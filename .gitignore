@@ -40,6 +40,8 @@ out/
 .kotlin
 
 ### ADDITIONAL ###
+application*.properties
+!application.properties.example
 .DS_Store
 ._.DS_Store
 **/.DS_Store
