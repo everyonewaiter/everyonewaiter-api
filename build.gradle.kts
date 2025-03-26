@@ -25,6 +25,7 @@ configurations.all {
     exclude(group = "commons-logging", module = "commons-logging")
 }
 
+val springCloudVersion: String by project
 val jjwtVersion: String by project
 val kotlinLoggingVersion: String by project
 val kotestVersion: String by project
@@ -34,6 +35,12 @@ val pdfBoxVersion: String by project
 val scrimageVersion: String by project
 val springDataJdbcPlusVersion: String by project
 val tsidVersion: String by project
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+    }
+}
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -45,6 +52,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")

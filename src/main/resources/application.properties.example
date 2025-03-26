@@ -50,3 +50,8 @@ naver.sens.channel-id=<CHANNEL_ID>
 # ORACLE OBJECT STORAGE
 oracle.object.storage.namespace=<NAMESPACE>
 oracle.object.storage.bucket-name=<BUCKET_NAME>
+
+# LOG
+logging.config=classpath:logback/logback-spring.xml
+logging.level.feign=debug
+logging.discord.webhook=<DISCORD_WEBHOOK_URL>
