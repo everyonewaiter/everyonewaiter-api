@@ -25,6 +25,7 @@ configurations.all {
     exclude(group = "commons-logging", module = "commons-logging")
 }
 
+val jjwtVersion: String by project
 val kotlinLoggingVersion: String by project
 val kotestVersion: String by project
 val kotestSpringExtensionVersion: String by project
@@ -46,13 +47,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     implementation("io.github.oshai:kotlin-logging-jvm:$kotlinLoggingVersion")
-    implementation("com.navercorp.spring:spring-boot-starter-data-jdbc-plus-sql:$springDataJdbcPlusVersion")
-    implementation("com.github.f4b6a3:tsid-creator:$tsidVersion")
     implementation("org.apache.pdfbox:pdfbox:$pdfBoxVersion")
     implementation("com.sksamuel.scrimage:scrimage-core:$scrimageVersion")
     implementation("com.sksamuel.scrimage:scrimage-webp:$scrimageVersion")
+    implementation("com.navercorp.spring:spring-boot-starter-data-jdbc-plus-sql:$springDataJdbcPlusVersion")
+    implementation("com.github.f4b6a3:tsid-creator:$tsidVersion")
 
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
     runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 
