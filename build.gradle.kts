@@ -29,6 +29,8 @@ val kotlinLoggingVersion: String by project
 val kotestVersion: String by project
 val kotestSpringExtensionVersion: String by project
 val mockkVersion: String by project
+val pdfBoxVersion: String by project
+val scrimageVersion: String by project
 val springDataJdbcPlusVersion: String by project
 val tsidVersion: String by project
 
@@ -47,6 +49,9 @@ dependencies {
     implementation("io.github.oshai:kotlin-logging-jvm:$kotlinLoggingVersion")
     implementation("com.navercorp.spring:spring-boot-starter-data-jdbc-plus-sql:$springDataJdbcPlusVersion")
     implementation("com.github.f4b6a3:tsid-creator:$tsidVersion")
+    implementation("org.apache.pdfbox:pdfbox:$pdfBoxVersion")
+    implementation("com.sksamuel.scrimage:scrimage-core:$scrimageVersion")
+    implementation("com.sksamuel.scrimage:scrimage-webp:$scrimageVersion")
 
     runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
