@@ -30,6 +30,7 @@ val kotestVersion: String by project
 val kotestSpringExtensionVersion: String by project
 val mockkVersion: String by project
 val springDataJdbcPlusVersion: String by project
+val tsidVersion: String by project
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -45,6 +46,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("io.github.oshai:kotlin-logging-jvm:$kotlinLoggingVersion")
     implementation("com.navercorp.spring:spring-boot-starter-data-jdbc-plus-sql:$springDataJdbcPlusVersion")
+    implementation("com.github.f4b6a3:tsid-creator:$tsidVersion")
 
     runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
