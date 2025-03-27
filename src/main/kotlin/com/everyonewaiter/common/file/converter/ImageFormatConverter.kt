@@ -31,7 +31,7 @@ class ImageFormatConverter {
         prefix: String? = null,
     ): Result<MultipartFile> =
         runCatching {
-            check(image.isImage) { "이미지 파일만 WebP 포맷으로 변환할 수 있습니다." }
+            check(image.isImage) { "이미지 파일만 WebP 포맷으로 변환할 수 있어요. 이미지 파일을 업로드 해주세요." }
             val name = image.originalFilename ?: "convertToWebp"
             val originalFileName = "${generateTsidFileName(prefix)}.${ImageFormat.WEBP.extension}"
             val content = ImmutableImage

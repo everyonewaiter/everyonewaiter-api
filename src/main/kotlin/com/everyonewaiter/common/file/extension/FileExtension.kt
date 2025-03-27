@@ -13,7 +13,7 @@ private val logger = KotlinLogging.logger {}
  * @throws [IllegalStateException] 파일명에 확장자가 없는 경우
  */
 val File.extensionOrThrow: String
-    get() = extension.ifBlank { throw IllegalStateException("파일명 ${name}에서 확장자를 찾을 수 없습니다.") }
+    get() = extension.ifBlank { throw IllegalStateException("파일명 '$name'에서 확장자를 찾지 못했어요. 파일명을 확인해 주세요.") }
 
 /**
  * [File]의 name 을 이용해 확장자명이 있는지 확인합니다.

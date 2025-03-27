@@ -33,7 +33,7 @@ val MultipartFile.extensionOrThrow: String
     get() = StringUtils
         .getFilenameExtension(originalFilename)
         ?.ifBlank { null }
-        ?: throw IllegalStateException("파일명 ${originalFilename}에서 확장자를 찾을 수 없습니다.")
+        ?: throw IllegalStateException("파일명 '$originalFilename'에서 확장자를 찾지 못했어요. 파일명을 확인해 주세요.")
 
 /**
  * [MultipartFile]의 originalFilename 을 이용해 확장자명이 있는지 확인합니다.

@@ -35,7 +35,7 @@ class PdfFileConverterTest :
                 )
                 val actual = pdfFileConverter.firstPageToImage(invalidFile)
                 actual.isFailure shouldBe true
-                actual.exceptionOrNull() shouldBe IllegalStateException("PDF 파일만 이미지로 변환할 수 있습니다.")
+                actual.exceptionOrNull() shouldBe IllegalStateException("PDF 파일만 이미지로 변환할 수 있어요. PDF 파일을 업로드 해주세요.")
             }
         }
     })

@@ -36,7 +36,7 @@ class PdfFileConverter {
         format: ImageFormat = ImageFormat.WEBP,
     ): Result<MultipartFile> =
         runCatching {
-            check(file.isPdf) { "PDF 파일만 이미지로 변환할 수 있습니다." }
+            check(file.isPdf) { "PDF 파일만 이미지로 변환할 수 있어요. PDF 파일을 업로드 해주세요." }
             PDDocument.load(file.inputStream).use { document ->
                 val name = file.originalFilename ?: "firstPageToImage"
                 val originalFileName = "${generateTsidFileName(prefix)}.${format.extension}"

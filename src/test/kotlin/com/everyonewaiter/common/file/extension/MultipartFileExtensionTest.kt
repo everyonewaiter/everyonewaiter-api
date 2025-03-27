@@ -56,7 +56,7 @@ class MultipartFileExtensionTest :
                 listOf(noExtensionFile, unknownFile).forEach {
                     shouldThrow<IllegalStateException> {
                         it.extensionOrThrow
-                    }.message shouldBe "파일명 ${it.originalFilename}에서 확장자를 찾을 수 없습니다."
+                    }.message shouldBe "파일명 '${it.originalFilename}'에서 확장자를 찾지 못했어요. 파일명을 확인해 주세요."
                 }
             }
         }
