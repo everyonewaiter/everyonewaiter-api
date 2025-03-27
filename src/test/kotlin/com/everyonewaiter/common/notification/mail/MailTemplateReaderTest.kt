@@ -11,8 +11,10 @@ import org.springframework.context.annotation.Import
 class MailTemplateReaderTest(
     private val templateReader: MailTemplateReader,
 ) : FunSpec({
-        test("타임리프 메일 템플릿을 읽어온다.") {
-            val variables = mapOf("variable1" to "Hello", "variable2" to "World")
-            templateReader.read("mail/template", variables) shouldBe "<p>Hello World</p>\n"
+        context("read") {
+            test("타임리프 메일 템플릿을 읽어온다.") {
+                val variables = mapOf("variable1" to "Hello", "variable2" to "World")
+                templateReader.read("mail/template", variables) shouldBe "<p>Hello World</p>\n"
+            }
         }
     })
