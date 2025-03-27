@@ -19,5 +19,5 @@ fun SseEmitter.sendEvent(
                 .name(name)
                 .data(event),
         )
-    }.onFailure { complete() }
+    }.onFailure { completeWithError(it) }
 }
