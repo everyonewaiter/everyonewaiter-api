@@ -18,9 +18,6 @@ class LoggingInterceptor : HandlerInterceptor {
         handler: Any,
     ): Boolean {
         MDC.put("startTime", System.currentTimeMillis().toString())
-        val requestId = MDC.get("requestId")
-        val requestUri = MDC.get("requestUri")
-        logger.info { "[REQUEST] [$requestId] [${request.method} $requestUri] [$handler]" }
         return true
     }
 
@@ -34,7 +31,10 @@ class LoggingInterceptor : HandlerInterceptor {
         val cachingResponse = response as ContentCachingResponseWrapper
         val requestId = MDC.get("requestId")
         val requestUri = MDC.get("requestUri")
+        val requestHeaders = MDC.get("requestHeaders")
         val duration = System.currentTimeMillis() - MDC.get("startTime").toLong()
+        logger.info { "[REQUEST] [$requestId] [${request.method} $requestUri] [$handler]" }
+        logger.info { "[REQUEST HEADERS] ${requestHeaders.replace("\n", ",")}" }
         logger.info { "[REQUEST BODY] ${cachingRequest.body}" }
         logger.info { "[RESPONSE BODY] ${cachingResponse.body}" }
         logger.info { "[RESPONSE ${response.status}] [$requestId] [${request.method} $requestUri] [$handler] [${duration}ms]" }
