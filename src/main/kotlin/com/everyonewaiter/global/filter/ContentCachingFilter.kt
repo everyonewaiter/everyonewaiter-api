@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import org.springframework.web.util.ContentCachingRequestWrapper
@@ -18,6 +19,10 @@ class ContentCachingFilter : OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        filterChain.doFilter(ContentCachingRequestWrapper(request), ContentCachingResponseWrapper(response))
+        if (request.contentType == MediaType.APPLICATION_JSON_VALUE) {
+            filterChain.doFilter(ContentCachingRequestWrapper(request), ContentCachingResponseWrapper(response))
+        } else {
+            filterChain.doFilter(request, response)
+        }
     }
 }

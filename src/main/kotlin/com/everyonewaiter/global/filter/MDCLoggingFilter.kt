@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import org.springframework.web.util.ContentCachingRequestWrapper
 
 @Component
 class MDCLoggingFilter(
@@ -22,12 +21,11 @@ class MDCLoggingFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        val cachingRequest = request as ContentCachingRequestWrapper
-        MDC.put("requestId", cachingRequest.xRequestId)
-        MDC.put("requestUri", cachingRequest.requestUri)
-        MDC.put("requestParameters", cachingRequest.parameters)
-        MDC.put("requestHeaders", cachingRequest.headers)
-        MDC.put("requestCookies", objectMapper.writeValueAsString(cachingRequest.cookies))
+        MDC.put("requestId", request.xRequestId)
+        MDC.put("requestUri", request.requestUri)
+        MDC.put("requestParameters", request.parameters)
+        MDC.put("requestHeaders", request.headers)
+        MDC.put("requestCookies", objectMapper.writeValueAsString(request.cookies))
         filterChain.doFilter(request, response)
     }
 }

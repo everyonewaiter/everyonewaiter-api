@@ -27,16 +27,14 @@ class LoggingInterceptor : HandlerInterceptor {
         handler: Any,
         exception: Exception?,
     ) {
-        val cachingRequest = request as ContentCachingRequestWrapper
-        val cachingResponse = response as ContentCachingResponseWrapper
         val requestId = MDC.get("requestId")
         val requestUri = MDC.get("requestUri")
         val requestHeaders = MDC.get("requestHeaders")
         val duration = System.currentTimeMillis() - MDC.get("startTime").toLong()
         logger.info { "[REQUEST] [$requestId] [${request.method} $requestUri] [$handler]" }
         logger.info { "[REQUEST HEADERS] ${requestHeaders.replace("\n", ",")}" }
-        logger.info { "[REQUEST BODY] ${cachingRequest.body}" }
-        logger.info { "[RESPONSE BODY] ${cachingResponse.body}" }
+        if (request is ContentCachingRequestWrapper) logger.info { "[REQUEST BODY] ${request.body}" }
+        if (response is ContentCachingResponseWrapper) logger.info { "[RESPONSE BODY] ${response.body}" }
         logger.info { "[RESPONSE ${response.status}] [$requestId] [${request.method} $requestUri] [$handler] [${duration}ms]" }
         MDC.clear()
     }
