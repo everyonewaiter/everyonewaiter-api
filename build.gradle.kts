@@ -21,6 +21,10 @@ repositories {
     mavenCentral()
 }
 
+springBoot {
+    buildInfo()
+}
+
 configurations.all {
     exclude(group = "commons-logging", module = "commons-logging")
 }
@@ -34,6 +38,7 @@ val mockkVersion: String by project
 val pdfBoxVersion: String by project
 val scrimageVersion: String by project
 val springDataJdbcPlusVersion: String by project
+val springDocVersion: String by project
 val tsidVersion: String by project
 
 dependencyManagement {
@@ -61,6 +66,9 @@ dependencies {
     implementation("com.sksamuel.scrimage:scrimage-core:$scrimageVersion")
     implementation("com.sksamuel.scrimage:scrimage-webp:$scrimageVersion")
     implementation("com.navercorp.spring:spring-boot-starter-data-jdbc-plus-sql:$springDataJdbcPlusVersion")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocVersion") {
+        exclude(group = "org.webjars", module = "swagger-ui")
+    }
     implementation("com.github.f4b6a3:tsid-creator:$tsidVersion")
 
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")

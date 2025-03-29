@@ -54,4 +54,16 @@ oracle.object.storage.bucket-name=<BUCKET_NAME>
 # LOG
 logging.config=classpath:logback/logback-spring.xml
 logging.level.feign=debug
-logging.discord.webhook=<DISCORD_WEBHOOK_URL>
+logging.discord.webhook=<DISCORD_WEBHOOK_URI>
+
+# SWAGGER
+springdoc.swagger-ui.enabled=true
+springdoc.default-consumes-media-type=application/json;charset=UTF-8
+springdoc.default-produces-media-type=application/json;charset=UTF-8
+springdoc.api-docs.path=/api/documents.json
+springdoc.swagger-ui.path=/api/documents
+springdoc.swagger-ui.disable-swagger-default-url=true
+springdoc.swagger-ui.display-request-duration=true
+springdoc.swagger-ui.persist-authorization=true
+springdoc.swagger-ui.tags-sorter=alpha
+springdoc.swagger-ui.operations-sorter=method
