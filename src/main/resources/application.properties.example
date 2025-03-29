@@ -1,4 +1,5 @@
 spring.application.name=everyonewaiter-api
+server.port=8080
 spring.profiles.active=<local | dev | prod>
 spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
