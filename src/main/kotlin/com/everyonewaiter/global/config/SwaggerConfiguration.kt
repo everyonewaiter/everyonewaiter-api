@@ -84,7 +84,7 @@ class SwaggerConfiguration(
             if (singleErrorAnnotation != null) {
                 val statusCode = singleErrorAnnotation.code.status.value()
                 val example = Example().apply {
-                    value = ErrorResponse(singleErrorAnnotation.code, singleErrorAnnotation.exampleMessage)
+                    value = ErrorResponse(singleErrorAnnotation.code, singleErrorAnnotation.code.message)
                 }
                 val swaggerMediaType = MediaType().apply {
                     addExamples(singleErrorAnnotation.exampleName, example)
@@ -114,7 +114,7 @@ class SwaggerConfiguration(
                             it.summary,
                             it.exampleName,
                             Example().apply {
-                                value = ErrorResponse(it.code, it.exampleMessage)
+                                value = ErrorResponse(it.code, it.code.message)
                             },
                         )
                     }
