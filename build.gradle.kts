@@ -72,7 +72,7 @@ dependencies {
     implementation("org.apache.pdfbox:pdfbox:$pdfBoxVersion")
     implementation("com.sksamuel.scrimage:scrimage-core:$scrimageVersion")
     implementation("com.sksamuel.scrimage:scrimage-webp:$scrimageVersion")
-    implementation("com.navercorp.spring:spring-boot-starter-data-jdbc-plus-sql:$springDataJdbcPlusVersion")
+//    implementation("com.navercorp.spring:spring-boot-starter-data-jdbc-plus-sql:$springDataJdbcPlusVersion")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocVersion") {
         exclude(group = "org.webjars", module = "swagger-ui")
     }
