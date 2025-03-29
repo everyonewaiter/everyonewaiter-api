@@ -1,9 +1,12 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 plugins {
     kotlin("jvm")
     kotlin("plugin.spring")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
     id("org.jlleitschuh.gradle.ktlint")
+    id("com.gorylenko.gradle-git-properties")
 }
 
 val applicationGroup: String by project
@@ -23,6 +26,10 @@ repositories {
 
 springBoot {
     buildInfo()
+}
+
+ktlint {
+    version.set("1.5.0")
 }
 
 configurations.all {
@@ -100,4 +107,12 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.withType<Jar> {
+    enabled = false
+}
+
+tasks.withType<BootJar> {
+    enabled = true
 }

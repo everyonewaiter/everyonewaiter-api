@@ -14,32 +14,20 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/v1/users")
 class UserController : UserApiSpec {
     @PostMapping
-    override fun signUp(request: SignUp.Request): ResponseEntity<Unit> {
-        TODO("Not yet implemented")
-    }
+    override fun signUp(request: SignUp.Request): ResponseEntity<Unit> = ResponseEntity.ok().build()
 
     @PostMapping("/sign-in")
-    override fun signIn(request: SignIn.Request): ResponseEntity<SignIn.Response> {
-        TODO("Not yet implemented")
-    }
+    override fun signIn(request: SignIn.Request): ResponseEntity<SignIn.Response> = ResponseEntity.ok().build()
 
     @PostMapping("/send-auth-code")
-    override fun sendAuthCode(request: AuthCode.SendRequest): ResponseEntity<Unit> {
-        TODO("Not yet implemented")
-    }
+    override fun sendAuthCode(request: AuthCode.SendRequest): ResponseEntity<Unit> = ResponseEntity.ok().build()
 
     @PostMapping("/verify-auth-code")
-    override fun verifyAuthCode(request: AuthCode.VerifyRequest): ResponseEntity<Unit> {
-        TODO("Not yet implemented")
-    }
+    override fun verifyAuthCode(request: AuthCode.VerifyRequest): ResponseEntity<Unit> = ResponseEntity.ok().build()
 
     @PostMapping("/send-auth-mail")
-    override fun sendAuthMail(request: AuthMail.SendRequest): ResponseEntity<Unit> {
-        TODO("Not yet implemented")
-    }
+    override fun sendAuthMail(request: AuthMail.SendRequest): ResponseEntity<Unit> = ResponseEntity.ok().build()
 
     @PostMapping("/verify-auth-mail")
-    override fun verifyEmail(): ResponseEntity<Unit> {
-        TODO("Not yet implemented")
-    }
+    override fun verifyEmail(): ResponseEntity<Unit> = ResponseEntity.ok().build()
 }
