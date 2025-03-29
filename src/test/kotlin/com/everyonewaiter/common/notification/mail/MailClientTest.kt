@@ -1,9 +1,9 @@
 package com.everyonewaiter.common.notification.mail
 
+import com.everyonewaiter.support.IntegrationTest
 import io.kotest.core.spec.style.FunSpec
-import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
+@IntegrationTest
 class MailClientTest(
     private val mailClient: MailClient,
 ) : FunSpec({

@@ -1,9 +1,9 @@
 package com.everyonewaiter.common.notification.discord
 
+import com.everyonewaiter.support.IntegrationTest
 import io.kotest.core.spec.style.FunSpec
-import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
+@IntegrationTest
 class DiscordWebhookClientTest(
     private val discordWebhookClient: DiscordWebhookClient,
 ) : FunSpec({

@@ -1,7 +1,7 @@
 package com.everyonewaiter.support
 
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 
@@ -10,8 +10,7 @@ import org.springframework.test.context.ActiveProfiles
 @Import(TestRedisContainerConfiguration::class)
 annotation class RedisTest
 
-@Suppress("unused")
 @ActiveProfiles("test")
-@DataJdbcTest
-@Import(TestMysqlContainerConfiguration::class)
-annotation class MySQLTest
+@SpringBootTest
+@Import(value = [TestMysqlContainerConfiguration::class, TestRedisContainerConfiguration::class])
+annotation class IntegrationTest
