@@ -109,16 +109,24 @@ class SwaggerConfiguration(
                 ?.groupBy { it.code.status.value() }
                 ?.entries
                 ?.associate { (statusCode, errorAnnotations) ->
-                    statusCode.toString() to errorAnnotations.associate {
-                        it.exampleName to Example().apply {
-                            value = ErrorResponse(it.code, it.exampleMessage)
-                        }
+                    statusCode.toString() to errorAnnotations.map {
+                        Triple(
+                            it.summary,
+                            it.exampleName,
+                            Example().apply {
+                                value = ErrorResponse(it.code, it.exampleMessage)
+                            },
+                        )
                     }
                 }?.forEach { (statusCode, examples) ->
-                    val swaggerMediaType =
-                        MediaType().apply { examples.entries.forEach { addExamples(it.key, it.value) } }
+                    var summary = multipleErrorAnnotation.summary
+                    val swaggerMediaType = MediaType()
+                    for (example in examples) {
+                        if (example.first.isNotBlank()) summary = example.first
+                        swaggerMediaType.addExamples(example.second, example.third)
+                    }
                     val apiResponse = ApiResponse().apply {
-                        description = multipleErrorAnnotation.summary
+                        description = summary
                         content = Content().apply {
                             addMediaType("application/json;charset=UTF-8", swaggerMediaType)
                         }
