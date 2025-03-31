@@ -74,8 +74,8 @@ internal class GlobalExceptionHandler {
         exception: BusinessException,
     ): ResponseEntity<ErrorResponse> {
         val errorCode = exception.errorCode
-        logWarn(request, errorCode, exception.message, exception)
-        return ResponseEntity.status(errorCode.status).body(ErrorResponse(errorCode, exception.message))
+        logWarn(request, errorCode, errorCode.message, exception)
+        return ResponseEntity.status(errorCode.status).body(ErrorResponse(errorCode, errorCode.message))
     }
 
     @ExceptionHandler
