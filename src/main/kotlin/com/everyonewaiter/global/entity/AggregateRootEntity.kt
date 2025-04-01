@@ -10,4 +10,7 @@ abstract class AggregateRootEntity : AbstractAggregateRoot<AggregateRootEntity>(
 
     @LastModifiedDate
     open val updatedAt: Instant = Instant.now()
+
+    val domainEvents: List<Any>
+        get() = domainEvents().toList()
 }

@@ -12,6 +12,7 @@ enum class ErrorCode(
     INVALID_REQUEST_BODY(HttpStatus.BAD_REQUEST, "요청 본문 읽기에 실패했어요. 요청 본문이 잘못된 형식이거나 누락된 값이 있을 수 있어요."),
     INVALID_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "요청하신 경로에서 지원하지 않는 Content-Type을 사용했어요. 요청 헤더를 확인해 주세요."),
     MISSING_PARAMETERS(HttpStatus.BAD_REQUEST, "요청을 처리하던 중 필수 파라미터가 누락된 것을 확인했어요. 누락된 파라미터가 있는지 확인해 주세요."),
+    FAILED_EXTERNAL_SERVER_COMMUNICATION(HttpStatus.BAD_REQUEST, "외부 서버와의 통신에 실패했어요. 잠시 후 다시 시도해 주세요."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "해당 서비스는 로그인 후 이용하실 수 있어요. 로그인 후 다시 시도해 주세요."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "해당 서비스에 접근할 수 있는 권한이 없어요."),
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "페이지를 찾지 못했어요. 주소를 잘못 입력하셨거나 요청하신 페이지가 변경 또는 삭제된 것 같아요."),

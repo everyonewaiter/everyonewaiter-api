@@ -1,5 +1,6 @@
 package com.everyonewaiter.global.exception
 
+import feign.FeignException
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -69,6 +71,20 @@ internal class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    fun handleMethodArgumentNotValidException(
+        request: HttpServletRequest,
+        exception: MethodArgumentNotValidException,
+    ): ResponseEntity<ErrorResponse> {
+        val errorCode = ErrorCode.BAD_REQUEST
+        val message = exception.bindingResult
+            .fieldErrors
+            .first()
+            .defaultMessage ?: errorCode.message
+        logWarn(request, errorCode, message, exception)
+        return ResponseEntity.status(errorCode.status).body(ErrorResponse(errorCode, message))
+    }
+
+    @ExceptionHandler
     fun handleBusinessException(
         request: HttpServletRequest,
         exception: BusinessException,
@@ -76,6 +92,18 @@ internal class GlobalExceptionHandler {
         val errorCode = exception.errorCode
         logWarn(request, errorCode, errorCode.message, exception)
         return ResponseEntity.status(errorCode.status).body(ErrorResponse(errorCode, errorCode.message))
+    }
+
+    @ExceptionHandler
+    fun handleFeignException(
+        request: HttpServletRequest,
+        exception: FeignException,
+    ): ResponseEntity<ErrorResponse> {
+        val errorCode = ErrorCode.FAILED_EXTERNAL_SERVER_COMMUNICATION
+        val status = exception.status()
+        val content = exception.contentUTF8()
+        logWarn(request, errorCode, content, exception)
+        return ResponseEntity.status(status).body(ErrorResponse(errorCode, errorCode.message))
     }
 
     @ExceptionHandler
