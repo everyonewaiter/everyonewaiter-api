@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.account.service
 
+import com.everyonewaiter.application.account.dto.SignIn
 import com.everyonewaiter.application.account.dto.SignUp
 import com.everyonewaiter.domain.account.entity.Account
 import com.everyonewaiter.domain.account.repository.AccountRepository
@@ -27,7 +28,7 @@ class AccountService(
     fun checkCanSendAuthMail(email: String) {
         val account = accountRepository.findByEmail(email)
         checkOrThrow(account != null, ErrorCode.ACCOUNT_NOT_FOUND)
-        checkOrThrow(account!!.isInactive, ErrorCode.ALREADY_VERIFIED_EMAIL)
+        checkOrThrow(account.isInactive, ErrorCode.ALREADY_VERIFIED_EMAIL)
     }
 
     fun checkPhoneNumberNotInUse(phoneNumber: String) {
@@ -35,4 +36,14 @@ class AccountService(
     }
 
     private fun existsByPhone(phoneNumber: String): Boolean = accountRepository.existsByPhone(phoneNumber)
+
+    @Transactional
+    fun signIn(request: SignIn.Request): Long {
+        val account = accountRepository.findByEmail(request.email)
+        checkOrThrow(account != null, ErrorCode.FAILED_SIGN_IN)
+        checkOrThrow(account.isActive, ErrorCode.FAILED_SIGN_IN)
+        checkOrThrow(passwordEncoder.matches(request.password, account.password), ErrorCode.FAILED_SIGN_IN)
+        account.signIn()
+        return accountRepository.save(account).id
+    }
 }

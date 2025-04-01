@@ -1,6 +1,7 @@
 package com.everyonewaiter.application.auth.service
 
 import com.everyonewaiter.application.auth.dto.VerifyAuthCode
+import com.everyonewaiter.common.jwt.JwtProvider
 import com.everyonewaiter.domain.auth.entity.AuthAttempt
 import com.everyonewaiter.domain.auth.entity.AuthCode
 import com.everyonewaiter.domain.auth.entity.AuthPurpose
@@ -25,11 +26,13 @@ import org.springframework.context.ApplicationEventPublisher
 
 class AuthServiceTest :
     FunSpec({
+        val jwtProvider = mockk<JwtProvider>()
         val authAttemptRepository = mockk<AuthAttemptRepository>()
         val authCodeRepository = mockk<AuthCodeRepository>()
         val authSuccessRepository = mockk<AuthSuccessRepository>()
         val applicationEventPublisher = mockk<ApplicationEventPublisher>()
         val authService = AuthService(
+            jwtProvider = jwtProvider,
             authAttemptRepository = authAttemptRepository,
             authCodeRepository = authCodeRepository,
             authSuccessRepository = authSuccessRepository,
@@ -82,6 +85,15 @@ class AuthServiceTest :
                 shouldThrow<BusinessException> {
                     authService.checkAuthAttemptExceed(authAttempt.phoneNumber, authAttempt.purpose)
                 }.errorCode shouldBe ErrorCode.EXCEED_MAXIMUM_VERIFICATION_PHONE_NUMBER
+            }
+        }
+
+        context("generateTokenBySignIn") {
+            test("액세스 토큰을 발급한다.") {
+                val accessToken = "<ACCESS_TOKEN>"
+                every { jwtProvider.generate(any()) } returns accessToken
+                val actual = authService.generateAccessTokenBySignIn(1L, "admin@everyonewaiter.com")
+                actual shouldBe accessToken
             }
         }
 

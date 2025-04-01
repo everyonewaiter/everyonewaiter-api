@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.account.service
 
+import com.everyonewaiter.application.account.dto.SignIn
 import com.everyonewaiter.application.account.dto.SignUp
 import com.everyonewaiter.domain.account.entity.Account
 import com.everyonewaiter.domain.account.entity.AccountStatus
@@ -9,11 +10,13 @@ import com.everyonewaiter.global.exception.ErrorCode
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.date.shouldBeAfter
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.springframework.security.crypto.password.PasswordEncoder
+import java.time.Instant
 
 class AccountServiceTest :
     FunSpec({
@@ -96,6 +99,49 @@ class AccountServiceTest :
                 shouldThrow<BusinessException> {
                     accountService.checkPhoneNumberNotInUse(phoneNumber)
                 }.errorCode shouldBe ErrorCode.ALREADY_USE_PHONE_NUMBER
+            }
+        }
+
+        context("signIn") {
+            val request = SignIn.Request("admin@everyonewaiter.com", "@password1")
+            val account = Account(
+                email = request.email,
+                password = request.password,
+                phoneNumber = "01044591812",
+            )
+
+            test("로그인하면 마지막 로그인 시간이 갱신된다.") {
+                val lastSignIn = Instant.ofEpochMilli(0)
+                val copied = account.copy(status = AccountStatus.ACTIVE, lastSignIn = lastSignIn)
+                every { accountRepository.findByEmail(request.email) } returns copied
+                every { passwordEncoder.matches(request.password, copied.password) } returns true
+                every { accountRepository.save(copied) } returns copied
+                accountService.signIn(request)
+                copied.lastSignIn shouldBeAfter lastSignIn
+                verify { accountRepository.save(copied) }
+            }
+
+            test("이메일로 계정을 찾지 못하면 예외가 발생한다.") {
+                every { accountRepository.findByEmail(request.email) } returns null
+                shouldThrow<BusinessException> {
+                    accountService.signIn(request)
+                }.errorCode shouldBe ErrorCode.FAILED_SIGN_IN
+            }
+
+            test("계정이 비활성 상태라면 예외가 발생한다.") {
+                every { accountRepository.findByEmail(request.email) } returns account
+                shouldThrow<BusinessException> {
+                    accountService.signIn(request)
+                }.errorCode shouldBe ErrorCode.FAILED_SIGN_IN
+            }
+
+            test("비밀번호가 일치하지 않으면 예외가 발생한다.") {
+                val copied = account.copy(status = AccountStatus.ACTIVE)
+                every { accountRepository.findByEmail(request.email) } returns copied
+                every { passwordEncoder.matches(request.password, account.password) } returns false
+                shouldThrow<BusinessException> {
+                    accountService.signIn(request)
+                }.errorCode shouldBe ErrorCode.FAILED_SIGN_IN
             }
         }
     })

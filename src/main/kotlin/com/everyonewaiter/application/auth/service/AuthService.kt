@@ -1,6 +1,8 @@
 package com.everyonewaiter.application.auth.service
 
 import com.everyonewaiter.application.auth.dto.VerifyAuthCode
+import com.everyonewaiter.common.jwt.JwtPayload
+import com.everyonewaiter.common.jwt.JwtProvider
 import com.everyonewaiter.domain.auth.entity.AuthAttempt
 import com.everyonewaiter.domain.auth.entity.AuthCode
 import com.everyonewaiter.domain.auth.entity.AuthPurpose
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class AuthService(
+    private val jwtProvider: JwtProvider,
     private val authAttemptRepository: AuthAttemptRepository,
     private val authCodeRepository: AuthCodeRepository,
     private val authSuccessRepository: AuthSuccessRepository,
@@ -40,6 +43,11 @@ class AuthService(
         val isExceed = authAttemptRepository.find(authAttempt) < purpose.maxAttempt
         checkOrThrow(isExceed, ErrorCode.EXCEED_MAXIMUM_VERIFICATION_PHONE_NUMBER)
     }
+
+    fun generateAccessTokenBySignIn(
+        accountId: Long,
+        email: String,
+    ): String = jwtProvider.generate(JwtPayload(accountId.toString(), email))
 
     fun generateCode(
         phoneNumber: String,

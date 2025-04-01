@@ -24,6 +24,13 @@ data class Account(
     val isInactive: Boolean
         get() = status == AccountStatus.INACTIVE
 
+    val isActive: Boolean
+        get() = status == AccountStatus.ACTIVE
+
+    fun signIn() {
+        lastSignIn = Instant.now()
+    }
+
     companion object {
         fun create(
             email: String,

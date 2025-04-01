@@ -28,7 +28,7 @@ enum class ErrorCode(
     EXPIRED_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "휴대폰 인증 번호가 만료되었어요. 재전송 버튼을 통해 인증 번호를 새로 발급받아 주세요."),
     EXPIRED_VERIFICATION_EMAIL(HttpStatus.BAD_REQUEST, "이메일 인증 유효기간이 만료되었어요. 이메일 인증을 다시 진행해 주세요."),
     EXPIRED_VERIFICATION_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "휴대폰 번호 인증이 만료되었어요. 휴대폰 번호 인증을 다시 진행해 주세요."),
-    SIGN_IN_FAILED(HttpStatus.BAD_REQUEST, "이메일 및 비밀번호를 확인해 주세요."),
+    FAILED_SIGN_IN(HttpStatus.BAD_REQUEST, "이메일 및 비밀번호를 확인해 주세요."),
     UNMATCHED_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "인증 번호가 일치하지 않아요. 입력하신 인증 번호를 확인해 주세요."),
     ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "계정을 찾지 못했어요."),
 }
