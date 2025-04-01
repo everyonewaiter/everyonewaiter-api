@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.Date
 
-private const val THREE_HOUR_MILLISECONDS = 3 * 60 * 60 * 1000L
+private const val TWELVE_HOUR_MILLISECONDS = 12 * 60 * 60 * 1000L
 
 /**
  * JWT 토큰을 생성 및 추출하는 클래스입니다.
@@ -24,12 +24,12 @@ class JwtProvider(
      * JWT 토큰을 생성합니다.
      *
      * @param [payload] JWT 생성 시 사용되는 데이터를 가진 DTO
-     * @param [expirationMilliseconds] JWT의 만료 시간(밀리초) - 기본값: 3시간
+     * @param [expirationMilliseconds] JWT의 만료 시간(밀리초) - 기본값: 12시간
      * @return 생성된 JWT 토큰 문자열
      */
     fun generate(
         payload: JwtPayload,
-        expirationMilliseconds: Long = THREE_HOUR_MILLISECONDS,
+        expirationMilliseconds: Long = TWELVE_HOUR_MILLISECONDS,
     ): String {
         val now = Date()
         val expiration = Date(now.time + expirationMilliseconds)
