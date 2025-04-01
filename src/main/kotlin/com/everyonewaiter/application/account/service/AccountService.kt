@@ -24,6 +24,12 @@ class AccountService(
         return accountRepository.save(account).id
     }
 
+    fun checkCanSendAuthMail(email: String) {
+        val account = accountRepository.findByEmail(email)
+        checkOrThrow(account != null, ErrorCode.ACCOUNT_NOT_FOUND)
+        checkOrThrow(account!!.isInactive, ErrorCode.ALREADY_VERIFIED_EMAIL)
+    }
+
     fun checkPhoneNumberNotInUse(phoneNumber: String) {
         checkOrThrow(existsByPhone(phoneNumber).not(), ErrorCode.ALREADY_USE_PHONE_NUMBER)
     }

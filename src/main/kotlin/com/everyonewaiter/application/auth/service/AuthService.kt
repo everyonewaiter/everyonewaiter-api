@@ -6,6 +6,7 @@ import com.everyonewaiter.domain.auth.entity.AuthCode
 import com.everyonewaiter.domain.auth.entity.AuthPurpose
 import com.everyonewaiter.domain.auth.entity.AuthSuccess
 import com.everyonewaiter.domain.auth.event.AuthCodeCreateEvent
+import com.everyonewaiter.domain.auth.event.AuthMailSendEvent
 import com.everyonewaiter.domain.auth.repository.AuthAttemptRepository
 import com.everyonewaiter.domain.auth.repository.AuthCodeRepository
 import com.everyonewaiter.domain.auth.repository.AuthSuccessRepository
@@ -55,5 +56,9 @@ class AuthService(
         checkOrThrow(code != null, ErrorCode.EXPIRED_VERIFICATION_CODE)
         checkOrThrow(code == request.code, ErrorCode.UNMATCHED_VERIFICATION_CODE)
         authSuccessRepository.save(AuthSuccess(request.phoneNumber))
+    }
+
+    fun sendAuthMail(email: String) {
+        applicationEventPublisher.publishEvent(AuthMailSendEvent(email))
     }
 }

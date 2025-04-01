@@ -3,6 +3,8 @@ package com.everyonewaiter.infrastructure.account
 import com.everyonewaiter.domain.account.entity.Account
 import com.everyonewaiter.support.MysqlTest
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.springframework.context.annotation.Import
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate
@@ -34,6 +36,19 @@ class AccountRepositoryImplTest(
 
             test("휴대폰 번호로 계정을 찾지 못하면 False를 반환한다.") {
                 accountRepositoryImpl.existsByPhone("01012345678") shouldBe false
+            }
+        }
+
+        context("findByEmail") {
+            test("이메일로 계정을 찾으면 계정 정보를 반환한다.") {
+                val actual = accountRepositoryImpl.findByEmail(account.email)
+                actual.shouldNotBeNull()
+                actual.id shouldBe account.id
+            }
+
+            test("이메일로 계정을 찾지 못하면 NULL을 반환한다.") {
+                val actual = accountRepositoryImpl.findByEmail("handwoong@gmail.com")
+                actual.shouldBeNull()
             }
         }
     })

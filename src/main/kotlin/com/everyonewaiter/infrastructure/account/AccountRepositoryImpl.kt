@@ -12,5 +12,7 @@ class AccountRepositoryImpl(
 
     override fun existsByPhone(phoneNumber: String): Boolean = accountJdbcRepository.existsByPhoneNumber(phoneNumber)
 
+    override fun findByEmail(email: String): Account? = accountJdbcRepository.findByEmail(email)
+
     override fun save(account: Account): Account = accountJdbcRepository.save(account)
 }

@@ -21,6 +21,9 @@ data class Account(
     var status: AccountStatus = AccountStatus.INACTIVE,
     var lastSignIn: Instant = Instant.ofEpochMilli(0L),
 ) : AggregateRootEntity() {
+    val isInactive: Boolean
+        get() = status == AccountStatus.INACTIVE
+
     companion object {
         fun create(
             email: String,

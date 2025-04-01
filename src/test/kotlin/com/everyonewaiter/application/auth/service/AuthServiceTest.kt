@@ -6,6 +6,7 @@ import com.everyonewaiter.domain.auth.entity.AuthCode
 import com.everyonewaiter.domain.auth.entity.AuthPurpose
 import com.everyonewaiter.domain.auth.entity.AuthSuccess
 import com.everyonewaiter.domain.auth.event.AuthCodeCreateEvent
+import com.everyonewaiter.domain.auth.event.AuthMailSendEvent
 import com.everyonewaiter.domain.auth.repository.AuthAttemptRepository
 import com.everyonewaiter.domain.auth.repository.AuthCodeRepository
 import com.everyonewaiter.domain.auth.repository.AuthSuccessRepository
@@ -122,6 +123,14 @@ class AuthServiceTest :
                 shouldThrow<BusinessException> {
                     authService.verifyCode(VerifyAuthCode.Request(authCode.phoneNumber, 654321))
                 }.errorCode shouldBe ErrorCode.UNMATCHED_VERIFICATION_CODE
+            }
+        }
+
+        context("sendAuthMail") {
+            test("이메일 인증 메일을 발송한다.") {
+                every { applicationEventPublisher.publishEvent(any(AuthMailSendEvent::class)) } just runs
+                authService.sendAuthMail("admin@everyonewaiter.com")
+                verify { applicationEventPublisher.publishEvent(any(AuthMailSendEvent::class)) }
             }
         }
     })

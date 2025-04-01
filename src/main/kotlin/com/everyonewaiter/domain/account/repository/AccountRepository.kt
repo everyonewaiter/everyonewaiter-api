@@ -7,5 +7,7 @@ interface AccountRepository {
 
     fun existsByPhone(phoneNumber: String): Boolean
 
+    fun findByEmail(email: String): Account?
+
     fun save(account: Account): Account
 }
