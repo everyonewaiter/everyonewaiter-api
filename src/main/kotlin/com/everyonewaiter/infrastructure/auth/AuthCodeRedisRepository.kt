@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository
 class AuthCodeRedisRepository(
     private val redisTemplate: RedisTemplate<String, String>,
 ) : AuthCodeRepository {
+    override fun find(authCode: AuthCode): Int? = redisTemplate.opsForValue()[authCode.key]?.toInt()
+
     override fun save(authCode: AuthCode) {
         redisTemplate.opsForValue()[authCode.key, authCode.value] = authCode.expiration
     }

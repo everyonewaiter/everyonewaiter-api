@@ -18,11 +18,11 @@ enum class ErrorCode(
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "요청하신 경로 '%s'는 '%s' 메서드를 지원하지 않아요."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 오류가 발생했어요. 문제 해결을 위해 관리자에게 문의를 남겨주세요."),
 
-    // USER
+    // ACCOUNT
     ALREADY_USE_EMAIL(HttpStatus.BAD_REQUEST, "입력하신 이메일은 이미 사용 중이에요. 다른 이메일을 입력해 주세요."),
     ALREADY_USE_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "입력하신 휴대폰 번호는 이미 사용 중이에요. 다른 휴대폰 번호를 입력해 주세요."),
     ALREADY_VERIFIED_EMAIL(HttpStatus.BAD_REQUEST, "이미 이메일 인증이 완료된 계정이에요."),
-    ALREADY_VERIFIED_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "이미 휴대폰 번호 인증이 완료되었어요. 다음 회원가입 절차를 진행해 주세요."),
+    ALREADY_VERIFIED_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "이미 휴대폰 번호 인증이 완료되었어요. 다음 절차를 진행해 주세요."),
     EXCEED_MAXIMUM_VERIFICATION_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "휴대폰 번호 인증 요청은 하루에 5회까지 가능해요. 내일 다시 시도해 주세요."),
     EXPIRED_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "휴대폰 인증 번호가 만료되었어요. 재전송 버튼을 통해 인증 번호를 새로 발급받아 주세요."),
     EXPIRED_VERIFICATION_EMAIL(HttpStatus.BAD_REQUEST, "이메일 인증 유효기간이 만료되었어요. 이메일 인증을 다시 진행해 주세요."),

@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.auth.service
 
+import com.everyonewaiter.application.auth.dto.VerifyAuthCode
 import com.everyonewaiter.domain.auth.entity.AuthAttempt
 import com.everyonewaiter.domain.auth.entity.AuthCode
 import com.everyonewaiter.domain.auth.entity.AuthPurpose
@@ -21,9 +22,14 @@ class AuthService(
     private val applicationEventPublisher: ApplicationEventPublisher,
 ) {
     fun checkAuthSuccessExists(phoneNumber: String) {
-        val authSuccess = AuthSuccess(phoneNumber)
-        checkOrThrow(authSuccessRepository.exists(authSuccess), ErrorCode.EXPIRED_VERIFICATION_PHONE_NUMBER)
+        checkOrThrow(existsSuccess(phoneNumber), ErrorCode.EXPIRED_VERIFICATION_PHONE_NUMBER)
     }
+
+    fun checkAuthSuccessNotExists(phoneNumber: String) {
+        checkOrThrow(existsSuccess(phoneNumber).not(), ErrorCode.ALREADY_VERIFIED_PHONE_NUMBER)
+    }
+
+    private fun existsSuccess(phoneNumber: String) = authSuccessRepository.exists(AuthSuccess(phoneNumber))
 
     fun checkAuthAttemptExceed(
         phoneNumber: String,
@@ -42,5 +48,12 @@ class AuthService(
         authCodeRepository.save(authCode)
         authAttemptRepository.increment(AuthAttempt(phoneNumber, purpose))
         applicationEventPublisher.publishEvent(AuthCodeCreateEvent(phoneNumber, authCode.code))
+    }
+
+    fun verifyCode(request: VerifyAuthCode.Request) {
+        val code = authCodeRepository.find(AuthCode(request.phoneNumber))
+        checkOrThrow(code != null, ErrorCode.EXPIRED_VERIFICATION_CODE)
+        checkOrThrow(code == request.code, ErrorCode.UNMATCHED_VERIFICATION_CODE)
+        authSuccessRepository.save(AuthSuccess(request.phoneNumber))
     }
 }
