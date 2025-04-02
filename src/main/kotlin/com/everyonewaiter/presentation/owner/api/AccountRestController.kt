@@ -1,5 +1,6 @@
 package com.everyonewaiter.presentation.owner.api
 
+import com.everyonewaiter.application.account.dto.Profile
 import com.everyonewaiter.application.account.dto.SignIn
 import com.everyonewaiter.application.account.dto.SignUp
 import com.everyonewaiter.application.account.service.AccountService
@@ -7,10 +8,13 @@ import com.everyonewaiter.application.auth.dto.SendAuthCode
 import com.everyonewaiter.application.auth.dto.SendAuthMail
 import com.everyonewaiter.application.auth.dto.VerifyAuthCode
 import com.everyonewaiter.application.auth.service.AuthService
+import com.everyonewaiter.domain.account.entity.Account
 import com.everyonewaiter.domain.auth.entity.AuthPurpose
+import com.everyonewaiter.global.annotation.AuthenticationAccount
 import com.everyonewaiter.presentation.owner.spec.AccountControllerSpecification
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -24,6 +28,11 @@ class AccountRestController(
     private val accountService: AccountService,
     private val authService: AuthService,
 ) : AccountControllerSpecification {
+    @GetMapping("/me")
+    override fun getProfile(
+        @AuthenticationAccount account: Account,
+    ): ResponseEntity<Profile.Response> = ResponseEntity.ok(Profile.Response(account.id.toString(), account.email, account.permission))
+
     @PostMapping
     override fun signUp(
         @RequestBody @Valid request: SignUp.Request,
@@ -75,7 +84,7 @@ class AccountRestController(
 
     @PostMapping("/verify-auth-mail")
     override fun verifyEmail(
-        @RequestParam(value = "token", required = true) accessToken: String,
+        @RequestParam(value = "token") accessToken: String,
     ): ResponseEntity<Unit> {
         val email = authService.verifyAuthMail(accessToken)
         accountService.activate(email)
