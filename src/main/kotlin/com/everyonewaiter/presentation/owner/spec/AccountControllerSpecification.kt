@@ -1,23 +1,36 @@
 package com.everyonewaiter.presentation.owner.spec
 
+import com.everyonewaiter.application.account.dto.Profile
 import com.everyonewaiter.application.account.dto.SignIn
 import com.everyonewaiter.application.account.dto.SignUp
 import com.everyonewaiter.application.auth.dto.SendAuthCode
 import com.everyonewaiter.application.auth.dto.SendAuthMail
 import com.everyonewaiter.application.auth.dto.VerifyAuthCode
+import com.everyonewaiter.domain.account.entity.Account
 import com.everyonewaiter.global.annotation.ApiErrorResponse
 import com.everyonewaiter.global.annotation.ApiErrorResponses
 import com.everyonewaiter.global.exception.ErrorCode
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.headers.Header
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirements
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.RequestBody
 
 @Tag(name = "계정")
 interface AccountControllerSpecification {
+    @Operation(summary = "프로필 조회", description = "프로필 조회 API")
+    @ApiResponse(responseCode = "200", description = "프로필 조회 성공")
+    @ApiErrorResponse(
+        code = ErrorCode.UNAUTHORIZED,
+        exampleName = "액세스 토큰이 유효하지 않은 경우",
+    )
+    fun getProfile(
+        @Parameter(hidden = true) account: Account,
+    ): ResponseEntity<Profile.Response>
+
     @SecurityRequirements
     @Operation(
         summary = "계정 생성",
@@ -29,7 +42,13 @@ interface AccountControllerSpecification {
     @ApiResponse(
         responseCode = "201",
         description = "계정 생성 완료",
-        headers = [Header(name = "Location", description = "생성된 계정 ID")],
+        headers = [
+            Header(
+                name = "Location",
+                description = "생성된 계정 ID",
+                schema = Schema(implementation = String::class),
+            ),
+        ],
     )
     @ApiErrorResponses(
         summary = "계정 생성 실패",
@@ -48,9 +67,7 @@ interface AccountControllerSpecification {
             ),
         ],
     )
-    fun signUp(
-        @RequestBody request: SignUp.Request,
-    ): ResponseEntity<Unit>
+    fun signUp(request: SignUp.Request): ResponseEntity<Unit>
 
     @SecurityRequirements
     @Operation(summary = "로그인", description = "로그인 API")
@@ -72,9 +89,7 @@ interface AccountControllerSpecification {
             ),
         ],
     )
-    fun signIn(
-        @RequestBody request: SignIn.Request,
-    ): ResponseEntity<SignIn.Response>
+    fun signIn(request: SignIn.Request): ResponseEntity<SignIn.Response>
 
     @SecurityRequirements
     @Operation(
