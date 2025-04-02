@@ -10,4 +10,4 @@ create table account
     last_sign_in datetime(6)                         not null,
     created_at   datetime(6)                         not null,
     updated_at   datetime(6)                         not null
-) engine = InnoDB;
+);
