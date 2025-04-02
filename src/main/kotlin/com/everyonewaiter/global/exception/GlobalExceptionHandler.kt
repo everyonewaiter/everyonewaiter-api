@@ -1,5 +1,6 @@
 package com.everyonewaiter.global.exception
 
+import com.everyonewaiter.global.extension.xRequestId
 import feign.FeignException
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
@@ -176,7 +177,7 @@ internal class GlobalExceptionHandler {
         val method = request.method
         val uri = request.requestURI
         val exceptionName = exception.javaClass.simpleName
-        logger.info { "[${errorCode.name}] [$method $uri] [$exceptionName ${errorCode.status}]: $message" }
+        logger.info { "[${errorCode.name}] [$method $uri] [${request.xRequestId}] [$exceptionName ${errorCode.status}]: $message" }
     }
 
     private fun logWarn(
@@ -188,7 +189,7 @@ internal class GlobalExceptionHandler {
         val method = request.method
         val uri = request.requestURI
         val exceptionName = exception.javaClass.simpleName
-        logger.warn { "[${errorCode.name}] [$method $uri] [$exceptionName ${errorCode.status}]: $message" }
+        logger.warn { "[${errorCode.name}] [$method $uri] [${request.xRequestId}] [$exceptionName ${errorCode.status}]: $message" }
     }
 
     private fun logError(
@@ -199,6 +200,6 @@ internal class GlobalExceptionHandler {
         val uri = request.requestURI
         val status = HttpStatus.INTERNAL_SERVER_ERROR
         val exceptionName = exception.javaClass.simpleName
-        logger.error(exception) { "[$method $uri] [$exceptionName $status]: ${exception.message}" }
+        logger.error(exception) { "[$method $uri] [${request.xRequestId}] [$exceptionName $status]: ${exception.message}" }
     }
 }
