@@ -15,7 +15,7 @@ data class Account(
     @Column("account_id")
     override var id: Long = 0L,
     override val createdAt: Instant = Instant.now(),
-    override val updatedAt: Instant = createdAt,
+    override var updatedAt: Instant = createdAt,
     val email: String,
     var password: String,
     var phoneNumber: String,
