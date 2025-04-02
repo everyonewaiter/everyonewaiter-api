@@ -76,6 +76,7 @@ interface AccountControllerSpecification {
         @RequestBody request: SignIn.Request,
     ): ResponseEntity<SignIn.Response>
 
+    @SecurityRequirements
     @Operation(
         summary = "휴대폰 인증 번호 알림톡 발송",
         description = "휴대폰 인증 번호 알림톡 발송 요청 API<br/><br/>" +
@@ -98,6 +99,7 @@ interface AccountControllerSpecification {
     )
     fun sendAuthCode(request: SendAuthCode.Request): ResponseEntity<Unit>
 
+    @SecurityRequirements
     @Operation(
         summary = "휴대폰 인증",
         description = "휴대폰 번호 인증 API<br/><br/>" +
@@ -123,6 +125,7 @@ interface AccountControllerSpecification {
     )
     fun verifyAuthCode(request: VerifyAuthCode.Request): ResponseEntity<Unit>
 
+    @SecurityRequirements
     @Operation(
         summary = "이메일 인증 확인 메일 발송",
         description = "이메일 인증 확인 메일 발송 요청 API<br/><br/>" +
@@ -145,6 +148,7 @@ interface AccountControllerSpecification {
     )
     fun sendAuthMail(request: SendAuthMail.Request): ResponseEntity<Unit>
 
+    @SecurityRequirements
     @Operation(summary = "이메일 인증", description = "이메일 인증 API")
     @ApiResponse(responseCode = "204", description = "이메일 인증 성공")
     @ApiErrorResponses(
