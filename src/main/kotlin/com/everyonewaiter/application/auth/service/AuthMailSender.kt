@@ -38,7 +38,7 @@ class AuthMailSender(
 
     fun sendMail(email: String) {
         val baseUrl = allowClientConfiguration.baseUrl
-        val accessToken = jwtProvider.generate(JwtPayload(email, "auth-mail"), ONE_DAY_MILLISECONDS)
+        val accessToken = jwtProvider.generate(JwtPayload(0L, email), ONE_DAY_MILLISECONDS)
         val authUrl = "$baseUrl/auth/mail?email=$email&accessToken=$accessToken"
         val content = mailTemplateReader.read("mail/email-authentication", mapOf("authenticationUrl" to authUrl))
         mailClient

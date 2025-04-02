@@ -7,6 +7,6 @@ package com.everyonewaiter.common.jwt
  * @property [subject] JWT 주체
  */
 data class JwtPayload(
-    val id: String,
+    val id: Long,
     val subject: String,
 )

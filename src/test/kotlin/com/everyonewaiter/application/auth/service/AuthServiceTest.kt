@@ -1,6 +1,7 @@
 package com.everyonewaiter.application.auth.service
 
 import com.everyonewaiter.application.auth.dto.VerifyAuthCode
+import com.everyonewaiter.common.jwt.JwtPayload
 import com.everyonewaiter.common.jwt.JwtProvider
 import com.everyonewaiter.domain.auth.entity.AuthAttempt
 import com.everyonewaiter.domain.auth.entity.AuthCode
@@ -143,6 +144,33 @@ class AuthServiceTest :
                 every { applicationEventPublisher.publishEvent(any(AuthMailSendEvent::class)) } just runs
                 authService.sendAuthMail("admin@everyonewaiter.com")
                 verify { applicationEventPublisher.publishEvent(any(AuthMailSendEvent::class)) }
+            }
+        }
+
+        context("verifyAuthMail") {
+            val accessToken = "<ACCESS_TOKEN>"
+
+            test("이메일 인증 토큰 검증에 성공하면 이메일 주소를 반환한다.") {
+                val subject = "admin@everyonewaiter.com"
+                val payload = JwtPayload(0L, subject)
+                every { jwtProvider.decode(accessToken) } returns Result.success(payload)
+                val actual = authService.verifyAuthMail(accessToken)
+                actual shouldBe subject
+            }
+
+            test("토큰 검증에 실패하면 예외가 발생한다.") {
+                every { jwtProvider.decode(accessToken) } returns Result.failure(IllegalArgumentException("Invalid Token"))
+                shouldThrow<BusinessException> {
+                    authService.verifyAuthMail(accessToken)
+                }.errorCode shouldBe ErrorCode.EXPIRED_VERIFICATION_EMAIL
+            }
+
+            test("이메일 인증 전용 토큰이 아니라면 예외가 발생한다.") {
+                val payload = JwtPayload(1L, "admin@everyonewaiter.com")
+                every { jwtProvider.decode(accessToken) } returns Result.success(payload)
+                shouldThrow<BusinessException> {
+                    authService.verifyAuthMail(accessToken)
+                }.errorCode shouldBe ErrorCode.EXPIRED_VERIFICATION_EMAIL
             }
         }
     })

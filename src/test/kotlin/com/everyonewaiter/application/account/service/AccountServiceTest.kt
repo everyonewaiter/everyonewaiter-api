@@ -2,6 +2,7 @@ package com.everyonewaiter.application.account.service
 
 import com.everyonewaiter.application.account.dto.SignIn
 import com.everyonewaiter.application.account.dto.SignUp
+import com.everyonewaiter.common.tsid.Tsid
 import com.everyonewaiter.domain.account.entity.Account
 import com.everyonewaiter.domain.account.entity.AccountStatus
 import com.everyonewaiter.domain.account.repository.AccountRepository
@@ -142,6 +143,40 @@ class AccountServiceTest :
                 shouldThrow<BusinessException> {
                     accountService.signIn(request)
                 }.errorCode shouldBe ErrorCode.FAILED_SIGN_IN
+            }
+        }
+
+        context("activate") {
+            val account = Account(
+                id = Tsid.nextLong(),
+                email = "admin@everyonewaiter.com",
+                password = "@password1",
+                phoneNumber = "01044591812",
+            )
+
+            test("계정을 활성화 상태로 변경한다.") {
+                every { accountRepository.findByEmail(account.email) } returns account
+                every { accountRepository.save(account) } returns account
+                accountService.activate(account.email)
+                account.status shouldBe AccountStatus.ACTIVE
+                verify { accountRepository.save(account) }
+            }
+
+            test("이메일로 계정을 찾을 수 없다면 예외가 발생한다.") {
+                val copied = account.copy(status = AccountStatus.INACTIVE)
+                every { accountRepository.findByEmail(copied.email) } returns null
+                shouldThrow<BusinessException> {
+                    accountService.activate(copied.email)
+                }.errorCode shouldBe ErrorCode.ACCOUNT_NOT_FOUND
+                copied.status shouldBe AccountStatus.INACTIVE
+            }
+
+            test("계정이 이미 활성화 상태라면 예외가 발생한다.") {
+                val copied = account.copy(status = AccountStatus.ACTIVE)
+                every { accountRepository.findByEmail(copied.email) } returns copied
+                shouldThrow<BusinessException> {
+                    accountService.activate(copied.email)
+                }.errorCode shouldBe ErrorCode.ALREADY_VERIFIED_EMAIL
             }
         }
     })

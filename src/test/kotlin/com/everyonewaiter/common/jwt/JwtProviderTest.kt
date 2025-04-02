@@ -19,7 +19,7 @@ class JwtProviderTest :
         context("generate") {
             test("토큰을 생성하고 생성한 토큰을 불러올 수 있다.") {
                 val payload = JwtPayload(
-                    id = "123456789",
+                    id = 123456789,
                     subject = "admin@everyonewaiter.com",
                 )
                 val token = jwtProvider.generate(payload)
@@ -32,7 +32,7 @@ class JwtProviderTest :
         context("decode") {
             test("유효하지 않은 토큰을 불러오면 예외가 발생한다.") {
                 val payload = JwtPayload(
-                    id = "123456789",
+                    id = 123456789,
                     subject = "admin@everyonewaiter.com",
                 )
                 val token = jwtProvider.generate(payload)

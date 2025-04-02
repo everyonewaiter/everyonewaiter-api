@@ -1,6 +1,9 @@
 package com.everyonewaiter.domain.account.entity
 
 import com.everyonewaiter.domain.account.event.AccountCreateEvent
+import com.everyonewaiter.global.exception.BusinessException
+import com.everyonewaiter.global.exception.ErrorCode
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.date.shouldBeAfter
@@ -27,6 +30,26 @@ class AccountTest :
                 val beforeSignIn = account.lastSignIn
                 account.signIn()
                 account.lastSignIn shouldBeAfter beforeSignIn
+            }
+        }
+
+        context("activate") {
+            val account = Account(
+                email = "admin@everyonewaiter.com",
+                password = "@password1",
+                phoneNumber = "01044591812",
+            )
+
+            test("계정의 상태가 비활성이라면 계정의 상태를 활성으로 변경한다.") {
+                account.activate()
+                account.status shouldBe AccountStatus.ACTIVE
+            }
+
+            test("계정의 상태가 비활성이 아닌 경우 예외가 발생한다.") {
+                val copied = account.copy(status = AccountStatus.DELETE)
+                shouldThrow<BusinessException> {
+                    copied.activate()
+                }.errorCode shouldBe ErrorCode.ALREADY_VERIFIED_EMAIL
             }
         }
     })

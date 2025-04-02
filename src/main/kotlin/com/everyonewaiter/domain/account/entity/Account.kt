@@ -2,6 +2,8 @@ package com.everyonewaiter.domain.account.entity
 
 import com.everyonewaiter.domain.account.event.AccountCreateEvent
 import com.everyonewaiter.global.entity.AggregateRootEntity
+import com.everyonewaiter.global.exception.ErrorCode
+import com.everyonewaiter.global.extension.checkOrThrow
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
@@ -29,6 +31,11 @@ data class Account(
 
     fun signIn() {
         lastSignIn = Instant.now()
+    }
+
+    fun activate() {
+        checkOrThrow(isInactive, ErrorCode.ALREADY_VERIFIED_EMAIL)
+        status = AccountStatus.ACTIVE
     }
 
     companion object {

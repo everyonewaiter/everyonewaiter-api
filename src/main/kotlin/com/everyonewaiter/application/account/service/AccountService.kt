@@ -46,4 +46,12 @@ class AccountService(
         account.signIn()
         return accountRepository.save(account).id
     }
+
+    @Transactional
+    fun activate(email: String) {
+        val account = accountRepository.findByEmail(email)
+        checkOrThrow(account != null, ErrorCode.ACCOUNT_NOT_FOUND)
+        account.activate()
+        accountRepository.save(account)
+    }
 }

@@ -12,6 +12,7 @@ import com.everyonewaiter.domain.auth.event.AuthMailSendEvent
 import com.everyonewaiter.domain.auth.repository.AuthAttemptRepository
 import com.everyonewaiter.domain.auth.repository.AuthCodeRepository
 import com.everyonewaiter.domain.auth.repository.AuthSuccessRepository
+import com.everyonewaiter.global.exception.BusinessException
 import com.everyonewaiter.global.exception.ErrorCode
 import com.everyonewaiter.global.extension.checkOrThrow
 import org.springframework.context.ApplicationEventPublisher
@@ -47,7 +48,7 @@ class AuthService(
     fun generateAccessTokenBySignIn(
         accountId: Long,
         email: String,
-    ): String = jwtProvider.generate(JwtPayload(accountId.toString(), email))
+    ): String = jwtProvider.generate(JwtPayload(accountId, email))
 
     fun generateCode(
         phoneNumber: String,
@@ -68,5 +69,13 @@ class AuthService(
 
     fun sendAuthMail(email: String) {
         applicationEventPublisher.publishEvent(AuthMailSendEvent(email))
+    }
+
+    fun verifyAuthMail(accessToken: String): String {
+        val payload = jwtProvider
+            .decode(accessToken)
+            .getOrNull() ?: throw BusinessException(ErrorCode.EXPIRED_VERIFICATION_EMAIL)
+        checkOrThrow(payload.id == 0L, ErrorCode.EXPIRED_VERIFICATION_EMAIL) // 이메일 인증 토큰의 id는 0L
+        return payload.subject
     }
 }

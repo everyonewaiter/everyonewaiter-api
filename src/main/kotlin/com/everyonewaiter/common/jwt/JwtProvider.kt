@@ -35,7 +35,7 @@ class JwtProvider(
         val expiration = Date(now.time + expirationMilliseconds)
         return Jwts
             .builder()
-            .id(payload.id)
+            .id(payload.id.toString())
             .subject(payload.subject)
             .issuedAt(now)
             .expiration(expiration)
@@ -58,6 +58,6 @@ class JwtProvider(
                 .build()
                 .parseSignedClaims(token)
                 .payload
-            JwtPayload(payload.id, payload.subject)
+            JwtPayload(payload.id.toLong(), payload.subject)
         }
 }
