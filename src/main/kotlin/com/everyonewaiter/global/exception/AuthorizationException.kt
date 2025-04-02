@@ -1,5 +1,5 @@
 package com.everyonewaiter.global.exception
 
-class AuthenticationException(
+class AuthorizationException(
     val errorCode: ErrorCode,
 ) : RuntimeException()

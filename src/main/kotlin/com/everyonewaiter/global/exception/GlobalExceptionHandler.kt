@@ -113,25 +113,25 @@ internal class GlobalExceptionHandler {
     ): ResponseEntity<ErrorResponse> {
         val errorCode = exception.errorCode
         if (errorCode == ErrorCode.UNAUTHORIZED) {
-            logInfo(request, errorCode, exception.message, exception)
+            logInfo(request, errorCode, errorCode.message, exception)
         } else {
-            logWarn(request, errorCode, exception.message, exception)
+            logWarn(request, errorCode, errorCode.message, exception)
         }
-        return ResponseEntity.status(errorCode.status).body(ErrorResponse(errorCode, exception.message))
+        return ResponseEntity.status(errorCode.status).body(ErrorResponse(errorCode, errorCode.message))
     }
 
     @ExceptionHandler
-    fun handleAccessDeniedException(
+    fun handleAuthorizationExceptionException(
         request: HttpServletRequest,
-        exception: AccessDeniedException,
+        exception: AuthorizationException,
     ): ResponseEntity<ErrorResponse> {
         val errorCode = exception.errorCode
         if (errorCode == ErrorCode.FORBIDDEN) {
-            logInfo(request, errorCode, exception.message, exception)
+            logInfo(request, errorCode, errorCode.message, exception)
         } else {
-            logWarn(request, errorCode, exception.message, exception)
+            logWarn(request, errorCode, errorCode.message, exception)
         }
-        return ResponseEntity.status(errorCode.status).body(ErrorResponse(errorCode, exception.message))
+        return ResponseEntity.status(errorCode.status).body(ErrorResponse(errorCode, errorCode.message))
     }
 
     @ExceptionHandler
