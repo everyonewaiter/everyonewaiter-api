@@ -20,14 +20,14 @@ data class Account(
     var password: String,
     var phoneNumber: String,
     var permission: AccountPermission = AccountPermission.USER,
-    var status: AccountStatus = AccountStatus.INACTIVE,
+    var state: AccountState = AccountState.INACTIVE,
     var lastSignIn: Instant = Instant.ofEpochMilli(0L),
 ) : AggregateRootEntity() {
     val isInactive: Boolean
-        get() = status == AccountStatus.INACTIVE
+        get() = state == AccountState.INACTIVE
 
     val isActive: Boolean
-        get() = status == AccountStatus.ACTIVE
+        get() = state == AccountState.ACTIVE
 
     fun signIn() {
         lastSignIn = Instant.now()
@@ -35,7 +35,7 @@ data class Account(
 
     fun activate() {
         checkOrThrow(isInactive, ErrorCode.ALREADY_VERIFIED_EMAIL)
-        status = AccountStatus.ACTIVE
+        state = AccountState.ACTIVE
     }
 
     companion object {

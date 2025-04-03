@@ -1,6 +1,6 @@
 package com.everyonewaiter.domain.account.entity
 
-enum class AccountStatus {
+enum class AccountState {
     INACTIVE,
     ACTIVE,
     DELETE,
