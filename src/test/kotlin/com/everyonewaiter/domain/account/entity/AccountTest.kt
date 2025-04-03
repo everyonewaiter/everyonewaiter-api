@@ -42,11 +42,11 @@ class AccountTest :
 
             test("계정의 상태가 비활성이라면 계정의 상태를 활성으로 변경한다.") {
                 account.activate()
-                account.status shouldBe AccountStatus.ACTIVE
+                account.state shouldBe AccountState.ACTIVE
             }
 
             test("계정의 상태가 비활성이 아닌 경우 예외가 발생한다.") {
-                val copied = account.copy(status = AccountStatus.DELETE)
+                val copied = account.copy(state = AccountState.DELETE)
                 shouldThrow<BusinessException> {
                     copied.activate()
                 }.errorCode shouldBe ErrorCode.ALREADY_VERIFIED_EMAIL
