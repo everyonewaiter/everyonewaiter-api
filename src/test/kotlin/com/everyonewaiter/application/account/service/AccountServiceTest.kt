@@ -4,7 +4,7 @@ import com.everyonewaiter.application.account.dto.SignIn
 import com.everyonewaiter.application.account.dto.SignUp
 import com.everyonewaiter.common.tsid.Tsid
 import com.everyonewaiter.domain.account.entity.Account
-import com.everyonewaiter.domain.account.entity.AccountStatus
+import com.everyonewaiter.domain.account.entity.AccountState
 import com.everyonewaiter.domain.account.repository.AccountRepository
 import com.everyonewaiter.global.exception.BusinessException
 import com.everyonewaiter.global.exception.ErrorCode
@@ -79,7 +79,7 @@ class AccountServiceTest :
             }
 
             test("계정이 비활성 상태가 아니라면 예외가 발생한다.") {
-                val copied = account.copy(status = AccountStatus.ACTIVE)
+                val copied = account.copy(state = AccountState.ACTIVE)
                 every { accountRepository.findByEmail(copied.email) } returns copied
                 shouldThrow<BusinessException> {
                     accountService.checkCanSendAuthMail(copied.email)
@@ -113,7 +113,7 @@ class AccountServiceTest :
 
             test("로그인하면 마지막 로그인 시간이 갱신된다.") {
                 val lastSignIn = Instant.ofEpochMilli(0)
-                val copied = account.copy(status = AccountStatus.ACTIVE, lastSignIn = lastSignIn)
+                val copied = account.copy(state = AccountState.ACTIVE, lastSignIn = lastSignIn)
                 every { accountRepository.findByEmail(request.email) } returns copied
                 every { passwordEncoder.matches(request.password, copied.password) } returns true
                 every { accountRepository.save(copied) } returns copied
@@ -137,7 +137,7 @@ class AccountServiceTest :
             }
 
             test("비밀번호가 일치하지 않으면 예외가 발생한다.") {
-                val copied = account.copy(status = AccountStatus.ACTIVE)
+                val copied = account.copy(state = AccountState.ACTIVE)
                 every { accountRepository.findByEmail(request.email) } returns copied
                 every { passwordEncoder.matches(request.password, account.password) } returns false
                 shouldThrow<BusinessException> {
@@ -158,21 +158,21 @@ class AccountServiceTest :
                 every { accountRepository.findByEmail(account.email) } returns account
                 every { accountRepository.save(account) } returns account
                 accountService.activate(account.email)
-                account.status shouldBe AccountStatus.ACTIVE
+                account.state shouldBe AccountState.ACTIVE
                 verify { accountRepository.save(account) }
             }
 
             test("이메일로 계정을 찾을 수 없다면 예외가 발생한다.") {
-                val copied = account.copy(status = AccountStatus.INACTIVE)
+                val copied = account.copy(state = AccountState.INACTIVE)
                 every { accountRepository.findByEmail(copied.email) } returns null
                 shouldThrow<BusinessException> {
                     accountService.activate(copied.email)
                 }.errorCode shouldBe ErrorCode.ACCOUNT_NOT_FOUND
-                copied.status shouldBe AccountStatus.INACTIVE
+                copied.state shouldBe AccountState.INACTIVE
             }
 
             test("계정이 이미 활성화 상태라면 예외가 발생한다.") {
-                val copied = account.copy(status = AccountStatus.ACTIVE)
+                val copied = account.copy(state = AccountState.ACTIVE)
                 every { accountRepository.findByEmail(copied.email) } returns copied
                 shouldThrow<BusinessException> {
                     accountService.activate(copied.email)
