@@ -12,19 +12,33 @@ create table account
     updated_at   datetime(6)                         not null
 );
 
+drop table if exists image;
+create table image
+(
+    image_id              bigint primary key,
+    account_id            bigint                              not null,
+    name                  varchar(100)                        not null,
+    original_name         varchar(255)                        not null,
+    state                 enum ('INACTIVE','ACTIVE','DELETE') not null,
+    access_url            varchar(500)                        not null,
+    access_url_expiration date                                not null,
+    created_at            datetime(6)                         not null,
+    updated_at            datetime(6)                         not null
+);
+
 drop table if exists store_registration;
 create table store_registration
 (
-    registration_id BIGINT PRIMARY KEY,
-    account_id      BIGINT                                         NOT NULL,
-    image_id        BIGINT                                         NOT NULL,
-    name            VARCHAR(30)                                    NOT NULL,
-    ceo_name        VARCHAR(20)                                    NOT NULL,
-    address         VARCHAR(100)                                   NOT NULL,
-    landline        VARCHAR(20)                                    NOT NULL,
-    license         VARCHAR(20)                                    NOT NULL,
-    status          ENUM ('APPLY', 'REAPPLY', 'APPROVE', 'REJECT') NOT NULL,
-    reason          VARCHAR(255)                                   NOT NULL,
-    created_at      DATETIME(6)                                    NOT NULL,
-    updated_at      DATETIME(6)                                    NOT NULL
-) ENGINE = InnoDB;
+    registration_id bigint primary key,
+    account_id      bigint                                      not null,
+    image_id        bigint                                      not null,
+    name            varchar(30)                                 not null,
+    ceo_name        varchar(20)                                 not null,
+    address         varchar(100)                                not null,
+    landline        varchar(20)                                 not null,
+    license         varchar(20)                                 not null,
+    status          enum ('APPLY','REAPPLY','APPROVE','REJECT') not null,
+    reason          varchar(255)                                not null,
+    created_at      datetime(6)                                 not null,
+    updated_at      datetime(6)                                 not null
+);
