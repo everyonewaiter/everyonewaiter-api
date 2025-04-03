@@ -1,13 +1,14 @@
 package com.everyonewaiter.infrastructure.image
 
-import java.io.File
+import org.springframework.web.multipart.MultipartFile
 import java.util.Date
+import java.util.concurrent.CompletableFuture
 
 interface ImageClient {
     fun read(
         name: String,
         accessUrlExpiration: Date,
-    ): String
+    ): CompletableFuture<String>
 
-    fun upload(image: File)
+    fun upload(file: MultipartFile)
 }

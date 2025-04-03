@@ -3,6 +3,7 @@ package com.everyonewaiter.common.file.extension
 import org.springframework.http.MediaType
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
 
 /**
  * [MultipartFile]이 PDF 파일인지 확인합니다.
@@ -43,3 +44,10 @@ val MultipartFile.extensionOrThrow: String
  */
 val MultipartFile.hasExtension: Boolean
     get() = StringUtils.getFilenameExtension(originalFilename)?.isNotBlank() ?: false
+
+val MultipartFile.toFile: File
+    get() {
+        val file = File(originalFilename ?: name)
+        transferTo(file)
+        return file
+    }
