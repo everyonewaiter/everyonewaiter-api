@@ -31,4 +31,9 @@ enum class ErrorCode(
     FAILED_SIGN_IN(HttpStatus.BAD_REQUEST, "이메일 및 비밀번호를 확인해 주세요."),
     UNMATCHED_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "인증 번호가 일치하지 않아요. 입력하신 인증 번호를 확인해 주세요."),
     ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "계정을 찾지 못했어요."),
+
+    // FILE
+    ALLOW_IMAGE_AND_PDF_FILE(HttpStatus.BAD_REQUEST, "이미지 또는 PDF 파일만 업로드할 수 있어요."),
+    FAILED_CONVERT_PDF_TO_IMAGE(HttpStatus.BAD_REQUEST, "PDF 파일을 이미지로 변환하는 데 실패했어요. 잠시 후 다시 시도해 주세요."),
+    FAILED_CONVERT_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "이미지 포맷을 변환하는 데 실패했어요. 잠시 후 다시 시도해 주세요."),
 }
