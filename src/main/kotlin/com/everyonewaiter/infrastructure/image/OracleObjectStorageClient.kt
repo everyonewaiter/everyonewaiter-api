@@ -1,5 +1,6 @@
 package com.everyonewaiter.infrastructure.image
 
+import com.everyonewaiter.common.file.extension.toFile
 import com.oracle.bmc.ConfigFileReader
 import com.oracle.bmc.Region
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider
@@ -13,22 +14,26 @@ import com.oracle.bmc.objectstorage.transfer.UploadConfiguration
 import com.oracle.bmc.objectstorage.transfer.UploadManager
 import com.oracle.bmc.objectstorage.transfer.UploadManager.UploadRequest
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
-import java.io.File
+import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.Date
+import java.util.concurrent.CompletableFuture
 
 @Component
 class OracleObjectStorageClient(
     @Value("\${oracle.object.storage.namespace}") val namespace: String,
     @Value("\${oracle.object.storage.bucket-name}") val bucketName: String,
 ) : ImageClient {
+    @Async
     override fun read(
         name: String,
         accessUrlExpiration: Date,
-    ): String {
+    ): CompletableFuture<String> {
+        val future = CompletableFuture<String>()
         initialize().use { client ->
             val details = builder()
                 .name("par-${DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm").format(Instant.now())}")
@@ -43,23 +48,27 @@ class OracleObjectStorageClient(
                 .createPreauthenticatedRequestDetails(details)
                 .build()
             val response = client.createPreauthenticatedRequest(request)
-            return response.preauthenticatedRequest.fullPath
+            future.complete(response.preauthenticatedRequest.fullPath)
+            return future
         }
     }
 
-    override fun upload(image: File) {
+    override fun upload(file: MultipartFile) {
+        val objectName = file.originalFilename ?: file.name
+        val contentType = file.contentType ?: "image/webp"
+        val convertedFile = file.toFile
         initialize().use { client ->
             val request = UploadRequest
-                .builder(image)
+                .builder(convertedFile)
                 .allowOverwrite(true)
                 .build(
                     PutObjectRequest
                         .builder()
                         .namespaceName(namespace)
                         .bucketName(bucketName)
-                        .objectName(image.name)
-                        .contentType("image/webp")
-                        .contentLength(image.length())
+                        .objectName(objectName)
+                        .contentType(contentType)
+                        .contentLength(convertedFile.length())
                         .cacheControl("max-age=86400")
                         .build(),
                 )
