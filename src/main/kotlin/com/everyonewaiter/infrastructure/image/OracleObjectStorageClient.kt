@@ -1,5 +1,6 @@
 package com.everyonewaiter.infrastructure.image
 
+import com.everyonewaiter.common.file.extension.deleteWithLog
 import com.everyonewaiter.common.file.extension.toFile
 import com.oracle.bmc.ConfigFileReader
 import com.oracle.bmc.Region
@@ -57,27 +58,31 @@ class OracleObjectStorageClient(
         val objectName = file.originalFilename ?: file.name
         val contentType = file.contentType ?: "image/webp"
         val convertedFile = file.toFile
-        initialize().use { client ->
-            val request = UploadRequest
-                .builder(convertedFile)
-                .allowOverwrite(true)
-                .build(
-                    PutObjectRequest
-                        .builder()
-                        .namespaceName(namespace)
-                        .bucketName(bucketName)
-                        .objectName(objectName)
-                        .contentType(contentType)
-                        .contentLength(convertedFile.length())
-                        .cacheControl("max-age=86400")
-                        .build(),
-                )
-            val configuration = UploadConfiguration
-                .builder()
-                .allowMultipartUploads(true)
-                .allowParallelUploads(true)
-                .build()
-            UploadManager(client, configuration).upload(request)
+        try {
+            initialize().use { client ->
+                val request = UploadRequest
+                    .builder(convertedFile)
+                    .allowOverwrite(true)
+                    .build(
+                        PutObjectRequest
+                            .builder()
+                            .namespaceName(namespace)
+                            .bucketName(bucketName)
+                            .objectName(objectName)
+                            .contentType(contentType)
+                            .contentLength(convertedFile.length())
+                            .cacheControl("max-age=86400")
+                            .build(),
+                    )
+                val configuration = UploadConfiguration
+                    .builder()
+                    .allowMultipartUploads(true)
+                    .allowParallelUploads(true)
+                    .build()
+                UploadManager(client, configuration).upload(request)
+            }
+        } finally {
+            convertedFile.deleteWithLog()
         }
     }
 
