@@ -42,6 +42,7 @@ val kotlinLoggingVersion: String by project
 val kotestVersion: String by project
 val kotestSpringExtensionVersion: String by project
 val mockkVersion: String by project
+val ociSdkVersion: String by project
 val pdfBoxVersion: String by project
 val scrimageVersion: String by project
 val springDataJdbcPlusVersion: String by project
@@ -69,6 +70,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     implementation("io.github.oshai:kotlin-logging-jvm:$kotlinLoggingVersion")
+    implementation("com.oracle.oci.sdk:oci-java-sdk-common:$ociSdkVersion")
+    implementation("com.oracle.oci.sdk:oci-java-sdk-objectstorage:$ociSdkVersion")
+    implementation("com.oracle.oci.sdk:oci-java-sdk-common-httpclient-jersey3:$ociSdkVersion")
     implementation("org.apache.pdfbox:pdfbox:$pdfBoxVersion")
     implementation("com.sksamuel.scrimage:scrimage-core:$scrimageVersion")
     implementation("com.sksamuel.scrimage:scrimage-webp:$scrimageVersion")
