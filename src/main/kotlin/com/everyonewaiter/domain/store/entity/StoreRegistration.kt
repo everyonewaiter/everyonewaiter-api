@@ -15,33 +15,33 @@ data class StoreRegistration(
     override val createdAt: Instant = Instant.now(),
     override var updatedAt: Instant = createdAt,
     val accountId: Long,
-    var imageId: Long,
     var name: String,
     var ceoName: String,
     var address: String,
     var landline: String,
     var license: String,
+    var image: String,
     var status: StoreRegistrationStatus = StoreRegistrationStatus.APPLY,
     var reason: String = "",
 ) : AggregateRootEntity() {
     companion object {
         fun create(
             accountId: Long,
-            imageId: Long,
             name: String,
             ceoName: String,
             address: String,
             landline: String,
             license: String,
+            image: String,
         ): StoreRegistration {
             val registration = StoreRegistration(
                 accountId = accountId,
-                imageId = imageId,
                 name = name,
                 ceoName = ceoName,
                 address = address,
                 landline = landline,
                 license = license,
+                image = image,
             )
             registration.registerEvent(StoreRegistrationApplyEvent(name))
             return registration
