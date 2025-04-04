@@ -5,6 +5,7 @@ import com.everyonewaiter.application.image.service.ImageService
 import com.everyonewaiter.application.store.dto.Apply
 import com.everyonewaiter.common.file.SimpleMultipartFile
 import com.everyonewaiter.common.tsid.Tsid
+import com.everyonewaiter.domain.store.entity.BusinessLicenseInformation
 import com.everyonewaiter.domain.store.entity.StoreRegistration
 import com.everyonewaiter.domain.store.repository.StoreRegistrationRepository
 import io.kotest.core.spec.style.FunSpec
@@ -35,12 +36,14 @@ class StoreRegistrationServiceTest :
             val registration = StoreRegistration(
                 id = Tsid.nextLong(),
                 accountId = accountId,
-                name = request.name,
-                ceoName = request.ceoName,
-                address = request.address,
-                landline = request.landline,
-                license = request.license,
-                image = "license/202501/abc.webp",
+                licenseInformation = BusinessLicenseInformation(
+                    name = request.name,
+                    ceoName = request.ceoName,
+                    address = request.address,
+                    landline = request.landline,
+                    license = request.license,
+                    image = "license/202501/abc.webp",
+                ),
             )
 
             test("매장 등록을 신청한다.") {
@@ -51,7 +54,7 @@ class StoreRegistrationServiceTest :
                             "license",
                         ),
                     )
-                } returns registration.image
+                } returns registration.licenseInformation.image
                 every { registrationRepository.save(any()) } returns registration
                 val actual = registrationService.apply(accountId, request)
                 actual shouldBe registration.id
