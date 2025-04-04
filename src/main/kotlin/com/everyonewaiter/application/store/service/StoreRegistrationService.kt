@@ -3,6 +3,7 @@ package com.everyonewaiter.application.store.service
 import com.everyonewaiter.application.image.dto.ImageUpload
 import com.everyonewaiter.application.image.service.ImageService
 import com.everyonewaiter.application.store.dto.Apply
+import com.everyonewaiter.domain.store.entity.BusinessLicenseInformation
 import com.everyonewaiter.domain.store.entity.StoreRegistration
 import com.everyonewaiter.domain.store.repository.StoreRegistrationRepository
 import org.springframework.stereotype.Service
@@ -21,12 +22,14 @@ class StoreRegistrationService(
         val image = imageService.upload(ImageUpload.Request(request.file, "license"))
         val registration = StoreRegistration.create(
             accountId = accountId,
-            name = request.name,
-            ceoName = request.ceoName,
-            address = request.address,
-            landline = request.landline,
-            license = request.license,
-            image = image,
+            licenseInformation = BusinessLicenseInformation(
+                name = request.name,
+                ceoName = request.ceoName,
+                address = request.address,
+                landline = request.landline,
+                license = request.license,
+                image = image,
+            ),
         )
         return registrationRepository.save(registration).id
     }
