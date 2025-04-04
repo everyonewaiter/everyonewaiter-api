@@ -15,8 +15,8 @@ import java.io.IOException
 class ImageFormatConverter {
     /**
      * 이미지를 WebP 포맷으로 변환합니다.
-     * 이미지의 이름은 랜덤으로 생성되며 형식은 `{prefix}-{yyyyMM}-{TSID}.webp`입니다.
-     * 접두사를 지정하지 않으면 이미지의 이름은 `{yyyyMM}-{TSID}.webp` 형식으로 생성됩니다.
+     * 이미지의 이름은 랜덤으로 생성되며 형식은 `{prefix}/{yyyyMM}/{TSID}.webp`입니다.
+     * 접두사를 지정하지 않으면 이미지의 이름은 `{yyyyMM}/{TSID}.webp` 형식으로 생성됩니다.
      *
      * @param [image] 변환할 이미지 파일
      * @param [prefix] 변환된 이미지 파일의 이름에 붙일 접두사

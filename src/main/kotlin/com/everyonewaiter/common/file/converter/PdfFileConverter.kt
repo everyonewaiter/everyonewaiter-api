@@ -18,8 +18,8 @@ import java.io.IOException
 class PdfFileConverter {
     /**
      * PDF 파일의 첫 페이지를 이미지로 변환합니다.
-     * 이미지의 이름은 랜덤으로 생성되며 형식은 `{prefix}-{yyyyMM}-{TSID}.{format}`입니다.
-     * 접두사를 지정하지 않으면 이미지의 이름은 `{yyyyMM}-{TSID}.{format}` 형식으로 생성됩니다.
+     * 이미지의 이름은 랜덤으로 생성되며 형식은 `{prefix}/{yyyyMM}/{TSID}.{format}`입니다.
+     * 접두사를 지정하지 않으면 이미지의 이름은 `{yyyyMM}/{TSID}.{format}` 형식으로 생성됩니다.
      *
      * @param [file] 변환할 PDF 파일
      * @param [prefix] 변환된 이미지 파일의 이름에 붙일 접두사
