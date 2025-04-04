@@ -48,6 +48,9 @@ naver.sens.secret-key=<SECRET_KEY>
 naver.sens.service-id=<SERVICE_ID>
 naver.sens.channel-id=<CHANNEL_ID>
 
+# EVENT NOTIFICATION
+event.discord.webhook=<DISCORD_WEBHOOK_URI>
+
 # ORACLE OBJECT STORAGE
 oracle.object.storage.namespace=<NAMESPACE>
 oracle.object.storage.bucket-name=<BUCKET_NAME>
