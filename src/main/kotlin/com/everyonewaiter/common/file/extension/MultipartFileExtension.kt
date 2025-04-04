@@ -47,7 +47,7 @@ val MultipartFile.hasExtension: Boolean
 
 val MultipartFile.toFile: File
     get() {
-        val file = File(originalFilename ?: name)
+        val file = File(name)
         transferTo(file)
         return file
     }
