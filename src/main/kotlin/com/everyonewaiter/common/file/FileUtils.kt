@@ -12,16 +12,16 @@ private val logger = KotlinLogging.logger {}
 /**
  * 파일의 이름을 TSID를 기반으로 생성합니다.
  * 생성된 파일 이름에는 확장자를 포함하고 있지 않습니다.
- * [prefix]가 있는 경우 `{prefix}-{yyyyMM}-{TSID}` 형식입니다.
- * [prefix]가 null 또는 공백인 경우 `{yyyyMM}-{TSID}` 형식입니다.
+ * [prefix]가 있는 경우 `{prefix}/{yyyyMM}/{TSID}` 형식입니다.
+ * [prefix]가 null 또는 공백인 경우 `{yyyyMM}/{TSID}` 형식입니다.
  *
  * @param [prefix] 파일 이름에 붙일 접두사
  * @return 생성된 파일 이름
  */
 fun generateTsidFileName(prefix: String? = null): String {
-    val formattedPrefix = if (prefix.isNullOrBlank()) "" else "$prefix-"
+    val formattedPrefix = if (prefix.isNullOrBlank()) "" else "$prefix/"
     val formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"))
-    return "$formattedPrefix$formattedDate-${Tsid.nextString()}"
+    return "$formattedPrefix$formattedDate/${Tsid.nextString()}"
 }
 
 /**

@@ -14,13 +14,13 @@ class FileUtilsTest :
                 val prefix = "image"
                 val formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"))
                 val fileName = generateTsidFileName(prefix)
-                fileName shouldStartWith "$prefix-$formattedDate-"
+                fileName shouldStartWith "$prefix/$formattedDate/"
             }
 
             test("접두사가 없는 경우 접두사를 포함하지 않은 TSID 파일 이름을 생성한다.") {
                 val formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"))
                 val fileName = generateTsidFileName()
-                fileName shouldStartWith "$formattedDate-"
+                fileName shouldStartWith "$formattedDate/"
             }
         }
 

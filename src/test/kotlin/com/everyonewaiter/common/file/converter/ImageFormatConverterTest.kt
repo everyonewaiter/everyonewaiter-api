@@ -27,14 +27,14 @@ class ImageFormatConverterTest :
                 val actual = imageFormatConverter.convertToWebp(imageFile, prefix)
                 actual.isSuccess shouldBe true
                 actual.getOrThrow().contentType shouldBe ImageFormat.WEBP.contentType
-                actual.getOrThrow().originalFilename shouldStartWith "$prefix-$formattedDate-"
+                actual.getOrThrow().originalFilename shouldStartWith "$prefix/$formattedDate/"
             }
 
             test("접두사 없이 이미지의 포맷을 WebP로 변환한다.") {
                 val actual = imageFormatConverter.convertToWebp(imageFile)
                 actual.isSuccess shouldBe true
                 actual.getOrThrow().contentType shouldBe ImageFormat.WEBP.contentType
-                actual.getOrThrow().originalFilename shouldStartWith "$formattedDate-"
+                actual.getOrThrow().originalFilename shouldStartWith "$formattedDate/"
             }
         }
     })
