@@ -7,8 +7,8 @@ data class DiscordWebhookPayload(
 data class DiscordEmbed(
     val title: String,
     val description: String,
-    val color: Int,
-    val fields: List<DiscordField>,
+    val color: Int = 0,
+    val fields: List<DiscordField> = listOf(),
 )
 
 data class DiscordField(
