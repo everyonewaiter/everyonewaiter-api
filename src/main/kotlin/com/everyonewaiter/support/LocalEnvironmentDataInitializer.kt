@@ -45,7 +45,7 @@ class LocalEnvironmentDataInitializer(
 
     private fun initAccounts() {
         val accountCount = jdbcAggregateOperations.count(Account::class.java)
-        if (accountCount > 0) return
+        if (accountCount > 1) return
         BulkInsertExecutor(
             threadCount = THREAD_COUNT,
             executorName = "Account",
