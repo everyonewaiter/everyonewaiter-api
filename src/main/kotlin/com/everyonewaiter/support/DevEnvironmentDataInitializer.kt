@@ -14,9 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.transaction.support.TransactionTemplate
 
-@Profile("local")
+@Profile("dev")
 @Component
-class LocalEnvironmentDataInitializer(
+class DevEnvironmentDataInitializer(
     private val transactionTemplate: TransactionTemplate,
     private val jdbcAggregateOperations: JdbcAggregateOperations,
     private val passwordEncoder: PasswordEncoder,
@@ -95,8 +95,8 @@ class LocalEnvironmentDataInitializer(
         }
 
     private companion object {
-        private const val THREAD_COUNT = 10
-        private const val BULK_INSERT_SIZE = 1000
-        private const val EXECUTE_COUNT = 10000
+        private const val THREAD_COUNT = 5
+        private const val BULK_INSERT_SIZE = 500
+        private const val EXECUTE_COUNT = 2000
     }
 }
