@@ -66,4 +66,29 @@ class StoreRegistrationRepositoryImplTest(
                 actual.first().licenseInformation.name shouldBe "모웨 1호점"
             }
         }
+
+        context("findOneOrThrow") {
+            test("매장 등록 신청 내역을 조회한다.") {
+                val registrationId = 1L
+                val actual = registrationRepository.findOneOrThrow(registrationId, accountId)
+                actual.id shouldBe registrationId
+                actual.accountId shouldBe accountId
+                actual.licenseInformation.name shouldBe "모웨 1호점"
+            }
+
+            test("매장 등록 신청 ID로 조회하지 못하면 예외가 발생한다.") {
+                val registrationId = 100L
+                shouldThrow<BusinessException> {
+                    registrationRepository.findOneOrThrow(registrationId, accountId)
+                }.errorCode shouldBe ErrorCode.NOT_FOUND_STORE_REGISTRATION
+            }
+
+            test("계정 ID로 조회하지 못하면 예외가 발생한다.") {
+                val registrationId = 1L
+                val invalidAccountId = 100L
+                shouldThrow<BusinessException> {
+                    registrationRepository.findOneOrThrow(registrationId, invalidAccountId)
+                }.errorCode shouldBe ErrorCode.NOT_FOUND_STORE_REGISTRATION
+            }
+        }
     })

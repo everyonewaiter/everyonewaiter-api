@@ -13,5 +13,11 @@ interface StoreRegistrationRepository {
         limit: Long,
         offset: Long,
     ): List<StoreRegistration>
+
+    fun findOneOrThrow(
+        registrationId: Long,
+        accountId: Long,
+    ): StoreRegistration
+
     fun save(registration: StoreRegistration): StoreRegistration
 }

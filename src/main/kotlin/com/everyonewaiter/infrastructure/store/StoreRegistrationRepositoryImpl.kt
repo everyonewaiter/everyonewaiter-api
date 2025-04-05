@@ -39,5 +39,15 @@ class StoreRegistrationRepositoryImpl(
             .addValue("offset", offset)
         return find(sql.selectByAccountIdAndPaging(), parameterSource)
     }
+
+    override fun findOneOrThrow(
+        registrationId: Long,
+        accountId: Long,
+    ): StoreRegistration =
+        registrationJdbcRepository.findByIdAndAccountId(registrationId, accountId) ?: throw BusinessException(
+            ErrorCode.NOT_FOUND_STORE_REGISTRATION,
+            mapOf("registrationId" to registrationId, "accountId" to accountId),
+        )
+
     override fun save(registration: StoreRegistration): StoreRegistration = registrationJdbcRepository.save(registration)
 }
