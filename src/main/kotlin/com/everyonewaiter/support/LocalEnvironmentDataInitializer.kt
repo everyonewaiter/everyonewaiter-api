@@ -34,7 +34,6 @@ class LocalEnvironmentDataInitializer(
             ?: accountRepository
                 .save(
                     Account(
-                        id = Tsid.nextLong(),
                         email = "admin@everyonewaiter.com",
                         password = passwordEncoder.encode("@password1"),
                         phoneNumber = "01044591812",
