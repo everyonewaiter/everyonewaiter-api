@@ -64,6 +64,29 @@ class StoreRegistrationServiceTest :
                 verify { registrationRepository.save(any()) }
             }
         }
+
+        context("getRegistration") {
+            test("매장 등록 신청 내역을 조회한다.") {
+                val registrationId = 1L
+                val accountId = 1L
+                val registration = StoreRegistration(
+                    id = registrationId,
+                    accountId = accountId,
+                    licenseInformation = BusinessLicenseInformation(
+                        name = "홍길동식당",
+                        ceoName = "홍길동",
+                        address = "서울시 강남구",
+                        landline = "02-123-4567",
+                        license = "111-11-11111",
+                        image = "license/202501/abc.webp",
+                    ),
+                )
+                every { registrationRepository.findOneOrThrow(registrationId, accountId) } returns registration
+                val actual = registrationService.getRegistration(registrationId, accountId)
+                actual shouldBe Registration.Response.from(registration)
+            }
+        }
+
         context("getRegistrations") {
             test("매장 등록 신청 내역을 조회한다.") {
                 val accountId = 1L

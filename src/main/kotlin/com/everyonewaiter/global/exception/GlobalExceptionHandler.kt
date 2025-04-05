@@ -91,7 +91,11 @@ internal class GlobalExceptionHandler {
         exception: BusinessException,
     ): ResponseEntity<ErrorResponse> {
         val errorCode = exception.errorCode
-        logWarn(request, errorCode, errorCode.message, exception)
+        val logMessage = exception.resources
+            ?.entries
+            ?.joinToString(separator = ", ") { "${it.key}=${it.value}" }
+            ?.let { "${errorCode.message} $it" } ?: errorCode.message
+        logWarn(request, errorCode, logMessage, exception)
         return ResponseEntity.status(errorCode.status).body(ErrorResponse(errorCode, errorCode.message))
     }
 

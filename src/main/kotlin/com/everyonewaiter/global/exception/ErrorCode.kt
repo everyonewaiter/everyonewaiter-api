@@ -19,6 +19,15 @@ enum class ErrorCode(
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "요청하신 경로 '%s'는 '%s' 메서드를 지원하지 않아요."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 오류가 발생했어요. 문제 해결을 위해 관리자에게 문의를 남겨주세요."),
 
+    // FILE
+    ALLOW_IMAGE_AND_PDF_FILE(HttpStatus.BAD_REQUEST, "이미지 또는 PDF 파일만 업로드할 수 있어요."),
+    FAILED_CONVERT_PDF_TO_IMAGE(HttpStatus.BAD_REQUEST, "PDF 파일을 이미지로 변환하던 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요."),
+    FAILED_CONVERT_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "이미지 포맷 변환 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요."),
+    FAILED_UPLOAD_IMAGE(HttpStatus.BAD_REQUEST, "이미지 업로드에 실패했어요. 잠시 후 다시 시도해 주세요."),
+    NOT_FOUND_FILENAME(HttpStatus.BAD_REQUEST, "파일명을 찾지 못했어요. 파일명을 확인해 주세요."),
+    NOT_FOUND_EXTENSION(HttpStatus.BAD_REQUEST, "파일명에서 확장자를 찾지 못했어요. 파일명을 확인해 주세요."),
+    NOT_FOUND_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "파일의 Content-Type을 찾지 못했어요."),
+
     // ACCOUNT
     ALREADY_USE_EMAIL(HttpStatus.BAD_REQUEST, "입력하신 이메일은 이미 사용 중이에요. 다른 이메일을 입력해 주세요."),
     ALREADY_USE_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "입력하신 휴대폰 번호는 이미 사용 중이에요. 다른 휴대폰 번호를 입력해 주세요."),
@@ -32,12 +41,6 @@ enum class ErrorCode(
     UNMATCHED_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "인증 번호가 일치하지 않아요. 입력하신 인증 번호를 확인해 주세요."),
     ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "계정을 찾지 못했어요."),
 
-    // FILE
-    ALLOW_IMAGE_AND_PDF_FILE(HttpStatus.BAD_REQUEST, "이미지 또는 PDF 파일만 업로드할 수 있어요."),
-    FAILED_CONVERT_PDF_TO_IMAGE(HttpStatus.BAD_REQUEST, "PDF 파일을 이미지로 변환하던 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요."),
-    FAILED_CONVERT_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "이미지 포맷 변환 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요."),
-    FAILED_UPLOAD_IMAGE(HttpStatus.BAD_REQUEST, "이미지 업로드에 실패했어요. 잠시 후 다시 시도해 주세요."),
-    NOT_FOUND_FILENAME(HttpStatus.BAD_REQUEST, "파일명을 찾지 못했어요. 파일명을 확인해 주세요."),
-    NOT_FOUND_EXTENSION(HttpStatus.BAD_REQUEST, "파일명에서 확장자를 찾지 못했어요. 파일명을 확인해 주세요."),
-    NOT_FOUND_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "파일의 Content-Type을 찾지 못했어요."),
+    // STORE
+    NOT_FOUND_STORE_REGISTRATION(HttpStatus.NOT_FOUND, "매장 등록 신청 내역을 찾을 수 없어요. 새로 고침 후 다시 시도해 주세요."),
 }
