@@ -1,18 +1,38 @@
 package com.everyonewaiter.presentation.owner.spec
 
 import com.everyonewaiter.application.store.dto.Apply
+import com.everyonewaiter.application.store.dto.Registration
 import com.everyonewaiter.domain.account.entity.Account
 import com.everyonewaiter.global.annotation.ApiErrorResponse
 import com.everyonewaiter.global.annotation.ApiErrorResponses
 import com.everyonewaiter.global.exception.ErrorCode
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 
 @Tag(name = "매장")
-fun interface StoreRegistrationControllerSpecification {
+    @Operation(summary = "등록 신청 목록 조회", description = "매장 등록 신청 목록 조회 API")
+    @ApiResponse(responseCode = "200", description = "매장 등록 신청 목록 조회 성공")
+    @ApiErrorResponses(
+        summary = "매장 등록 신청 목록 조회 실패",
+        value = [
+            ApiErrorResponse(
+                code = ErrorCode.UNAUTHORIZED,
+                exampleName = "액세스 토큰이 유효하지 않은 경우",
+            ),
+        ],
+    )
+    fun getRegistrations(
+        @Schema(description = "조회 페이지 번호", defaultValue = "1")
+        page: Long,
+        @Schema(description = "페이지 조회 데이터 수", defaultValue = "20")
+        size: Long,
+        @Parameter(hidden = true) account: Account,
+    ): ResponseEntity<Registration.PageResponse>
+
     @Operation(
         summary = "등록 신청",
         description = "매장 등록 신청 API<br/><br/>" +
