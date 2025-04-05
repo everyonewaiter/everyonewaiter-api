@@ -11,6 +11,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -22,6 +23,15 @@ import java.net.URI
 class StoreRegistrationRestController(
     private val registrationService: StoreRegistrationService,
 ) : StoreRegistrationControllerSpecification {
+    @GetMapping("/{registrationId}")
+    override fun getRegistration(
+        @PathVariable registrationId: Long,
+        @AuthenticationAccount account: Account,
+    ): ResponseEntity<Registration.Response> {
+        val response = registrationService.getRegistration(registrationId, account.id)
+        return ResponseEntity.ok(response)
+    }
+
     @GetMapping
     override fun getRegistrations(
         @RequestParam(value = "page", defaultValue = "1") page: Long,

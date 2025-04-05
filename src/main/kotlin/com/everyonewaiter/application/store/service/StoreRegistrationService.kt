@@ -36,6 +36,15 @@ class StoreRegistrationService(
         )
         return registrationRepository.save(registration).id
     }
+
+    fun getRegistration(
+        registrationId: Long,
+        accountId: Long,
+    ): Registration.Response {
+        val registration = registrationRepository.findOneOrThrow(registrationId, accountId)
+        return Registration.Response.from(registration)
+    }
+
     fun getRegistrations(
         accountId: Long,
         request: Registration.PageRequest,
