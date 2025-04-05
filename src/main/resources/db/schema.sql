@@ -1,4 +1,3 @@
-drop table if exists account;
 create table account
 (
     account_id   bigint primary key,
@@ -12,7 +11,6 @@ create table account
     updated_at   datetime(6)                         not null
 );
 
-drop table if exists store_registration;
 create table store_registration
 (
     registration_id bigint primary key,
@@ -28,3 +26,4 @@ create table store_registration
     created_at      datetime(6)                                 not null,
     updated_at      datetime(6)                                 not null
 );
+create index idx_registration_account_id_registration_id on store_registration (account_id asc, registration_id desc);

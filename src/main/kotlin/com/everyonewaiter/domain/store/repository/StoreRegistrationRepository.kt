@@ -2,6 +2,16 @@ package com.everyonewaiter.domain.store.repository
 
 import com.everyonewaiter.domain.store.entity.StoreRegistration
 
-fun interface StoreRegistrationRepository {
+interface StoreRegistrationRepository {
+    fun count(
+        accountId: Long,
+        limit: Long,
+    ): Long
+
+    fun findAll(
+        accountId: Long,
+        limit: Long,
+        offset: Long,
+    ): List<StoreRegistration>
     fun save(registration: StoreRegistration): StoreRegistration
 }

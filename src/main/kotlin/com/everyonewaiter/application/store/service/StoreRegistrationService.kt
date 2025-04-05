@@ -3,9 +3,12 @@ package com.everyonewaiter.application.store.service
 import com.everyonewaiter.application.image.dto.ImageUpload
 import com.everyonewaiter.application.image.service.ImageService
 import com.everyonewaiter.application.store.dto.Apply
+import com.everyonewaiter.application.store.dto.Registration
 import com.everyonewaiter.domain.store.entity.BusinessLicenseInformation
 import com.everyonewaiter.domain.store.entity.StoreRegistration
 import com.everyonewaiter.domain.store.repository.StoreRegistrationRepository
+import com.everyonewaiter.global.extension.calculatePageLimit
+import com.everyonewaiter.global.extension.calculatePageOffset
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -32,5 +35,14 @@ class StoreRegistrationService(
             ),
         )
         return registrationRepository.save(registration).id
+    }
+    fun getRegistrations(
+        accountId: Long,
+        request: Registration.PageRequest,
+    ): Registration.PageResponse {
+        val (page, size) = request
+        val registrations = registrationRepository.findAll(accountId, size, calculatePageOffset(page, size))
+        val registrationCount = registrationRepository.count(accountId, calculatePageLimit(page, size))
+        return Registration.PageResponse.of(registrations, registrationCount)
     }
 }
