@@ -3,11 +3,14 @@ package com.everyonewaiter.application.store.service
 import com.everyonewaiter.application.image.dto.ImageUpload
 import com.everyonewaiter.application.image.service.ImageService
 import com.everyonewaiter.application.store.dto.Apply
+import com.everyonewaiter.application.store.dto.Registration
 import com.everyonewaiter.common.file.SimpleMultipartFile
 import com.everyonewaiter.common.tsid.Tsid
 import com.everyonewaiter.domain.store.entity.BusinessLicenseInformation
 import com.everyonewaiter.domain.store.entity.StoreRegistration
 import com.everyonewaiter.domain.store.repository.StoreRegistrationRepository
+import com.everyonewaiter.global.extension.calculatePageLimit
+import com.everyonewaiter.global.extension.calculatePageOffset
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -59,6 +62,45 @@ class StoreRegistrationServiceTest :
                 val actual = registrationService.apply(accountId, request)
                 actual shouldBe registration.id
                 verify { registrationRepository.save(any()) }
+            }
+        }
+        context("getRegistrations") {
+            test("매장 등록 신청 내역을 조회한다.") {
+                val accountId = 1L
+                val request = Registration.PageRequest(page = 1, size = 5)
+                val registrations = List(request.size.toInt()) { index ->
+                    val id = index + 1L
+                    StoreRegistration(
+                        id = id,
+                        accountId = accountId,
+                        licenseInformation = BusinessLicenseInformation(
+                            name = "홍길동식당",
+                            ceoName = "홍길동",
+                            address = "서울시 강남구",
+                            landline = "02-123-4567",
+                            license = "111-11-11111",
+                            image = "license/202501/abc.webp",
+                        ),
+                    )
+                }
+
+                every {
+                    registrationRepository.findAll(
+                        accountId,
+                        request.size,
+                        calculatePageOffset(request.page, request.size),
+                    )
+                } returns registrations
+                every {
+                    registrationRepository.count(
+                        accountId,
+                        calculatePageLimit(request.page, request.size),
+                    )
+                } returns request.size
+
+                val actual = registrationService.getRegistrations(accountId, request)
+                actual.registrationCount shouldBe request.size
+                actual.registrations shouldBe registrations.map { Registration.Response.from(it) }
             }
         }
     })
