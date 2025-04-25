@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springdoc.core.models.GroupedOpenApi;
@@ -196,14 +195,13 @@ class SwaggerConfiguration {
         .in(SecurityScheme.In.HEADER);
   }
 
-  @Data
   private static class ExampleHolder {
 
-    private String summary;
-    private String exampleName;
-    private Example example;
+    private final String summary;
+    private final String exampleName;
+    private final Example example;
 
-    public ExampleHolder(String summary, String exampleName, ErrorCode errorCode) {
+    ExampleHolder(String summary, String exampleName, ErrorCode errorCode) {
       this.summary = summary;
       this.exampleName = exampleName;
       this.example = new Example().value(ErrorResponse.from(errorCode));
