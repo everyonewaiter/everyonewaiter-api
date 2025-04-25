@@ -45,3 +45,15 @@ spring.mail.properties.mail.smtp.starttls.enable=true
 spring.mail.properties.mail.smtp.starttls.required=true
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.mime.charset=UTF-8
+
+# SWAGGER
+springdoc.swagger-ui.enabled=true
+springdoc.default-consumes-media-type=application/json;charset=UTF-8
+springdoc.default-produces-media-type=application/json;charset=UTF-8
+springdoc.api-docs.path=/api/documents.json
+springdoc.swagger-ui.path=/api/documents
+springdoc.swagger-ui.disable-swagger-default-url=true
+springdoc.swagger-ui.display-request-duration=true
+springdoc.swagger-ui.persist-authorization=true
+springdoc.swagger-ui.tags-sorter=alpha
+springdoc.swagger-ui.operations-sorter=method
