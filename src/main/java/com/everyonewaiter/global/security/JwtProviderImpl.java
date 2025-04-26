@@ -1,7 +1,5 @@
-package com.everyonewaiter.infrastructure.auth;
+package com.everyonewaiter.global.security;
 
-import com.everyonewaiter.application.auth.service.JwtPayload;
-import com.everyonewaiter.application.auth.service.JwtProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

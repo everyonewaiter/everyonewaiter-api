@@ -4,6 +4,7 @@ import com.everyonewaiter.application.notification.mail.service.MailService;
 import com.everyonewaiter.application.notification.mail.service.request.MailSend;
 import com.everyonewaiter.domain.auth.event.AuthMailSendEvent;
 import com.everyonewaiter.global.config.ClientUrlRegistry;
+import com.everyonewaiter.global.security.JwtPayload;
 import java.time.Duration;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;

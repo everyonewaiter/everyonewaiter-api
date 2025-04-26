@@ -6,6 +6,8 @@ import com.everyonewaiter.domain.auth.entity.AuthCode;
 import com.everyonewaiter.domain.auth.event.AuthCodeSendEvent;
 import com.everyonewaiter.domain.auth.repository.AuthRepository;
 import com.everyonewaiter.domain.auth.service.AuthValidator;
+import com.everyonewaiter.global.security.JwtPayload;
+import com.everyonewaiter.global.security.JwtProvider;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

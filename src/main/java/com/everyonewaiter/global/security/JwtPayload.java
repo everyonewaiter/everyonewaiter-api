@@ -1,4 +1,4 @@
-package com.everyonewaiter.application.auth.service;
+package com.everyonewaiter.global.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
