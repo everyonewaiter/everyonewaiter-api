@@ -46,6 +46,12 @@ spring.mail.properties.mail.smtp.starttls.required=true
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.mime.charset=UTF-8
 
+# NAVER SENS
+naver.sens.access-key=<ACCESS_KEY>
+naver.sens.secret-key=<SECRET_KEY>
+naver.sens.service-id=<SERVICE_ID>
+naver.sens.channel-id=<CHANNEL_ID>
+
 # SWAGGER
 springdoc.swagger-ui.enabled=true
 springdoc.default-consumes-media-type=application/json;charset=UTF-8
