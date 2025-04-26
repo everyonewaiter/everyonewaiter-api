@@ -23,15 +23,10 @@ class JwtProviderImpl implements JwtProvider {
   }
 
   @Override
-  public String generate(JwtPayload payload) {
-    return generate(payload, Duration.ofHours(12));
-  }
-
-  @Override
   public String generate(JwtPayload payload, Duration expiration) {
     Date now = new Date();
     return Jwts.builder()
-        .id(payload.getId())
+        .id(payload.getId().toString())
         .subject(payload.getSubject())
         .issuedAt(now)
         .expiration(new Date(now.getTime() + expiration.toMillis()))
@@ -48,7 +43,7 @@ class JwtProviderImpl implements JwtProvider {
           .build()
           .parseSignedClaims(token)
           .getPayload();
-      return Optional.of(new JwtPayload(payload.getId(), payload.getSubject()));
+      return Optional.of(new JwtPayload(Long.parseLong(payload.getId()), payload.getSubject()));
     } catch (Exception exception) {
       return Optional.empty();
     }

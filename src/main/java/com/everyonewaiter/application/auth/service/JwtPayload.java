@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class JwtPayload {
 
-  private String id;
+  private Long id;
   private String subject;
 
 }
