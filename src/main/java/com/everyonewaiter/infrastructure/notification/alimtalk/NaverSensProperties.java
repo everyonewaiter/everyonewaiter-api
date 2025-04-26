@@ -1,23 +1,17 @@
 package com.everyonewaiter.infrastructure.notification.alimtalk;
 
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
-@Configuration
+@ConfigurationProperties(prefix = "naver.sens")
+@RequiredArgsConstructor
 class NaverSensProperties {
 
-  @Value("${naver.sens.access-key}")
-  private String accessKey;
-
-  @Value("${naver.sens.secret-key}")
-  private String secretKey;
-
-  @Value("${naver.sens.service-id}")
-  private String serviceId;
-
-  @Value("${naver.sens.channel-id}")
-  private String channelId;
+  private final String accessKey;
+  private final String secretKey;
+  private final String serviceId;
+  private final String channelId;
 
 }

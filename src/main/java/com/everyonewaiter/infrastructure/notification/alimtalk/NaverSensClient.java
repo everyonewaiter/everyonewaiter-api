@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(
     name = "naverSensClient",
     url = "https://sens.apigw.ntruss.com",
-    configuration = NaverSensProperties.class
+    configuration = NaverSensClientConfiguration.class
 )
 interface NaverSensClient {
 
