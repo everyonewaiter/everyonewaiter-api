@@ -1,28 +1,17 @@
 package com.everyonewaiter.domain.auth.entity;
 
 import java.time.Duration;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@EqualsAndHashCode(exclude = "expiration")
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AuthAttempt implements Auth {
+public record AuthAttempt(
+    String phoneNumber,
+    AuthPurpose purpose,
+    Duration expiration
+) implements Auth {
 
   private static final String KEY_PREFIX = "auth:attempt:";
 
-  private String phoneNumber;
-  private AuthPurpose purpose;
-  private Duration expiration;
-
-  public static AuthAttempt create(String phoneNumber, AuthPurpose purpose) {
-    AuthAttempt authAttempt = new AuthAttempt();
-    authAttempt.phoneNumber = phoneNumber;
-    authAttempt.purpose = purpose;
-    authAttempt.expiration = Duration.ofDays(1);
-    return authAttempt;
+  public AuthAttempt(String phoneNumber, AuthPurpose purpose) {
+    this(phoneNumber, purpose, Duration.ofDays(1));
   }
 
   public boolean isExceed(int count) {
@@ -36,7 +25,12 @@ public class AuthAttempt implements Auth {
 
   @Override
   public int getValue() {
-    return 0;
+    return -2;
+  }
+
+  @Override
+  public Duration getExpiration() {
+    return expiration;
   }
 
 }

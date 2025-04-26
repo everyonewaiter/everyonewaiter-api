@@ -26,7 +26,7 @@ class GlobalExceptionHandler {
     String message = Objects.requireNonNullElse(exception.getMessage(), errorCode.getMessage());
     ExceptionLogger.warn(request, errorCode, message, exception);
     return ResponseEntity.status(errorCode.getStatus())
-        .body(ErrorResponse.withMessage(errorCode, message));
+        .body(ErrorResponse.of(errorCode, message));
   }
 
   @ExceptionHandler
@@ -86,7 +86,7 @@ class GlobalExceptionHandler {
     String message = Objects.requireNonNullElse(fieldErrorMessage, errorCode.getMessage());
     ExceptionLogger.warn(request, errorCode, message, exception);
     return ResponseEntity.status(errorCode.getStatus())
-        .body(ErrorResponse.withMessage(errorCode, message));
+        .body(ErrorResponse.of(errorCode, message));
   }
 
   @ExceptionHandler
@@ -155,7 +155,7 @@ class GlobalExceptionHandler {
         .formatted(request.getRequestURI(), exception.getMethod());
     ExceptionLogger.warn(request, errorCode, message, exception);
     return ResponseEntity.status(errorCode.getStatus())
-        .body(ErrorResponse.withMessage(errorCode, message));
+        .body(ErrorResponse.of(errorCode, message));
   }
 
   @ExceptionHandler

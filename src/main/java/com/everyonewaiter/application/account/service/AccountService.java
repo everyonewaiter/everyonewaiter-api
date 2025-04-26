@@ -20,11 +20,11 @@ public class AccountService {
 
   @Transactional
   public Long create(AccountCreate request) {
-    accountValidator.validateUnique(request.getEmail(), request.getPhoneNumber());
+    accountValidator.validateUnique(request.email(), request.phoneNumber());
     Account account = Account.create(
-        request.getEmail(),
-        passwordEncoder.encode(request.getPassword()),
-        request.getPhoneNumber()
+        request.email(),
+        passwordEncoder.encode(request.password()),
+        request.phoneNumber()
     );
     return accountRepository.save(account).getId();
   }

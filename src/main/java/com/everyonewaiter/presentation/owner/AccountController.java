@@ -32,7 +32,7 @@ class AccountController implements AccountControllerSpecification {
   @Override
   @PostMapping("/send-auth-code")
   public ResponseEntity<Void> sendAuthCode(@RequestBody @Valid Auth.SendAuthCodeRequest request) {
-    accountService.checkAvailablePhoneNumber(request.getPhoneNumber());
+    accountService.checkAvailablePhoneNumber(request.phoneNumber());
     authService.sendAuthCode(request.toSendAuthCode(AuthPurpose.SIGN_UP));
     return ResponseEntity.noContent().build();
   }

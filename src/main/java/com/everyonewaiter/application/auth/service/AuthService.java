@@ -23,14 +23,14 @@ public class AuthService {
   private final ApplicationEventPublisher applicationEventPublisher;
 
   public void sendAuthCode(SendAuthCode request) {
-    AuthAttempt authAttempt = AuthAttempt.create(request.getPhoneNumber(), request.getPurpose());
+    AuthAttempt authAttempt = new AuthAttempt(request.phoneNumber(), request.purpose());
     authValidator.validateAuthAttempt(authAttempt);
 
-    AuthCode authCode = AuthCode.create(request.getPhoneNumber());
+    AuthCode authCode = new AuthCode(request.phoneNumber());
     authRepository.save(authCode);
     authRepository.increment(authAttempt);
 
-    AuthCodeSendEvent event = new AuthCodeSendEvent(request.getPhoneNumber(), authCode.getCode());
+    AuthCodeSendEvent event = new AuthCodeSendEvent(request.phoneNumber(), authCode.code());
     applicationEventPublisher.publishEvent(event);
   }
 

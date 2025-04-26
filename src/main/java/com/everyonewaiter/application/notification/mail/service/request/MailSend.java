@@ -2,22 +2,19 @@ package com.everyonewaiter.application.notification.mail.service.request;
 
 import java.util.HashMap;
 import java.util.Map;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MailSend {
 
   private static final String FROM_FORMAT = "모두의 웨이터 <%s>";
   private static final String NO_REPLY_FROM = "noreply@everyonewaiter.com";
 
-  private String from;
-  private String to;
-  private String subject;
-  private String templateName;
+  private final String from;
+  private final String to;
+  private final String subject;
+  private final String templateName;
   private final Map<String, Object> variables = new HashMap<>();
 
   private MailSend(String from, String to, String templateName, String subject) {

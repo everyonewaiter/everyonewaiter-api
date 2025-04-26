@@ -24,8 +24,8 @@ class JwtProviderImpl implements JwtProvider {
   public String generate(JwtPayload payload, Duration expiration) {
     Date now = new Date();
     return Jwts.builder()
-        .id(payload.getId().toString())
-        .subject(payload.getSubject())
+        .id(payload.id().toString())
+        .subject(payload.subject())
         .issuedAt(now)
         .expiration(new Date(now.getTime() + expiration.toMillis()))
         .signWith(secretKey)
