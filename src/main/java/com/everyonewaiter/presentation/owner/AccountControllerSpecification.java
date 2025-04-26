@@ -4,6 +4,7 @@ import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.presentation.owner.request.AccountWrite;
+import com.everyonewaiter.presentation.owner.request.Auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,5 +44,29 @@ interface AccountControllerSpecification {
       }
   )
   ResponseEntity<Void> signUp(@RequestBody AccountWrite.CreateRequest request);
+
+  @SecurityRequirements
+  @Operation(
+      summary = "휴대폰 인증 번호 알림톡 발송",
+      description = "휴대폰 인증 번호 알림톡 발송 요청 API<br/><br/>" +
+          "24시간동안 최대 5번까지 요청할 수 있습니다.<br/>" +
+          "**5분**의 유효기간을 가진 6자리의 랜덤 번호를 생성 후, 요청 본문의 휴대폰 번호로 알림톡을 발송합니다."
+  )
+  @ApiResponse(responseCode = "204", description = "휴대폰 인증 번호 알림톡 발송 요청 성공")
+  @ApiErrorResponses(
+      summary = "휴대폰 인증 번호 알림톡 발송 요청 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.ALREADY_USE_PHONE_NUMBER,
+              exampleName = "이미 사용중인 휴대폰 번호인 경우"
+          ),
+
+          @ApiErrorResponse(
+              code = ErrorCode.EXCEED_MAXIMUM_VERIFICATION_PHONE_NUMBER,
+              exampleName = "일일 인증 횟수가 초과된 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> sendAuthCode(@RequestBody Auth.SendAuthCodeRequest request);
 
 }

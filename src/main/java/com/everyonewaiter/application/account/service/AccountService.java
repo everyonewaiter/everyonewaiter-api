@@ -29,4 +29,8 @@ public class AccountService {
     return accountRepository.save(account).getId();
   }
 
+  public void checkAvailablePhoneNumber(String phoneNumber) {
+    accountValidator.validatePhoneNumberUnique(phoneNumber);
+  }
+
 }

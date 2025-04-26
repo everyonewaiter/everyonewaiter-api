@@ -13,10 +13,17 @@ public class AccountValidator {
   private final AccountRepository accountRepository;
 
   public void validateUnique(String email, String phoneNumber) {
+    validateEmailUnique(email);
+    validatePhoneNumberUnique(phoneNumber);
+  }
+
+  public void validateEmailUnique(String email) {
     if (accountRepository.existsByEmail(email)) {
       throw new BusinessException(ErrorCode.ALREADY_USE_EMAIL);
     }
+  }
 
+  public void validatePhoneNumberUnique(String phoneNumber) {
     if (accountRepository.existsByPhoneNumber(phoneNumber)) {
       throw new BusinessException(ErrorCode.ALREADY_USE_PHONE_NUMBER);
     }
