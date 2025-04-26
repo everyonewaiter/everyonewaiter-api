@@ -52,6 +52,9 @@ naver.sens.secret-key=<SECRET_KEY>
 naver.sens.service-id=<SERVICE_ID>
 naver.sens.channel-id=<CHANNEL_ID>
 
+# LOGGING
+logging.level.feign=debug
+
 # SWAGGER
 springdoc.swagger-ui.enabled=true
 springdoc.default-consumes-media-type=application/json;charset=UTF-8
