@@ -1,6 +1,6 @@
 package com.everyonewaiter.global.domain.entity;
 
-import com.everyonewaiter.global.domain.support.Tsid;
+import com.everyonewaiter.global.support.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;

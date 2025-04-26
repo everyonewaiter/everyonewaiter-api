@@ -1,4 +1,4 @@
-package com.everyonewaiter.global.domain.support;
+package com.everyonewaiter.global.support;
 
 import com.github.f4b6a3.tsid.TsidCreator;
 import lombok.AccessLevel;

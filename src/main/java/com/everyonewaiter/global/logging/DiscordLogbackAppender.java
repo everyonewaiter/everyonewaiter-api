@@ -5,7 +5,7 @@ import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import com.everyonewaiter.domain.notification.discord.DiscordEmbed;
 import com.everyonewaiter.domain.notification.discord.DiscordField;
-import com.everyonewaiter.global.domain.support.DateFormatter;
+import com.everyonewaiter.global.support.DateFormatter;
 import com.everyonewaiter.infrastructure.notification.discord.DiscordWebhookRequest;
 import java.io.IOException;
 import java.time.Instant;

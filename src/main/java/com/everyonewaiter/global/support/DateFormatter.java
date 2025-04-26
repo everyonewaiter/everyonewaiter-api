@@ -1,4 +1,4 @@
-package com.everyonewaiter.global.domain.support;
+package com.everyonewaiter.global.support;
 
 import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
