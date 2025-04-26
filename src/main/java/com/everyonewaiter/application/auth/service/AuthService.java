@@ -22,6 +22,10 @@ public class AuthService {
   private final AuthRepository authRepository;
   private final ApplicationEventPublisher applicationEventPublisher;
 
+  public void checkExistsAuthSuccess(String phoneNumber) {
+    authValidator.checkExistsAuthSuccess(phoneNumber);
+  }
+
   public void sendAuthCode(SendAuthCode request) {
     AuthAttempt authAttempt = new AuthAttempt(request.phoneNumber(), request.purpose());
     authValidator.validateAuthAttempt(authAttempt);

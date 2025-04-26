@@ -41,6 +41,10 @@ interface AccountControllerSpecification {
               code = ErrorCode.ALREADY_USE_PHONE_NUMBER,
               exampleName = "이미 사용중인 휴대폰 번호인 경우"
           ),
+          @ApiErrorResponse(
+              code = ErrorCode.EXPIRED_VERIFICATION_PHONE_NUMBER,
+              exampleName = "휴대폰 번호 인증이 만료된 경우"
+          ),
       }
   )
   ResponseEntity<Void> signUp(@RequestBody AccountWrite.CreateRequest request);

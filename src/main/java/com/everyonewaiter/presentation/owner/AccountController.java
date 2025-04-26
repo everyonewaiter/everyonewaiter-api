@@ -25,6 +25,7 @@ class AccountController implements AccountControllerSpecification {
   @Override
   @PostMapping
   public ResponseEntity<Void> signUp(@RequestBody @Valid AccountWrite.CreateRequest request) {
+    authService.checkExistsAuthSuccess(request.phoneNumber());
     Long accountId = accountService.create(request.toAccountCreate());
     return ResponseEntity.created(URI.create(accountId.toString())).build();
   }

@@ -1,6 +1,7 @@
 package com.everyonewaiter.domain.auth.service;
 
 import com.everyonewaiter.domain.auth.entity.AuthAttempt;
+import com.everyonewaiter.domain.auth.entity.AuthSuccess;
 import com.everyonewaiter.domain.auth.repository.AuthRepository;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
@@ -16,6 +17,13 @@ public class AuthValidator {
   public void validateAuthAttempt(AuthAttempt authAttempt) {
     if (authAttempt.isExceed(authRepository.find(authAttempt))) {
       throw new BusinessException(ErrorCode.EXCEED_MAXIMUM_VERIFICATION_PHONE_NUMBER);
+    }
+  }
+
+  public void checkExistsAuthSuccess(String phoneNumber) {
+    AuthSuccess authSuccess = new AuthSuccess(phoneNumber);
+    if (!authRepository.exists(authSuccess)) {
+      throw new BusinessException(ErrorCode.EXPIRED_VERIFICATION_PHONE_NUMBER);
     }
   }
 

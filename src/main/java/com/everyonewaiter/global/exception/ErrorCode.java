@@ -31,6 +31,7 @@ public enum ErrorCode {
   // AUTH
   EXCEED_MAXIMUM_VERIFICATION_PHONE_NUMBER(
       BAD_REQUEST, "오늘은 더 이상 휴대폰 번호 인증 요청을 할 수 없어요. 내일 다시 시도해 주세요."),
+  EXPIRED_VERIFICATION_PHONE_NUMBER(BAD_REQUEST, "휴대폰 번호 인증이 만료되었어요. 휴대폰 번호 인증을 다시 진행해 주세요."),
   ;
 
   private final HttpStatus status;
