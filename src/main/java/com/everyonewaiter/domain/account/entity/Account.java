@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.account.entity;
 
+import com.everyonewaiter.domain.account.event.AccountCreateEvent;
 import com.everyonewaiter.domain.auth.event.AuthMailSendEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import jakarta.persistence.Column;
@@ -49,6 +50,7 @@ public class Account extends AggregateRoot<Account> {
     account.email = email;
     account.password = password;
     account.phoneNumber = phoneNumber;
+    account.registerEvent(new AccountCreateEvent(email));
     account.registerEvent(new AuthMailSendEvent(email));
     return account;
   }
