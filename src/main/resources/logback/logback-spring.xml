@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <springProperty scope="context" name="PROJECT_ROOT" source="user.dir"/>
+
+  <springProfile name="local">
+    <logger name="com.everyonewaiter" level="DEBUG"/>
+    <include resource="logback/logback-console.xml"/>
+    <include resource="logback/logback-discord.xml"/>
+
+    <root level="INFO">
+      <appender-ref ref="ASYNC_DISCORD"/>
+      <appender-ref ref="CONSOLE"/>
+    </root>
+  </springProfile>
+  <springProfile name="test">
+    <logger name="com.everyonewaiter" level="DEBUG"/>
+    <include resource="logback/logback-console.xml"/>
+
+    <root level="INFO">
+      <appender-ref ref="CONSOLE"/>
+    </root>
+  </springProfile>
+  <springProfile name="dev">
+    <include resource="logback/logback-discord.xml"/>
+    <include resource="logback/logback-file.xml"/>
+
+    <logger name="com.everyonewaiter.infrastructure.notification" level="DEBUG">
+      <appender-ref ref="FILE_DEBUG"/>
+    </logger>
+
+    <root level="INFO">
+      <appender-ref ref="ASYNC_DISCORD"/>
+      <appender-ref ref="FILE_INFO"/>
+      <appender-ref ref="FILE_WARN"/>
+      <appender-ref ref="FILE_ERROR"/>
+    </root>
+  </springProfile>
+  <springProfile name="prod">
+    <include resource="logback/logback-discord.xml"/>
+    <include resource="logback/logback-file.xml"/>
+
+    <logger name="com.everyonewaiter.infrastructure.notification" level="DEBUG">
+      <appender-ref ref="FILE_DEBUG"/>
+    </logger>
+
+    <root level="INFO">
+      <appender-ref ref="ASYNC_DISCORD"/>
+      <appender-ref ref="FILE_INFO"/>
+      <appender-ref ref="FILE_WARN"/>
+      <appender-ref ref="FILE_ERROR"/>
+    </root>
+  </springProfile>
+</configuration>

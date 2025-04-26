@@ -57,6 +57,7 @@ discord.event.uri=<DISCORD_WEBHOOK_URI>
 discord.logging-uri=DISCORD_WEBHOOK_URI
 
 # LOGGING
+logging.config=classpath:logback/logback-spring.xml
 logging.level.feign=debug
 
 # SWAGGER
