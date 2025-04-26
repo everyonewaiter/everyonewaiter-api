@@ -3,6 +3,7 @@ package com.everyonewaiter.global.logging;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
+import com.everyonewaiter.domain.notification.discord.DiscordColor;
 import com.everyonewaiter.domain.notification.discord.DiscordEmbed;
 import com.everyonewaiter.domain.notification.discord.DiscordField;
 import com.everyonewaiter.global.support.DateFormatter;
@@ -27,7 +28,6 @@ import org.springframework.web.client.RestClient;
 public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DiscordLogbackAppender.class);
-  private static final int COLOR_RED = 16711680;
   private static final RestClient WEB_HOOK_CLIENT =
       RestClient.create("https://discord.com/api/webhooks");
 
@@ -56,7 +56,7 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
         DiscordEmbed.builder()
             .title("Error Information")
             .description(iLoggingEvent.getFormattedMessage())
-            .color(COLOR_RED)
+            .color(DiscordColor.RED.getValue())
             .field(new DiscordField(
                 "Timestamp", DateFormatter.SERIALIZE_FORMATTER.format(Instant.now())
             ))
@@ -70,7 +70,7 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
         DiscordEmbed.builder()
             .title("Stack Trace")
             .description("```java\n" + stackTrace + "\n```")
-            .color(COLOR_RED)
+            .color(DiscordColor.RED.getValue())
             .build()
     );
 
