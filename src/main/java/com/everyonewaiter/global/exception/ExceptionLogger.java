@@ -14,9 +14,10 @@ final class ExceptionLogger {
   private static final String DEFAULT_LOGGING_FORMAT = "[{}] [{} {}] [{}] [{} {}]: {}";
 
   public static void info(HttpServletRequest request, ErrorCode errorCode, Exception exception) {
+    String requestId = HttpRequestParser.getXRequestId(request);
     LOGGER.info(DEFAULT_LOGGING_FORMAT, errorCode.name(), request.getMethod(),
-        request.getRequestURI(), HttpRequestParser.getXRequestId(request),
-        exception.getClass().getSimpleName(), errorCode.getStatus(), exception.getMessage());
+        request.getRequestURI(), requestId, exception.getClass().getSimpleName(),
+        errorCode.getStatus(), exception.getMessage());
   }
 
   public static void warn(HttpServletRequest request, ErrorCode errorCode, Exception exception) {
@@ -29,15 +30,17 @@ final class ExceptionLogger {
       String message,
       Exception exception
   ) {
+    String requestId = HttpRequestParser.getXRequestId(request);
     LOGGER.warn(DEFAULT_LOGGING_FORMAT, errorCode.name(), request.getMethod(),
-        request.getRequestURI(), HttpRequestParser.getXRequestId(request),
-        exception.getClass().getSimpleName(), errorCode.getStatus(), message);
+        request.getRequestURI(), requestId, exception.getClass().getSimpleName(),
+        errorCode.getStatus(), message);
   }
 
   public static void error(HttpServletRequest request, ErrorCode errorCode, Exception exception) {
+    String requestId = HttpRequestParser.getXRequestId(request);
     LOGGER.error(DEFAULT_LOGGING_FORMAT, errorCode.name(), request.getMethod(),
-        request.getRequestURI(), HttpRequestParser.getXRequestId(request),
-        exception.getClass().getSimpleName(), errorCode.getStatus(), exception.getMessage());
+        request.getRequestURI(), requestId, exception.getClass().getSimpleName(),
+        errorCode.getStatus(), exception.getMessage(), exception);
   }
 
 }
