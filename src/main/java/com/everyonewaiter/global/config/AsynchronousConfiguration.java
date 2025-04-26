@@ -14,7 +14,7 @@ class AsynchronousConfiguration {
 
   @Bean(name = "eventTaskExecutor")
   public TaskExecutor eventTaskExecutor() {
-    ThreadFactory factory = Thread.ofVirtual().name("app-event-").factory();
+    ThreadFactory factory = Thread.ofVirtual().name("app-event-", 1).factory();
     return new TaskExecutorAdapter(Executors.newThreadPerTaskExecutor(factory));
   }
 
