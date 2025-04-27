@@ -47,4 +47,14 @@ public class Auth {
 
   }
 
+  @Schema(name = "Auth.SendAuthMailRequest")
+  public record SendAuthMailRequest(
+      @Schema(description = "이메일", example = "admin@everyonewaiter.com")
+      @NotBlank(message = "이메일을 입력해 주세요.")
+      @Pattern(regexp = "^[\\w+-.*]+@[\\w-]+\\.[\\w-.]+$", message = "잘못된 형식의 이메일을 입력하셨어요. 이메일을 다시 입력해 주세요.")
+      String email
+  ) {
+
+  }
+
 }

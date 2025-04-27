@@ -8,6 +8,8 @@ public interface AccountRepository {
 
   boolean existsByPhoneNumber(String phoneNumber);
 
+  Account findByEmailOrThrow(String email);
+
   Account save(Account account);
 
 }

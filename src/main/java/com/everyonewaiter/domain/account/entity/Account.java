@@ -55,4 +55,8 @@ public class Account extends AggregateRoot<Account> {
     return account;
   }
 
+  public boolean isInactive() {
+    return state == State.INACTIVE;
+  }
+
 }

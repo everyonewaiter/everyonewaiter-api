@@ -47,4 +47,12 @@ class AccountController implements AccountControllerSpecification {
     return ResponseEntity.noContent().build();
   }
 
+  @Override
+  @PostMapping("/send-auth-mail")
+  public ResponseEntity<Void> sendAuthMail(@RequestBody @Valid Auth.SendAuthMailRequest request) {
+    accountService.checkPossibleSendAuthMail(request.email());
+    authService.sendAuthMail(request.email());
+    return ResponseEntity.noContent().build();
+  }
+
 }

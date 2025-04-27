@@ -33,4 +33,8 @@ public class AccountService {
     accountValidator.validatePhoneNumberUnique(phoneNumber);
   }
 
+  public void checkPossibleSendAuthMail(String email) {
+    accountValidator.validateAccountIsInactive(email);
+  }
+
 }

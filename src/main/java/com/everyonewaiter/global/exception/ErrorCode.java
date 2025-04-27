@@ -27,11 +27,13 @@ public enum ErrorCode {
   // ACCOUNT
   ALREADY_USE_EMAIL(BAD_REQUEST, "입력하신 이메일은 이미 사용 중이에요. 다른 이메일을 입력해 주세요."),
   ALREADY_USE_PHONE_NUMBER(BAD_REQUEST, "입력하신 휴대폰 번호는 이미 사용 중이에요. 다른 휴대폰 번호를 입력해 주세요."),
+  ACCOUNT_NOT_FOUND(NOT_FOUND, "계정을 찾지 못했어요."),
 
   // AUTH
   EXCEED_MAXIMUM_VERIFICATION_PHONE_NUMBER(
       BAD_REQUEST, "오늘은 더 이상 휴대폰 번호 인증 요청을 할 수 없어요. 내일 다시 시도해 주세요."),
   EXPIRED_VERIFICATION_PHONE_NUMBER(BAD_REQUEST, "휴대폰 번호 인증이 만료되었어요. 휴대폰 번호 인증을 다시 진행해 주세요."),
+  ALREADY_VERIFIED_EMAIL(BAD_REQUEST, "이미 이메일 인증이 완료된 계정이에요."),
   ALREADY_VERIFIED_PHONE_NUMBER(BAD_REQUEST, "이미 휴대폰 번호 인증이 완료되었어요. 다음 절차를 진행해 주세요."),
   UNMATCHED_VERIFICATION_CODE(BAD_REQUEST, "인증 번호가 일치하지 않아요. 입력하신 인증 번호를 확인해 주세요."),
   EXPIRED_VERIFICATION_CODE(BAD_REQUEST, "휴대폰 인증 번호가 만료되었어요. 재전송 버튼을 통해 인증 번호를 새로 발급받아 주세요."),
