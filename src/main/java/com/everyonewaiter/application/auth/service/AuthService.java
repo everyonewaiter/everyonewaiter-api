@@ -2,13 +2,16 @@ package com.everyonewaiter.application.auth.service;
 
 import com.everyonewaiter.application.auth.service.request.SendAuthCode;
 import com.everyonewaiter.application.auth.service.request.VerifyAuthCode;
+import com.everyonewaiter.application.auth.service.response.Token;
 import com.everyonewaiter.domain.auth.entity.AuthAttempt;
 import com.everyonewaiter.domain.auth.entity.AuthCode;
 import com.everyonewaiter.domain.auth.entity.AuthPurpose;
 import com.everyonewaiter.domain.auth.entity.AuthSuccess;
+import com.everyonewaiter.domain.auth.entity.RefreshToken;
 import com.everyonewaiter.domain.auth.event.AuthCodeSendEvent;
 import com.everyonewaiter.domain.auth.event.AuthMailSendEvent;
 import com.everyonewaiter.domain.auth.repository.AuthRepository;
+import com.everyonewaiter.domain.auth.repository.RefreshTokenRepository;
 import com.everyonewaiter.domain.auth.service.AuthValidator;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
@@ -25,9 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
   private final JwtProvider jwtProvider;
+  private final ApplicationEventPublisher applicationEventPublisher;
   private final AuthValidator authValidator;
   private final AuthRepository authRepository;
-  private final ApplicationEventPublisher applicationEventPublisher;
+  private final RefreshTokenRepository refreshTokenRepository;
 
   public void checkExistsAuthSuccess(String phoneNumber, AuthPurpose purpose) {
     AuthSuccess authSuccess = new AuthSuccess(phoneNumber, purpose);
@@ -59,10 +63,6 @@ public class AuthService {
     authRepository.delete(authCode);
   }
 
-  public String generateToken(JwtPayload payload, Duration expiration) {
-    return jwtProvider.generate(payload, expiration);
-  }
-
   @Transactional(readOnly = true)
   public void sendAuthMail(String email) {
     applicationEventPublisher.publishEvent(new AuthMailSendEvent(email));
@@ -73,6 +73,21 @@ public class AuthService {
         .orElseThrow(() -> new BusinessException(ErrorCode.EXPIRED_VERIFICATION_EMAIL));
     authValidator.validateAuthMailTokenPayload(payload);
     return payload.subject();
+  }
+
+  public String generateToken(JwtPayload payload, Duration expiration) {
+    return jwtProvider.generate(payload, expiration);
+  }
+
+  @Transactional
+  public Token.SingInResponse generateTokenBySignIn(Long accountId, String email) {
+    RefreshToken refTokenEntity = refreshTokenRepository.save(RefreshToken.create(accountId));
+    String accessToken = generateToken(new JwtPayload(accountId, email), Duration.ofHours(12));
+    String refreshToken = generateToken(
+        new JwtPayload(refTokenEntity.getId(), refTokenEntity.getCurrentTokenId().toString()),
+        Duration.ofHours(14)
+    );
+    return new Token.SingInResponse(accessToken, refreshToken);
   }
 
 }
