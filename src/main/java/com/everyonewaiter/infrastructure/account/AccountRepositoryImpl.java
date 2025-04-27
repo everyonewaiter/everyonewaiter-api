@@ -4,6 +4,7 @@ import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -24,9 +25,13 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
+  public Optional<Account> findByEmail(String email) {
+    return accountJpaRepository.findByEmail(email);
+  }
+
+  @Override
   public Account findByEmailOrThrow(String email) {
-    return accountJpaRepository.findByEmail(email)
-        .orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
+    return findByEmail(email).orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
   }
 
   @Override

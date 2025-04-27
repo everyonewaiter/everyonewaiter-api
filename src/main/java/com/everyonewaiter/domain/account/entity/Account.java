@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Table(name = "account")
 @Entity
@@ -61,11 +62,23 @@ public class Account extends AggregateRoot<Account> {
     return state == State.INACTIVE;
   }
 
+  public boolean isActive() {
+    return state == State.ACTIVE;
+  }
+
   public void activate() {
     if (!isInactive()) {
       throw new BusinessException(ErrorCode.ALREADY_VERIFIED_EMAIL);
     }
     this.state = State.ACTIVE;
+  }
+
+  public void signIn(PasswordEncoder passwordEncoder, String rawPassword) {
+    if (isActive() && passwordEncoder.matches(rawPassword, password)) {
+      this.lastSingIn = Instant.now();
+    } else {
+      throw new BusinessException(ErrorCode.FAILED_SIGN_IN);
+    }
   }
 
 }

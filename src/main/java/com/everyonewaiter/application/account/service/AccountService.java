@@ -1,9 +1,12 @@
 package com.everyonewaiter.application.account.service;
 
 import com.everyonewaiter.application.account.service.request.AccountCreate;
+import com.everyonewaiter.application.account.service.request.AccountSignIn;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
 import com.everyonewaiter.domain.account.service.AccountValidator;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,6 +45,16 @@ public class AccountService {
     Account account = accountRepository.findByEmailOrThrow(email);
     account.activate();
     accountRepository.save(account);
+  }
+
+  @Transactional
+  public Long signIn(AccountSignIn request) {
+    return accountRepository.findByEmail(request.email())
+        .map(account -> {
+          account.signIn(passwordEncoder, request.password());
+          return accountRepository.save(account).getId();
+        })
+        .orElseThrow(() -> new BusinessException(ErrorCode.FAILED_SIGN_IN));
   }
 
 }

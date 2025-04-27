@@ -2,6 +2,7 @@ package com.everyonewaiter.presentation.owner;
 
 import com.everyonewaiter.application.account.service.AccountService;
 import com.everyonewaiter.application.auth.service.AuthService;
+import com.everyonewaiter.application.auth.service.response.Token.SingInResponse;
 import com.everyonewaiter.domain.auth.entity.AuthPurpose;
 import com.everyonewaiter.presentation.owner.request.AccountWrite;
 import com.everyonewaiter.presentation.owner.request.Auth;
@@ -29,6 +30,16 @@ class AccountController implements AccountControllerSpecification {
     authService.checkExistsAuthSuccess(request.phoneNumber(), AuthPurpose.SIGN_UP);
     Long accountId = accountService.create(request.toAccountCreate());
     return ResponseEntity.created(URI.create(accountId.toString())).build();
+  }
+
+  @Override
+  @PostMapping("/sign-in")
+  public ResponseEntity<SingInResponse> signIn(
+      @RequestBody @Valid AccountWrite.SignInRequest request
+  ) {
+    Long accountId = accountService.signIn(request.toAccountSignIn());
+    SingInResponse response = authService.generateTokenBySignIn(accountId, request.email());
+    return ResponseEntity.ok(response);
   }
 
   @Override

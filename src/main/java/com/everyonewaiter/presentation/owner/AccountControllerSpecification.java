@@ -1,5 +1,6 @@
 package com.everyonewaiter.presentation.owner;
 
+import com.everyonewaiter.application.auth.service.response.Token;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
 import com.everyonewaiter.global.exception.ErrorCode;
@@ -7,6 +8,7 @@ import com.everyonewaiter.presentation.owner.request.AccountWrite;
 import com.everyonewaiter.presentation.owner.request.Auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,6 +50,28 @@ interface AccountControllerSpecification {
       }
   )
   ResponseEntity<Void> signUp(@RequestBody AccountWrite.CreateRequest request);
+
+  @SecurityRequirements
+  @Operation(summary = "로그인", description = "로그인 API")
+  @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = Token.SingInResponse.class)))
+  @ApiErrorResponses(
+      summary = "로그인 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.FAILED_SIGN_IN,
+              exampleName = "이메일로 계정을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FAILED_SIGN_IN,
+              exampleName = "계정이 활성 상태가 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FAILED_SIGN_IN,
+              exampleName = "이메일 및 비밀번호가 일치하지 않는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Token.SingInResponse> signIn(@RequestBody AccountWrite.SignInRequest request);
 
   @SecurityRequirements
   @Operation(
