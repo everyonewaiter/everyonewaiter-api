@@ -20,10 +20,15 @@ public class AuthValidator {
     }
   }
 
-  public void checkExistsAuthSuccess(String phoneNumber) {
-    AuthSuccess authSuccess = new AuthSuccess(phoneNumber);
+  public void checkExistsAuthSuccess(AuthSuccess authSuccess) {
     if (!authRepository.exists(authSuccess)) {
       throw new BusinessException(ErrorCode.EXPIRED_VERIFICATION_PHONE_NUMBER);
+    }
+  }
+
+  public void checkNotExistsAuthSuccess(AuthSuccess authSuccess) {
+    if (authRepository.exists(authSuccess)) {
+      throw new BusinessException(ErrorCode.ALREADY_VERIFIED_PHONE_NUMBER);
     }
   }
 

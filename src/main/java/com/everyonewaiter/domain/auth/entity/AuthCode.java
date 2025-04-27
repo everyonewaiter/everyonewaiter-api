@@ -1,5 +1,7 @@
 package com.everyonewaiter.domain.auth.entity;
 
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import java.time.Duration;
 import java.util.Random;
 
@@ -12,6 +14,20 @@ public record AuthCode(String phoneNumber, int code, Duration expiration) implem
 
   public AuthCode(String phoneNumber) {
     this(phoneNumber, RANDOM.nextInt(MAX - MIN + 1) + MIN, Duration.ofMinutes(5));
+  }
+
+  public AuthCode(String phoneNumber, int code) {
+    this(phoneNumber, code, Duration.ofMinutes(5));
+  }
+
+  public void verify(int code) {
+    if (code <= 0) {
+      throw new BusinessException(ErrorCode.EXPIRED_VERIFICATION_CODE);
+    }
+
+    if (this.code != code) {
+      throw new BusinessException(ErrorCode.UNMATCHED_VERIFICATION_CODE);
+    }
   }
 
   @Override

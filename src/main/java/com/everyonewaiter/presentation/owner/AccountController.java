@@ -25,7 +25,7 @@ class AccountController implements AccountControllerSpecification {
   @Override
   @PostMapping
   public ResponseEntity<Void> signUp(@RequestBody @Valid AccountWrite.CreateRequest request) {
-    authService.checkExistsAuthSuccess(request.phoneNumber());
+    authService.checkExistsAuthSuccess(request.phoneNumber(), AuthPurpose.SIGN_UP);
     Long accountId = accountService.create(request.toAccountCreate());
     return ResponseEntity.created(URI.create(accountId.toString())).build();
   }
@@ -35,6 +35,15 @@ class AccountController implements AccountControllerSpecification {
   public ResponseEntity<Void> sendAuthCode(@RequestBody @Valid Auth.SendAuthCodeRequest request) {
     accountService.checkAvailablePhoneNumber(request.phoneNumber());
     authService.sendAuthCode(request.toSendAuthCode(AuthPurpose.SIGN_UP));
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @PostMapping("/verify-auth-code")
+  public ResponseEntity<Void> verifyAuthCode(
+      @RequestBody @Valid Auth.VerifyAuthCodeRequest request
+  ) {
+    authService.verifyAuthCode(request.toVerifyAuthCode(AuthPurpose.SIGN_UP));
     return ResponseEntity.noContent().build();
   }
 

@@ -2,12 +2,16 @@ package com.everyonewaiter.domain.auth.entity;
 
 import java.time.Duration;
 
-public record AuthSuccess(String phoneNumber, Duration expiration) implements Auth {
+public record AuthSuccess(
+    String phoneNumber,
+    AuthPurpose purpose,
+    Duration expiration
+) implements Auth {
 
   private static final String KEY_PREFIX = "auth:success:";
 
-  public AuthSuccess(String phoneNumber) {
-    this(phoneNumber, Duration.ofMinutes(15));
+  public AuthSuccess(String phoneNumber, AuthPurpose purpose) {
+    this(phoneNumber, purpose, purpose.getExpiration());
   }
 
   @Override

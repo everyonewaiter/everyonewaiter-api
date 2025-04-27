@@ -73,4 +73,30 @@ interface AccountControllerSpecification {
   )
   ResponseEntity<Void> sendAuthCode(@RequestBody Auth.SendAuthCodeRequest request);
 
+  @SecurityRequirements
+  @Operation(
+      summary = "휴대폰 인증",
+      description = "휴대폰 번호 인증 API<br/><br/>" +
+          "휴대폰 번호 인증이 완료된 후 15분 이내 계정 생성을 완료해야 합니다."
+  )
+  @ApiResponse(responseCode = "204", description = "휴대폰 번호 인증 성공")
+  @ApiErrorResponses(
+      summary = "휴대폰 번호 인증 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.ALREADY_VERIFIED_PHONE_NUMBER,
+              exampleName = "이미 휴대폰 번호 인증이 완료된 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.EXPIRED_VERIFICATION_CODE,
+              exampleName = "인증 번호가 만료된 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNMATCHED_VERIFICATION_CODE,
+              exampleName = "인증 번호가 일치하지 않는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> verifyAuthCode(@RequestBody Auth.VerifyAuthCodeRequest request);
+
 }

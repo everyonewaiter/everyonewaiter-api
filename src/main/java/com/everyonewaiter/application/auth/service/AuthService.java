@@ -1,8 +1,11 @@
 package com.everyonewaiter.application.auth.service;
 
 import com.everyonewaiter.application.auth.service.request.SendAuthCode;
+import com.everyonewaiter.application.auth.service.request.VerifyAuthCode;
 import com.everyonewaiter.domain.auth.entity.AuthAttempt;
 import com.everyonewaiter.domain.auth.entity.AuthCode;
+import com.everyonewaiter.domain.auth.entity.AuthPurpose;
+import com.everyonewaiter.domain.auth.entity.AuthSuccess;
 import com.everyonewaiter.domain.auth.event.AuthCodeSendEvent;
 import com.everyonewaiter.domain.auth.repository.AuthRepository;
 import com.everyonewaiter.domain.auth.service.AuthValidator;
@@ -22,8 +25,9 @@ public class AuthService {
   private final AuthRepository authRepository;
   private final ApplicationEventPublisher applicationEventPublisher;
 
-  public void checkExistsAuthSuccess(String phoneNumber) {
-    authValidator.checkExistsAuthSuccess(phoneNumber);
+  public void checkExistsAuthSuccess(String phoneNumber, AuthPurpose purpose) {
+    AuthSuccess authSuccess = new AuthSuccess(phoneNumber, purpose);
+    authValidator.checkExistsAuthSuccess(authSuccess);
   }
 
   public void sendAuthCode(SendAuthCode request) {
@@ -33,9 +37,22 @@ public class AuthService {
     AuthCode authCode = new AuthCode(request.phoneNumber());
     authRepository.save(authCode);
     authRepository.increment(authAttempt);
+    authRepository.delete(new AuthSuccess(request.phoneNumber(), request.purpose()));
 
     AuthCodeSendEvent event = new AuthCodeSendEvent(request.phoneNumber(), authCode.code());
     applicationEventPublisher.publishEvent(event);
+  }
+
+  public void verifyAuthCode(VerifyAuthCode request) {
+    AuthSuccess authSuccess = new AuthSuccess(request.phoneNumber(), request.purpose());
+    authValidator.checkNotExistsAuthSuccess(authSuccess);
+
+    AuthCode authCode = new AuthCode(request.phoneNumber(), request.code());
+    int code = authRepository.find(authCode);
+    authCode.verify(code);
+
+    authRepository.save(authSuccess);
+    authRepository.delete(authCode);
   }
 
   public String generateToken(JwtPayload payload, Duration expiration) {
