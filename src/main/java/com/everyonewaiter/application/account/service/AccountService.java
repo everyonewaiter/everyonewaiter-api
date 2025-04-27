@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.account.service;
 
+import com.everyonewaiter.application.account.service.request.AccountAdminUpdate;
 import com.everyonewaiter.application.account.service.request.AccountCreate;
 import com.everyonewaiter.application.account.service.request.AccountSignIn;
 import com.everyonewaiter.application.account.service.response.AccountAdminRead;
@@ -61,6 +62,13 @@ public class AccountService {
   public AccountAdminRead.Response readByAdmin(Long accountId) {
     Account account = accountRepository.findByIdOrThrow(accountId);
     return AccountAdminRead.Response.from(account);
+  }
+
+  @Transactional
+  public void updateByAdmin(Long accountId, AccountAdminUpdate request) {
+    Account account = accountRepository.findByIdOrThrow(accountId);
+    account.update(request.state(), request.permission());
+    accountRepository.save(account);
   }
 
 }

@@ -28,13 +28,13 @@ public class Account extends AggregateRoot<Account> {
 
   public enum Permission {USER, OWNER, ADMIN}
 
-  @Column(name = "email", nullable = false, unique = true)
+  @Column(name = "email", nullable = false, updatable = false, unique = true)
   private String email;
 
   @Column(name = "password", nullable = false)
   private String password;
 
-  @Column(name = "phone_number", nullable = false, unique = true)
+  @Column(name = "phone_number", nullable = false, updatable = false, unique = true)
   private String phoneNumber;
 
   @Enumerated(EnumType.STRING)
@@ -88,6 +88,11 @@ public class Account extends AggregateRoot<Account> {
     } else {
       throw new BusinessException(ErrorCode.FAILED_SIGN_IN);
     }
+  }
+
+  public void update(State state, Permission permission) {
+    this.state = state;
+    this.permission = permission;
   }
 
 }
