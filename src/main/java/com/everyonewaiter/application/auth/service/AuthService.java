@@ -18,7 +18,10 @@ import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.security.JwtPayload;
 import com.everyonewaiter.global.security.JwtProvider;
 import java.time.Duration;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(AuthService.class);
 
   private final JwtProvider jwtProvider;
   private final ApplicationEventPublisher applicationEventPublisher;
@@ -80,13 +85,40 @@ public class AuthService {
   }
 
   @Transactional
-  public Token.AllResponse generateTokenBySignIn(Long accountId, String email) {
+  public Token.AllResponse generateTokenBySignIn(Long accountId) {
     RefreshToken refTokenEntity = refreshTokenRepository.save(RefreshToken.create(accountId));
-    String accessToken = generateToken(new JwtPayload(accountId, email), Duration.ofHours(12));
-    String refreshToken = generateToken(
-        new JwtPayload(refTokenEntity.getId(), refTokenEntity.getCurrentTokenId().toString()),
-        Duration.ofHours(14)
-    );
+    return generateAllToken(accountId, refTokenEntity.getId(), refTokenEntity.getCurrentTokenId());
+  }
+
+  @Transactional
+  public Optional<Token.AllResponse> renewToken(String refreshToken) {
+    JwtPayload payload = jwtProvider.decode(refreshToken)
+        .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+    RefreshToken refTokenEntity = refreshTokenRepository.findByIdOrThrow(payload.id());
+
+    try {
+      refTokenEntity.renew(payload.subject());
+      refreshTokenRepository.save(refTokenEntity);
+      return Optional.of(generateAllToken(
+          refTokenEntity.getAccountId(),
+          refTokenEntity.getId(),
+          refTokenEntity.getCurrentTokenId()
+      ));
+    } catch (BusinessException exception) {
+      LOGGER.warn("토큰 탈취가 의심되어 로그아웃을 진행합니다. accountId: {}", refTokenEntity.getAccountId());
+      refreshTokenRepository.delete(refTokenEntity);
+      return Optional.empty();
+    }
+  }
+
+  private Token.AllResponse generateAllToken(
+      Long accountId,
+      Long rootTokenId,
+      Long currentTokenId
+  ) {
+    String subject = currentTokenId.toString();
+    String accessToken = generateToken(new JwtPayload(accountId, subject), Duration.ofHours(12));
+    String refreshToken = generateToken(new JwtPayload(rootTokenId, subject), Duration.ofDays(14));
     return new Token.AllResponse(accessToken, refreshToken);
   }
 

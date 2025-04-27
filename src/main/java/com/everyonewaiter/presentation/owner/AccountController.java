@@ -4,6 +4,8 @@ import com.everyonewaiter.application.account.service.AccountService;
 import com.everyonewaiter.application.auth.service.AuthService;
 import com.everyonewaiter.application.auth.service.response.Token;
 import com.everyonewaiter.domain.auth.entity.AuthPurpose;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.presentation.owner.request.AccountWrite;
 import com.everyonewaiter.presentation.owner.request.Auth;
 import jakarta.validation.Valid;
@@ -38,7 +40,7 @@ class AccountController implements AccountControllerSpecification {
       @RequestBody @Valid AccountWrite.SignInRequest request
   ) {
     Long accountId = accountService.signIn(request.toAccountSignIn());
-    Token.AllResponse response = authService.generateTokenBySignIn(accountId, request.email());
+    Token.AllResponse response = authService.generateTokenBySignIn(accountId);
     return ResponseEntity.ok(response);
   }
 
@@ -73,6 +75,16 @@ class AccountController implements AccountControllerSpecification {
     String email = authService.verifyAuthMail(token);
     accountService.activate(email);
     return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @PostMapping("/renew-token")
+  public ResponseEntity<Token.AllResponse> renewToken(
+      @RequestBody @Valid Auth.RenewTokenRequest request
+  ) {
+    return authService.renewToken(request.refreshToken())
+        .map(ResponseEntity::ok)
+        .orElseThrow(() -> new BusinessException(ErrorCode.FORBIDDEN));
   }
 
 }

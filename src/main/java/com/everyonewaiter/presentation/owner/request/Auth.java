@@ -57,4 +57,13 @@ public class Auth {
 
   }
 
+  @Schema(name = "Auth.RenewTokenRequest")
+  public record RenewTokenRequest(
+      @Schema(description = "리프레시 토큰", example = "abcdefghijklmnopqrstuvwxyz")
+      @NotBlank(message = "리프레시 토큰을 입력해 주세요.")
+      String refreshToken
+  ) {
+
+  }
+
 }

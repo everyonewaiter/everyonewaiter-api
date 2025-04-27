@@ -1,6 +1,9 @@
 package com.everyonewaiter.domain.auth.entity;
 
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.global.support.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -27,6 +30,14 @@ public class RefreshToken extends AggregateRoot<RefreshToken> {
     refreshToken.accountId = accountId;
     refreshToken.currentTokenId = refreshToken.getId();
     return refreshToken;
+  }
+
+  public void renew(String currentTokenId) {
+    if (this.currentTokenId.toString().equals(currentTokenId)) {
+      this.currentTokenId = Tsid.nextLong();
+    } else {
+      throw new BusinessException(ErrorCode.UNAUTHORIZED);
+    }
   }
 
 }

@@ -167,4 +167,22 @@ interface AccountControllerSpecification {
   )
   ResponseEntity<Void> verifyEmail(String token);
 
+  @SecurityRequirements
+  @Operation(summary = "토큰 갱신", description = "토큰 갱신 API")
+  @ApiResponse(responseCode = "200", description = "토큰 갱신 성공")
+  @ApiErrorResponses(
+      summary = "토큰 갱신 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "리프레시 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "토큰이 탈취된것으로 의심되는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Token.AllResponse> renewToken(@RequestBody Auth.RenewTokenRequest request);
+
 }
