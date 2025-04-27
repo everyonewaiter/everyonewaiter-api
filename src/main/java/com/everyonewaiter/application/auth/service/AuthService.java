@@ -80,14 +80,14 @@ public class AuthService {
   }
 
   @Transactional
-  public Token.SingInResponse generateTokenBySignIn(Long accountId, String email) {
+  public Token.AllResponse generateTokenBySignIn(Long accountId, String email) {
     RefreshToken refTokenEntity = refreshTokenRepository.save(RefreshToken.create(accountId));
     String accessToken = generateToken(new JwtPayload(accountId, email), Duration.ofHours(12));
     String refreshToken = generateToken(
         new JwtPayload(refTokenEntity.getId(), refTokenEntity.getCurrentTokenId().toString()),
         Duration.ofHours(14)
     );
-    return new Token.SingInResponse(accessToken, refreshToken);
+    return new Token.AllResponse(accessToken, refreshToken);
   }
 
 }

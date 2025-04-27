@@ -8,7 +8,6 @@ import com.everyonewaiter.presentation.owner.request.AccountWrite;
 import com.everyonewaiter.presentation.owner.request.Auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -53,7 +52,7 @@ interface AccountControllerSpecification {
 
   @SecurityRequirements
   @Operation(summary = "로그인", description = "로그인 API")
-  @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = Token.SingInResponse.class)))
+  @ApiResponse(responseCode = "200", description = "로그인 성공")
   @ApiErrorResponses(
       summary = "로그인 실패",
       value = {
@@ -71,7 +70,7 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Token.SingInResponse> signIn(@RequestBody AccountWrite.SignInRequest request);
+  ResponseEntity<Token.AllResponse> signIn(@RequestBody AccountWrite.SignInRequest request);
 
   @SecurityRequirements
   @Operation(

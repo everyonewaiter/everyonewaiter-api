@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Token {
 
-  @Schema(name = "Token.SignInResponse")
-  public record SingInResponse(
+  @Schema(name = "Token.AllResponse")
+  public record AllResponse(
       @Schema(description = "액세스 토큰 (12시간)", example = "abcdefghijklmnopqrstuvwxyz")
       String accessToken,
 

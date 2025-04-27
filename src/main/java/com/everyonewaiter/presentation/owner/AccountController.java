@@ -3,7 +3,6 @@ package com.everyonewaiter.presentation.owner;
 import com.everyonewaiter.application.account.service.AccountService;
 import com.everyonewaiter.application.auth.service.AuthService;
 import com.everyonewaiter.application.auth.service.response.Token;
-import com.everyonewaiter.application.auth.service.response.Token.SingInResponse;
 import com.everyonewaiter.domain.auth.entity.AuthPurpose;
 import com.everyonewaiter.presentation.owner.request.AccountWrite;
 import com.everyonewaiter.presentation.owner.request.Auth;
@@ -35,11 +34,11 @@ class AccountController implements AccountControllerSpecification {
 
   @Override
   @PostMapping("/sign-in")
-  public ResponseEntity<Token.SingInResponse> signIn(
+  public ResponseEntity<Token.AllResponse> signIn(
       @RequestBody @Valid AccountWrite.SignInRequest request
   ) {
     Long accountId = accountService.signIn(request.toAccountSignIn());
-    SingInResponse response = authService.generateTokenBySignIn(accountId, request.email());
+    Token.AllResponse response = authService.generateTokenBySignIn(accountId, request.email());
     return ResponseEntity.ok(response);
   }
 
