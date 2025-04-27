@@ -13,7 +13,9 @@ public interface AccountRepository {
 
   Account findByEmailOrThrow(String email);
 
-  Optional<Account> findById(Long id);
+  Optional<Account> findById(Long accountId);
+
+  Account findByIdOrThrow(Long accountId);
 
   Account save(Account account);
 

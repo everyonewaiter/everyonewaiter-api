@@ -35,8 +35,14 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public Optional<Account> findById(Long id) {
-    return accountJpaRepository.findById(id);
+  public Optional<Account> findById(Long accountId) {
+    return accountJpaRepository.findById(accountId);
+  }
+
+  @Override
+  public Account findByIdOrThrow(Long accountId) {
+    return findById(accountId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
   }
 
   @Override

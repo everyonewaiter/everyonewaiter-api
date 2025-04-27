@@ -2,6 +2,7 @@ package com.everyonewaiter.application.account.service;
 
 import com.everyonewaiter.application.account.service.request.AccountCreate;
 import com.everyonewaiter.application.account.service.request.AccountSignIn;
+import com.everyonewaiter.application.account.service.response.AccountAdmin;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
 import com.everyonewaiter.domain.account.service.AccountValidator;
@@ -55,6 +56,11 @@ public class AccountService {
           return accountRepository.save(account).getId();
         })
         .orElseThrow(() -> new BusinessException(ErrorCode.FAILED_SIGN_IN));
+  }
+
+  public AccountAdmin.ReadResponse readByAdmin(Long accountId) {
+    Account account = accountRepository.findByIdOrThrow(accountId);
+    return AccountAdmin.ReadResponse.from(account);
   }
 
 }
