@@ -46,7 +46,7 @@ public class Account extends AggregateRoot<Account> {
   private Permission permission = Permission.USER;
 
   @Column(name = "last_sign_in", nullable = false)
-  private Instant lastSingIn = Instant.ofEpochMilli(0);
+  private Instant lastSignIn = Instant.ofEpochMilli(0);
 
   public static Account create(String email, String password, String phoneNumber) {
     Account account = new Account();
@@ -84,7 +84,7 @@ public class Account extends AggregateRoot<Account> {
 
   public void signIn(PasswordEncoder passwordEncoder, String rawPassword) {
     if (isActive() && passwordEncoder.matches(rawPassword, password)) {
-      this.lastSingIn = Instant.now();
+      this.lastSignIn = Instant.now();
     } else {
       throw new BusinessException(ErrorCode.FAILED_SIGN_IN);
     }
