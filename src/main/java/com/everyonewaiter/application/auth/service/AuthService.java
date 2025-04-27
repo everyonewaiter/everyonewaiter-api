@@ -13,6 +13,7 @@ import com.everyonewaiter.domain.auth.event.AuthMailSendEvent;
 import com.everyonewaiter.domain.auth.repository.AuthRepository;
 import com.everyonewaiter.domain.auth.repository.RefreshTokenRepository;
 import com.everyonewaiter.domain.auth.service.AuthValidator;
+import com.everyonewaiter.global.exception.AuthenticationException;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.security.JwtPayload;
@@ -92,8 +93,7 @@ public class AuthService {
 
   @Transactional
   public Optional<Token.AllResponse> renewToken(String refreshToken) {
-    JwtPayload payload = jwtProvider.decode(refreshToken)
-        .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+    JwtPayload payload = jwtProvider.decode(refreshToken).orElseThrow(AuthenticationException::new);
     RefreshToken refTokenEntity = refreshTokenRepository.findByIdOrThrow(payload.id());
 
     try {

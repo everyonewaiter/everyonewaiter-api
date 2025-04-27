@@ -4,8 +4,7 @@ import com.everyonewaiter.application.account.service.AccountService;
 import com.everyonewaiter.application.auth.service.AuthService;
 import com.everyonewaiter.application.auth.service.response.Token;
 import com.everyonewaiter.domain.auth.entity.AuthPurpose;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.global.exception.AccessDeniedException;
 import com.everyonewaiter.presentation.owner.request.AccountWrite;
 import com.everyonewaiter.presentation.owner.request.Auth;
 import jakarta.validation.Valid;
@@ -84,7 +83,7 @@ class AccountController implements AccountControllerSpecification {
   ) {
     return authService.renewToken(request.refreshToken())
         .map(ResponseEntity::ok)
-        .orElseThrow(() -> new BusinessException(ErrorCode.FORBIDDEN));
+        .orElseThrow(AccessDeniedException::new);
   }
 
 }

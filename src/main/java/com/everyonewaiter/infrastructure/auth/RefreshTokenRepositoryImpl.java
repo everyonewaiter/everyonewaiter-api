@@ -2,8 +2,7 @@ package com.everyonewaiter.infrastructure.auth;
 
 import com.everyonewaiter.domain.auth.entity.RefreshToken;
 import com.everyonewaiter.domain.auth.repository.RefreshTokenRepository;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.global.exception.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,8 +14,7 @@ class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
 
   @Override
   public RefreshToken findByIdOrThrow(Long id) {
-    return refreshTokenJpaRepository.findById(id)
-        .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+    return refreshTokenJpaRepository.findById(id).orElseThrow(AuthenticationException::new);
   }
 
   @Override
