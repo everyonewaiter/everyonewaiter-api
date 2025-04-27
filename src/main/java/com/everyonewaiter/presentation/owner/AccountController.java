@@ -1,9 +1,12 @@
 package com.everyonewaiter.presentation.owner;
 
 import com.everyonewaiter.application.account.service.AccountService;
+import com.everyonewaiter.application.account.service.response.ProfileResponse;
 import com.everyonewaiter.application.auth.service.AuthService;
 import com.everyonewaiter.application.auth.service.response.Token;
+import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.auth.entity.AuthPurpose;
+import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.global.exception.AccessDeniedException;
 import com.everyonewaiter.presentation.owner.request.AccountWrite;
 import com.everyonewaiter.presentation.owner.request.Auth;
@@ -11,6 +14,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +28,13 @@ class AccountController implements AccountControllerSpecification {
 
   private final AuthService authService;
   private final AccountService accountService;
+
+  @Override
+  @GetMapping("/me")
+  public ResponseEntity<ProfileResponse> getProfile(@AuthenticationAccount Account account) {
+    ProfileResponse response = ProfileResponse.from(account);
+    return ResponseEntity.ok(response);
+  }
 
   @Override
   @PostMapping

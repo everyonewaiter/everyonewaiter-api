@@ -1,12 +1,15 @@
 package com.everyonewaiter.presentation.owner;
 
+import com.everyonewaiter.application.account.service.response.ProfileResponse;
 import com.everyonewaiter.application.auth.service.response.Token;
+import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.presentation.owner.request.AccountWrite;
 import com.everyonewaiter.presentation.owner.request.Auth;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -17,6 +20,14 @@ import org.springframework.http.ResponseEntity;
 
 @Tag(name = "계정")
 interface AccountControllerSpecification {
+
+  @Operation(summary = "프로필 조회", description = "프로필 조회 API")
+  @ApiResponse(responseCode = "200", description = "프로필 조회 성공")
+  @ApiErrorResponse(
+      code = ErrorCode.UNAUTHORIZED,
+      exampleName = "액세스 토큰이 유효하지 않은 경우"
+  )
+  ResponseEntity<ProfileResponse> getProfile(@Parameter(hidden = true) Account account);
 
   @SecurityRequirements
   @Operation(
