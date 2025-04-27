@@ -4,6 +4,7 @@ import com.everyonewaiter.application.notification.mail.service.MailService;
 import com.everyonewaiter.application.notification.mail.service.request.MailSend;
 import com.everyonewaiter.domain.auth.event.AuthMailSendEvent;
 import com.everyonewaiter.global.config.ClientUrlRegistry;
+import com.everyonewaiter.global.security.JwtFixedId;
 import com.everyonewaiter.global.security.JwtPayload;
 import java.time.Duration;
 import java.util.Map;
@@ -29,7 +30,7 @@ class AuthMailSendEventHandler {
   public void consume(AuthMailSendEvent event) {
     LOGGER.info("[이메일 인증 메일 전송 이벤트] email: {}", event.email());
 
-    JwtPayload payload = new JwtPayload(0L, event.email());
+    JwtPayload payload = new JwtPayload(JwtFixedId.VERIFICATION_EMAIL, event.email());
     String authToken = authService.generateToken(payload, Duration.ofDays(1));
     String authUrl = clientUrlRegistry.getUrls().getFirst()
         + "/auth/mail?email="
