@@ -1,7 +1,7 @@
 package com.everyonewaiter.presentation.admin;
 
 import com.everyonewaiter.application.account.service.AccountService;
-import com.everyonewaiter.application.account.service.response.AccountAdminRead;
+import com.everyonewaiter.application.account.service.response.AccountAdmin;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.presentation.admin.request.AccountAdminWrite;
@@ -24,11 +24,11 @@ class AccountAdminController implements AccountAdminControllerSpecification {
 
   @Override
   @GetMapping("/{accountId}")
-  public ResponseEntity<AccountAdminRead.Response> getAccount(
+  public ResponseEntity<AccountAdmin.ReadResponse> getAccount(
       @PathVariable Long accountId,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
-    AccountAdminRead.Response response = accountService.readByAdmin(accountId);
+    AccountAdmin.ReadResponse response = accountService.readByAdmin(accountId);
     return ResponseEntity.ok(response);
   }
 

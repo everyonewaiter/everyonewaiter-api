@@ -3,7 +3,7 @@ package com.everyonewaiter.application.account.service;
 import com.everyonewaiter.application.account.service.request.AccountAdminUpdate;
 import com.everyonewaiter.application.account.service.request.AccountCreate;
 import com.everyonewaiter.application.account.service.request.AccountSignIn;
-import com.everyonewaiter.application.account.service.response.AccountAdminRead;
+import com.everyonewaiter.application.account.service.response.AccountAdmin;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
 import com.everyonewaiter.domain.account.service.AccountValidator;
@@ -59,9 +59,9 @@ public class AccountService {
         .orElseThrow(() -> new BusinessException(ErrorCode.FAILED_SIGN_IN));
   }
 
-  public AccountAdminRead.Response readByAdmin(Long accountId) {
+  public AccountAdmin.ReadResponse readByAdmin(Long accountId) {
     Account account = accountRepository.findByIdOrThrow(accountId);
-    return AccountAdminRead.Response.from(account);
+    return AccountAdmin.ReadResponse.from(account);
   }
 
   @Transactional

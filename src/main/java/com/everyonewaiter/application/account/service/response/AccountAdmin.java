@@ -3,15 +3,16 @@ package com.everyonewaiter.application.account.service.response;
 import com.everyonewaiter.domain.account.entity.Account;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AccountAdminRead {
+public class AccountAdmin {
 
-  @Schema(name = "AccountAdminRead.Response")
-  public record Response(
+  @Schema(name = "AccountAdmin.ReadResponse")
+  public record ReadResponse(
       @Schema(description = "계정 ID", example = "\"694865267482835533\"")
       String accountId,
 
@@ -37,8 +38,8 @@ public class AccountAdminRead {
       Instant updatedAt
   ) {
 
-    public static Response from(Account account) {
-      return new Response(
+    public static ReadResponse from(Account account) {
+      return new ReadResponse(
           Objects.requireNonNull(account.getId()).toString(),
           account.getEmail(),
           account.getPhoneNumber(),
@@ -49,6 +50,20 @@ public class AccountAdminRead {
           account.getUpdatedAt()
       );
     }
+
+  }
+
+  @Schema(name = "AccountAdmin.PageResponse")
+  public record PageResponse(
+      List<ViewResponse> accounts,
+      boolean hasNext,
+      boolean hasPrevious
+  ) {
+
+  }
+
+  @Schema(name = "AccountAdmin.ViewResponse")
+  public record ViewResponse() {
 
   }
 
