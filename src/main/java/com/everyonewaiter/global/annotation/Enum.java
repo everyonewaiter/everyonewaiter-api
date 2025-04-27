@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Enum {
 
-  String message() default "요청 본문 중 누락되었거나 잘못된 형식의 값이 포함되어 있습니다.";
+  String message() default "요청 본문에 잘못된 형식의 값이 포함되어 있습니다.";
 
   Class<?>[] groups() default {};
 
