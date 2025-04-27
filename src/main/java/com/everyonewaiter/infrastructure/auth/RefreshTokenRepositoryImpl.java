@@ -13,6 +13,11 @@ class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
   private final RefreshTokenJpaRepository refreshTokenJpaRepository;
 
   @Override
+  public boolean aliveAccountToken(Long accountId, Long currentTokenId) {
+    return refreshTokenJpaRepository.existsByAccountIdAndCurrentTokenId(accountId, currentTokenId);
+  }
+
+  @Override
   public RefreshToken findByIdOrThrow(Long id) {
     return refreshTokenJpaRepository.findById(id).orElseThrow(AuthenticationException::new);
   }

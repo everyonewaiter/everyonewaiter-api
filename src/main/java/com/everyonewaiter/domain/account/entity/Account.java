@@ -66,11 +66,20 @@ public class Account extends AggregateRoot<Account> {
     return state == State.ACTIVE;
   }
 
+  public boolean hasPermission(Permission permission) {
+    return switch (permission) {
+      case OWNER -> this.permission != Permission.USER;
+      case ADMIN -> this.permission == Permission.ADMIN;
+      default -> true;
+    };
+  }
+
   public void activate() {
-    if (!isInactive()) {
+    if (isInactive()) {
+      this.state = State.ACTIVE;
+    } else {
       throw new BusinessException(ErrorCode.ALREADY_VERIFIED_EMAIL);
     }
-    this.state = State.ACTIVE;
   }
 
   public void signIn(PasswordEncoder passwordEncoder, String rawPassword) {

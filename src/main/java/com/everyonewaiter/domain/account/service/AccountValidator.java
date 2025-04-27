@@ -2,6 +2,7 @@ package com.everyonewaiter.domain.account.service;
 
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
+import com.everyonewaiter.global.exception.AccessDeniedException;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,12 @@ public class AccountValidator {
     Account account = getAccount(email);
     if (!account.isInactive()) {
       throw new BusinessException(ErrorCode.ALREADY_VERIFIED_EMAIL);
+    }
+  }
+
+  public void validateAccountPermission(Account account, Account.Permission permission) {
+    if (!account.hasPermission(permission)) {
+      throw new AccessDeniedException();
     }
   }
 

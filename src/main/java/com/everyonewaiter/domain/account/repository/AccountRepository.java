@@ -13,6 +13,8 @@ public interface AccountRepository {
 
   Account findByEmailOrThrow(String email);
 
+  Optional<Account> findById(Long id);
+
   Account save(Account account);
 
 }

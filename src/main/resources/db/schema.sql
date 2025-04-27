@@ -20,3 +20,4 @@ create table refresh_token
     updated_at       datetime(6) not null
 );
 create index idx_refresh_token_updated_at on refresh_token (updated_at asc);
+create index idx_refresh_token_account_id_current_token_id on refresh_token (account_id asc, current_token_id asc);
