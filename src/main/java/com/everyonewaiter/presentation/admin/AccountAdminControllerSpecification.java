@@ -1,6 +1,6 @@
 package com.everyonewaiter.presentation.admin;
 
-import com.everyonewaiter.application.account.service.response.AccountAdmin;
+import com.everyonewaiter.application.account.service.response.AccountAdminRead;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
@@ -33,7 +33,7 @@ interface AccountAdminControllerSpecification {
           ),
       }
   )
-  ResponseEntity<AccountAdmin.ReadResponse> getAccount(
+  ResponseEntity<AccountAdminRead.Response> getAccount(
       Long accountId,
       @Parameter(hidden = true) Account account
   );

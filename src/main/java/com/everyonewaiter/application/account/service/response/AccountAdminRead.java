@@ -8,10 +8,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AccountAdmin {
+public class AccountAdminRead {
 
-  @Schema(name = "AccountAdmin.ReadResponse")
-  public record ReadResponse(
+  @Schema(name = "AccountAdminRead.Response")
+  public record Response(
       @Schema(description = "계정 ID", example = "\"694865267482835533\"")
       String accountId,
 
@@ -37,8 +37,8 @@ public class AccountAdmin {
       Instant updatedAt
   ) {
 
-    public static ReadResponse from(Account account) {
-      return new ReadResponse(
+    public static Response from(Account account) {
+      return new Response(
           Objects.requireNonNull(account.getId()).toString(),
           account.getEmail(),
           account.getPhoneNumber(),
