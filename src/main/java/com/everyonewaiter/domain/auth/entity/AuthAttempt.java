@@ -28,9 +28,4 @@ public record AuthAttempt(
     return -2;
   }
 
-  @Override
-  public Duration getExpiration() {
-    return expiration;
-  }
-
 }

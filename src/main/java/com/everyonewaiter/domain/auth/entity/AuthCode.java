@@ -24,9 +24,4 @@ public record AuthCode(String phoneNumber, int code, Duration expiration) implem
     return code;
   }
 
-  @Override
-  public Duration getExpiration() {
-    return expiration;
-  }
-
 }

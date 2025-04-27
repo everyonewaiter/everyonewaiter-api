@@ -27,14 +27,14 @@ class AuthRepositoryImpl implements AuthRepository {
   @Override
   public void save(Auth auth) {
     redisTemplate.opsForValue()
-        .set(auth.getKey(), String.valueOf(auth.getValue()), auth.getExpiration());
+        .set(auth.getKey(), String.valueOf(auth.getValue()), auth.expiration());
   }
 
   @Override
   public void increment(Auth auth) {
     Long incrementedValue = redisTemplate.opsForValue().increment(auth.getKey());
     if (incrementedValue != null && incrementedValue == 1L) {
-      redisTemplate.expire(auth.getKey(), auth.getExpiration());
+      redisTemplate.expire(auth.getKey(), auth.expiration());
     }
   }
 

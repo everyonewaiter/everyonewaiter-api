@@ -20,9 +20,4 @@ public record AuthSuccess(String phoneNumber, Duration expiration) implements Au
     return -2;
   }
 
-  @Override
-  public Duration getExpiration() {
-    return expiration;
-  }
-
 }

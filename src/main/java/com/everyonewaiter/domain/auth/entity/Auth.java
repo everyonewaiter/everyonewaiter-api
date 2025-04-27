@@ -8,6 +8,6 @@ public interface Auth {
 
   int getValue();
 
-  Duration getExpiration();
+  Duration expiration();
 
 }
