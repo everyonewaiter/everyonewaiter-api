@@ -10,6 +10,8 @@ import com.everyonewaiter.domain.auth.event.AuthCodeSendEvent;
 import com.everyonewaiter.domain.auth.event.AuthMailSendEvent;
 import com.everyonewaiter.domain.auth.repository.AuthRepository;
 import com.everyonewaiter.domain.auth.service.AuthValidator;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.security.JwtPayload;
 import com.everyonewaiter.global.security.JwtProvider;
 import java.time.Duration;
@@ -64,6 +66,13 @@ public class AuthService {
   @Transactional(readOnly = true)
   public void sendAuthMail(String email) {
     applicationEventPublisher.publishEvent(new AuthMailSendEvent(email));
+  }
+
+  public String verifyAuthMail(String token) {
+    JwtPayload payload = jwtProvider.decode(token)
+        .orElseThrow(() -> new BusinessException(ErrorCode.EXPIRED_VERIFICATION_EMAIL));
+    authValidator.validateAuthMailTokenPayload(payload);
+    return payload.subject();
   }
 
 }

@@ -5,6 +5,9 @@ import com.everyonewaiter.domain.auth.entity.AuthSuccess;
 import com.everyonewaiter.domain.auth.repository.AuthRepository;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.global.security.JwtFixedId;
+import com.everyonewaiter.global.security.JwtPayload;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +32,12 @@ public class AuthValidator {
   public void checkNotExistsAuthSuccess(AuthSuccess authSuccess) {
     if (authRepository.exists(authSuccess)) {
       throw new BusinessException(ErrorCode.ALREADY_VERIFIED_PHONE_NUMBER);
+    }
+  }
+
+  public void validateAuthMailTokenPayload(JwtPayload payload) {
+    if (!Objects.equals(payload.id(), JwtFixedId.VERIFICATION_EMAIL.getId())) {
+      throw new BusinessException(ErrorCode.EXPIRED_VERIFICATION_EMAIL);
     }
   }
 

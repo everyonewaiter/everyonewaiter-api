@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -52,6 +53,14 @@ class AccountController implements AccountControllerSpecification {
   public ResponseEntity<Void> sendAuthMail(@RequestBody @Valid Auth.SendAuthMailRequest request) {
     accountService.checkPossibleSendAuthMail(request.email());
     authService.sendAuthMail(request.email());
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @PostMapping("/verify-auth-mail")
+  public ResponseEntity<Void> verifyEmail(@RequestParam String token) {
+    String email = authService.verifyAuthMail(token);
+    accountService.activate(email);
     return ResponseEntity.noContent().build();
   }
 

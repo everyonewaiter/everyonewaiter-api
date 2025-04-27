@@ -122,4 +122,26 @@ interface AccountControllerSpecification {
   )
   ResponseEntity<Void> sendAuthMail(@RequestBody Auth.SendAuthMailRequest request);
 
+  @SecurityRequirements
+  @Operation(summary = "이메일 인증", description = "이메일 인증 API")
+  @ApiResponse(responseCode = "204", description = "이메일 인증 성공")
+  @ApiErrorResponses(
+      summary = "이메일 인증 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.EXPIRED_VERIFICATION_EMAIL,
+              exampleName = "토큰이 만료되었거나 이메일 인증 확인 메일의 토큰이 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ALREADY_VERIFIED_EMAIL,
+              exampleName = "이미 이메일 인증이 완료된 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ACCOUNT_NOT_FOUND,
+              exampleName = "이메일로 회원을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> verifyEmail(String token);
+
 }

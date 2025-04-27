@@ -37,4 +37,11 @@ public class AccountService {
     accountValidator.validateAccountIsInactive(email);
   }
 
+  @Transactional
+  public void activate(String email) {
+    Account account = accountRepository.findByEmailOrThrow(email);
+    account.activate();
+    accountRepository.save(account);
+  }
+
 }

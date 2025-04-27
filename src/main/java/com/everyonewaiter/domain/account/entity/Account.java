@@ -3,6 +3,8 @@ package com.everyonewaiter.domain.account.entity;
 import com.everyonewaiter.domain.account.event.AccountCreateEvent;
 import com.everyonewaiter.domain.auth.event.AuthMailSendEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -57,6 +59,13 @@ public class Account extends AggregateRoot<Account> {
 
   public boolean isInactive() {
     return state == State.INACTIVE;
+  }
+
+  public void activate() {
+    if (!isInactive()) {
+      throw new BusinessException(ErrorCode.ALREADY_VERIFIED_EMAIL);
+    }
+    this.state = State.ACTIVE;
   }
 
 }
