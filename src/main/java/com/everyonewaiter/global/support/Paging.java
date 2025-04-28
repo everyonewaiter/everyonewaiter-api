@@ -1,5 +1,7 @@
 package com.everyonewaiter.global.support;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,9 +34,11 @@ public class Paging<T> {
   private final boolean hasPrevious;
 
   @Schema(description = "첫번째 페이지인지 여부", example = "true")
+  @JsonProperty("isFirst")
   private final boolean isFirst;
 
   @Schema(description = "마지막 페이지인지 여부", example = "false")
+  @JsonProperty("isLast")
   private final boolean isLast;
 
   @Schema(description = "FastForward 페이지 번호", example = "6")
@@ -66,6 +70,16 @@ public class Paging<T> {
 
   public List<T> getContent() {
     return Collections.unmodifiableList(content);
+  }
+
+  @JsonIgnore
+  public boolean isFirst() {
+    return isFirst;
+  }
+
+  @JsonIgnore
+  public boolean isLast() {
+    return isLast;
   }
 
 }
