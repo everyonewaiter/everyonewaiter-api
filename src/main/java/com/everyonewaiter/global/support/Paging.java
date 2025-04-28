@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.Data;
 
 @Data
@@ -53,6 +55,13 @@ public class Paging<T> {
     this.isLast = !hasNext;
     this.fastForwardPage = Math.min(page + pageSkipSize, (long) Math.ceil((double) count / size));
     this.fastBackwardPage = Math.max(page - pageSkipSize, 1);
+  }
+
+  public <U> Paging<U> map(Function<? super T, ? extends U> converter) {
+    List<U> convertedContent = this.content.stream()
+        .map(converter)
+        .collect(Collectors.toList());
+    return new Paging<>(convertedContent, count, new PagingRequest(page, size, pageSkipSize));
   }
 
   public List<T> getContent() {
