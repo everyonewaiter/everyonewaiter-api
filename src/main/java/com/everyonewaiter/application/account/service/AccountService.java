@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.account.service;
 
+import com.everyonewaiter.application.account.service.request.AccountAdminPage;
 import com.everyonewaiter.application.account.service.request.AccountAdminUpdate;
 import com.everyonewaiter.application.account.service.request.AccountCreate;
 import com.everyonewaiter.application.account.service.request.AccountSignIn;
@@ -9,6 +10,7 @@ import com.everyonewaiter.domain.account.repository.AccountRepository;
 import com.everyonewaiter.domain.account.service.AccountValidator;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.global.support.Paging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,16 @@ public class AccountService {
           return accountRepository.save(account).getId();
         })
         .orElseThrow(() -> new BusinessException(ErrorCode.FAILED_SIGN_IN));
+  }
+
+  public Paging<AccountAdmin.PageViewResponse> readAllByAdmin(AccountAdminPage request) {
+    return accountRepository.findAllByAdmin(
+            request.email(),
+            request.state(),
+            request.permission(),
+            request.pagination()
+        )
+        .map(AccountAdmin.PageViewResponse::from);
   }
 
   public AccountAdmin.ReadResponse readByAdmin(Long accountId) {

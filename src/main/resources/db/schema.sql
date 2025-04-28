@@ -10,6 +10,7 @@ create table account
     created_at   datetime(6)                         not null,
     updated_at   datetime(6)                         not null
 );
+create index idx_account_id_email_state_permission on account (id desc, email asc, state asc, permission asc);
 
 create table refresh_token
 (

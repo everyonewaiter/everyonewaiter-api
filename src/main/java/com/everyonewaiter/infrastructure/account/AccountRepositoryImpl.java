@@ -1,17 +1,30 @@
 package com.everyonewaiter.infrastructure.account;
 
+import static com.everyonewaiter.domain.account.entity.QAccount.account;
+
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
+import com.everyonewaiter.domain.account.view.AccountAdminPageView;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.global.support.Pagination;
+import com.everyonewaiter.global.support.Paging;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.annotation.Nullable;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 @Repository
 @RequiredArgsConstructor
 class AccountRepositoryImpl implements AccountRepository {
 
+  private final JPAQueryFactory queryFactory;
   private final AccountJpaRepository accountJpaRepository;
 
   @Override
@@ -22,6 +35,52 @@ class AccountRepositoryImpl implements AccountRepository {
   @Override
   public boolean existsByPhoneNumber(String phoneNumber) {
     return accountJpaRepository.existsByPhoneNumber(phoneNumber);
+  }
+
+  @Override
+  public Paging<AccountAdminPageView> findAllByAdmin(
+      @Nullable String email,
+      @Nullable Account.State state,
+      @Nullable Account.Permission permission,
+      Pagination pagination
+  ) {
+    List<AccountAdminPageView> views = queryFactory
+        .select(
+            Projections.constructor(
+                AccountAdminPageView.class,
+                account.id,
+                account.email,
+                account.state,
+                account.permission,
+                account.id.isNull(),
+                account.createdAt,
+                account.updatedAt
+            )
+        )
+        .from(account)
+        .where(
+            emailStratsWith(email),
+            stateEq(state),
+            permissionEq(permission)
+        )
+        .orderBy(account.id.desc())
+        .limit(pagination.limit())
+        .offset(pagination.offset())
+        .fetch();
+
+    Long count = queryFactory
+        .select(account.count())
+        .from(account)
+        .where(
+            emailStratsWith(email),
+            stateEq(state),
+            permissionEq(permission)
+        )
+        .orderBy(account.id.desc())
+        .limit(pagination.countLimit())
+        .fetchOne();
+
+    return new Paging<>(views, Objects.requireNonNull(count), pagination);
   }
 
   @Override
@@ -48,6 +107,18 @@ class AccountRepositoryImpl implements AccountRepository {
   @Override
   public Account save(Account account) {
     return accountJpaRepository.save(account);
+  }
+
+  private BooleanExpression emailStratsWith(@Nullable String email) {
+    return StringUtils.hasText(email) ? account.email.startsWith(email) : null;
+  }
+
+  private BooleanExpression stateEq(@Nullable Account.State state) {
+    return state != null ? account.state.eq(state) : null;
+  }
+
+  private BooleanExpression permissionEq(@Nullable Account.Permission permission) {
+    return permission != null ? account.permission.eq(permission) : null;
   }
 
 }

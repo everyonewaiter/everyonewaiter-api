@@ -4,11 +4,14 @@ import com.everyonewaiter.application.account.service.AccountService;
 import com.everyonewaiter.application.account.service.response.AccountAdmin;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
+import com.everyonewaiter.global.support.Paging;
+import com.everyonewaiter.presentation.admin.request.AccountAdminRead;
 import com.everyonewaiter.presentation.admin.request.AccountAdminWrite;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 class AccountAdminController implements AccountAdminControllerSpecification {
 
   private final AccountService accountService;
+
+  @Override
+  @GetMapping
+  public ResponseEntity<Paging<AccountAdmin.PageViewResponse>> getAccounts(
+      @ModelAttribute @Valid AccountAdminRead.PageRequest request,
+      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+  ) {
+    return ResponseEntity.ok(accountService.readAllByAdmin(request.toAccountAdminPage()));
+  }
 
   @Override
   @GetMapping("/{accountId}")
