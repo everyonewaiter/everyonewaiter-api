@@ -69,7 +69,7 @@ public class AuthService {
     authRepository.delete(authCode);
   }
 
-  @Transactional(readOnly = true)
+  @Transactional
   public void sendAuthMail(String email) {
     applicationEventPublisher.publishEvent(new AuthMailSendEvent(email));
   }
