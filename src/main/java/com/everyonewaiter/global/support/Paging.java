@@ -43,11 +43,11 @@ public class Paging<T> {
   @Schema(description = "FastBackward 페이지 번호", example = "1")
   private final long fastBackwardPage;
 
-  public Paging(List<T> content, long count, PagingRequest pagingRequest) {
+  public Paging(List<T> content, long count, Pagination pagination) {
     this.content.addAll(content);
-    this.page = pagingRequest.page();
-    this.size = pagingRequest.size();
-    this.pageSkipSize = pagingRequest.pageSkipSize();
+    this.page = pagination.page();
+    this.size = pagination.size();
+    this.pageSkipSize = pagination.pageSkipSize();
     this.count = count;
     this.hasNext = count > page * size;
     this.hasPrevious = page > 1;
@@ -61,7 +61,7 @@ public class Paging<T> {
     List<U> convertedContent = this.content.stream()
         .map(converter)
         .collect(Collectors.toList());
-    return new Paging<>(convertedContent, count, new PagingRequest(page, size, pageSkipSize));
+    return new Paging<>(convertedContent, count, new Pagination(page, size, pageSkipSize));
   }
 
   public List<T> getContent() {

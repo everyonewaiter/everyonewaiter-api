@@ -1,10 +1,10 @@
 package com.everyonewaiter.global.support;
 
-public record PagingRequest(long page, long size, int pageSkipSize) {
+public record Pagination(long page, long size, int pageSkipSize) {
 
   private static final int DEFAULT_PAGE_SKIP_SIZE = 5;
 
-  public PagingRequest(long page, long size) {
+  public Pagination(long page, long size) {
     this(page, size, DEFAULT_PAGE_SKIP_SIZE);
   }
 
