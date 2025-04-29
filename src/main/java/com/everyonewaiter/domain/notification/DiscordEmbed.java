@@ -1,4 +1,4 @@
-package com.everyonewaiter.domain.notification.discord;
+package com.everyonewaiter.domain.notification;
 
 import java.util.List;
 import lombok.Builder;

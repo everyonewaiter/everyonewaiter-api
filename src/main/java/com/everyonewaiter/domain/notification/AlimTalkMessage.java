@@ -1,4 +1,4 @@
-package com.everyonewaiter.domain.notification.alimtalk;
+package com.everyonewaiter.domain.notification;
 
 import java.util.List;
 

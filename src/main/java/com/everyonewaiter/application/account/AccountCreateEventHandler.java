@@ -1,10 +1,10 @@
 package com.everyonewaiter.application.account;
 
-import com.everyonewaiter.application.notification.DiscordService;
-import com.everyonewaiter.application.notification.request.DiscordMessageSend;
 import com.everyonewaiter.domain.account.event.AccountCreateEvent;
-import com.everyonewaiter.domain.notification.discord.DiscordColor;
-import com.everyonewaiter.domain.notification.discord.DiscordEmbed;
+import com.everyonewaiter.domain.notification.DiscordColor;
+import com.everyonewaiter.domain.notification.DiscordEmbed;
+import com.everyonewaiter.domain.notification.service.DiscordSender;
+import com.everyonewaiter.domain.notification.service.request.DiscordMessageSend;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ class AccountCreateEventHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AccountCreateEventHandler.class);
 
-  private final DiscordService discordService;
+  private final DiscordSender discordSender;
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
@@ -32,7 +32,7 @@ class AccountCreateEventHandler {
         .build();
     DiscordMessageSend request = new DiscordMessageSend(embed);
 
-    discordService.sendMessage(request);
+    discordSender.send(request);
   }
 
 }

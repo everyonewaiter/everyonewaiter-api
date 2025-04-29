@@ -1,4 +1,4 @@
-package com.everyonewaiter.application.notification.request;
+package com.everyonewaiter.domain.notification.service.request;
 
 import java.util.HashMap;
 import java.util.Map;

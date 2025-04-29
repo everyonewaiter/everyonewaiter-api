@@ -3,11 +3,11 @@ package com.everyonewaiter.global.logging;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
-import com.everyonewaiter.domain.notification.discord.DiscordColor;
-import com.everyonewaiter.domain.notification.discord.DiscordEmbed;
-import com.everyonewaiter.domain.notification.discord.DiscordField;
+import com.everyonewaiter.domain.notification.DiscordColor;
+import com.everyonewaiter.domain.notification.DiscordEmbed;
+import com.everyonewaiter.domain.notification.DiscordField;
+import com.everyonewaiter.domain.notification.service.request.DiscordMessageSend;
 import com.everyonewaiter.global.support.DateFormatter;
-import com.everyonewaiter.infrastructure.notification.discord.DiscordWebhookRequest;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
 
   @Override
   protected void append(ILoggingEvent iLoggingEvent) {
-    DiscordWebhookRequest request = new DiscordWebhookRequest(createEmbeds(iLoggingEvent));
+    DiscordMessageSend request = new DiscordMessageSend(createEmbeds(iLoggingEvent));
     WEB_HOOK_CLIENT.post()
         .uri("/" + discordWebhookUri)
         .contentType(MediaType.APPLICATION_JSON)

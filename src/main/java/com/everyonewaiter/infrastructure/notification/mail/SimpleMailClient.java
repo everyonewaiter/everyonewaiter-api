@@ -1,6 +1,6 @@
 package com.everyonewaiter.infrastructure.notification.mail;
 
-import com.everyonewaiter.application.notification.MailClient;
+import com.everyonewaiter.domain.notification.service.MailClient;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;

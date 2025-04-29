@@ -1,6 +1,6 @@
-package com.everyonewaiter.application.notification.request;
+package com.everyonewaiter.domain.notification.service.request;
 
-import com.everyonewaiter.domain.notification.discord.DiscordEmbed;
+import com.everyonewaiter.domain.notification.DiscordEmbed;
 import java.util.List;
 
 public record DiscordMessageSend(List<DiscordEmbed> embeds) {

@@ -1,5 +1,6 @@
 package com.everyonewaiter.infrastructure.notification.discord;
 
+import com.everyonewaiter.domain.notification.service.request.DiscordMessageSend;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 interface DiscordWebhookClient {
 
   @PostMapping(value = "/{discordWebhookUri}", consumes = MediaType.APPLICATION_JSON_VALUE)
-  void sendMessage(
+  void send(
       @PathVariable String discordWebhookUri,
-      @RequestBody DiscordWebhookRequest request
+      @RequestBody DiscordMessageSend request
   );
 
 }

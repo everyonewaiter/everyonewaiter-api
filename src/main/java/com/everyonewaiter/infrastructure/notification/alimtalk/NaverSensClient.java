@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 interface NaverSensClient {
 
   @PostMapping(value = "/alimtalk/v2/services/{serviceId}/messages", consumes = MediaType.APPLICATION_JSON_VALUE)
-  void sendAlimTalk(
+  void send(
       @PathVariable String serviceId,
       @RequestBody NaverSensAlimTalkRequest request
   );

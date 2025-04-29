@@ -1,9 +1,8 @@
 package com.everyonewaiter.application.auth;
 
-import com.everyonewaiter.application.notification.AlimTalkService;
-import com.everyonewaiter.application.notification.request.AlimTalkSend;
 import com.everyonewaiter.domain.auth.event.AuthCodeSendEvent;
-import com.everyonewaiter.domain.notification.alimtalk.AlimTalkMessage;
+import com.everyonewaiter.domain.notification.AlimTalkMessage;
+import com.everyonewaiter.domain.notification.service.AlimTalkSender;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,7 @@ class AuthCodeSendEventHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthCodeSendEventHandler.class);
 
-  private final AlimTalkService alimTalkService;
+  private final AlimTalkSender alimTalkSender;
 
   @Async("eventTaskExecutor")
   @EventListener
@@ -30,9 +29,8 @@ class AuthCodeSendEventHandler {
         인증번호는 [%s]입니다.
         """.trim().formatted(event.code());
     AlimTalkMessage message = new AlimTalkMessage(event.phoneNumber(), content);
-    AlimTalkSend request = new AlimTalkSend("authenticationCode", message);
 
-    alimTalkService.sendAlimTalk(request);
+    alimTalkSender.sendTo("authenticationCode", message);
   }
 
 }

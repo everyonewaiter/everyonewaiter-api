@@ -1,11 +1,12 @@
 package com.everyonewaiter.application.auth;
 
-import com.everyonewaiter.application.notification.MailService;
-import com.everyonewaiter.application.notification.request.MailSend;
 import com.everyonewaiter.domain.auth.event.AuthMailSendEvent;
+import com.everyonewaiter.domain.notification.service.MailSender;
+import com.everyonewaiter.domain.notification.service.request.MailSend;
 import com.everyonewaiter.global.config.ClientUrlRegistry;
 import com.everyonewaiter.global.security.JwtFixedId;
 import com.everyonewaiter.global.security.JwtPayload;
+import com.everyonewaiter.global.security.JwtProvider;
 import java.time.Duration;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,8 @@ class AuthMailSendEventHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthMailSendEventHandler.class);
 
   private final ClientUrlRegistry clientUrlRegistry;
-  private final AuthService authService;
-  private final MailService mailService;
+  private final MailSender mailSender;
+  private final JwtProvider jwtProvider;
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
@@ -31,21 +32,19 @@ class AuthMailSendEventHandler {
     LOGGER.info("[이메일 인증 메일 전송 이벤트] email: {}", event.email());
 
     JwtPayload payload = new JwtPayload(JwtFixedId.VERIFICATION_EMAIL, event.email());
-    String authToken = authService.generateToken(payload, Duration.ofDays(1));
+    String authToken = jwtProvider.generate(payload, Duration.ofDays(1));
     String authUrl = clientUrlRegistry.getUrls().getFirst()
         + "/auth/mail?email="
         + event.email()
         + "&token="
         + authToken;
 
-    mailService.sendMail(
-        MailSend.of(
-            event.email(),
-            "email-authentication",
-            "[모두의 웨이터] 이메일 인증 안내드립니다.",
-            Map.of("authenticationUrl", authUrl)
-        )
-    );
+    mailSender.sendTo(MailSend.of(
+        event.email(),
+        "email-authentication",
+        "[모두의 웨이터] 이메일 인증 안내드립니다.",
+        Map.of("authenticationUrl", authUrl)
+    ));
   }
 
 }

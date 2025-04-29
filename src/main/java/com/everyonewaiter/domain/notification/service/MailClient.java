@@ -1,4 +1,4 @@
-package com.everyonewaiter.application.notification;
+package com.everyonewaiter.domain.notification.service;
 
 public interface MailClient {
 
