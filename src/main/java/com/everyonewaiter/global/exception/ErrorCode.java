@@ -24,6 +24,15 @@ public enum ErrorCode {
   METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "요청하신 경로 '%s'는 '%s' 메서드를 지원하지 않아요."),
   INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 오류가 발생했어요. 관리자에게 문의를 남겨주세요."),
 
+  // FILE
+  ALLOW_IMAGE_AND_PDF_FILE(BAD_REQUEST, "이미지 또는 PDF 파일만 업로드할 수 있어요."),
+  FAILED_CONVERT_PDF_TO_IMAGE(BAD_REQUEST, "PDF 파일을 이미지로 변환하던 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요."),
+  FAILED_CONVERT_IMAGE_FORMAT(BAD_REQUEST, "이미지 포맷 변환 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요."),
+  FAILED_UPLOAD_IMAGE(BAD_REQUEST, "이미지 업로드에 실패했어요. 잠시 후 다시 시도해 주세요."),
+  NOT_FOUND_FILENAME(BAD_REQUEST, "파일명을 찾지 못했어요. 파일명을 확인해 주세요."),
+  NOT_FOUND_EXTENSION(BAD_REQUEST, "파일명에서 확장자를 찾지 못했어요. 파일명을 확인해 주세요."),
+  NOT_FOUND_CONTENT_TYPE(BAD_REQUEST, "파일의 Content-Type을 찾지 못했어요."),
+
   // ACCOUNT
   ALREADY_USE_EMAIL(BAD_REQUEST, "입력하신 이메일은 이미 사용 중이에요. 다른 이메일을 입력해 주세요."),
   ALREADY_USE_PHONE_NUMBER(BAD_REQUEST, "입력하신 휴대폰 번호는 이미 사용 중이에요. 다른 휴대폰 번호를 입력해 주세요."),
