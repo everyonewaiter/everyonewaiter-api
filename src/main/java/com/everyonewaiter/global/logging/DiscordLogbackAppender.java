@@ -50,7 +50,7 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
     List<DiscordEmbed> embeds = new ArrayList<>();
     Map<String, String> mdc = iLoggingEvent.getMDCPropertyMap();
     String throwable = ThrowableProxyUtil.asString(iLoggingEvent.getThrowableProxy());
-    String stackTrace = throwable.substring(0, 700);
+    String stackTrace = throwable.length() > 700 ? throwable.substring(0, 700) : throwable;
 
     embeds.add(
         DiscordEmbed.builder()
