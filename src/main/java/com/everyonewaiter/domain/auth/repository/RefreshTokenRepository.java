@@ -6,7 +6,7 @@ public interface RefreshTokenRepository {
 
   boolean aliveAccountToken(Long accountId, Long currentTokenId);
 
-  RefreshToken findByIdOrThrow(Long id);
+  RefreshToken findByIdOrThrow(Long refreshTokenId);
 
   RefreshToken save(RefreshToken refreshToken);
 
