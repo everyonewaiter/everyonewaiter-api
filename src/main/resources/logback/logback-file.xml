@@ -18,7 +18,7 @@
     </filter>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>${PROJECT_ROOT}/logs/debug/debug-%d{yyyy-MM-dd}.log</fileNamePattern>
-      <maxHistory>30</maxHistory>
+      <maxHistory>7</maxHistory>
     </rollingPolicy>
   </appender>
 
@@ -34,7 +34,7 @@
     </filter>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>${PROJECT_ROOT}/logs/info/info-%d{yyyy-MM-dd}.log</fileNamePattern>
-      <maxHistory>30</maxHistory>
+      <maxHistory>14</maxHistory>
     </rollingPolicy>
   </appender>
 
@@ -50,7 +50,7 @@
     </filter>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>${PROJECT_ROOT}/logs/warn/warn-%d{yyyy-MM-dd}.log</fileNamePattern>
-      <maxHistory>30</maxHistory>
+      <maxHistory>14</maxHistory>
     </rollingPolicy>
   </appender>
 
@@ -66,7 +66,7 @@
     </filter>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>${PROJECT_ROOT}/logs/error/error-%d{yyyy-MM-dd}.log</fileNamePattern>
-      <maxHistory>30</maxHistory>
+      <maxHistory>14</maxHistory>
     </rollingPolicy>
   </appender>
 </included>
