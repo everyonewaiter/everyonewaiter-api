@@ -21,7 +21,7 @@ class InstantJsonSerializer extends JsonSerializer<Instant> {
       SerializerProvider serializerProvider
   ) throws IOException {
     jsonGenerator.writeString(
-        DateFormatter.SERIALIZE_FORMATTER
+        DateFormatter.SERIALIZE
             .withZone(ZoneId.of(ZONE_ID))
             .format(instant)
     );

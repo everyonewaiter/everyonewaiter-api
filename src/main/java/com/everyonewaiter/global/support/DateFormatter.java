@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DateFormatter {
 
-  public static final DateTimeFormatter SERIALIZE_FORMATTER =
+  public static final DateTimeFormatter SERIALIZE =
       DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 }

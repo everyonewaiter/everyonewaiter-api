@@ -57,9 +57,7 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
             .title("Error Information")
             .description(iLoggingEvent.getFormattedMessage())
             .color(DiscordColor.RED.getValue())
-            .field(new DiscordField(
-                "Timestamp", DateFormatter.SERIALIZE_FORMATTER.format(Instant.now())
-            ))
+            .field(new DiscordField("Timestamp", DateFormatter.SERIALIZE.format(Instant.now())))
             .field(new DiscordField("Request URI", mdc.get("requestURI")))
             .field(new DiscordField("Request Parameters", mdc.get("requestParameters")))
             .field(new DiscordField("Request Headers", mdc.get("requestHeaders")))
