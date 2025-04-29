@@ -1,6 +1,6 @@
 package com.everyonewaiter.infrastructure.notification.mail;
 
-import com.everyonewaiter.application.notification.mail.service.MailTemplateReader;
+import com.everyonewaiter.application.notification.MailTemplateReader;
 import java.util.Locale;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;

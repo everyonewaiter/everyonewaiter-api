@@ -1,6 +1,6 @@
 package com.everyonewaiter.presentation.admin.request;
 
-import com.everyonewaiter.application.account.service.request.AccountAdminPage;
+import com.everyonewaiter.application.account.request.AccountAdminPage;
 import com.everyonewaiter.domain.account.entity.Account;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;

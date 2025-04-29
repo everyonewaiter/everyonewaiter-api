@@ -1,6 +1,6 @@
 package com.everyonewaiter.presentation.admin;
 
-import com.everyonewaiter.application.account.service.response.AccountAdmin;
+import com.everyonewaiter.application.account.response.AccountAdmin;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;

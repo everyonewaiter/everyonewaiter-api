@@ -1,6 +1,6 @@
 package com.everyonewaiter.presentation.owner.request;
 
-import com.everyonewaiter.application.store.service.request.RegistrationCreate;
+import com.everyonewaiter.application.store.request.RegistrationCreate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

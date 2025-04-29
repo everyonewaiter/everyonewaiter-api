@@ -1,9 +1,9 @@
 package com.everyonewaiter.presentation.owner;
 
-import com.everyonewaiter.application.account.service.AccountService;
-import com.everyonewaiter.application.account.service.response.ProfileResponse;
-import com.everyonewaiter.application.auth.service.AuthService;
-import com.everyonewaiter.application.auth.service.response.Token;
+import com.everyonewaiter.application.account.AccountService;
+import com.everyonewaiter.application.account.response.ProfileResponse;
+import com.everyonewaiter.application.auth.AuthService;
+import com.everyonewaiter.application.auth.response.Token;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.auth.entity.AuthPurpose;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;

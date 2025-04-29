@@ -1,6 +1,6 @@
 package com.everyonewaiter.presentation.admin.request;
 
-import com.everyonewaiter.application.account.service.request.AccountAdminUpdate;
+import com.everyonewaiter.application.account.request.AccountAdminUpdate;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.Enum;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,6 +1,6 @@
 package com.everyonewaiter.infrastructure.notification.alimtalk;
 
-import com.everyonewaiter.application.notification.alimtalk.service.AlimTalkClient;
+import com.everyonewaiter.application.notification.AlimTalkClient;
 import com.everyonewaiter.domain.notification.alimtalk.AlimTalkMessage;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.everyonewaiter.presentation.owner;
 
-import com.everyonewaiter.application.account.service.response.ProfileResponse;
-import com.everyonewaiter.application.auth.service.response.Token;
+import com.everyonewaiter.application.account.response.ProfileResponse;
+import com.everyonewaiter.application.auth.response.Token;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;

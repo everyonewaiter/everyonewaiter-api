@@ -1,7 +1,7 @@
 package com.everyonewaiter.presentation.owner.request;
 
-import com.everyonewaiter.application.auth.service.request.SendAuthCode;
-import com.everyonewaiter.application.auth.service.request.VerifyAuthCode;
+import com.everyonewaiter.application.auth.request.SendAuthCode;
+import com.everyonewaiter.application.auth.request.VerifyAuthCode;
 import com.everyonewaiter.domain.auth.entity.AuthPurpose;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;

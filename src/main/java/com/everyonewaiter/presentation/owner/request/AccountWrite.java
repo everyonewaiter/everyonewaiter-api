@@ -1,7 +1,7 @@
 package com.everyonewaiter.presentation.owner.request;
 
-import com.everyonewaiter.application.account.service.request.AccountCreate;
-import com.everyonewaiter.application.account.service.request.AccountSignIn;
+import com.everyonewaiter.application.account.request.AccountCreate;
+import com.everyonewaiter.application.account.request.AccountSignIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

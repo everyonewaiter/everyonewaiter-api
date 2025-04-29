@@ -1,6 +1,6 @@
 package com.everyonewaiter.presentation.owner;
 
-import com.everyonewaiter.application.store.service.StoreService;
+import com.everyonewaiter.application.store.StoreService;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.presentation.owner.request.StoreWrite;
