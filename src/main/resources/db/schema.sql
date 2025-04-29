@@ -10,7 +10,6 @@ create table account
     created_at   datetime(6)                         not null,
     updated_at   datetime(6)                         not null
 );
-create index idx_account_id_email_state_permission on account (id desc, email asc, state asc, permission asc);
 
 create table refresh_token
 (
@@ -20,8 +19,6 @@ create table refresh_token
     created_at       datetime(6) not null,
     updated_at       datetime(6) not null
 );
-create index idx_refresh_token_updated_at on refresh_token (updated_at asc);
-create index idx_refresh_token_account_id_current_token_id on refresh_token (account_id asc, current_token_id asc);
 
 create table store_license
 (
@@ -45,4 +42,3 @@ create table store_registration
     updated_at    datetime(6)                                 not null,
     constraint fk_registration_license_id foreign key (license_id) references store_license (id)
 );
-create index idx_registration_account_id_id on store_registration (account_id asc, id desc);
