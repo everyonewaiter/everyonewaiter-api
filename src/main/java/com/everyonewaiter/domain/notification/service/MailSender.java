@@ -4,7 +4,7 @@ import com.everyonewaiter.domain.notification.service.request.MailSend;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component(value = "emailSender")
 @RequiredArgsConstructor
 public class MailSender {
 
