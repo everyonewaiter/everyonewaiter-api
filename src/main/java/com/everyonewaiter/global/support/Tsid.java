@@ -11,4 +11,8 @@ public final class Tsid {
     return TsidCreator.getTsid().toLong();
   }
 
+  public static String nextString() {
+    return TsidCreator.getTsid().toString();
+  }
+
 }
