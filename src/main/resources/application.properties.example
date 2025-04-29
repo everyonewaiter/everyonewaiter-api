@@ -56,6 +56,10 @@ naver.sens.channel-id=<CHANNEL_ID>
 discord.event.uri=<DISCORD_WEBHOOK_URI>
 discord.logging-uri=DISCORD_WEBHOOK_URI
 
+# ORACLE OBJECT STORAGE
+oracle.object.storage.namespace=<NAMESPACE>
+oracle.object.storage.bucket-name=<BUCKET_NAME>
+
 # LOGGING
 logging.config=classpath:logback/logback-spring.xml
 logging.level.feign=debug

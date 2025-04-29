@@ -29,6 +29,7 @@ public enum ErrorCode {
   FAILED_CONVERT_PDF_TO_IMAGE(BAD_REQUEST, "PDF 파일을 이미지로 변환하던 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요."),
   FAILED_CONVERT_IMAGE_FORMAT(BAD_REQUEST, "이미지 포맷 변환 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요."),
   FAILED_UPLOAD_IMAGE(BAD_REQUEST, "이미지 업로드에 실패했어요. 잠시 후 다시 시도해 주세요."),
+  FAILED_DELETE_IMAGE(BAD_REQUEST, "이미지 삭제에 실패했어요. 잠시 후 다시 시도해 주세요."),
   NOT_FOUND_FILENAME(BAD_REQUEST, "파일명을 찾지 못했어요. 파일명을 확인해 주세요."),
   NOT_FOUND_EXTENSION(BAD_REQUEST, "파일명에서 확장자를 찾지 못했어요. 파일명을 확인해 주세요."),
   NOT_FOUND_CONTENT_TYPE(BAD_REQUEST, "파일의 Content-Type을 찾지 못했어요."),
