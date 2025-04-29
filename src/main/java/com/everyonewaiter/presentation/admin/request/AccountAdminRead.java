@@ -29,7 +29,7 @@ public class AccountAdminRead {
 
     @Schema(description = "조회 페이지 번호", defaultValue = "1")
     @Min(value = 1, message = "페이지 번호는 1 이상이어야 합니다.")
-    @Max(value = 10_000, message = "페이지 번호는 10,000 이하이어야 합니다.")
+    @Max(value = 1_000, message = "페이지 번호는 1,000 이하이어야 합니다.")
     private long page = 1;
 
     @Schema(description = "페이지 조회 데이터 수", defaultValue = "20")
