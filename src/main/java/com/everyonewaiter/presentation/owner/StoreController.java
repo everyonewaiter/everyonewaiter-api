@@ -1,6 +1,7 @@
 package com.everyonewaiter.presentation.owner;
 
 import com.everyonewaiter.application.store.StoreService;
+import com.everyonewaiter.application.store.response.RegistrationDetailResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.presentation.owner.request.StoreWrite;
@@ -9,7 +10,9 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +23,15 @@ import org.springframework.web.bind.annotation.RestController;
 class StoreController implements StoreControllerSpecification {
 
   private final StoreService storeService;
+
+  @Override
+  @GetMapping("/registrations/{registrationId}")
+  public ResponseEntity<RegistrationDetailResponse> getRegistration(
+      @PathVariable Long registrationId,
+      @AuthenticationAccount Account account
+  ) {
+    return ResponseEntity.ok(storeService.readRegistration(registrationId, account.getId()));
+  }
 
   @Override
   @PostMapping(value = "/registrations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
