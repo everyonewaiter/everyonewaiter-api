@@ -9,7 +9,7 @@ import com.everyonewaiter.domain.notification.DiscordField;
 import com.everyonewaiter.domain.notification.service.request.DiscordMessageSend;
 import com.everyonewaiter.global.support.DateFormatter;
 import java.io.IOException;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +47,7 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
   }
 
   private List<DiscordEmbed> createEmbeds(ILoggingEvent iLoggingEvent) {
+    LocalDateTime now = LocalDateTime.now();
     List<DiscordEmbed> embeds = new ArrayList<>();
     Map<String, String> mdc = iLoggingEvent.getMDCPropertyMap();
     String throwable = ThrowableProxyUtil.asString(iLoggingEvent.getThrowableProxy());
@@ -57,7 +58,7 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
             .title("Error Information")
             .description(iLoggingEvent.getFormattedMessage())
             .color(DiscordColor.RED.getValue())
-            .field(new DiscordField("Timestamp", DateFormatter.SERIALIZE.format(Instant.now())))
+            .field(new DiscordField("Timestamp", DateFormatter.SERIALIZE.format(now)))
             .field(new DiscordField("Request URI", mdc.get("requestURI")))
             .field(new DiscordField("Request Parameters", mdc.get("requestParameters")))
             .field(new DiscordField("Request Headers", mdc.get("requestHeaders")))
