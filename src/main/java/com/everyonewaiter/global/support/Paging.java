@@ -57,7 +57,8 @@ public class Paging<T> {
     this.hasPrevious = page > 1;
     this.isFirst = page == 1;
     this.isLast = !hasNext;
-    this.fastForwardPage = Math.min(page + pageSkipSize, (long) Math.ceil((double) count / size));
+    this.fastForwardPage =
+        Math.clamp((long) Math.ceil((double) count / size), 1, page + pageSkipSize);
     this.fastBackwardPage = Math.max(page - pageSkipSize, 1);
   }
 
