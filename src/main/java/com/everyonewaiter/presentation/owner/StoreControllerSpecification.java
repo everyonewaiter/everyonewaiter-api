@@ -41,18 +41,6 @@ interface StoreControllerSpecification {
               exampleName = "이미지 업로드 중 오류가 발생한 경우"
           ),
           @ApiErrorResponse(
-              code = ErrorCode.NOT_FOUND_FILENAME,
-              exampleName = "파일명을 찾을 수 없는 경우 (해당 오류 발견 시 문의 요청)"
-          ),
-          @ApiErrorResponse(
-              code = ErrorCode.NOT_FOUND_EXTENSION,
-              exampleName = "파일 확장자명을 찾을 수 없는 경우 (해당 오류 발견 시 문의 요청)"
-          ),
-          @ApiErrorResponse(
-              code = ErrorCode.NOT_FOUND_CONTENT_TYPE,
-              exampleName = "파일 Content-Type을 찾을 수 없는 경우 (해당 오류 발견 시 문의 요청)"
-          ),
-          @ApiErrorResponse(
               code = ErrorCode.UNAUTHORIZED,
               exampleName = "액세스 토큰이 유효하지 않은 경우"
           ),
