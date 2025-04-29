@@ -6,6 +6,6 @@ public interface ImageClient {
 
   void upload(File imageFile, String imageName, String contentType);
 
-  void delete(String imagePath);
+  void delete(String imageName);
 
 }

@@ -32,12 +32,10 @@ class OracleObjectStorageClient implements ImageClient {
           .build();
       UploadManager uploadManager = new UploadManager(client, configuration);
 
-      UploadManager.UploadRequest request = UploadManager.UploadRequest
-          .builder(imageFile)
+      UploadManager.UploadRequest request = UploadManager.UploadRequest.builder(imageFile)
           .allowOverwrite(true)
           .build(
-              PutObjectRequest
-                  .builder()
+              PutObjectRequest.builder()
                   .namespaceName(properties.getNamespace())
                   .bucketName(properties.getBucketName())
                   .objectName(imageName)
@@ -54,13 +52,12 @@ class OracleObjectStorageClient implements ImageClient {
   }
 
   @Override
-  public void delete(String imagePath) {
+  public void delete(String imageName) {
     try (ObjectStorageClient client = initializeClient()) {
-      DeleteObjectRequest request = DeleteObjectRequest
-          .builder()
+      DeleteObjectRequest request = DeleteObjectRequest.builder()
           .namespaceName(properties.getNamespace())
           .bucketName(properties.getBucketName())
-          .objectName(imagePath)
+          .objectName(imageName)
           .build();
       client.deleteObject(request);
     } catch (Exception e) {

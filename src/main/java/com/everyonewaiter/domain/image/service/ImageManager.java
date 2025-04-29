@@ -15,9 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Component
 @RequiredArgsConstructor
-public class ImageUploader {
+public class ImageManager {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ImageUploader.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ImageManager.class);
 
   private final PDFToImageConverter pdfToImageConverter;
   private final ImageFormatConverter imageFormatConverter;
@@ -47,6 +47,14 @@ public class ImageUploader {
       case MediaType.APPLICATION_PDF_VALUE -> pdfToImageConverter.convertFirstPage(file, prefix);
       default -> throw new BusinessException(ErrorCode.ALLOW_IMAGE_AND_PDF_FILE);
     };
+  }
+
+  public void delete(String imageName) {
+    try {
+      imageClient.delete(imageName);
+    } catch (BusinessException exception) {
+      LOGGER.error("[이미지 삭제 실패] {}", imageName, exception);
+    }
   }
 
   private void deleteTempFile(File tempFile) {
