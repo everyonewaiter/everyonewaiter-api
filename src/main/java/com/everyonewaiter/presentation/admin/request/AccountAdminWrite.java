@@ -24,7 +24,7 @@ public class AccountAdminWrite {
       Account.Permission permission
   ) {
 
-    public AccountAdminUpdate toAccountAdminUpdate() {
+    public AccountAdminUpdate toDomainDto() {
       return new AccountAdminUpdate(state, permission);
     }
 

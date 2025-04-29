@@ -31,7 +31,7 @@ class AccountAdminController implements AccountAdminControllerSpecification {
       @ModelAttribute @Valid AccountAdminRead.PageRequest request,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
-    return ResponseEntity.ok(accountService.readAllByAdmin(request.toAccountAdminPage()));
+    return ResponseEntity.ok(accountService.readAllByAdmin(request.toDomainDto()));
   }
 
   @Override
@@ -51,7 +51,7 @@ class AccountAdminController implements AccountAdminControllerSpecification {
       @RequestBody @Valid AccountAdminWrite.UpdateRequest request,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
-    accountService.updateByAdmin(accountId, request.toAccountAdminUpdate());
+    accountService.updateByAdmin(accountId, request.toDomainDto());
     return ResponseEntity.noContent().build();
   }
 

@@ -15,7 +15,7 @@ public class RegistrationRead {
   @Data
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class RegistrationPageRequest {
+  public static class PageRequest {
 
     @Schema(description = "조회 페이지 번호", defaultValue = "1")
     @Min(value = 1, message = "페이지 번호는 1 이상이어야 합니다.")
@@ -27,7 +27,7 @@ public class RegistrationRead {
     @Max(value = 100, message = "페이지 조회 크기는 100 이하이어야 합니다.")
     private long size = 20;
 
-    public RegistrationPage toRegistrationPage() {
+    public RegistrationPage toDomainDto() {
       return new RegistrationPage(page, size);
     }
 

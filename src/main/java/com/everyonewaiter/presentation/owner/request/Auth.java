@@ -22,7 +22,7 @@ public class Auth {
       String phoneNumber
   ) {
 
-    public SendAuthCode toSendAuthCode(AuthPurpose purpose) {
+    public SendAuthCode toDomainDto(AuthPurpose purpose) {
       return new SendAuthCode(phoneNumber, purpose);
     }
 
@@ -41,7 +41,7 @@ public class Auth {
       int code
   ) {
 
-    public VerifyAuthCode toVerifyAuthCode(AuthPurpose purpose) {
+    public VerifyAuthCode toDomainDto(AuthPurpose purpose) {
       return new VerifyAuthCode(phoneNumber, code, purpose);
     }
 

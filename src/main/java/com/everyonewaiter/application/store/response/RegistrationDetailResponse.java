@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
 import java.util.Objects;
 
-@Schema(name = "Store.RegistrationDetailResponse")
+@Schema(name = "Registration.DetailResponse")
 public record RegistrationDetailResponse(
     @Schema(description = "매장 등록 ID", example = "\"694865267482835533\"")
     String registrationId,

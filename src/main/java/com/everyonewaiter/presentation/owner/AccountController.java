@@ -40,7 +40,7 @@ class AccountController implements AccountControllerSpecification {
   @PostMapping
   public ResponseEntity<Void> signUp(@RequestBody @Valid AccountWrite.CreateRequest request) {
     authService.checkExistsAuthSuccess(request.phoneNumber(), AuthPurpose.SIGN_UP);
-    Long accountId = accountService.create(request.toAccountCreate());
+    Long accountId = accountService.create(request.toDomainDto());
     return ResponseEntity.created(URI.create(accountId.toString())).build();
   }
 
@@ -49,7 +49,7 @@ class AccountController implements AccountControllerSpecification {
   public ResponseEntity<Token.AllResponse> signIn(
       @RequestBody @Valid AccountWrite.SignInRequest request
   ) {
-    Long accountId = accountService.signIn(request.toAccountSignIn());
+    Long accountId = accountService.signIn(request.toDomainDto());
     Token.AllResponse response = authService.generateTokenBySignIn(accountId);
     return ResponseEntity.ok(response);
   }
@@ -58,7 +58,7 @@ class AccountController implements AccountControllerSpecification {
   @PostMapping("/send-auth-code")
   public ResponseEntity<Void> sendAuthCode(@RequestBody @Valid Auth.SendAuthCodeRequest request) {
     accountService.checkAvailablePhoneNumber(request.phoneNumber());
-    authService.sendAuthCode(request.toSendAuthCode(AuthPurpose.SIGN_UP));
+    authService.sendAuthCode(request.toDomainDto(AuthPurpose.SIGN_UP));
     return ResponseEntity.noContent().build();
   }
 
@@ -67,7 +67,7 @@ class AccountController implements AccountControllerSpecification {
   public ResponseEntity<Void> verifyAuthCode(
       @RequestBody @Valid Auth.VerifyAuthCodeRequest request
   ) {
-    authService.verifyAuthCode(request.toVerifyAuthCode(AuthPurpose.SIGN_UP));
+    authService.verifyAuthCode(request.toDomainDto(AuthPurpose.SIGN_UP));
     return ResponseEntity.noContent().build();
   }
 

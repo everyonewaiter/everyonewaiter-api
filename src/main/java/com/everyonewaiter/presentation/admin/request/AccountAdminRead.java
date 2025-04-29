@@ -37,7 +37,7 @@ public class AccountAdminRead {
     @Max(value = 100, message = "페이지 조회 크기는 100 이하이어야 합니다.")
     private long size = 20;
 
-    public AccountAdminPage toAccountAdminPage() {
+    public AccountAdminPage toDomainDto() {
       return new AccountAdminPage(email, state, permission, page, size);
     }
 

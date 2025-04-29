@@ -32,7 +32,7 @@ public class AccountWrite {
       String phoneNumber
   ) {
 
-    public AccountCreate toAccountCreate() {
+    public AccountCreate toDomainDto() {
       return new AccountCreate(email, password, phoneNumber);
     }
 
@@ -54,7 +54,7 @@ public class AccountWrite {
       String password
   ) {
 
-    public AccountSignIn toAccountSignIn() {
+    public AccountSignIn toDomainDto() {
       return new AccountSignIn(email, password);
     }
 
