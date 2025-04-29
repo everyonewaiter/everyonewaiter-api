@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,11 +31,11 @@ class StoreController implements StoreControllerSpecification {
   @Override
   @GetMapping("/registrations")
   public ResponseEntity<Paging<RegistrationDetailResponse>> getRegistrations(
-      @ModelAttribute @Valid RegistrationRead.RegistrationPageRequest request,
+      @ModelAttribute @Valid RegistrationRead.PageRequest request,
       @AuthenticationAccount Account account
   ) {
     Paging<RegistrationDetailResponse> responses =
-        registrationService.readAll(account.getId(), request.toRegistrationPage());
+        registrationService.readAll(account.getId(), request.toDomainDto());
     return ResponseEntity.ok(responses);
   }
 
@@ -49,12 +51,33 @@ class StoreController implements StoreControllerSpecification {
   @Override
   @PostMapping(value = "/registrations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Void> apply(
-      @ModelAttribute @Valid RegistrationWrite.RegistrationCreateRequest request,
+      @ModelAttribute @Valid RegistrationWrite.CreateRequest request,
       @AuthenticationAccount Account account
   ) {
-    Long registrationId =
-        registrationService.apply(account.getId(), request.toRegistrationCreate());
+    Long registrationId = registrationService.apply(account.getId(), request.toDomainDto());
     return ResponseEntity.created(URI.create(registrationId.toString())).build();
+  }
+
+  @Override
+  @PutMapping("/registrations/{registrationId}")
+  public ResponseEntity<Void> reapply(
+      @PathVariable Long registrationId,
+      @RequestBody @Valid RegistrationWrite.UpdateRequest request,
+      @AuthenticationAccount Account account
+  ) {
+    registrationService.reapply(registrationId, account.getId(), request.toDomainDto());
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @PutMapping(value = "/registrations/{registrationId}/with-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<Void> reapply(
+      @PathVariable Long registrationId,
+      @ModelAttribute @Valid RegistrationWrite.UpdateWithImageRequest request,
+      @AuthenticationAccount Account account
+  ) {
+    registrationService.reapply(registrationId, account.getId(), request.toDomainDto());
+    return ResponseEntity.noContent().build();
   }
 
 }

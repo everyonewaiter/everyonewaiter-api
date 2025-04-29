@@ -52,4 +52,24 @@ public class BusinessLicense extends Aggregate {
     return businessLicense;
   }
 
+  public void update(
+      String name,
+      String ceoName,
+      String address,
+      String landline,
+      String license,
+      String image
+  ) {
+    this.name = name;
+    this.ceoName = ceoName;
+    this.address = address;
+    this.landline = landline;
+    this.license = license;
+    this.image = image;
+  }
+
+  public boolean isChangeImage(String image) {
+    return !this.image.equals(image);
+  }
+
 }

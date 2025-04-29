@@ -30,7 +30,7 @@ interface StoreControllerSpecification {
       }
   )
   ResponseEntity<Paging<RegistrationDetailResponse>> getRegistrations(
-      @ParameterObject RegistrationRead.RegistrationPageRequest request,
+      @ParameterObject RegistrationRead.PageRequest request,
       @Parameter(hidden = true) Account account
   );
 
@@ -87,7 +87,78 @@ interface StoreControllerSpecification {
       }
   )
   ResponseEntity<Void> apply(
-      RegistrationWrite.RegistrationCreateRequest request,
+      RegistrationWrite.CreateRequest request,
+      @Parameter(hidden = true) Account account
+  );
+
+  @Operation(summary = "등록 재신청", description = "매장 등록 재신청 API")
+  @ApiResponse(responseCode = "204", description = "매장 등록 재신청 성공")
+  @ApiErrorResponses(
+      summary = "매장 등록 재신청 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.ONLY_REJECTED_REGISTRATION_CAN_BE_REAPPLY,
+              exampleName = "거부된 매장 등록 신청이 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_REGISTRATION_NOT_FOUND,
+              exampleName = "매장 등록 신청 내역을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> reapply(
+      Long registrationId,
+      RegistrationWrite.UpdateRequest request,
+      @Parameter(hidden = true) Account account
+  );
+
+  @Operation(
+      summary = "등록 재신청 (이미지 포함)",
+      description = "매장 등록 재신청 (이미지 포함) API<br/><br/>" +
+          "사업자 등록증 파일은 이미지 또는 PDF 형식만 지원합니다.<br/>" +
+          "PDF 형식의 파일의 경우 첫번째 페이지만 이미지로 변환 후 업로드됩니다."
+  )
+  @ApiResponse(responseCode = "204", description = "매장 등록 재신청 (이미지 포함) 성공")
+  @ApiErrorResponses(
+      summary = "매장 등록 재신청 (이미지 포함) 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.ONLY_REJECTED_REGISTRATION_CAN_BE_REAPPLY,
+              exampleName = "거부된 매장 등록 신청이 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ALLOW_IMAGE_AND_PDF_FILE,
+              exampleName = "이미지 또는 PDF 형식의 파일이 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FAILED_CONVERT_PDF_TO_IMAGE,
+              exampleName = "PDF 파일을 이미지로 변환하는데 실패한 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FAILED_CONVERT_IMAGE_FORMAT,
+              exampleName = "이미지 파일을 압축 및 WebP 포맷으로 변환하는데 실패한 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FAILED_UPLOAD_IMAGE,
+              exampleName = "이미지 업로드 중 오류가 발생한 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_REGISTRATION_NOT_FOUND,
+              exampleName = "매장 등록 신청 내역을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> reapply(
+      Long registrationId,
+      RegistrationWrite.UpdateWithImageRequest request,
       @Parameter(hidden = true) Account account
   );
 
