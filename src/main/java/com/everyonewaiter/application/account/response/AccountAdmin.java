@@ -53,7 +53,7 @@ public class AccountAdmin {
 
   }
 
-  @Schema(name = "AccountAdmin.ViewResponse")
+  @Schema(name = "AccountAdmin.PageViewResponse")
   public record PageViewResponse(
       @Schema(description = "계정 ID", example = "\"694865267482835533\"")
       String accountId,
