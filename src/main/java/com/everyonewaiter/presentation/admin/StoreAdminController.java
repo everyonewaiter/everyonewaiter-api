@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +29,15 @@ class StoreAdminController implements StoreAdminControllerSpecification {
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
     return ResponseEntity.ok(registrationService.readAllByAdmin(request.toDomainDto()));
+  }
+
+  @Override
+  @GetMapping("/registrations/{registrationId}")
+  public ResponseEntity<RegistrationAdmin.DetailViewResponse> getRegistration(
+      @PathVariable Long registrationId,
+      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+  ) {
+    return ResponseEntity.ok(registrationService.readByAdmin(registrationId));
   }
 
 }

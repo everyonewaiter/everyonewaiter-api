@@ -1,6 +1,7 @@
 package com.everyonewaiter.domain.store.repository;
 
 import com.everyonewaiter.domain.store.entity.Registration;
+import com.everyonewaiter.domain.store.view.RegistrationAdminDetailView;
 import com.everyonewaiter.domain.store.view.RegistrationAdminPageView;
 import com.everyonewaiter.global.support.Pagination;
 import com.everyonewaiter.global.support.Paging;
@@ -19,6 +20,8 @@ public interface RegistrationRepository {
   );
 
   Optional<Registration> findByIdAndAccountId(Long registrationId, Long accountId);
+
+  Optional<RegistrationAdminDetailView> findByAdmin(Long registrationId);
 
   Registration save(Registration registration);
 

@@ -6,6 +6,7 @@ import static com.everyonewaiter.domain.store.entity.QRegistration.registration;
 
 import com.everyonewaiter.domain.store.entity.Registration;
 import com.everyonewaiter.domain.store.repository.RegistrationRepository;
+import com.everyonewaiter.domain.store.view.RegistrationAdminDetailView;
 import com.everyonewaiter.domain.store.view.RegistrationAdminPageView;
 import com.everyonewaiter.global.support.Pagination;
 import com.everyonewaiter.global.support.Paging;
@@ -103,6 +104,35 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
   @Override
   public Optional<Registration> findByIdAndAccountId(Long registrationId, Long accountId) {
     return registrationJpaRepository.findByIdAndAccountId(registrationId, accountId);
+  }
+
+  @Override
+  public Optional<RegistrationAdminDetailView> findByAdmin(Long registrationId) {
+    return Optional.ofNullable(
+        queryFactory
+            .select(
+                Projections.constructor(
+                    RegistrationAdminDetailView.class,
+                    registration.id,
+                    registration.accountId,
+                    account.email,
+                    registration.businessLicense.name,
+                    registration.businessLicense.ceoName,
+                    registration.businessLicense.address,
+                    registration.businessLicense.landline,
+                    registration.businessLicense.license,
+                    registration.businessLicense.image,
+                    registration.status,
+                    registration.createdAt,
+                    registration.updatedAt
+                )
+            )
+            .from(registration)
+            .where(registration.id.eq(registrationId))
+            .innerJoin(registration.businessLicense, businessLicense)
+            .innerJoin(account).on(registration.accountId.eq(account.id))
+            .fetchOne()
+    );
   }
 
   @Override

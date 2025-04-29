@@ -91,4 +91,10 @@ public class RegistrationService {
         .orElseThrow(() -> new BusinessException(ErrorCode.STORE_REGISTRATION_NOT_FOUND));
   }
 
+  public RegistrationAdmin.DetailViewResponse readByAdmin(Long registrationId) {
+    return registrationRepository.findByAdmin(registrationId)
+        .map(RegistrationAdmin.DetailViewResponse::from)
+        .orElseThrow(() -> new BusinessException(ErrorCode.STORE_REGISTRATION_NOT_FOUND));
+  }
+
 }

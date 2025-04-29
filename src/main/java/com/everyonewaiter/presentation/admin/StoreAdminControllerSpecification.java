@@ -37,4 +37,28 @@ interface StoreAdminControllerSpecification {
       @Parameter(hidden = true) Account account
   );
 
+  @Operation(summary = "등록 신청 상세 조회", description = "매장 등록 신청 상세 조회 API")
+  @ApiResponse(responseCode = "200", description = "매장 등록 신청 상세 조회 성공")
+  @ApiErrorResponses(
+      summary = "매장 등록 신청 상세 조회 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "관리자 권한이 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_REGISTRATION_NOT_FOUND,
+              exampleName = "매장 등록 ID로 매장 등록 신청 내역을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<RegistrationAdmin.DetailViewResponse> getRegistration(
+      Long registrationId,
+      @Parameter(hidden = true) Account account
+  );
+
 }
