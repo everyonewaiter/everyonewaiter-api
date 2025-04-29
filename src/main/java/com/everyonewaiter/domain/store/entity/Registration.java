@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.store.entity;
 
+import com.everyonewaiter.domain.store.event.RegistrationApplyEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -42,6 +43,7 @@ public class Registration extends AggregateRoot<Registration> {
     Registration registration = new Registration();
     registration.accountId = accountId;
     registration.businessLicense = businessLicense;
+    registration.registerEvent(new RegistrationApplyEvent(businessLicense.getName()));
     return registration;
   }
 
