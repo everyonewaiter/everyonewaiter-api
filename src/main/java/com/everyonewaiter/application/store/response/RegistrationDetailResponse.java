@@ -53,7 +53,7 @@ public record RegistrationDetailResponse(
         registration.getBusinessLicense().getAddress(),
         registration.getBusinessLicense().getLandline(),
         registration.getBusinessLicense().getLicense(),
-        registration.getBusinessLicense().getImage(),
+        registration.getBusinessLicense().getLicenseImage(),
         registration.getStatus(),
         registration.getRejectReason(),
         registration.getCreatedAt(),

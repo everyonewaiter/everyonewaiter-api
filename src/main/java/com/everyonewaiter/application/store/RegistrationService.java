@@ -70,6 +70,13 @@ public class RegistrationService {
   }
 
   @Transactional
+  public void approve(Long registrationId) {
+    Registration registration = registrationRepository.findByIdOrThrow(registrationId);
+    registration.approve();
+    registrationRepository.save(registration);
+  }
+
+  @Transactional
   public void reject(Long registrationId, RegistrationAdminReject request) {
     Registration registration = registrationRepository.findByIdOrThrow(registrationId);
     registration.reject(request.rejectReason());

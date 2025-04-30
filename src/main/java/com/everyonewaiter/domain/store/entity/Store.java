@@ -3,6 +3,7 @@ package com.everyonewaiter.domain.store.entity;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,7 +20,7 @@ import lombok.ToString;
 @Table(name = "store")
 @Entity
 @Getter
-@ToString(exclude = {"businessLicense", "setting"}, callSuper = true)
+@ToString(exclude = {"setting"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Store extends AggregateRoot<Store> {
 
@@ -28,13 +29,8 @@ public class Store extends AggregateRoot<Store> {
   @Column(name = "account_id", nullable = false, updatable = false)
   private Long accountId;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "license_id", nullable = false)
+  @Embedded
   private BusinessLicense businessLicense;
-
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "setting_id", nullable = false)
-  private Setting setting = new Setting();
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status", nullable = false)
@@ -45,6 +41,10 @@ public class Store extends AggregateRoot<Store> {
 
   @Column(name = "last_closed_at", nullable = false)
   private Instant lastClosedAt = Instant.ofEpochMilli(0);
+
+  @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+  @JoinColumn(name = "setting_id", nullable = false)
+  private Setting setting = new Setting();
 
   public static Store create(Long accountId, BusinessLicense businessLicense) {
     Store store = new Store();

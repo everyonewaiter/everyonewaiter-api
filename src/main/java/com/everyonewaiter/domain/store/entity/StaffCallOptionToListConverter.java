@@ -9,30 +9,28 @@ import java.util.stream.Collectors;
 import org.springframework.util.StringUtils;
 
 @Converter
-class CountryOfOriginToListConverter implements AttributeConverter<List<CountryOfOrigin>, String> {
+class StaffCallOptionToListConverter implements AttributeConverter<List<StaffCallOption>, String> {
 
-  private static final String COLON = ":";
   private static final String COMMA = ",";
 
   @Override
-  public String convertToDatabaseColumn(List<CountryOfOrigin> attribute) {
+  public String convertToDatabaseColumn(List<StaffCallOption> attribute) {
     if (attribute == null || attribute.isEmpty()) {
       return "";
     } else {
       return attribute.stream()
-          .map(countryOfOrigin -> countryOfOrigin.item() + COLON + countryOfOrigin.origin())
+          .map(StaffCallOption::optionName)
           .collect(Collectors.joining(COMMA));
     }
   }
 
   @Override
-  public List<CountryOfOrigin> convertToEntityAttribute(String dbData) {
+  public List<StaffCallOption> convertToEntityAttribute(String dbData) {
     if (!StringUtils.hasText(dbData)) {
       return Collections.emptyList();
     } else {
       return Arrays.stream(dbData.split(COMMA))
-          .map(countryOfOrigin -> countryOfOrigin.split(COLON))
-          .map(countryOfOrigin -> new CountryOfOrigin(countryOfOrigin[0], countryOfOrigin[1]))
+          .map(StaffCallOption::new)
           .toList();
     }
   }

@@ -1,7 +1,6 @@
 package com.everyonewaiter.infrastructure.store;
 
 import static com.everyonewaiter.domain.account.entity.QAccount.account;
-import static com.everyonewaiter.domain.store.entity.QBusinessLicense.businessLicense;
 import static com.everyonewaiter.domain.store.entity.QRegistration.registration;
 
 import com.everyonewaiter.domain.store.entity.Registration;
@@ -35,7 +34,6 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
     List<Registration> registrations = queryFactory
         .select(registration)
         .from(registration)
-        .innerJoin(registration.businessLicense, businessLicense).fetchJoin()
         .where(registration.accountId.eq(accountId))
         .orderBy(registration.id.desc())
         .limit(pagination.limit())
@@ -74,7 +72,6 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
             )
         )
         .from(registration)
-        .innerJoin(registration.businessLicense, businessLicense)
         .innerJoin(account).on(registration.accountId.eq(account.id))
         .where(
             emailStratsWith(email),
@@ -89,7 +86,6 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
     Long count = queryFactory
         .select(registration.count())
         .from(registration)
-        .innerJoin(registration.businessLicense, businessLicense)
         .innerJoin(account).on(registration.accountId.eq(account.id))
         .where(
             emailStratsWith(email),
@@ -135,7 +131,7 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
                     registration.businessLicense.address,
                     registration.businessLicense.landline,
                     registration.businessLicense.license,
-                    registration.businessLicense.image,
+                    registration.businessLicense.licenseImage,
                     registration.status,
                     registration.createdAt,
                     registration.updatedAt
@@ -143,7 +139,6 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
             )
             .from(registration)
             .where(registration.id.eq(registrationId))
-            .innerJoin(registration.businessLicense, businessLicense)
             .innerJoin(account).on(registration.accountId.eq(account.id))
             .fetchOne()
     );

@@ -1,6 +1,5 @@
 package com.everyonewaiter.application.store;
 
-import com.everyonewaiter.domain.image.service.ImageManager;
 import com.everyonewaiter.domain.notification.DiscordColor;
 import com.everyonewaiter.domain.notification.DiscordEmbed;
 import com.everyonewaiter.domain.notification.DiscordField;
@@ -21,12 +20,11 @@ class RegistrationReapplyEventHandler {
   private static final Logger LOGGER =
       LoggerFactory.getLogger(RegistrationReapplyEventHandler.class);
 
-  private final ImageManager imageManager;
   private final DiscordSender discordSender;
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
-  public void consumeNotification(RegistrationReapplyEvent event) {
+  public void consume(RegistrationReapplyEvent event) {
     LOGGER.info("[매장 등록 재신청 알림 이벤트] storeName: {}", event.storeName());
 
     DiscordEmbed embed = DiscordEmbed.builder()
@@ -38,15 +36,6 @@ class RegistrationReapplyEventHandler {
     DiscordMessageSend request = new DiscordMessageSend(embed);
 
     discordSender.send(request);
-  }
-
-  @Async("eventTaskExecutor")
-  @TransactionalEventListener
-  public void consumeRemoveImage(RegistrationReapplyEvent event) {
-    event.licenseImage().ifPresent(imageName -> {
-      LOGGER.info("[사업자 등록증 이미지 삭제] {}: {}", event.storeName(), imageName);
-      imageManager.delete(imageName);
-    });
   }
 
 }

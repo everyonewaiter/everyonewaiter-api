@@ -1,20 +1,19 @@
 package com.everyonewaiter.domain.store.entity;
 
-import com.everyonewaiter.global.domain.entity.Aggregate;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Table(name = "store_license")
-@Entity
+@Embeddable
 @Getter
-@ToString(callSuper = true)
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BusinessLicense extends Aggregate {
+public class BusinessLicense {
 
   @Column(name = "name", nullable = false)
   private String name;
@@ -31,8 +30,8 @@ public class BusinessLicense extends Aggregate {
   @Column(name = "license", nullable = false)
   private String license;
 
-  @Column(name = "image", nullable = false)
-  private String image;
+  @Column(name = "license_image", nullable = false)
+  private String licenseImage;
 
   public static BusinessLicense create(
       String name,
@@ -40,7 +39,7 @@ public class BusinessLicense extends Aggregate {
       String address,
       String landline,
       String license,
-      String image
+      String licenseImage
   ) {
     BusinessLicense businessLicense = new BusinessLicense();
     businessLicense.name = name;
@@ -48,8 +47,12 @@ public class BusinessLicense extends Aggregate {
     businessLicense.address = address;
     businessLicense.landline = landline;
     businessLicense.license = license;
-    businessLicense.image = image;
+    businessLicense.licenseImage = licenseImage;
     return businessLicense;
+  }
+
+  public void update(String name, String ceoName, String address, String landline, String license) {
+    update(name, ceoName, address, landline, license, licenseImage);
   }
 
   public void update(
@@ -58,18 +61,14 @@ public class BusinessLicense extends Aggregate {
       String address,
       String landline,
       String license,
-      String image
+      String licenseImage
   ) {
     this.name = name;
     this.ceoName = ceoName;
     this.address = address;
     this.landline = landline;
     this.license = license;
-    this.image = image;
-  }
-
-  public boolean isChangeImage(String image) {
-    return !this.image.equals(image);
+    this.licenseImage = licenseImage;
   }
 
 }

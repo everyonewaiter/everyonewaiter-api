@@ -1,10 +1,11 @@
 package com.everyonewaiter.domain.store.entity;
 
 import com.everyonewaiter.global.domain.entity.Aggregate;
-import com.everyonewaiter.global.domain.entity.StringToListConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,12 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Setting extends Aggregate {
 
-  public enum PrinterLocation {POS, KITCHEN}
+  public enum PrinterLocation {POS, HALL}
 
   @Column(name = "extra_table_count", nullable = false)
   private int extraTableCount = 5;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "printer_location", nullable = false)
   private PrinterLocation printerLocation = PrinterLocation.POS;
 
@@ -39,7 +41,7 @@ public class Setting extends Aggregate {
   private final List<CountryOfOrigin> countryOfOrigins = new ArrayList<>();
 
   @Column(name = "staff_call_options", nullable = false)
-  @Convert(converter = StringToListConverter.class)
-  private final List<String> staffCallOptions = new ArrayList<>();
+  @Convert(converter = StaffCallOptionToListConverter.class)
+  private final List<StaffCallOption> staffCallOptions = new ArrayList<>();
 
 }

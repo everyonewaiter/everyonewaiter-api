@@ -44,6 +44,16 @@ class StoreAdminController implements StoreAdminControllerSpecification {
   }
 
   @Override
+  @PostMapping("/registrations/{registrationId}/approve")
+  public ResponseEntity<Void> approve(
+      @PathVariable Long registrationId,
+      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+  ) {
+    registrationService.approve(registrationId);
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
   @PostMapping("/registrations/{registrationId}/reject")
   public ResponseEntity<Void> reject(
       @PathVariable Long registrationId,

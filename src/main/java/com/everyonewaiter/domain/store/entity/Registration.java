@@ -1,21 +1,19 @@
 package com.everyonewaiter.domain.store.entity;
 
+import com.everyonewaiter.domain.store.event.LicenseImageDeleteEvent;
 import com.everyonewaiter.domain.store.event.RegistrationApplyEvent;
+import com.everyonewaiter.domain.store.event.RegistrationApproveEvent;
 import com.everyonewaiter.domain.store.event.RegistrationReapplyEvent;
 import com.everyonewaiter.domain.store.event.RegistrationRejectEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +22,7 @@ import lombok.ToString;
 @Table(name = "store_registration")
 @Entity
 @Getter
-@ToString(exclude = "businessLicense", callSuper = true)
+@ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Registration extends AggregateRoot<Registration> {
 
@@ -33,8 +31,7 @@ public class Registration extends AggregateRoot<Registration> {
   @Column(name = "account_id", nullable = false, updatable = false)
   private Long accountId;
 
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-  @JoinColumn(name = "license_id")
+  @Embedded
   private BusinessLicense businessLicense;
 
   @Enumerated(EnumType.STRING)
@@ -59,7 +56,8 @@ public class Registration extends AggregateRoot<Registration> {
       String landline,
       String license
   ) {
-    reapply(name, ceoName, address, landline, license, businessLicense.getImage());
+    reapply();
+    this.businessLicense.update(name, ceoName, address, landline, license);
   }
 
   public void reapply(
@@ -68,29 +66,34 @@ public class Registration extends AggregateRoot<Registration> {
       String address,
       String landline,
       String license,
-      String image
+      String licenseImage
   ) {
-    if (isRejected()) {
-      boolean shouldDeleteLicenseImage = businessLicense.isChangeImage(image);
-      registerEvent(new RegistrationReapplyEvent(
-          businessLicense.getName(),
-          rejectReason,
-          Optional.ofNullable(shouldDeleteLicenseImage ? businessLicense.getImage() : null)
-      ));
+    reapply();
+    String beforeLicenseImage = this.businessLicense.getLicenseImage();
+    registerEvent(new LicenseImageDeleteEvent(name, beforeLicenseImage));
+    this.businessLicense.update(name, ceoName, address, landline, license, licenseImage);
+  }
 
-      this.businessLicense.update(name, ceoName, address, landline, license, image);
+  private void reapply() {
+    if (isRejected()) {
       this.status = Status.REAPPLY;
+      registerEvent(new RegistrationReapplyEvent(businessLicense.getName(), rejectReason));
     } else {
       throw new BusinessException(ErrorCode.ONLY_REJECTED_REGISTRATION_CAN_BE_REAPPLY);
     }
   }
 
-  public boolean isRejected() {
-    return this.status == Status.REJECT;
+  public void approve() {
+    if (isApplied()) {
+      this.status = Status.APPROVE;
+      registerEvent(new RegistrationApproveEvent(accountId, businessLicense));
+    } else {
+      throw new BusinessException(ErrorCode.ONLY_APPLY_OR_REAPPLY_STATUS_CAN_BE_APPROVE);
+    }
   }
 
   public void reject(String rejectReason) {
-    if (canReject()) {
+    if (isApplied()) {
       this.status = Status.REJECT;
       this.rejectReason = rejectReason;
       registerEvent(new RegistrationRejectEvent(
@@ -103,8 +106,12 @@ public class Registration extends AggregateRoot<Registration> {
     }
   }
 
-  public boolean canReject() {
+  public boolean isApplied() {
     return this.status == Status.APPLY || this.status == Status.REAPPLY;
+  }
+
+  public boolean isRejected() {
+    return this.status == Status.REJECT;
   }
 
 }
