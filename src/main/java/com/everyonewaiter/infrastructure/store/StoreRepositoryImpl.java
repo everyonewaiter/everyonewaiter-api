@@ -8,6 +8,7 @@ import com.everyonewaiter.domain.store.view.StoreView;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -31,6 +32,11 @@ class StoreRepositoryImpl implements StoreRepository {
         .from(store)
         .where(store.accountId.eq(accountId))
         .fetch();
+  }
+
+  @Override
+  public Optional<Store> findByIdAndAccountId(Long storeId, Long accountId) {
+    return storeJpaRepository.findByIdAndAccountId(storeId, accountId);
   }
 
   @Override
