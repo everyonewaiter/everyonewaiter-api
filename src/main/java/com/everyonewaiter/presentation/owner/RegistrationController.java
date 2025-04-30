@@ -23,13 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/stores")
-class StoreController implements StoreControllerSpecification {
+@RequestMapping("/api/v1/stores/registrations")
+class RegistrationController implements RegistrationControllerSpecification {
 
   private final RegistrationService registrationService;
 
   @Override
-  @GetMapping("/registrations")
+  @GetMapping
   public ResponseEntity<Paging<RegistrationDetailResponse>> getRegistrations(
       @ModelAttribute @Valid RegistrationRead.PageRequest request,
       @AuthenticationAccount Account account
@@ -40,7 +40,7 @@ class StoreController implements StoreControllerSpecification {
   }
 
   @Override
-  @GetMapping("/registrations/{registrationId}")
+  @GetMapping("/{registrationId}")
   public ResponseEntity<RegistrationDetailResponse> getRegistration(
       @PathVariable Long registrationId,
       @AuthenticationAccount Account account
@@ -49,7 +49,7 @@ class StoreController implements StoreControllerSpecification {
   }
 
   @Override
-  @PostMapping(value = "/registrations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Void> apply(
       @ModelAttribute @Valid RegistrationWrite.CreateRequest request,
       @AuthenticationAccount Account account
@@ -59,7 +59,7 @@ class StoreController implements StoreControllerSpecification {
   }
 
   @Override
-  @PutMapping("/registrations/{registrationId}")
+  @PutMapping("/{registrationId}")
   public ResponseEntity<Void> reapply(
       @PathVariable Long registrationId,
       @RequestBody @Valid RegistrationWrite.UpdateRequest request,
@@ -70,7 +70,7 @@ class StoreController implements StoreControllerSpecification {
   }
 
   @Override
-  @PutMapping(value = "/registrations/{registrationId}/with-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PutMapping(value = "/{registrationId}/with-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Void> reapply(
       @PathVariable Long registrationId,
       @ModelAttribute @Valid RegistrationWrite.UpdateWithImageRequest request,

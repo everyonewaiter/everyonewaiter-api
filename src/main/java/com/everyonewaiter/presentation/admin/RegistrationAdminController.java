@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admins/stores")
-class StoreAdminController implements StoreAdminControllerSpecification {
+@RequestMapping("/api/v1/admins/stores/registrations")
+class RegistrationAdminController implements RegistrationAdminControllerSpecification {
 
   private final RegistrationService registrationService;
 
   @Override
-  @GetMapping("/registrations")
+  @GetMapping
   public ResponseEntity<Paging<RegistrationAdmin.PageViewResponse>> getRegistrations(
       @ModelAttribute @Valid RegistrationAdminRead.PageRequest request,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
@@ -35,7 +35,7 @@ class StoreAdminController implements StoreAdminControllerSpecification {
   }
 
   @Override
-  @GetMapping("/registrations/{registrationId}")
+  @GetMapping("/{registrationId}")
   public ResponseEntity<RegistrationAdmin.DetailViewResponse> getRegistration(
       @PathVariable Long registrationId,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
@@ -44,7 +44,7 @@ class StoreAdminController implements StoreAdminControllerSpecification {
   }
 
   @Override
-  @PostMapping("/registrations/{registrationId}/approve")
+  @PostMapping("/{registrationId}/approve")
   public ResponseEntity<Void> approve(
       @PathVariable Long registrationId,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
@@ -54,7 +54,7 @@ class StoreAdminController implements StoreAdminControllerSpecification {
   }
 
   @Override
-  @PostMapping("/registrations/{registrationId}/reject")
+  @PostMapping("/{registrationId}/reject")
   public ResponseEntity<Void> reject(
       @PathVariable Long registrationId,
       @RequestBody @Valid RegistrationAdminWrite.RejectRequest request,

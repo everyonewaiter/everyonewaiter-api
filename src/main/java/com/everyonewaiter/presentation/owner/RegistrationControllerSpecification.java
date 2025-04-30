@@ -16,8 +16,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 
-@Tag(name = "매장")
-interface StoreControllerSpecification {
+@Tag(name = "매장 등록")
+interface RegistrationControllerSpecification {
 
   @Operation(summary = "등록 신청 목록 조회", description = "매장 등록 신청 목록 조회 API")
   @ApiResponse(responseCode = "200", description = "매장 등록 신청 목록 조회 성공")
