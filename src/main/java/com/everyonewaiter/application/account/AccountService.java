@@ -1,9 +1,8 @@
 package com.everyonewaiter.application.account;
 
-import com.everyonewaiter.application.account.request.AccountAdminPage;
-import com.everyonewaiter.application.account.request.AccountAdminUpdate;
-import com.everyonewaiter.application.account.request.AccountCreate;
-import com.everyonewaiter.application.account.request.AccountSignIn;
+import com.everyonewaiter.application.account.request.AccountAdminRead;
+import com.everyonewaiter.application.account.request.AccountAdminWrite;
+import com.everyonewaiter.application.account.request.AccountWrite;
 import com.everyonewaiter.application.account.response.AccountAdminResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
@@ -25,7 +24,7 @@ public class AccountService {
   private final PasswordEncoder passwordEncoder;
 
   @Transactional
-  public Long create(AccountCreate request) {
+  public Long create(AccountWrite.Create request) {
     accountValidator.validateUnique(request.email(), request.phoneNumber());
     Account account = Account.create(
         request.email(),
@@ -51,7 +50,7 @@ public class AccountService {
   }
 
   @Transactional
-  public Long signIn(AccountSignIn request) {
+  public Long signIn(AccountWrite.SignIn request) {
     return accountRepository.findByEmail(request.email())
         .map(account -> {
           account.signIn(passwordEncoder, request.password());
@@ -60,7 +59,7 @@ public class AccountService {
         .orElseThrow(() -> new BusinessException(ErrorCode.FAILED_SIGN_IN));
   }
 
-  public Paging<AccountAdminResponse.PageView> readAllByAdmin(AccountAdminPage request) {
+  public Paging<AccountAdminResponse.PageView> readAllByAdmin(AccountAdminRead.PageView request) {
     return accountRepository.findAllByAdmin(
             request.email(),
             request.state(),
@@ -77,7 +76,7 @@ public class AccountService {
   }
 
   @Transactional
-  public void updateByAdmin(Long accountId, AccountAdminUpdate request) {
+  public void updateByAdmin(Long accountId, AccountAdminWrite.Update request) {
     Account account = accountRepository.findByIdOrThrow(accountId);
     account.update(request.state(), request.permission());
     accountRepository.save(account);

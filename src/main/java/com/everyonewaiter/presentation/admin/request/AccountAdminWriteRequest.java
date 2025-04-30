@@ -1,6 +1,6 @@
 package com.everyonewaiter.presentation.admin.request;
 
-import com.everyonewaiter.application.account.request.AccountAdminUpdate;
+import com.everyonewaiter.application.account.request.AccountAdminWrite;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.Enum;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,10 +9,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AccountAdminWrite {
+public class AccountAdminWriteRequest {
 
-  @Schema(name = "AccountAdminWrite.UpdateRequest")
-  public record UpdateRequest(
+  @Schema(name = "AccountAdminWriteRequest.Update")
+  public record Update(
       @Schema(description = "상태", example = "ACTIVE")
       @NotNull(message = "계정 상태가 누락되었거나 옳바르지 않습니다.")
       @Enum(clazz = Account.State.class, message = "계정 상태가 누락되었거나 옳바르지 않습니다.")
@@ -24,8 +24,8 @@ public class AccountAdminWrite {
       Account.Permission permission
   ) {
 
-    public AccountAdminUpdate toDomainDto() {
-      return new AccountAdminUpdate(state, permission);
+    public AccountAdminWrite.Update toDomainDto() {
+      return new AccountAdminWrite.Update(state, permission);
     }
 
   }

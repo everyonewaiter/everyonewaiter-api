@@ -5,8 +5,8 @@ import com.everyonewaiter.application.account.response.AccountAdminResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.global.support.Paging;
-import com.everyonewaiter.presentation.admin.request.AccountAdminRead;
-import com.everyonewaiter.presentation.admin.request.AccountAdminWrite;
+import com.everyonewaiter.presentation.admin.request.AccountAdminReadRequest;
+import com.everyonewaiter.presentation.admin.request.AccountAdminWriteRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ class AccountAdminController implements AccountAdminControllerSpecification {
   @Override
   @GetMapping
   public ResponseEntity<Paging<AccountAdminResponse.PageView>> getAccounts(
-      @ModelAttribute @Valid AccountAdminRead.PageRequest request,
+      @ModelAttribute @Valid AccountAdminReadRequest.PageView request,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
     return ResponseEntity.ok(accountService.readAllByAdmin(request.toDomainDto()));
@@ -48,7 +48,7 @@ class AccountAdminController implements AccountAdminControllerSpecification {
   @PutMapping("/{accountId}")
   public ResponseEntity<Void> update(
       @PathVariable Long accountId,
-      @RequestBody @Valid AccountAdminWrite.UpdateRequest request,
+      @RequestBody @Valid AccountAdminWriteRequest.Update request,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
     accountService.updateByAdmin(accountId, request.toDomainDto());

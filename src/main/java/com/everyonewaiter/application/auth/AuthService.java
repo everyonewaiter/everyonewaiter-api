@@ -1,8 +1,7 @@
 package com.everyonewaiter.application.auth;
 
-import com.everyonewaiter.application.auth.request.SendAuthCode;
-import com.everyonewaiter.application.auth.request.VerifyAuthCode;
-import com.everyonewaiter.application.auth.response.Token;
+import com.everyonewaiter.application.auth.request.AuthWrite;
+import com.everyonewaiter.application.auth.response.TokenResponse;
 import com.everyonewaiter.domain.auth.entity.AuthAttempt;
 import com.everyonewaiter.domain.auth.entity.AuthCode;
 import com.everyonewaiter.domain.auth.entity.AuthPurpose;
@@ -44,7 +43,7 @@ public class AuthService {
     authValidator.checkExistsAuthSuccess(authSuccess);
   }
 
-  public void sendAuthCode(SendAuthCode request) {
+  public void sendAuthCode(AuthWrite.SendAuthCode request) {
     AuthAttempt authAttempt = new AuthAttempt(request.phoneNumber(), request.purpose());
     authValidator.validateAuthAttempt(authAttempt);
 
@@ -57,7 +56,7 @@ public class AuthService {
     applicationEventPublisher.publishEvent(event);
   }
 
-  public void verifyAuthCode(VerifyAuthCode request) {
+  public void verifyAuthCode(AuthWrite.VerifyAuthCode request) {
     AuthSuccess authSuccess = new AuthSuccess(request.phoneNumber(), request.purpose());
     authValidator.checkNotExistsAuthSuccess(authSuccess);
 
@@ -86,13 +85,13 @@ public class AuthService {
   }
 
   @Transactional
-  public Token.AllResponse generateTokenBySignIn(Long accountId) {
+  public TokenResponse.All generateTokenBySignIn(Long accountId) {
     RefreshToken refTokenEntity = refreshTokenRepository.save(RefreshToken.create(accountId));
     return generateAllToken(accountId, refTokenEntity.getId(), refTokenEntity.getCurrentTokenId());
   }
 
   @Transactional
-  public Optional<Token.AllResponse> renewToken(String refreshToken) {
+  public Optional<TokenResponse.All> renewToken(String refreshToken) {
     JwtPayload payload = jwtProvider.decode(refreshToken).orElseThrow(AuthenticationException::new);
     RefreshToken refTokenEntity = refreshTokenRepository.findByIdOrThrow(payload.id());
 
@@ -111,7 +110,7 @@ public class AuthService {
     }
   }
 
-  private Token.AllResponse generateAllToken(
+  private TokenResponse.All generateAllToken(
       Long accountId,
       Long rootTokenId,
       Long currentTokenId
@@ -119,7 +118,7 @@ public class AuthService {
     String subject = currentTokenId.toString();
     String accessToken = generateToken(new JwtPayload(accountId, subject), Duration.ofHours(12));
     String refreshToken = generateToken(new JwtPayload(rootTokenId, subject), Duration.ofDays(14));
-    return new Token.AllResponse(accessToken, refreshToken);
+    return new TokenResponse.All(accessToken, refreshToken);
   }
 
 }

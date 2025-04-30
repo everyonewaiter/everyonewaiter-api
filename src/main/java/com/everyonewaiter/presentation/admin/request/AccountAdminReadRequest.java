@@ -1,6 +1,6 @@
 package com.everyonewaiter.presentation.admin.request;
 
-import com.everyonewaiter.application.account.request.AccountAdminPage;
+import com.everyonewaiter.application.account.request.AccountAdminRead;
 import com.everyonewaiter.domain.account.entity.Account;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
@@ -11,12 +11,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AccountAdminRead {
+public class AccountAdminReadRequest {
 
   @Data
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class PageRequest {
+  public static class PageView {
 
     @Schema(description = "조회할 이메일")
     private String email;
@@ -40,8 +40,8 @@ public class AccountAdminRead {
     @Max(value = 100, message = "페이지 조회 크기는 100 이하이어야 합니다.")
     private long size = 20;
 
-    public AccountAdminPage toDomainDto() {
-      return new AccountAdminPage(email, state, permission, hasStore, page, size);
+    public AccountAdminRead.PageView toDomainDto() {
+      return new AccountAdminRead.PageView(email, state, permission, hasStore, page, size);
     }
 
   }

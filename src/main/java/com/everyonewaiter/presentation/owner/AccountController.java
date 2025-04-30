@@ -3,13 +3,13 @@ package com.everyonewaiter.presentation.owner;
 import com.everyonewaiter.application.account.AccountService;
 import com.everyonewaiter.application.account.response.AccountResponse;
 import com.everyonewaiter.application.auth.AuthService;
-import com.everyonewaiter.application.auth.response.Token;
+import com.everyonewaiter.application.auth.response.TokenResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.auth.entity.AuthPurpose;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.global.exception.AccessDeniedException;
-import com.everyonewaiter.presentation.owner.request.AccountWrite;
-import com.everyonewaiter.presentation.owner.request.Auth;
+import com.everyonewaiter.presentation.owner.request.AccountWriteRequest;
+import com.everyonewaiter.presentation.owner.request.AuthWriteRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ class AccountController implements AccountControllerSpecification {
 
   @Override
   @PostMapping
-  public ResponseEntity<Void> signUp(@RequestBody @Valid AccountWrite.CreateRequest request) {
+  public ResponseEntity<Void> signUp(@RequestBody @Valid AccountWriteRequest.Create request) {
     authService.checkExistsAuthSuccess(request.phoneNumber(), AuthPurpose.SIGN_UP);
     Long accountId = accountService.create(request.toDomainDto());
     return ResponseEntity.created(URI.create(accountId.toString())).build();
@@ -48,17 +48,19 @@ class AccountController implements AccountControllerSpecification {
 
   @Override
   @PostMapping("/sign-in")
-  public ResponseEntity<Token.AllResponse> signIn(
-      @RequestBody @Valid AccountWrite.SignInRequest request
+  public ResponseEntity<TokenResponse.All> signIn(
+      @RequestBody @Valid AccountWriteRequest.SignIn request
   ) {
     Long accountId = accountService.signIn(request.toDomainDto());
-    Token.AllResponse response = authService.generateTokenBySignIn(accountId);
+    TokenResponse.All response = authService.generateTokenBySignIn(accountId);
     return ResponseEntity.ok(response);
   }
 
   @Override
   @PostMapping("/send-auth-code")
-  public ResponseEntity<Void> sendAuthCode(@RequestBody @Valid Auth.SendAuthCodeRequest request) {
+  public ResponseEntity<Void> sendAuthCode(
+      @RequestBody @Valid AuthWriteRequest.SendAuthCode request
+  ) {
     accountService.checkAvailablePhoneNumber(request.phoneNumber());
     authService.sendAuthCode(request.toDomainDto(AuthPurpose.SIGN_UP));
     return ResponseEntity.noContent().build();
@@ -67,7 +69,7 @@ class AccountController implements AccountControllerSpecification {
   @Override
   @PostMapping("/verify-auth-code")
   public ResponseEntity<Void> verifyAuthCode(
-      @RequestBody @Valid Auth.VerifyAuthCodeRequest request
+      @RequestBody @Valid AuthWriteRequest.VerifyAuthCode request
   ) {
     authService.verifyAuthCode(request.toDomainDto(AuthPurpose.SIGN_UP));
     return ResponseEntity.noContent().build();
@@ -75,7 +77,9 @@ class AccountController implements AccountControllerSpecification {
 
   @Override
   @PostMapping("/send-auth-mail")
-  public ResponseEntity<Void> sendAuthMail(@RequestBody @Valid Auth.SendAuthMailRequest request) {
+  public ResponseEntity<Void> sendAuthMail(
+      @RequestBody @Valid AuthWriteRequest.SendAuthMail request
+  ) {
     accountService.checkPossibleSendAuthMail(request.email());
     authService.sendAuthMail(request.email());
     return ResponseEntity.noContent().build();
@@ -91,8 +95,8 @@ class AccountController implements AccountControllerSpecification {
 
   @Override
   @PostMapping("/renew-token")
-  public ResponseEntity<Token.AllResponse> renewToken(
-      @RequestBody @Valid Auth.RenewTokenRequest request
+  public ResponseEntity<TokenResponse.All> renewToken(
+      @RequestBody @Valid AuthWriteRequest.RenewToken request
   ) {
     return authService.renewToken(request.refreshToken())
         .map(ResponseEntity::ok)

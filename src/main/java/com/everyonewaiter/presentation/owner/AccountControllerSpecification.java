@@ -1,13 +1,13 @@
 package com.everyonewaiter.presentation.owner;
 
 import com.everyonewaiter.application.account.response.AccountResponse;
-import com.everyonewaiter.application.auth.response.Token;
+import com.everyonewaiter.application.auth.response.TokenResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
 import com.everyonewaiter.global.exception.ErrorCode;
-import com.everyonewaiter.presentation.owner.request.AccountWrite;
-import com.everyonewaiter.presentation.owner.request.Auth;
+import com.everyonewaiter.presentation.owner.request.AccountWriteRequest;
+import com.everyonewaiter.presentation.owner.request.AuthWriteRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -59,7 +59,7 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Void> signUp(@RequestBody AccountWrite.CreateRequest request);
+  ResponseEntity<Void> signUp(@RequestBody AccountWriteRequest.Create request);
 
   @SecurityRequirements
   @Operation(summary = "로그인", description = "로그인 API")
@@ -81,7 +81,7 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Token.AllResponse> signIn(@RequestBody AccountWrite.SignInRequest request);
+  ResponseEntity<TokenResponse.All> signIn(@RequestBody AccountWriteRequest.SignIn request);
 
   @SecurityRequirements
   @Operation(
@@ -105,7 +105,7 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Void> sendAuthCode(@RequestBody Auth.SendAuthCodeRequest request);
+  ResponseEntity<Void> sendAuthCode(@RequestBody AuthWriteRequest.SendAuthCode request);
 
   @SecurityRequirements
   @Operation(
@@ -131,7 +131,7 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Void> verifyAuthCode(@RequestBody Auth.VerifyAuthCodeRequest request);
+  ResponseEntity<Void> verifyAuthCode(@RequestBody AuthWriteRequest.VerifyAuthCode request);
 
   @SecurityRequirements
   @Operation(
@@ -154,7 +154,7 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Void> sendAuthMail(@RequestBody Auth.SendAuthMailRequest request);
+  ResponseEntity<Void> sendAuthMail(@RequestBody AuthWriteRequest.SendAuthMail request);
 
   @SecurityRequirements
   @Operation(summary = "이메일 인증", description = "이메일 인증 API")
@@ -194,6 +194,6 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Token.AllResponse> renewToken(@RequestBody Auth.RenewTokenRequest request);
+  ResponseEntity<TokenResponse.All> renewToken(@RequestBody AuthWriteRequest.RenewToken request);
 
 }

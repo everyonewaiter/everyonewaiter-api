@@ -6,8 +6,8 @@ import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.support.Paging;
-import com.everyonewaiter.presentation.admin.request.AccountAdminRead;
-import com.everyonewaiter.presentation.admin.request.AccountAdminWrite;
+import com.everyonewaiter.presentation.admin.request.AccountAdminReadRequest;
+import com.everyonewaiter.presentation.admin.request.AccountAdminWriteRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -35,7 +35,7 @@ interface AccountAdminControllerSpecification {
       }
   )
   ResponseEntity<Paging<AccountAdminResponse.PageView>> getAccounts(
-      @ParameterObject AccountAdminRead.PageRequest request,
+      @ParameterObject AccountAdminReadRequest.PageView request,
       @Parameter(hidden = true) Account account
   );
 
@@ -84,7 +84,7 @@ interface AccountAdminControllerSpecification {
   )
   ResponseEntity<Void> update(
       Long accountId,
-      @RequestBody AccountAdminWrite.UpdateRequest request,
+      @RequestBody AccountAdminWriteRequest.Update request,
       @Parameter(hidden = true) Account account
   );
 

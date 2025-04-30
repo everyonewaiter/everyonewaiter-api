@@ -5,10 +5,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Token {
+public class TokenResponse {
 
-  @Schema(name = "Token.AllResponse")
-  public record AllResponse(
+  @Schema(name = "TokenResponse.All")
+  public record All(
       @Schema(description = "액세스 토큰 (12시간)", example = "abcdefghijklmnopqrstuvwxyz")
       String accessToken,
 
