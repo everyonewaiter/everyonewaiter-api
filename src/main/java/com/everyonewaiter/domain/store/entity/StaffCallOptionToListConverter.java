@@ -2,8 +2,8 @@ package com.everyonewaiter.domain.store.entity;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.util.StringUtils;
@@ -27,11 +27,11 @@ class StaffCallOptionToListConverter implements AttributeConverter<List<StaffCal
   @Override
   public List<StaffCallOption> convertToEntityAttribute(String dbData) {
     if (!StringUtils.hasText(dbData)) {
-      return Collections.emptyList();
+      return new ArrayList<>();
     } else {
       return Arrays.stream(dbData.split(COMMA))
           .map(StaffCallOption::new)
-          .toList();
+          .collect(Collectors.toCollection(ArrayList::new));
     }
   }
 

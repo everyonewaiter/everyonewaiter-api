@@ -51,6 +51,10 @@ public class BusinessLicense {
     return businessLicense;
   }
 
+  public void update(String landline) {
+    this.landline = landline;
+  }
+
   public void update(String name, String ceoName, String address, String landline, String license) {
     update(name, ceoName, address, landline, license, licenseImage);
   }

@@ -8,6 +8,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -43,5 +44,31 @@ public class Setting extends Aggregate {
   @Column(name = "staff_call_options", nullable = false)
   @Convert(converter = StaffCallOptionToListConverter.class)
   private final List<StaffCallOption> staffCallOptions = new ArrayList<>();
+
+  public void update(
+      int extraTableCount,
+      PrinterLocation printerLocation,
+      boolean showMenuPopup,
+      boolean showOrderTotalPrice,
+      List<CountryOfOrigin> countryOfOrigins,
+      List<StaffCallOption> staffCallOptions
+  ) {
+    this.extraTableCount = extraTableCount;
+    this.printerLocation = printerLocation;
+    this.showMenuPopup = showMenuPopup;
+    this.showOrderTotalPrice = showOrderTotalPrice;
+    this.countryOfOrigins.clear();
+    this.countryOfOrigins.addAll(countryOfOrigins);
+    this.staffCallOptions.clear();
+    this.staffCallOptions.addAll(staffCallOptions);
+  }
+
+  public List<CountryOfOrigin> getCountryOfOrigins() {
+    return Collections.unmodifiableList(countryOfOrigins);
+  }
+
+  public List<StaffCallOption> getStaffCallOptions() {
+    return Collections.unmodifiableList(staffCallOptions);
+  }
 
 }

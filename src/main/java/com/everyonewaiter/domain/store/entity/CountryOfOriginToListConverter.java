@@ -2,8 +2,8 @@ package com.everyonewaiter.domain.store.entity;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.util.StringUtils;
@@ -28,12 +28,12 @@ class CountryOfOriginToListConverter implements AttributeConverter<List<CountryO
   @Override
   public List<CountryOfOrigin> convertToEntityAttribute(String dbData) {
     if (!StringUtils.hasText(dbData)) {
-      return Collections.emptyList();
+      return new ArrayList<>();
     } else {
       return Arrays.stream(dbData.split(COMMA))
           .map(countryOfOrigin -> countryOfOrigin.split(COLON))
           .map(countryOfOrigin -> new CountryOfOrigin(countryOfOrigin[0], countryOfOrigin[1]))
-          .toList();
+          .collect(Collectors.toCollection(ArrayList::new));
     }
   }
 

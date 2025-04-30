@@ -5,6 +5,8 @@ import static com.everyonewaiter.domain.store.entity.QStore.store;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.domain.store.repository.StoreRepository;
 import com.everyonewaiter.domain.store.view.StoreView;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -37,6 +39,12 @@ class StoreRepositoryImpl implements StoreRepository {
   @Override
   public Optional<Store> findByIdAndAccountId(Long storeId, Long accountId) {
     return storeJpaRepository.findByIdAndAccountId(storeId, accountId);
+  }
+
+  @Override
+  public Store findByIdAndAccountIdOrThrow(Long storeId, Long accountId) {
+    return findByIdAndAccountId(storeId, accountId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.STORE_NOT_FOUND));
   }
 
   @Override

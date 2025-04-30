@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,6 +52,26 @@ public class Store extends AggregateRoot<Store> {
     store.accountId = accountId;
     store.businessLicense = businessLicense;
     return store;
+  }
+
+  public void update(
+      String landline,
+      int extraTableCount,
+      Setting.PrinterLocation printerLocation,
+      boolean showMenuPopup,
+      boolean showOrderTotalPrice,
+      List<CountryOfOrigin> countryOfOrigins,
+      List<StaffCallOption> staffCallOptions
+  ) {
+    this.businessLicense.update(landline);
+    this.setting.update(
+        extraTableCount,
+        printerLocation,
+        showMenuPopup,
+        showOrderTotalPrice,
+        countryOfOrigins,
+        staffCallOptions
+    );
   }
 
 }
