@@ -27,6 +27,9 @@ public class AccountAdminRead {
     @Schema(description = "조회할 권한")
     private Account.Permission permission;
 
+    @Schema(description = "조회할 매장 소유 여부")
+    private Boolean hasStore;
+
     @Schema(description = "조회 페이지 번호", defaultValue = "1")
     @Min(value = 1, message = "페이지 번호는 1 이상이어야 합니다.")
     @Max(value = 1_000, message = "페이지 번호는 1,000 이하이어야 합니다.")
@@ -38,7 +41,7 @@ public class AccountAdminRead {
     private long size = 20;
 
     public AccountAdminPage toDomainDto() {
-      return new AccountAdminPage(email, state, permission, page, size);
+      return new AccountAdminPage(email, state, permission, hasStore, page, size);
     }
 
   }

@@ -1,6 +1,7 @@
 package com.everyonewaiter.infrastructure.account;
 
 import static com.everyonewaiter.domain.account.entity.QAccount.account;
+import static com.everyonewaiter.domain.store.entity.QStore.store;
 
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
@@ -42,6 +43,7 @@ class AccountRepositoryImpl implements AccountRepository {
       @Nullable String email,
       @Nullable Account.State state,
       @Nullable Account.Permission permission,
+      @Nullable Boolean hasStore,
       Pagination pagination
   ) {
     List<AccountAdminPageView> views = queryFactory
@@ -52,16 +54,19 @@ class AccountRepositoryImpl implements AccountRepository {
                 account.email,
                 account.state,
                 account.permission,
-                account.id.isNull(),
+                store.id.isNotNull(),
                 account.createdAt,
                 account.updatedAt
             )
         )
+        .distinct()
         .from(account)
+        .leftJoin(store).on(account.id.eq(store.accountId))
         .where(
             emailStratsWith(email),
             stateEq(state),
-            permissionEq(permission)
+            permissionEq(permission),
+            hasStoreEq(hasStore)
         )
         .orderBy(account.id.desc())
         .limit(pagination.limit())
@@ -69,12 +74,14 @@ class AccountRepositoryImpl implements AccountRepository {
         .fetch();
 
     Long count = queryFactory
-        .select(account.count())
+        .select(account.countDistinct())
         .from(account)
+        .leftJoin(store).on(account.id.eq(store.accountId))
         .where(
             emailStratsWith(email),
             stateEq(state),
-            permissionEq(permission)
+            permissionEq(permission),
+            hasStoreEq(hasStore)
         )
         .orderBy(account.id.desc())
         .limit(pagination.countLimit())
@@ -119,6 +126,13 @@ class AccountRepositoryImpl implements AccountRepository {
 
   private BooleanExpression permissionEq(@Nullable Account.Permission permission) {
     return permission != null ? account.permission.eq(permission) : null;
+  }
+
+  private BooleanExpression hasStoreEq(@Nullable Boolean hasStore) {
+    if (hasStore == null) {
+      return null;
+    }
+    return hasStore ? store.id.isNotNull() : store.id.isNull();
   }
 
 }

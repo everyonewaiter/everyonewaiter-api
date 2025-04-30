@@ -14,6 +14,9 @@ public record AccountAdminPage(
     @Nullable
     Account.Permission permission,
 
+    @Nullable
+    Boolean hasStore,
+
     Pagination pagination
 ) {
 
@@ -21,10 +24,11 @@ public record AccountAdminPage(
       @Nullable String email,
       @Nullable Account.State state,
       @Nullable Account.Permission permission,
+      @Nullable Boolean hasStore,
       long page,
       long size
   ) {
-    this(email, state, permission, new Pagination(page, size));
+    this(email, state, permission, hasStore, new Pagination(page, size));
   }
 
 }

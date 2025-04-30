@@ -65,6 +65,7 @@ public class AccountService {
             request.email(),
             request.state(),
             request.permission(),
+            request.hasStore(),
             request.pagination()
         )
         .map(AccountAdmin.PageViewResponse::from);
