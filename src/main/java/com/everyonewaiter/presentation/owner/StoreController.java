@@ -1,7 +1,7 @@
 package com.everyonewaiter.presentation.owner;
 
 import com.everyonewaiter.application.store.StoreService;
-import com.everyonewaiter.application.store.response.StoreSimpleResponses;
+import com.everyonewaiter.application.store.response.StoreResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ class StoreController implements StoreControllerSpecification {
 
   @Override
   @GetMapping
-  public ResponseEntity<StoreSimpleResponses> getStores(@AuthenticationAccount Account account) {
+  public ResponseEntity<StoreResponse.Simples> getStores(@AuthenticationAccount Account account) {
     return ResponseEntity.ok(storeService.readAllSimpleView(account.getId()));
   }
 

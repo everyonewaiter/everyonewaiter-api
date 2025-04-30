@@ -1,6 +1,6 @@
 package com.everyonewaiter.application.store;
 
-import com.everyonewaiter.application.store.response.StoreSimpleResponses;
+import com.everyonewaiter.application.store.response.StoreResponse;
 import com.everyonewaiter.domain.store.repository.StoreRepository;
 import com.everyonewaiter.domain.store.view.StoreSimpleView;
 import java.util.List;
@@ -13,9 +13,9 @@ public class StoreService {
 
   private final StoreRepository storeRepository;
 
-  public StoreSimpleResponses readAllSimpleView(Long accountId) {
+  public StoreResponse.Simples readAllSimpleView(Long accountId) {
     List<StoreSimpleView> views = storeRepository.findAllSimpleViewByAccountId(accountId);
-    return StoreSimpleResponses.from(views);
+    return StoreResponse.Simples.from(views);
   }
 
 }

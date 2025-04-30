@@ -21,5 +21,7 @@ interface StoreControllerSpecification {
       exampleName = "액세스 토큰이 유효하지 않은 경우"
   )
   ResponseEntity<StoreSimpleResponses> getStores(@Parameter(hidden = true) Account account);
+  ResponseEntity<StoreResponse.Simples> getStores(@Parameter(hidden = true) Account account);
+
 
 }
