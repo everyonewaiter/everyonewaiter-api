@@ -5,8 +5,8 @@ import com.everyonewaiter.application.store.response.RegistrationDetailResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.global.support.Paging;
-import com.everyonewaiter.presentation.owner.request.RegistrationRead;
-import com.everyonewaiter.presentation.owner.request.RegistrationWrite;
+import com.everyonewaiter.presentation.owner.request.RegistrationReadRequest;
+import com.everyonewaiter.presentation.owner.request.RegistrationWriteRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ class RegistrationController implements RegistrationControllerSpecification {
   @Override
   @GetMapping
   public ResponseEntity<Paging<RegistrationDetailResponse>> getRegistrations(
-      @ModelAttribute @Valid RegistrationRead.PageRequest request,
+      @ModelAttribute @Valid RegistrationReadRequest.PageView request,
       @AuthenticationAccount Account account
   ) {
     Paging<RegistrationDetailResponse> responses =
@@ -51,7 +51,7 @@ class RegistrationController implements RegistrationControllerSpecification {
   @Override
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Void> apply(
-      @ModelAttribute @Valid RegistrationWrite.CreateRequest request,
+      @ModelAttribute @Valid RegistrationWriteRequest.Create request,
       @AuthenticationAccount Account account
   ) {
     Long registrationId = registrationService.apply(account.getId(), request.toDomainDto());
@@ -62,7 +62,7 @@ class RegistrationController implements RegistrationControllerSpecification {
   @PutMapping("/{registrationId}")
   public ResponseEntity<Void> reapply(
       @PathVariable Long registrationId,
-      @RequestBody @Valid RegistrationWrite.UpdateRequest request,
+      @RequestBody @Valid RegistrationWriteRequest.Update request,
       @AuthenticationAccount Account account
   ) {
     registrationService.reapply(registrationId, account.getId(), request.toDomainDto());
@@ -73,7 +73,7 @@ class RegistrationController implements RegistrationControllerSpecification {
   @PutMapping(value = "/{registrationId}/with-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Void> reapply(
       @PathVariable Long registrationId,
-      @ModelAttribute @Valid RegistrationWrite.UpdateWithImageRequest request,
+      @ModelAttribute @Valid RegistrationWriteRequest.UpdateWithImage request,
       @AuthenticationAccount Account account
   ) {
     registrationService.reapply(registrationId, account.getId(), request.toDomainDto());

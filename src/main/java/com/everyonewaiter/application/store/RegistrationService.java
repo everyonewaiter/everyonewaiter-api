@@ -1,11 +1,9 @@
 package com.everyonewaiter.application.store;
 
-import com.everyonewaiter.application.store.request.RegistrationAdminPage;
-import com.everyonewaiter.application.store.request.RegistrationAdminReject;
-import com.everyonewaiter.application.store.request.RegistrationCreate;
-import com.everyonewaiter.application.store.request.RegistrationPage;
-import com.everyonewaiter.application.store.request.RegistrationUpdate;
-import com.everyonewaiter.application.store.request.RegistrationUpdateWithImage;
+import com.everyonewaiter.application.store.request.RegistrationAdminRead;
+import com.everyonewaiter.application.store.request.RegistrationAdminWrite;
+import com.everyonewaiter.application.store.request.RegistrationRead;
+import com.everyonewaiter.application.store.request.RegistrationWrite;
 import com.everyonewaiter.application.store.response.RegistrationAdmin;
 import com.everyonewaiter.application.store.response.RegistrationDetailResponse;
 import com.everyonewaiter.domain.image.service.ImageManager;
@@ -27,7 +25,7 @@ public class RegistrationService {
   private final RegistrationRepository registrationRepository;
 
   @Transactional
-  public Long apply(Long accountId, RegistrationCreate request) {
+  public Long apply(Long accountId, RegistrationWrite.Create request) {
     BusinessLicense businessLicense = BusinessLicense.create(
         request.name(),
         request.ceoName(),
@@ -41,7 +39,7 @@ public class RegistrationService {
   }
 
   @Transactional
-  public void reapply(Long registrationId, Long accountId, RegistrationUpdate request) {
+  public void reapply(Long registrationId, Long accountId, RegistrationWrite.Update request) {
     Registration registration =
         registrationRepository.findByIdAndAccountIdOrThrow(registrationId, accountId);
     registration.reapply(
@@ -55,7 +53,11 @@ public class RegistrationService {
   }
 
   @Transactional
-  public void reapply(Long registrationId, Long accountId, RegistrationUpdateWithImage request) {
+  public void reapply(
+      Long registrationId,
+      Long accountId,
+      RegistrationWrite.UpdateWithImage request
+  ) {
     Registration registration =
         registrationRepository.findByIdAndAccountIdOrThrow(registrationId, accountId);
     registration.deleteLicenseImage();
@@ -78,18 +80,24 @@ public class RegistrationService {
   }
 
   @Transactional
-  public void reject(Long registrationId, RegistrationAdminReject request) {
+  public void reject(Long registrationId, RegistrationAdminWrite.Reject request) {
     Registration registration = registrationRepository.findByIdOrThrow(registrationId);
     registration.reject(request.rejectReason());
     registrationRepository.save(registration);
   }
 
-  public Paging<RegistrationDetailResponse> readAll(Long accountId, RegistrationPage request) {
-    return registrationRepository.findAllByAccountId(accountId, request.pagination())
+  public Paging<RegistrationDetailResponse> readAll(
+      Long accountId,
+      RegistrationRead.PageView request
+  ) {
+    return registrationRepository
+        .findAllByAccountId(accountId, request.pagination())
         .map(RegistrationDetailResponse::from);
   }
 
-  public Paging<RegistrationAdmin.PageViewResponse> readAllByAdmin(RegistrationAdminPage request) {
+  public Paging<RegistrationAdmin.PageViewResponse> readAllByAdmin(
+      RegistrationAdminRead.PageView request
+  ) {
     return registrationRepository.findAllByAdmin(
             request.email(),
             request.name(),

@@ -6,8 +6,8 @@ import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.support.Paging;
-import com.everyonewaiter.presentation.owner.request.RegistrationRead;
-import com.everyonewaiter.presentation.owner.request.RegistrationWrite;
+import com.everyonewaiter.presentation.owner.request.RegistrationReadRequest;
+import com.everyonewaiter.presentation.owner.request.RegistrationWriteRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -31,7 +31,7 @@ interface RegistrationControllerSpecification {
       }
   )
   ResponseEntity<Paging<RegistrationDetailResponse>> getRegistrations(
-      @ParameterObject RegistrationRead.PageRequest request,
+      @ParameterObject RegistrationReadRequest.PageView request,
       @Parameter(hidden = true) Account account
   );
 
@@ -88,7 +88,7 @@ interface RegistrationControllerSpecification {
       }
   )
   ResponseEntity<Void> apply(
-      RegistrationWrite.CreateRequest request,
+      RegistrationWriteRequest.Create request,
       @Parameter(hidden = true) Account account
   );
 
@@ -113,7 +113,7 @@ interface RegistrationControllerSpecification {
   )
   ResponseEntity<Void> reapply(
       Long registrationId,
-      @RequestBody RegistrationWrite.UpdateRequest request,
+      @RequestBody RegistrationWriteRequest.Update request,
       @Parameter(hidden = true) Account account
   );
 
@@ -159,7 +159,7 @@ interface RegistrationControllerSpecification {
   )
   ResponseEntity<Void> reapply(
       Long registrationId,
-      RegistrationWrite.UpdateWithImageRequest request,
+      RegistrationWriteRequest.UpdateWithImage request,
       @Parameter(hidden = true) Account account
   );
 

@@ -1,8 +1,6 @@
 package com.everyonewaiter.presentation.owner.request;
 
-import com.everyonewaiter.application.store.request.RegistrationCreate;
-import com.everyonewaiter.application.store.request.RegistrationUpdate;
-import com.everyonewaiter.application.store.request.RegistrationUpdateWithImage;
+import com.everyonewaiter.application.store.request.RegistrationWrite;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,10 +11,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class RegistrationWrite {
+public class RegistrationWriteRequest {
 
-  @Schema(name = "RegistrationWrite.CreateRequest")
-  public record CreateRequest(
+  @Schema(name = "RegistrationWriteRequest.Create")
+  public record Create(
       @Schema(description = "매장 이름", example = "홍길동식당", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotBlank(message = "매장 이름을 입력해 주세요.")
       @Size(min = 1, max = 30, message = "매장 이름은 1자 이상 30자 이하로 입력해 주세요.")
@@ -50,14 +48,14 @@ public class RegistrationWrite {
       MultipartFile file
   ) {
 
-    public RegistrationCreate toDomainDto() {
-      return new RegistrationCreate(name, ceoName, address, landline, license, file);
+    public RegistrationWrite.Create toDomainDto() {
+      return new RegistrationWrite.Create(name, ceoName, address, landline, license, file);
     }
 
   }
 
-  @Schema(name = "RegistrationWrite.UpdateRequest")
-  public record UpdateRequest(
+  @Schema(name = "RegistrationWriteRequest.Update")
+  public record Update(
       @Schema(description = "매장 이름", example = "홍길동식당")
       @NotBlank(message = "매장 이름을 입력해 주세요.")
       @Size(min = 1, max = 30, message = "매장 이름은 1자 이상 30자 이하로 입력해 주세요.")
@@ -87,14 +85,14 @@ public class RegistrationWrite {
       String license
   ) {
 
-    public RegistrationUpdate toDomainDto() {
-      return new RegistrationUpdate(name, ceoName, address, landline, license);
+    public RegistrationWrite.Update toDomainDto() {
+      return new RegistrationWrite.Update(name, ceoName, address, landline, license);
     }
 
   }
 
-  @Schema(name = "RegistrationWrite.UpdateWithImageRequest")
-  public record UpdateWithImageRequest(
+  @Schema(name = "RegistrationWriteRequest.UpdateWithImage")
+  public record UpdateWithImage(
       @Schema(description = "매장 이름", example = "홍길동식당", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotBlank(message = "매장 이름을 입력해 주세요.")
       @Size(min = 1, max = 30, message = "매장 이름은 1자 이상 30자 이하로 입력해 주세요.")
@@ -128,8 +126,8 @@ public class RegistrationWrite {
       MultipartFile file
   ) {
 
-    public RegistrationUpdateWithImage toDomainDto() {
-      return new RegistrationUpdateWithImage(name, ceoName, address, landline, license, file);
+    public RegistrationWrite.UpdateWithImage toDomainDto() {
+      return new RegistrationWrite.UpdateWithImage(name, ceoName, address, landline, license, file);
     }
 
   }

@@ -5,8 +5,8 @@ import com.everyonewaiter.application.store.response.RegistrationAdmin;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.global.support.Paging;
-import com.everyonewaiter.presentation.admin.request.RegistrationAdminRead;
-import com.everyonewaiter.presentation.admin.request.RegistrationAdminWrite;
+import com.everyonewaiter.presentation.admin.request.RegistrationAdminReadRequest;
+import com.everyonewaiter.presentation.admin.request.RegistrationAdminWriteRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ class RegistrationAdminController implements RegistrationAdminControllerSpecific
   @Override
   @GetMapping
   public ResponseEntity<Paging<RegistrationAdmin.PageViewResponse>> getRegistrations(
-      @ModelAttribute @Valid RegistrationAdminRead.PageRequest request,
+      @ModelAttribute @Valid RegistrationAdminReadRequest.PageView request,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
     return ResponseEntity.ok(registrationService.readAllByAdmin(request.toDomainDto()));
@@ -57,7 +57,7 @@ class RegistrationAdminController implements RegistrationAdminControllerSpecific
   @PostMapping("/{registrationId}/reject")
   public ResponseEntity<Void> reject(
       @PathVariable Long registrationId,
-      @RequestBody @Valid RegistrationAdminWrite.RejectRequest request,
+      @RequestBody @Valid RegistrationAdminWriteRequest.Reject request,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
     registrationService.reject(registrationId, request.toDomainDto());
