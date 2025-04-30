@@ -5,7 +5,7 @@ import static com.everyonewaiter.domain.store.entity.QStore.store;
 
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
-import com.everyonewaiter.domain.account.view.AccountAdminPageView;
+import com.everyonewaiter.domain.account.view.AccountAdminView;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.support.Pagination;
@@ -39,17 +39,17 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public Paging<AccountAdminPageView> findAllByAdmin(
+  public Paging<AccountAdminView.Page> findAllByAdmin(
       @Nullable String email,
       @Nullable Account.State state,
       @Nullable Account.Permission permission,
       @Nullable Boolean hasStore,
       Pagination pagination
   ) {
-    List<AccountAdminPageView> views = queryFactory
+    List<AccountAdminView.Page> views = queryFactory
         .select(
             Projections.constructor(
-                AccountAdminPageView.class,
+                AccountAdminView.Page.class,
                 account.id,
                 account.email,
                 account.state,

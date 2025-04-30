@@ -1,7 +1,7 @@
 package com.everyonewaiter.domain.account.repository;
 
 import com.everyonewaiter.domain.account.entity.Account;
-import com.everyonewaiter.domain.account.view.AccountAdminPageView;
+import com.everyonewaiter.domain.account.view.AccountAdminView;
 import com.everyonewaiter.global.support.Pagination;
 import com.everyonewaiter.global.support.Paging;
 import jakarta.annotation.Nullable;
@@ -13,7 +13,7 @@ public interface AccountRepository {
 
   boolean existsByPhoneNumber(String phoneNumber);
 
-  Paging<AccountAdminPageView> findAllByAdmin(
+  Paging<AccountAdminView.Page> findAllByAdmin(
       @Nullable String email,
       @Nullable Account.State state,
       @Nullable Account.Permission permission,

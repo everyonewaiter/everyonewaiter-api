@@ -1,7 +1,7 @@
 package com.everyonewaiter.application.account.response;
 
 import com.everyonewaiter.domain.account.entity.Account;
-import com.everyonewaiter.domain.account.view.AccountAdminPageView;
+import com.everyonewaiter.domain.account.view.AccountAdminView;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
 import java.util.Objects;
@@ -77,7 +77,7 @@ public class AccountAdminResponse {
       Instant updatedAt
   ) {
 
-    public static PageView from(AccountAdminPageView adminPageView) {
+    public static PageView from(AccountAdminView.Page adminPageView) {
       return new PageView(
           adminPageView.id().toString(),
           adminPageView.email(),
