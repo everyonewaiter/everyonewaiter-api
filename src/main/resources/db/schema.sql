@@ -42,3 +42,29 @@ create table store_registration
     updated_at    datetime(6)                                 not null,
     constraint fk_registration_license_id foreign key (license_id) references store_license (id)
 );
+
+create table store_setting
+(
+    id                     bigint primary key,
+    extra_table_count      int                  not null,
+    printer_location       enum ('POS', 'HALL') not null,
+    show_menu_popup        boolean              not null,
+    show_order_total_price boolean              not null,
+    country_of_origins     varchar(500)         not null,
+    staff_call_options     varchar(255)         not null
+);
+
+create table store
+(
+    id             bigint primary key,
+    account_id     bigint                 not null,
+    license_id     bigint                 not null,
+    setting_id     bigint                 not null,
+    status         enum ('OPEN', 'CLOSE') not null,
+    last_opened_at datetime(6)            not null,
+    last_closed_at datetime(6)            not null,
+    created_at     datetime(6)            not null,
+    updated_at     datetime(6)            not null,
+    constraint fk_store_license_id foreign key (license_id) references store_license (id),
+    constraint fk_store_setting_id foreign key (setting_id) references store_setting (id)
+);
