@@ -1,6 +1,6 @@
 package com.everyonewaiter.presentation.admin;
 
-import com.everyonewaiter.application.store.response.RegistrationAdmin;
+import com.everyonewaiter.application.store.response.RegistrationAdminResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
@@ -34,7 +34,7 @@ interface RegistrationAdminControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Paging<RegistrationAdmin.PageViewResponse>> getRegistrations(
+  ResponseEntity<Paging<RegistrationAdminResponse.PageView>> getRegistrations(
       @ParameterObject RegistrationAdminReadRequest.PageView request,
       @Parameter(hidden = true) Account account
   );
@@ -58,7 +58,7 @@ interface RegistrationAdminControllerSpecification {
           ),
       }
   )
-  ResponseEntity<RegistrationAdmin.DetailViewResponse> getRegistration(
+  ResponseEntity<RegistrationAdminResponse.DetailView> getRegistration(
       Long registrationId,
       @Parameter(hidden = true) Account account
   );

@@ -1,7 +1,7 @@
 package com.everyonewaiter.presentation.owner;
 
 import com.everyonewaiter.application.store.RegistrationService;
-import com.everyonewaiter.application.store.response.RegistrationDetailResponse;
+import com.everyonewaiter.application.store.response.RegistrationResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.global.support.Paging;
@@ -30,18 +30,18 @@ class RegistrationController implements RegistrationControllerSpecification {
 
   @Override
   @GetMapping
-  public ResponseEntity<Paging<RegistrationDetailResponse>> getRegistrations(
+  public ResponseEntity<Paging<RegistrationResponse.Detail>> getRegistrations(
       @ModelAttribute @Valid RegistrationReadRequest.PageView request,
       @AuthenticationAccount Account account
   ) {
-    Paging<RegistrationDetailResponse> responses =
+    Paging<RegistrationResponse.Detail> responses =
         registrationService.readAll(account.getId(), request.toDomainDto());
     return ResponseEntity.ok(responses);
   }
 
   @Override
   @GetMapping("/{registrationId}")
-  public ResponseEntity<RegistrationDetailResponse> getRegistration(
+  public ResponseEntity<RegistrationResponse.Detail> getRegistration(
       @PathVariable Long registrationId,
       @AuthenticationAccount Account account
   ) {

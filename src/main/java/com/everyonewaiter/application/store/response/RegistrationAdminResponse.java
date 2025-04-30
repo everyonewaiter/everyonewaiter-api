@@ -9,10 +9,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class RegistrationAdmin {
+public class RegistrationAdminResponse {
 
-  @Schema(name = "RegistrationAdmin.PageViewResponse")
-  public record PageViewResponse(
+  @Schema(name = "RegistrationAdminResponse.PageView")
+  public record PageView(
       @Schema(description = "매장 등록 ID", example = "\"694865267482835533\"")
       String registrationId,
 
@@ -35,8 +35,8 @@ public class RegistrationAdmin {
       Instant updatedAt
   ) {
 
-    public static PageViewResponse from(RegistrationAdminPageView adminPageView) {
-      return new PageViewResponse(
+    public static PageView from(RegistrationAdminPageView adminPageView) {
+      return new PageView(
           adminPageView.id().toString(),
           adminPageView.accountId().toString(),
           adminPageView.email(),
@@ -49,8 +49,8 @@ public class RegistrationAdmin {
 
   }
 
-  @Schema(name = "RegistrationAdmin.DetailViewResponse")
-  public record DetailViewResponse(
+  @Schema(name = "RegistrationAdminResponse.DetailView")
+  public record DetailView(
       @Schema(description = "매장 등록 ID", example = "\"694865267482835533\"")
       String registrationId,
 
@@ -88,8 +88,8 @@ public class RegistrationAdmin {
       Instant updatedAt
   ) {
 
-    public static DetailViewResponse from(RegistrationAdminDetailView adminDetailView) {
-      return new DetailViewResponse(
+    public static DetailView from(RegistrationAdminDetailView adminDetailView) {
+      return new DetailView(
           adminDetailView.id().toString(),
           adminDetailView.accountId().toString(),
           adminDetailView.email(),

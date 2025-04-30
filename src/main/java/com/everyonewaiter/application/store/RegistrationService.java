@@ -4,8 +4,8 @@ import com.everyonewaiter.application.store.request.RegistrationAdminRead;
 import com.everyonewaiter.application.store.request.RegistrationAdminWrite;
 import com.everyonewaiter.application.store.request.RegistrationRead;
 import com.everyonewaiter.application.store.request.RegistrationWrite;
-import com.everyonewaiter.application.store.response.RegistrationAdmin;
-import com.everyonewaiter.application.store.response.RegistrationDetailResponse;
+import com.everyonewaiter.application.store.response.RegistrationAdminResponse;
+import com.everyonewaiter.application.store.response.RegistrationResponse;
 import com.everyonewaiter.domain.image.service.ImageManager;
 import com.everyonewaiter.domain.store.entity.BusinessLicense;
 import com.everyonewaiter.domain.store.entity.Registration;
@@ -86,16 +86,16 @@ public class RegistrationService {
     registrationRepository.save(registration);
   }
 
-  public Paging<RegistrationDetailResponse> readAll(
+  public Paging<RegistrationResponse.Detail> readAll(
       Long accountId,
       RegistrationRead.PageView request
   ) {
     return registrationRepository
         .findAllByAccountId(accountId, request.pagination())
-        .map(RegistrationDetailResponse::from);
+        .map(RegistrationResponse.Detail::from);
   }
 
-  public Paging<RegistrationAdmin.PageViewResponse> readAllByAdmin(
+  public Paging<RegistrationAdminResponse.PageView> readAllByAdmin(
       RegistrationAdminRead.PageView request
   ) {
     return registrationRepository.findAllByAdmin(
@@ -104,18 +104,18 @@ public class RegistrationService {
             request.status(),
             request.pagination()
         )
-        .map(RegistrationAdmin.PageViewResponse::from);
+        .map(RegistrationAdminResponse.PageView::from);
   }
 
-  public RegistrationDetailResponse read(Long registrationId, Long accountId) {
+  public RegistrationResponse.Detail read(Long registrationId, Long accountId) {
     return registrationRepository.findByIdAndAccountId(registrationId, accountId)
-        .map(RegistrationDetailResponse::from)
+        .map(RegistrationResponse.Detail::from)
         .orElseThrow(() -> new BusinessException(ErrorCode.STORE_REGISTRATION_NOT_FOUND));
   }
 
-  public RegistrationAdmin.DetailViewResponse readByAdmin(Long registrationId) {
+  public RegistrationAdminResponse.DetailView readByAdmin(Long registrationId) {
     return registrationRepository.findByAdmin(registrationId)
-        .map(RegistrationAdmin.DetailViewResponse::from)
+        .map(RegistrationAdminResponse.DetailView::from)
         .orElseThrow(() -> new BusinessException(ErrorCode.STORE_REGISTRATION_NOT_FOUND));
   }
 

@@ -1,6 +1,6 @@
 package com.everyonewaiter.presentation.owner;
 
-import com.everyonewaiter.application.store.response.RegistrationDetailResponse;
+import com.everyonewaiter.application.store.response.RegistrationResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
@@ -30,7 +30,7 @@ interface RegistrationControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Paging<RegistrationDetailResponse>> getRegistrations(
+  ResponseEntity<Paging<RegistrationResponse.Detail>> getRegistrations(
       @ParameterObject RegistrationReadRequest.PageView request,
       @Parameter(hidden = true) Account account
   );
@@ -50,7 +50,7 @@ interface RegistrationControllerSpecification {
           ),
       }
   )
-  ResponseEntity<RegistrationDetailResponse> getRegistration(
+  ResponseEntity<RegistrationResponse.Detail> getRegistration(
       Long registrationId,
       @Parameter(hidden = true) Account account
   );

@@ -1,7 +1,7 @@
 package com.everyonewaiter.presentation.admin;
 
 import com.everyonewaiter.application.store.RegistrationService;
-import com.everyonewaiter.application.store.response.RegistrationAdmin;
+import com.everyonewaiter.application.store.response.RegistrationAdminResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.global.support.Paging;
@@ -27,7 +27,7 @@ class RegistrationAdminController implements RegistrationAdminControllerSpecific
 
   @Override
   @GetMapping
-  public ResponseEntity<Paging<RegistrationAdmin.PageViewResponse>> getRegistrations(
+  public ResponseEntity<Paging<RegistrationAdminResponse.PageView>> getRegistrations(
       @ModelAttribute @Valid RegistrationAdminReadRequest.PageView request,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
@@ -36,7 +36,7 @@ class RegistrationAdminController implements RegistrationAdminControllerSpecific
 
   @Override
   @GetMapping("/{registrationId}")
-  public ResponseEntity<RegistrationAdmin.DetailViewResponse> getRegistration(
+  public ResponseEntity<RegistrationAdminResponse.DetailView> getRegistration(
       @PathVariable Long registrationId,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
