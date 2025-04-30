@@ -1,8 +1,7 @@
 package com.everyonewaiter.application.store.response;
 
 import com.everyonewaiter.domain.store.entity.Registration;
-import com.everyonewaiter.domain.store.view.RegistrationAdminDetailView;
-import com.everyonewaiter.domain.store.view.RegistrationAdminPageView;
+import com.everyonewaiter.domain.store.view.RegistrationAdminView;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
 import lombok.AccessLevel;
@@ -35,7 +34,7 @@ public class RegistrationAdminResponse {
       Instant updatedAt
   ) {
 
-    public static PageView from(RegistrationAdminPageView adminPageView) {
+    public static PageView from(RegistrationAdminView.Page adminPageView) {
       return new PageView(
           adminPageView.id().toString(),
           adminPageView.accountId().toString(),
@@ -88,7 +87,7 @@ public class RegistrationAdminResponse {
       Instant updatedAt
   ) {
 
-    public static DetailView from(RegistrationAdminDetailView adminDetailView) {
+    public static DetailView from(RegistrationAdminView.Detail adminDetailView) {
       return new DetailView(
           adminDetailView.id().toString(),
           adminDetailView.accountId().toString(),

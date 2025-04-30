@@ -1,8 +1,7 @@
 package com.everyonewaiter.domain.store.repository;
 
 import com.everyonewaiter.domain.store.entity.Registration;
-import com.everyonewaiter.domain.store.view.RegistrationAdminDetailView;
-import com.everyonewaiter.domain.store.view.RegistrationAdminPageView;
+import com.everyonewaiter.domain.store.view.RegistrationAdminView;
 import com.everyonewaiter.global.support.Pagination;
 import com.everyonewaiter.global.support.Paging;
 import jakarta.annotation.Nullable;
@@ -12,7 +11,7 @@ public interface RegistrationRepository {
 
   Paging<Registration> findAllByAccountId(Long accountId, Pagination pagination);
 
-  Paging<RegistrationAdminPageView> findAllByAdmin(
+  Paging<RegistrationAdminView.Page> findAllByAdmin(
       @Nullable String email,
       @Nullable String name,
       @Nullable Registration.Status status,
@@ -25,7 +24,7 @@ public interface RegistrationRepository {
 
   Registration findByIdAndAccountIdOrThrow(Long registrationId, Long accountId);
 
-  Optional<RegistrationAdminDetailView> findByAdmin(Long registrationId);
+  Optional<RegistrationAdminView.Detail> findByAdmin(Long registrationId);
 
   Registration save(Registration registration);
 

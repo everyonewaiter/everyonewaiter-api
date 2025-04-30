@@ -5,8 +5,7 @@ import static com.everyonewaiter.domain.store.entity.QRegistration.registration;
 
 import com.everyonewaiter.domain.store.entity.Registration;
 import com.everyonewaiter.domain.store.repository.RegistrationRepository;
-import com.everyonewaiter.domain.store.view.RegistrationAdminDetailView;
-import com.everyonewaiter.domain.store.view.RegistrationAdminPageView;
+import com.everyonewaiter.domain.store.view.RegistrationAdminView;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.support.Pagination;
@@ -52,16 +51,16 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
   }
 
   @Override
-  public Paging<RegistrationAdminPageView> findAllByAdmin(
+  public Paging<RegistrationAdminView.Page> findAllByAdmin(
       @Nullable String email,
       @Nullable String name,
       @Nullable Registration.Status status,
       Pagination pagination
   ) {
-    List<RegistrationAdminPageView> views = queryFactory
+    List<RegistrationAdminView.Page> views = queryFactory
         .select(
             Projections.constructor(
-                RegistrationAdminPageView.class,
+                RegistrationAdminView.Page.class,
                 registration.id,
                 registration.accountId,
                 account.email,
@@ -117,12 +116,12 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
   }
 
   @Override
-  public Optional<RegistrationAdminDetailView> findByAdmin(Long registrationId) {
+  public Optional<RegistrationAdminView.Detail> findByAdmin(Long registrationId) {
     return Optional.ofNullable(
         queryFactory
             .select(
                 Projections.constructor(
-                    RegistrationAdminDetailView.class,
+                    RegistrationAdminView.Detail.class,
                     registration.id,
                     registration.accountId,
                     account.email,
