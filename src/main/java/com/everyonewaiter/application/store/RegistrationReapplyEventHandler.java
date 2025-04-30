@@ -16,7 +16,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
 @RequiredArgsConstructor
-public class RegistrationReapplyEventHandler {
+class RegistrationReapplyEventHandler {
 
   private static final Logger LOGGER =
       LoggerFactory.getLogger(RegistrationReapplyEventHandler.class);

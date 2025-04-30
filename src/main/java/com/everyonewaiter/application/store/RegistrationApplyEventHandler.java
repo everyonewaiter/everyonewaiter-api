@@ -14,7 +14,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
 @RequiredArgsConstructor
-public class RegistrationApplyEventHandler {
+class RegistrationApplyEventHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationApplyEventHandler.class);
 
