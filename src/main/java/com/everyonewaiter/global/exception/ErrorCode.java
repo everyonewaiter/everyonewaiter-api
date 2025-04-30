@@ -49,6 +49,7 @@ public enum ErrorCode {
 
   // STORE
   ONLY_REJECTED_REGISTRATION_CAN_BE_REAPPLY(BAD_REQUEST, "거부된 매장 등록 신청만 재신청할 수 있어요."),
+  ONLY_APPLY_OR_REAPPLY_STATUS_CAN_BE_REJECT(BAD_REQUEST, "접수 또는 재접수된 매장 등록 신청만 거부할 수 있어요."),
   STORE_REGISTRATION_NOT_FOUND(NOT_FOUND, "매장 등록 신청 내역을 찾을 수 없어요."),
   ;
 

@@ -10,6 +10,7 @@ import com.everyonewaiter.presentation.owner.request.RegistrationRead;
 import com.everyonewaiter.presentation.owner.request.RegistrationWrite;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.ParameterObject;
@@ -112,7 +113,7 @@ interface StoreControllerSpecification {
   )
   ResponseEntity<Void> reapply(
       Long registrationId,
-      RegistrationWrite.UpdateRequest request,
+      @RequestBody RegistrationWrite.UpdateRequest request,
       @Parameter(hidden = true) Account account
   );
 

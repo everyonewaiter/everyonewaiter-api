@@ -19,7 +19,11 @@ public interface RegistrationRepository {
       Pagination pagination
   );
 
+  Registration findByIdOrThrow(Long registrationId);
+
   Optional<Registration> findByIdAndAccountId(Long registrationId, Long accountId);
+
+  Registration findByIdAndAccountIdOrThrow(Long registrationId, Long accountId);
 
   Optional<RegistrationAdminDetailView> findByAdmin(Long registrationId);
 

@@ -1,6 +1,7 @@
 package com.everyonewaiter.application.store;
 
 import com.everyonewaiter.application.store.request.RegistrationAdminPage;
+import com.everyonewaiter.application.store.request.RegistrationAdminReject;
 import com.everyonewaiter.application.store.request.RegistrationCreate;
 import com.everyonewaiter.application.store.request.RegistrationPage;
 import com.everyonewaiter.application.store.request.RegistrationUpdate;
@@ -41,33 +42,38 @@ public class RegistrationService {
 
   @Transactional
   public void reapply(Long registrationId, Long accountId, RegistrationUpdate request) {
-    registrationRepository.findByIdAndAccountId(registrationId, accountId)
-        .ifPresent(registration -> {
-          registration.reapply(
-              request.name(),
-              request.ceoName(),
-              request.address(),
-              request.landline(),
-              request.license()
-          );
-          registrationRepository.save(registration);
-        });
+    Registration registration =
+        registrationRepository.findByIdAndAccountIdOrThrow(registrationId, accountId);
+    registration.reapply(
+        request.name(),
+        request.ceoName(),
+        request.address(),
+        request.landline(),
+        request.license()
+    );
+    registrationRepository.save(registration);
   }
 
   @Transactional
   public void reapply(Long registrationId, Long accountId, RegistrationUpdateWithImage request) {
-    registrationRepository.findByIdAndAccountId(registrationId, accountId)
-        .ifPresent(registration -> {
-          registration.reapply(
-              request.name(),
-              request.ceoName(),
-              request.address(),
-              request.landline(),
-              request.license(),
-              imageManager.upload(request.file(), "license")
-          );
-          registrationRepository.save(registration);
-        });
+    Registration registration =
+        registrationRepository.findByIdAndAccountIdOrThrow(registrationId, accountId);
+    registration.reapply(
+        request.name(),
+        request.ceoName(),
+        request.address(),
+        request.landline(),
+        request.license(),
+        imageManager.upload(request.file(), "license")
+    );
+    registrationRepository.save(registration);
+  }
+
+  @Transactional
+  public void reject(Long registrationId, RegistrationAdminReject request) {
+    Registration registration = registrationRepository.findByIdOrThrow(registrationId);
+    registration.reject(request.rejectReason());
+    registrationRepository.save(registration);
   }
 
   public Paging<RegistrationDetailResponse> readAll(Long accountId, RegistrationPage request) {

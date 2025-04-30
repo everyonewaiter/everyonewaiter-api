@@ -8,6 +8,8 @@ import com.everyonewaiter.domain.store.entity.Registration;
 import com.everyonewaiter.domain.store.repository.RegistrationRepository;
 import com.everyonewaiter.domain.store.view.RegistrationAdminDetailView;
 import com.everyonewaiter.domain.store.view.RegistrationAdminPageView;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.support.Pagination;
 import com.everyonewaiter.global.support.Paging;
 import com.querydsl.core.types.Projections;
@@ -102,8 +104,20 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
   }
 
   @Override
+  public Registration findByIdOrThrow(Long registrationId) {
+    return registrationJpaRepository.findById(registrationId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.STORE_REGISTRATION_NOT_FOUND));
+  }
+
+  @Override
   public Optional<Registration> findByIdAndAccountId(Long registrationId, Long accountId) {
     return registrationJpaRepository.findByIdAndAccountId(registrationId, accountId);
+  }
+
+  @Override
+  public Registration findByIdAndAccountIdOrThrow(Long registrationId, Long accountId) {
+    return findByIdAndAccountId(registrationId, accountId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.STORE_REGISTRATION_NOT_FOUND));
   }
 
   @Override

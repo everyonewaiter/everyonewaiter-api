@@ -2,6 +2,7 @@ package com.everyonewaiter.domain.store.entity;
 
 import com.everyonewaiter.domain.store.event.RegistrationApplyEvent;
 import com.everyonewaiter.domain.store.event.RegistrationReapplyEvent;
+import com.everyonewaiter.domain.store.event.RegistrationRejectEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
@@ -51,10 +52,6 @@ public class Registration extends AggregateRoot<Registration> {
     return registration;
   }
 
-  public boolean isRejected() {
-    return this.status == Status.REJECT;
-  }
-
   public void reapply(
       String name,
       String ceoName,
@@ -74,9 +71,9 @@ public class Registration extends AggregateRoot<Registration> {
       String image
   ) {
     if (isRejected()) {
-      boolean shouldDeleteLicenseImage = this.businessLicense.isChangeImage(image);
+      boolean shouldDeleteLicenseImage = businessLicense.isChangeImage(image);
       registerEvent(new RegistrationReapplyEvent(
-          this.businessLicense.getName(),
+          businessLicense.getName(),
           rejectReason,
           Optional.ofNullable(shouldDeleteLicenseImage ? businessLicense.getImage() : null)
       ));
@@ -86,6 +83,28 @@ public class Registration extends AggregateRoot<Registration> {
     } else {
       throw new BusinessException(ErrorCode.ONLY_REJECTED_REGISTRATION_CAN_BE_REAPPLY);
     }
+  }
+
+  public boolean isRejected() {
+    return this.status == Status.REJECT;
+  }
+
+  public void reject(String rejectReason) {
+    if (canReject()) {
+      this.status = Status.REJECT;
+      this.rejectReason = rejectReason;
+      registerEvent(new RegistrationRejectEvent(
+          accountId,
+          businessLicense.getName(),
+          rejectReason
+      ));
+    } else {
+      throw new BusinessException(ErrorCode.ONLY_APPLY_OR_REAPPLY_STATUS_CAN_BE_REJECT);
+    }
+  }
+
+  public boolean canReject() {
+    return this.status == Status.APPLY || this.status == Status.REAPPLY;
   }
 
 }
