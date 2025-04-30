@@ -9,10 +9,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AccountAdmin {
+public class AccountAdminResponse {
 
-  @Schema(name = "AccountAdmin.ReadResponse")
-  public record ReadResponse(
+  @Schema(name = "AccountAdminResponse.Detail")
+  public record Detail(
       @Schema(description = "계정 ID", example = "\"694865267482835533\"")
       String accountId,
 
@@ -38,8 +38,8 @@ public class AccountAdmin {
       Instant updatedAt
   ) {
 
-    public static ReadResponse from(Account account) {
-      return new ReadResponse(
+    public static Detail from(Account account) {
+      return new Detail(
           Objects.requireNonNull(account.getId()).toString(),
           account.getEmail(),
           account.getPhoneNumber(),
@@ -53,8 +53,8 @@ public class AccountAdmin {
 
   }
 
-  @Schema(name = "AccountAdmin.PageViewResponse")
-  public record PageViewResponse(
+  @Schema(name = "AccountAdminResponse.PageView")
+  public record PageView(
       @Schema(description = "계정 ID", example = "\"694865267482835533\"")
       String accountId,
 
@@ -77,8 +77,8 @@ public class AccountAdmin {
       Instant updatedAt
   ) {
 
-    public static PageViewResponse from(AccountAdminPageView adminPageView) {
-      return new PageViewResponse(
+    public static PageView from(AccountAdminPageView adminPageView) {
+      return new PageView(
           adminPageView.id().toString(),
           adminPageView.email(),
           adminPageView.state(),

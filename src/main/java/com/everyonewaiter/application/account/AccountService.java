@@ -4,7 +4,7 @@ import com.everyonewaiter.application.account.request.AccountAdminPage;
 import com.everyonewaiter.application.account.request.AccountAdminUpdate;
 import com.everyonewaiter.application.account.request.AccountCreate;
 import com.everyonewaiter.application.account.request.AccountSignIn;
-import com.everyonewaiter.application.account.response.AccountAdmin;
+import com.everyonewaiter.application.account.response.AccountAdminResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
 import com.everyonewaiter.domain.account.service.AccountValidator;
@@ -60,7 +60,7 @@ public class AccountService {
         .orElseThrow(() -> new BusinessException(ErrorCode.FAILED_SIGN_IN));
   }
 
-  public Paging<AccountAdmin.PageViewResponse> readAllByAdmin(AccountAdminPage request) {
+  public Paging<AccountAdminResponse.PageView> readAllByAdmin(AccountAdminPage request) {
     return accountRepository.findAllByAdmin(
             request.email(),
             request.state(),
@@ -68,12 +68,12 @@ public class AccountService {
             request.hasStore(),
             request.pagination()
         )
-        .map(AccountAdmin.PageViewResponse::from);
+        .map(AccountAdminResponse.PageView::from);
   }
 
-  public AccountAdmin.ReadResponse readByAdmin(Long accountId) {
+  public AccountAdminResponse.Detail readByAdmin(Long accountId) {
     Account account = accountRepository.findByIdOrThrow(accountId);
-    return AccountAdmin.ReadResponse.from(account);
+    return AccountAdminResponse.Detail.from(account);
   }
 
   @Transactional

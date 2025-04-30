@@ -1,6 +1,6 @@
 package com.everyonewaiter.presentation.owner;
 
-import com.everyonewaiter.application.account.response.ProfileResponse;
+import com.everyonewaiter.application.account.response.AccountResponse;
 import com.everyonewaiter.application.auth.response.Token;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
@@ -27,7 +27,7 @@ interface AccountControllerSpecification {
       code = ErrorCode.UNAUTHORIZED,
       exampleName = "액세스 토큰이 유효하지 않은 경우"
   )
-  ResponseEntity<ProfileResponse> getProfile(@Parameter(hidden = true) Account account);
+  ResponseEntity<AccountResponse.Profile> getProfile(@Parameter(hidden = true) Account account);
 
   @SecurityRequirements
   @Operation(

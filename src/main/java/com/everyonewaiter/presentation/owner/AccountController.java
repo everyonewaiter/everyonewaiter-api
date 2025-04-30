@@ -1,7 +1,7 @@
 package com.everyonewaiter.presentation.owner;
 
 import com.everyonewaiter.application.account.AccountService;
-import com.everyonewaiter.application.account.response.ProfileResponse;
+import com.everyonewaiter.application.account.response.AccountResponse;
 import com.everyonewaiter.application.auth.AuthService;
 import com.everyonewaiter.application.auth.response.Token;
 import com.everyonewaiter.domain.account.entity.Account;
@@ -31,8 +31,10 @@ class AccountController implements AccountControllerSpecification {
 
   @Override
   @GetMapping("/me")
-  public ResponseEntity<ProfileResponse> getProfile(@AuthenticationAccount Account account) {
-    ProfileResponse response = ProfileResponse.from(account);
+  public ResponseEntity<AccountResponse.Profile> getProfile(
+      @AuthenticationAccount Account account
+  ) {
+    AccountResponse.Profile response = AccountResponse.Profile.from(account);
     return ResponseEntity.ok(response);
   }
 

@@ -1,7 +1,7 @@
 package com.everyonewaiter.presentation.admin;
 
 import com.everyonewaiter.application.account.AccountService;
-import com.everyonewaiter.application.account.response.AccountAdmin;
+import com.everyonewaiter.application.account.response.AccountAdminResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.global.support.Paging;
@@ -27,7 +27,7 @@ class AccountAdminController implements AccountAdminControllerSpecification {
 
   @Override
   @GetMapping
-  public ResponseEntity<Paging<AccountAdmin.PageViewResponse>> getAccounts(
+  public ResponseEntity<Paging<AccountAdminResponse.PageView>> getAccounts(
       @ModelAttribute @Valid AccountAdminRead.PageRequest request,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
@@ -36,11 +36,11 @@ class AccountAdminController implements AccountAdminControllerSpecification {
 
   @Override
   @GetMapping("/{accountId}")
-  public ResponseEntity<AccountAdmin.ReadResponse> getAccount(
+  public ResponseEntity<AccountAdminResponse.Detail> getAccount(
       @PathVariable Long accountId,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
-    AccountAdmin.ReadResponse response = accountService.readByAdmin(accountId);
+    AccountAdminResponse.Detail response = accountService.readByAdmin(accountId);
     return ResponseEntity.ok(response);
   }
 

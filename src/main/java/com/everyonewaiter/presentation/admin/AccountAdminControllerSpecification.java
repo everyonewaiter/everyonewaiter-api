@@ -1,6 +1,6 @@
 package com.everyonewaiter.presentation.admin;
 
-import com.everyonewaiter.application.account.response.AccountAdmin;
+import com.everyonewaiter.application.account.response.AccountAdminResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
@@ -34,7 +34,7 @@ interface AccountAdminControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Paging<AccountAdmin.PageViewResponse>> getAccounts(
+  ResponseEntity<Paging<AccountAdminResponse.PageView>> getAccounts(
       @ParameterObject AccountAdminRead.PageRequest request,
       @Parameter(hidden = true) Account account
   );
@@ -58,7 +58,7 @@ interface AccountAdminControllerSpecification {
           ),
       }
   )
-  ResponseEntity<AccountAdmin.ReadResponse> getAccount(
+  ResponseEntity<AccountAdminResponse.Detail> getAccount(
       Long accountId,
       @Parameter(hidden = true) Account account
   );
