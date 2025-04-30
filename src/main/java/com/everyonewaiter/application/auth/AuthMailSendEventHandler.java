@@ -8,7 +8,6 @@ import com.everyonewaiter.global.security.JwtFixedId;
 import com.everyonewaiter.global.security.JwtPayload;
 import com.everyonewaiter.global.security.JwtProvider;
 import java.time.Duration;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,12 +38,13 @@ class AuthMailSendEventHandler {
         + "&token="
         + authToken;
 
-    mailSender.sendTo(MailSend.of(
-        event.email(),
-        "email-authentication",
-        "[모두의 웨이터] 이메일 인증 안내드립니다.",
-        Map.of("authenticationUrl", authUrl)
-    ));
+    MailSend request = MailSend.builder()
+        .to(event.email())
+        .templateName("email-authentication")
+        .subject("[모두의 웨이터] 이메일 인증 안내드립니다.")
+        .variable("authenticationUrl", authUrl)
+        .build();
+    mailSender.sendTo(request);
   }
 
 }

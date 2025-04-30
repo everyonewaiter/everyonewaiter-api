@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 class SimpleMailClient implements MailClient {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SimpleMailClient.class);
+  private static final String FROM_FORMAT = "모두의 웨이터 <%s>";
 
   private final JavaMailSender javaMailSender;
 
@@ -25,7 +26,7 @@ class SimpleMailClient implements MailClient {
       MimeMessage mimeMessage = javaMailSender.createMimeMessage();
       MimeMessageHelper mimeMessageHelper =
           new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
-      mimeMessageHelper.setFrom(from);
+      mimeMessageHelper.setFrom(FROM_FORMAT.formatted(from));
       mimeMessageHelper.setTo(to);
       mimeMessageHelper.setSubject(subject);
       mimeMessageHelper.setText(content, true);
