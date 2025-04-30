@@ -58,6 +58,7 @@ public class RegistrationService {
   public void reapply(Long registrationId, Long accountId, RegistrationUpdateWithImage request) {
     Registration registration =
         registrationRepository.findByIdAndAccountIdOrThrow(registrationId, accountId);
+    registration.deleteLicenseImage();
     registration.reapply(
         request.name(),
         request.ceoName(),
