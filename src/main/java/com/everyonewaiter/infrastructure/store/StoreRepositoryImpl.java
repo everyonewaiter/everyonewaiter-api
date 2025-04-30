@@ -4,7 +4,7 @@ import static com.everyonewaiter.domain.store.entity.QStore.store;
 
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.domain.store.repository.StoreRepository;
-import com.everyonewaiter.domain.store.view.StoreSimpleView;
+import com.everyonewaiter.domain.store.view.StoreView;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -19,11 +19,11 @@ class StoreRepositoryImpl implements StoreRepository {
   private final StoreJpaRepository storeJpaRepository;
 
   @Override
-  public List<StoreSimpleView> findAllSimpleViewByAccountId(Long accountId) {
+  public List<StoreView.Simple> findAllSimpleViewByAccountId(Long accountId) {
     return queryFactory
         .select(
             Projections.constructor(
-                StoreSimpleView.class,
+                StoreView.Simple.class,
                 store.id,
                 store.businessLicense.name
             )
