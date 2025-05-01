@@ -1,14 +1,15 @@
 create table account
 (
     id           bigint primary key,
-    email        varchar(50)                         not null unique,
+    email        varchar(50)                         not null,
     password     char(60)                            not null,
-    phone_number char(11)                            not null unique,
+    phone_number char(11)                            not null,
     state        enum ('INACTIVE','ACTIVE','DELETE') not null,
     permission   enum ('USER','OWNER','ADMIN')       not null,
     last_sign_in datetime(6)                         not null,
     created_at   datetime(6)                         not null,
-    updated_at   datetime(6)                         not null
+    updated_at   datetime(6)                         not null,
+    constraint uk_email unique (email)
 );
 
 create table refresh_token

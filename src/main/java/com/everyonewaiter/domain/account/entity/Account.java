@@ -34,7 +34,7 @@ public class Account extends AggregateRoot<Account> {
   @Column(name = "password", nullable = false)
   private String password;
 
-  @Column(name = "phone_number", nullable = false, updatable = false, unique = true)
+  @Column(name = "phone_number", nullable = false, updatable = false)
   private String phoneNumber;
 
   @Enumerated(EnumType.STRING)
