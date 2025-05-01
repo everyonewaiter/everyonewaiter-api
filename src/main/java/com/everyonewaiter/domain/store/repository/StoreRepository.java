@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface StoreRepository {
 
+  boolean existsByIdAndAccountId(Long storeId, Long accountId);
+
   List<StoreView.Simple> findAllSimpleViewByAccountId(Long accountId);
 
   Optional<Store> findByIdAndAccountId(Long storeId, Long accountId);

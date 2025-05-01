@@ -16,8 +16,10 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+@Order(1)
 @Aspect
 @Component
 class HttpRequestLoggingAspect {

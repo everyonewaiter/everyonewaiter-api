@@ -22,6 +22,11 @@ class StoreRepositoryImpl implements StoreRepository {
   private final StoreJpaRepository storeJpaRepository;
 
   @Override
+  public boolean existsByIdAndAccountId(Long storeId, Long accountId) {
+    return storeJpaRepository.existsByIdAndAccountId(storeId, accountId);
+  }
+
+  @Override
   public List<StoreView.Simple> findAllSimpleViewByAccountId(Long accountId) {
     return queryFactory
         .select(
