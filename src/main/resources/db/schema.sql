@@ -9,7 +9,7 @@ create table account
     last_sign_in datetime(6)                         not null,
     created_at   datetime(6)                         not null,
     updated_at   datetime(6)                         not null,
-    constraint uk_email unique (email)
+    constraint uk_account_email unique (email)
 );
 
 create table refresh_token
@@ -65,4 +65,20 @@ create table store
     created_at     datetime(6)            not null,
     updated_at     datetime(6)            not null,
     constraint fk_store_setting_id foreign key (setting_id) references store_setting (id)
+);
+
+create table device
+(
+    device_id       bigint primary key,
+    store_id        bigint                                   not null,
+    name            varchar(20)                              not null,
+    purpose         enum ('POS', 'HALL', 'TABLE', 'WAITING') not null,
+    table_no        int                                      not null,
+    ksnet_device_no varchar(30)                              not null,
+    state           enum ('ACTIVE', 'INACTIVE')              not null,
+    payment_type    enum ('PREPAID', 'POSTPAID')             not null,
+    secret_key      varchar(30)                              not null,
+    created_at      datetime(6)                              not null,
+    updated_at      datetime(6)                              not null,
+    constraint uk_device_store_id_name unique (store_id, name)
 );
