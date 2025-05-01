@@ -28,7 +28,7 @@ create table store_registration
     name          varchar(30)                                 not null,
     ceo_name      varchar(20)                                 not null,
     address       varchar(50)                                 not null,
-    landline      char(12)                                    not null,
+    landline      char(13)                                    not null,
     license       char(12)                                    not null,
     license_image char(33)                                    not null,
     status        enum ('APPLY','REAPPLY','APPROVE','REJECT') not null,

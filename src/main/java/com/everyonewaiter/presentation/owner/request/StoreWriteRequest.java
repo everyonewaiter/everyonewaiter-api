@@ -22,7 +22,7 @@ public class StoreWriteRequest {
       @Schema(description = "매장 전화번호", example = "02-123-4567", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotBlank(message = "매장 전화번호를 입력해 주세요.")
       @Pattern(
-          regexp = "^\\d{2,3}-\\d{3}-\\d{4}$",
+          regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$",
           message = "잘못된 형식의 매장 전화번호를 입력하셨어요. 매장 전화번호를 다시 입력해 주세요."
       )
       String landline,
