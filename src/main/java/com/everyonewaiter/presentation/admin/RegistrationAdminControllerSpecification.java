@@ -73,12 +73,20 @@ interface RegistrationAdminControllerSpecification {
               exampleName = "매장 등록 신청 상태가 신청 또는 재신청이 아닌 경우"
           ),
           @ApiErrorResponse(
+              code = ErrorCode.DISABLED_ACCOUNT,
+              exampleName = "매장 등록 신청자 계정이 비활성 또는 탈퇴인 경우"
+          ),
+          @ApiErrorResponse(
               code = ErrorCode.UNAUTHORIZED,
               exampleName = "액세스 토큰이 유효하지 않은 경우"
           ),
           @ApiErrorResponse(
               code = ErrorCode.FORBIDDEN,
               exampleName = "관리자 권한이 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ACCOUNT_NOT_FOUND,
+              exampleName = "매장 등록 신청자 계정을 찾을 수 없는 경우"
           ),
           @ApiErrorResponse(
               code = ErrorCode.STORE_REGISTRATION_NOT_FOUND,

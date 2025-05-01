@@ -82,6 +82,15 @@ public class Account extends AggregateRoot<Account> {
     }
   }
 
+  public void authorize(Permission permission) {
+    if (!isActive()) {
+      throw new BusinessException(ErrorCode.DISABLED_ACCOUNT);
+    }
+    if (!hasPermission(permission)) {
+      this.permission = permission;
+    }
+  }
+
   public void signIn(PasswordEncoder passwordEncoder, String rawPassword) {
     if (isActive() && passwordEncoder.matches(rawPassword, password)) {
       this.lastSignIn = Instant.now();

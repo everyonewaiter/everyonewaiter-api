@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.store;
 
+import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
 import com.everyonewaiter.domain.notification.service.MailSender;
 import com.everyonewaiter.domain.notification.service.request.MailSend;
@@ -29,6 +30,17 @@ class RegistrationApproveEventHandler {
   private final StoreRepository storeRepository;
 
   @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+  public void consumeAuthorizeAccount(RegistrationApproveEvent event) {
+    Long accountId = event.accountId();
+    String storeName = event.businessLicense().getName();
+    LOGGER.info("[계정 사장님 권한 부여 이벤트] accountId: {}, storeName: {}", accountId, storeName);
+
+    Account account = accountRepository.findByIdOrThrow(accountId);
+    account.authorize(Account.Permission.OWNER);
+    accountRepository.save(account);
+  }
+
+  @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
   public void consumeCreateStore(RegistrationApproveEvent event) {
     Long accountId = event.accountId();
     BusinessLicense businessLicense = event.businessLicense();
@@ -41,8 +53,9 @@ class RegistrationApproveEventHandler {
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void consumeNotification(RegistrationApproveEvent event) {
+    Long accountId = event.accountId();
     String storeName = event.businessLicense().getName();
-    LOGGER.info("[매장 등록 신청 승인 알림 이벤트] storeName: {}", storeName);
+    LOGGER.info("[매장 등록 신청 승인 알림 이벤트] accountId: {}, storeName: {}", accountId, storeName);
 
     accountRepository.findById(event.accountId())
         .ifPresent(account -> {
