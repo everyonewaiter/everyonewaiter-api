@@ -27,7 +27,7 @@ public class RegistrationWriteRequest {
 
       @Schema(description = "매장 주소", example = "경상남도 창원시 의창구 123", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotBlank(message = "매장 주소를 입력해 주세요.")
-      @Size(min = 1, max = 50, message = "매장 주소는 1자 이상 100자 이하로 입력해 주세요.")
+      @Size(min = 1, max = 50, message = "매장 주소는 1자 이상 50자 이하로 입력해 주세요.")
       String address,
 
       @Schema(description = "매장 전화번호", example = "055-123-4567", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -68,7 +68,7 @@ public class RegistrationWriteRequest {
 
       @Schema(description = "매장 주소", example = "경상남도 창원시 의창구 123")
       @NotBlank(message = "매장 주소를 입력해 주세요.")
-      @Size(min = 1, max = 50, message = "매장 주소는 1자 이상 100자 이하로 입력해 주세요.")
+      @Size(min = 1, max = 50, message = "매장 주소는 1자 이상 50자 이하로 입력해 주세요.")
       String address,
 
       @Schema(description = "매장 전화번호", example = "055-123-4567")
@@ -105,7 +105,7 @@ public class RegistrationWriteRequest {
 
       @Schema(description = "매장 주소", example = "경상남도 창원시 의창구 123", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotBlank(message = "매장 주소를 입력해 주세요.")
-      @Size(min = 1, max = 50, message = "매장 주소는 1자 이상 100자 이하로 입력해 주세요.")
+      @Size(min = 1, max = 50, message = "매장 주소는 1자 이상 50자 이하로 입력해 주세요.")
       String address,
 
       @Schema(description = "매장 전화번호", example = "055-123-4567", requiredMode = Schema.RequiredMode.REQUIRED)
