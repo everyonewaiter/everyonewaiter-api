@@ -11,7 +11,7 @@ public interface AccountRepository {
 
   boolean existsByEmail(String email);
 
-  boolean existsByPhoneNumber(String phoneNumber);
+  boolean existsByPhone(String phoneNumber);
 
   Paging<AccountAdminView.Page> findAllByAdmin(
       @Nullable String email,
@@ -21,13 +21,15 @@ public interface AccountRepository {
       Pagination pagination
   );
 
+  Optional<Account> findById(Long accountId);
+
+  Account findByIdOrThrow(Long accountId);
+
   Optional<Account> findByEmail(String email);
 
   Account findByEmailOrThrow(String email);
 
-  Optional<Account> findById(Long accountId);
-
-  Account findByIdOrThrow(Long accountId);
+  Account findByPhoneOrThrow(String phoneNumber);
 
   Account save(Account account);
 

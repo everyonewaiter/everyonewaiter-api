@@ -54,6 +54,9 @@ public enum ErrorCode {
   ONLY_APPLY_OR_REAPPLY_STATUS_CAN_BE_REJECT(BAD_REQUEST, "접수 또는 재접수된 매장 등록 신청만 거부할 수 있어요."),
   STORE_REGISTRATION_NOT_FOUND(NOT_FOUND, "매장 등록 신청 내역을 찾을 수 없어요."),
   STORE_NOT_FOUND(NOT_FOUND, "매장을 찾을 수 없어요."),
+
+  // DEVICE
+  ALREADY_USE_DEVICE_NAME(BAD_REQUEST, "입력하신 기기 이름은 이미 사용 중이에요. 다른 기기 이름을 입력해 주세요."),
   ;
 
   private final HttpStatus status;

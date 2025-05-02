@@ -45,7 +45,7 @@ public class Device extends AggregateRoot<Device> {
   private Purpose purpose;
 
   @Column(name = "table_no", nullable = false)
-  private int tableNo;
+  private int tableNo = 0;
 
   @Column(name = "ksnet_device_no", nullable = false)
   private String ksnetDeviceNo = "";
@@ -60,5 +60,49 @@ public class Device extends AggregateRoot<Device> {
 
   @Column(name = "secret_key", nullable = false)
   private String secretKey = Tsid.nextString();
+
+  private static Device create(Long storeId, String name, Purpose purpose) {
+    return create(storeId, name, purpose, 0, "", PaymentType.POSTPAID);
+  }
+
+  private static Device create(
+      Long storeId,
+      String name,
+      Purpose purpose,
+      int tableNo,
+      String ksnetDeviceNo,
+      PaymentType paymentType
+  ) {
+    Device device = new Device();
+    device.storeId = storeId;
+    device.name = name;
+    device.purpose = purpose;
+    device.tableNo = tableNo;
+    device.ksnetDeviceNo = ksnetDeviceNo;
+    device.paymentType = paymentType;
+    return device;
+  }
+
+  public static Device pos(Long storeId, String name, String ksnetDeviceNo) {
+    return create(storeId, name, Purpose.POS, 0, ksnetDeviceNo, PaymentType.POSTPAID);
+  }
+
+  public static Device hall(Long storeId, String name) {
+    return create(storeId, name, Purpose.HALL);
+  }
+
+  public static Device table(
+      Long storeId,
+      String name,
+      int tableNo,
+      String ksnetDeviceNo,
+      PaymentType paymentType
+  ) {
+    return create(storeId, name, Purpose.TABLE, tableNo, ksnetDeviceNo, paymentType);
+  }
+
+  public static Device waiting(Long storeId, String name) {
+    return create(storeId, name, Purpose.WAITING);
+  }
 
 }

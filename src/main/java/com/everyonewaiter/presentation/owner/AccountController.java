@@ -61,7 +61,7 @@ class AccountController implements AccountControllerSpecification {
   public ResponseEntity<Void> sendAuthCode(
       @RequestBody @Valid AuthWriteRequest.SendAuthCode request
   ) {
-    accountService.checkAvailablePhoneNumber(request.phoneNumber());
+    accountService.checkAvailablePhone(request.phoneNumber());
     authService.sendAuthCode(request.toDomainDto(AuthPurpose.SIGN_UP));
     return ResponseEntity.noContent().build();
   }

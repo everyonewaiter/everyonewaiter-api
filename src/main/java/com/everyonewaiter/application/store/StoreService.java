@@ -6,6 +6,7 @@ import com.everyonewaiter.domain.store.entity.CountryOfOrigin;
 import com.everyonewaiter.domain.store.entity.StaffCallOption;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.domain.store.repository.StoreRepository;
+import com.everyonewaiter.domain.store.service.StoreValidator;
 import com.everyonewaiter.domain.store.view.StoreView;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
@@ -18,7 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class StoreService {
 
+  private final StoreValidator storeValidator;
   private final StoreRepository storeRepository;
+
+  public void checkStoreOwner(Long storeId, Long accountId) {
+    storeValidator.validateOwner(storeId, accountId);
+  }
 
   public StoreResponse.Simples readAllSimpleView(Long accountId) {
     List<StoreView.Simple> views = storeRepository.findAllSimpleViewByAccountId(accountId);

@@ -26,8 +26,14 @@ public class AccountValidator {
   }
 
   public void validatePhoneNumberUnique(String phoneNumber) {
-    if (accountRepository.existsByPhoneNumber(phoneNumber)) {
+    if (accountRepository.existsByPhone(phoneNumber)) {
       throw new BusinessException(ErrorCode.ALREADY_USE_PHONE_NUMBER);
+    }
+  }
+
+  public void validateExistsPhoneNumber(String phoneNumber) {
+    if (!accountRepository.existsByPhone(phoneNumber)) {
+      throw new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND);
     }
   }
 
@@ -39,7 +45,7 @@ public class AccountValidator {
   }
 
   public void validateAccountPermission(Account account, Account.Permission permission) {
-    if (!account.hasPermission(permission)) {
+    if (!account.isActive() || !account.hasPermission(permission)) {
       throw new AccessDeniedException();
     }
   }

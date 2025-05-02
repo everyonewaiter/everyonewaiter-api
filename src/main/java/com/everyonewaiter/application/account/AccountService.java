@@ -34,8 +34,12 @@ public class AccountService {
     return accountRepository.save(account).getId();
   }
 
-  public void checkAvailablePhoneNumber(String phoneNumber) {
+  public void checkAvailablePhone(String phoneNumber) {
     accountValidator.validatePhoneNumberUnique(phoneNumber);
+  }
+
+  public void checkExistsPhone(String phoneNumber) {
+    accountValidator.validateExistsPhoneNumber(phoneNumber);
   }
 
   public void checkPossibleSendAuthMail(String email) {
@@ -57,6 +61,10 @@ public class AccountService {
           return accountRepository.save(account).getId();
         })
         .orElseThrow(() -> new BusinessException(ErrorCode.FAILED_SIGN_IN));
+  }
+
+  public Long getAccountIdByPhone(String phoneNumber) {
+    return accountRepository.findByPhoneOrThrow(phoneNumber).getId();
   }
 
   public Paging<AccountAdminResponse.PageView> readAllByAdmin(AccountAdminRead.PageView request) {

@@ -69,7 +69,7 @@ create table store
 
 create table device
 (
-    device_id       bigint primary key,
+    id              bigint primary key,
     store_id        bigint                                   not null,
     name            varchar(20)                              not null,
     purpose         enum ('POS', 'HALL', 'TABLE', 'WAITING') not null,

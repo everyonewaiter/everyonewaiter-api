@@ -34,7 +34,7 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public boolean existsByPhoneNumber(String phoneNumber) {
+  public boolean existsByPhone(String phoneNumber) {
     return accountJpaRepository.existsByPhoneNumber(phoneNumber);
   }
 
@@ -91,6 +91,17 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
+  public Optional<Account> findById(Long accountId) {
+    return accountJpaRepository.findById(accountId);
+  }
+
+  @Override
+  public Account findByIdOrThrow(Long accountId) {
+    return findById(accountId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
+  }
+
+  @Override
   public Optional<Account> findByEmail(String email) {
     return accountJpaRepository.findByEmail(email);
   }
@@ -101,13 +112,8 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public Optional<Account> findById(Long accountId) {
-    return accountJpaRepository.findById(accountId);
-  }
-
-  @Override
-  public Account findByIdOrThrow(Long accountId) {
-    return findById(accountId)
+  public Account findByPhoneOrThrow(String phoneNumber) {
+    return accountJpaRepository.findByPhoneNumber(phoneNumber)
         .orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
   }
 
