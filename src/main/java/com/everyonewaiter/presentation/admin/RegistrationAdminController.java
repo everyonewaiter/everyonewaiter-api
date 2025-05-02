@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admins/stores/registrations")
+@RequestMapping("/v1/admins/stores/registrations")
 class RegistrationAdminController implements RegistrationAdminControllerSpecification {
 
   private final RegistrationService registrationService;

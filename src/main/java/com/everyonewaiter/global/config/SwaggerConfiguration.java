@@ -36,7 +36,6 @@ class SwaggerConfiguration {
   private static final String TIMESTAMP_HEADER = "x-ew-timestamp";
 
   private final BuildProperties buildProperties;
-  private final ClientUrlRegistry clientUrlRegistry;
 
   @Bean
   public OpenAPI openAPI() {
@@ -148,10 +147,10 @@ class SwaggerConfiguration {
   }
 
   private List<Server> servers() {
-    return clientUrlRegistry.getUrls()
-        .stream()
-        .map(url -> new Server().url(url))
-        .toList();
+    return List.of(
+        new Server().url("https://api.everyonewaiter.com").description("Production"),
+        new Server().url("http://localhost:8080").description("Local")
+    );
   }
 
   private SecurityRequirement jwtSecurityRequirement() {

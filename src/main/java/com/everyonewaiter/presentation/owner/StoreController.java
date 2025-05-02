@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/stores")
+@RequestMapping("/v1/stores")
 class StoreController implements StoreControllerSpecification {
 
   private final StoreService storeService;

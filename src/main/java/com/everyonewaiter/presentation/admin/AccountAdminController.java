@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admins/accounts")
+@RequestMapping("/v1/admins/accounts")
 class AccountAdminController implements AccountAdminControllerSpecification {
 
   private final AccountService accountService;

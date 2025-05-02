@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/stores/registrations")
+@RequestMapping("/v1/stores/registrations")
 class RegistrationController implements RegistrationControllerSpecification {
 
   private final RegistrationService registrationService;
