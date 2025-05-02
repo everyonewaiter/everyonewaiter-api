@@ -3,7 +3,6 @@ package com.everyonewaiter.global.security;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
 import com.everyonewaiter.domain.account.service.AccountValidator;
-import com.everyonewaiter.domain.auth.service.AuthValidator;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.global.exception.AuthenticationException;
 import java.util.Objects;
@@ -25,7 +24,6 @@ public class AuthenticationAccountResolver implements HandlerMethodArgumentResol
   private static final String BEARER_PREFIX = "Bearer ";
 
   private final JwtProvider jwtProvider;
-  private final AuthValidator authValidator;
   private final AccountValidator accountValidator;
   private final AccountRepository accountRepository;
 
@@ -44,13 +42,7 @@ public class AuthenticationAccountResolver implements HandlerMethodArgumentResol
       WebDataBinderFactory binderFactory
   ) {
     String accessToken = extractToken(webRequest);
-
-    JwtPayload payload = jwtProvider.decode(accessToken)
-        .map(jwtPayload -> {
-          authValidator.validateAliveAccountToken(jwtPayload);
-          return jwtPayload;
-        })
-        .orElseThrow(AuthenticationException::new);
+    JwtPayload payload = jwtProvider.decode(accessToken).orElseThrow(AuthenticationException::new);
 
     return accountRepository.findById(payload.id())
         .map(account -> {
