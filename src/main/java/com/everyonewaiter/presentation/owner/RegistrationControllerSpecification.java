@@ -10,6 +10,8 @@ import com.everyonewaiter.presentation.owner.request.RegistrationReadRequest;
 import com.everyonewaiter.presentation.owner.request.RegistrationWriteRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,7 +63,11 @@ interface RegistrationControllerSpecification {
           "사업자 등록증 파일은 이미지 또는 PDF 형식만 지원합니다.<br/>" +
           "PDF 형식의 파일의 경우 첫번째 페이지만 이미지로 변환 후 업로드됩니다."
   )
-  @ApiResponse(responseCode = "201", description = "매장 등록 신청 성공")
+  @ApiResponse(
+      responseCode = "201",
+      description = "매장 등록 신청 성공",
+      headers = @Header(name = "Location", description = "생성된 매장 등록 ID", schema = @Schema(implementation = String.class))
+  )
   @ApiErrorResponses(
       summary = "매장 등록 신청 실패",
       value = {
