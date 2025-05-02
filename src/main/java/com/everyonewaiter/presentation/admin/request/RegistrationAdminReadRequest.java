@@ -27,12 +27,12 @@ public class RegistrationAdminReadRequest {
     @Schema(description = "조회할 상태")
     private Registration.Status status;
 
-    @Schema(description = "조회 페이지 번호", defaultValue = "1")
+    @Schema(description = "조회 페이지 번호", defaultValue = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     @Min(value = 1, message = "페이지 번호는 1 이상이어야 합니다.")
     @Max(value = 1_000, message = "페이지 번호는 1,000 이하이어야 합니다.")
     private long page = 1;
 
-    @Schema(description = "페이지 조회 데이터 수", defaultValue = "20")
+    @Schema(description = "페이지 조회 데이터 수", defaultValue = "20", requiredMode = Schema.RequiredMode.REQUIRED)
     @Min(value = 1, message = "페이지 조회 크기는 1 이상이어야 합니다.")
     @Max(value = 100, message = "페이지 조회 크기는 100 이하이어야 합니다.")
     private long size = 20;

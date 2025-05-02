@@ -12,11 +12,11 @@ public class AccountAdminWriteRequest {
 
   @Schema(name = "AccountAdminWriteRequest.Update")
   public record Update(
-      @Schema(description = "상태", example = "ACTIVE")
+      @Schema(description = "상태", example = "ACTIVE", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotNull(message = "계정 상태가 누락되었거나 옳바르지 않습니다.")
       Account.State state,
 
-      @Schema(description = "권한", example = "ADMIN")
+      @Schema(description = "권한", example = "ADMIN", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotNull(message = "계정 권한이 누락되었거나 옳바르지 않습니다.")
       Account.Permission permission
   ) {

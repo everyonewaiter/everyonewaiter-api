@@ -12,7 +12,7 @@ public class RegistrationAdminWriteRequest {
 
   @Schema(name = "RegistrationAdminWriteRequest.Reject")
   public record Reject(
-      @Schema(description = "매장 등록 거부 사유", example = "사업자 정보를 조회할 수 없습니다.")
+      @Schema(description = "매장 등록 거부 사유", example = "사업자 정보를 조회할 수 없습니다.", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotBlank(message = "매장 등록 거부 사유를 입력해 주세요.")
       @Size(min = 1, max = 30, message = "매장 등록 거부 사유는 1자 이상 30자 이하로 입력해 주세요.")
       String reason

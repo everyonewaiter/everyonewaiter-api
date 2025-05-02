@@ -15,7 +15,7 @@ public class AuthWriteRequest {
 
   @Schema(name = "AuthWriteRequest.SendAuthCode")
   public record SendAuthCode(
-      @Schema(description = "휴대폰 번호", example = "01044591812")
+      @Schema(description = "휴대폰 번호", example = "01044591812", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotBlank(message = "휴대폰 번호를 입력해 주세요.")
       @Pattern(regexp = "^01[016789]\\d{8}$", message = "잘못된 형식의 휴대폰 번호를 입력하셨어요. 휴대폰 번호를 다시 입력해 주세요.")
       String phoneNumber
@@ -29,12 +29,12 @@ public class AuthWriteRequest {
 
   @Schema(name = "AuthWriteRequest.VerifyAuthCode")
   public record VerifyAuthCode(
-      @Schema(description = "휴대폰 번호", example = "01044591812")
+      @Schema(description = "휴대폰 번호", example = "01044591812", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotBlank(message = "휴대폰 번호를 입력해 주세요.")
       @Pattern(regexp = "^01[016789]\\d{8}$", message = "잘못된 형식의 휴대폰 번호를 입력하셨어요. 휴대폰 번호를 다시 입력해 주세요.")
       String phoneNumber,
 
-      @Schema(description = "인증 번호", example = "123456")
+      @Schema(description = "인증 번호", example = "123456", requiredMode = Schema.RequiredMode.REQUIRED)
       @Min(value = 100000, message = "인증 번호는 6자리 숫자로 입력해 주세요.")
       @Max(value = 999999, message = "인증 번호는 6자리 숫자로 입력해 주세요.")
       int code
@@ -48,7 +48,7 @@ public class AuthWriteRequest {
 
   @Schema(name = "AuthWriteRequest.SendAuthMail")
   public record SendAuthMail(
-      @Schema(description = "이메일", example = "admin@everyonewaiter.com")
+      @Schema(description = "이메일", example = "admin@everyonewaiter.com", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotBlank(message = "이메일을 입력해 주세요.")
       @Pattern(regexp = "^[\\w+-.*]+@[\\w-]+\\.[\\w-.]+$", message = "잘못된 형식의 이메일을 입력하셨어요. 이메일을 다시 입력해 주세요.")
       String email
@@ -58,7 +58,7 @@ public class AuthWriteRequest {
 
   @Schema(name = "AuthWriteRequest.RenewToken")
   public record RenewToken(
-      @Schema(description = "리프레시 토큰", example = "abcdefghijklmnopqrstuvwxyz")
+      @Schema(description = "리프레시 토큰", example = "abcdefghijklmnopqrstuvwxyz", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotBlank(message = "리프레시 토큰을 입력해 주세요.")
       String refreshToken
   ) {
