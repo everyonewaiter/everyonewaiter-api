@@ -2,8 +2,10 @@ package com.everyonewaiter.domain.device.service;
 
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.domain.device.repository.DeviceRepository;
+import com.everyonewaiter.global.exception.AccessDeniedException;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +51,12 @@ public class DeviceValidator {
     }
     if (tableNo > 100) {
       throw new IllegalArgumentException("테이블 번호는 100 이하로 입력해 주세요.");
+    }
+  }
+
+  public void validateDevicePurpose(Device device, Device.Purpose[] purpose) {
+    if (!device.isActive() || Arrays.stream(purpose).noneMatch(device::hasPurpose)) {
+      throw new AccessDeniedException();
     }
   }
 

@@ -105,4 +105,12 @@ public class Device extends AggregateRoot<Device> {
     return create(storeId, name, Purpose.WAITING);
   }
 
+  public boolean isActive() {
+    return state == State.ACTIVE;
+  }
+
+  public boolean hasPurpose(Purpose purpose) {
+    return this.purpose == purpose;
+  }
+
 }

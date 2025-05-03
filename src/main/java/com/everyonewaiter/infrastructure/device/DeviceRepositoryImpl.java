@@ -13,6 +13,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -60,6 +61,11 @@ class DeviceRepositoryImpl implements DeviceRepository {
         .fetchOne();
 
     return new Paging<>(views, Objects.requireNonNull(count), pagination);
+  }
+
+  @Override
+  public Optional<Device> findById(Long deviceId) {
+    return deviceJpaRepository.findById(deviceId);
   }
 
   @Override
