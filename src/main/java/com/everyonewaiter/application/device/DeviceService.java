@@ -1,10 +1,12 @@
 package com.everyonewaiter.application.device;
 
+import com.everyonewaiter.application.device.request.DeviceRead;
 import com.everyonewaiter.application.device.request.DeviceWrite;
 import com.everyonewaiter.application.device.response.DeviceResponse;
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.domain.device.repository.DeviceRepository;
 import com.everyonewaiter.domain.device.service.DeviceValidator;
+import com.everyonewaiter.global.support.Paging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +46,16 @@ public class DeviceService {
     };
 
     return DeviceResponse.Create.from(deviceRepository.save(device));
+  }
+
+  public Paging<DeviceResponse.PageView> readAll(Long storeId, DeviceRead.PageView request) {
+    return deviceRepository.findAll(storeId, request.pagination())
+        .map(DeviceResponse.PageView::from);
+  }
+
+  public DeviceResponse.Detail read(Long deviceId, Long storeId) {
+    Device device = deviceRepository.findByIdAndStoreIdOrThrow(deviceId, storeId);
+    return DeviceResponse.Detail.from(device);
   }
 
 }

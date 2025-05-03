@@ -6,13 +6,20 @@ import com.everyonewaiter.application.device.DeviceService;
 import com.everyonewaiter.application.device.response.DeviceResponse;
 import com.everyonewaiter.application.store.StoreService;
 import com.everyonewaiter.application.store.response.StoreResponse;
+import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.auth.entity.AuthPurpose;
+import com.everyonewaiter.global.annotation.AuthenticationAccount;
+import com.everyonewaiter.global.annotation.StoreOwner;
+import com.everyonewaiter.global.support.Paging;
 import com.everyonewaiter.presentation.owner.request.AuthWriteRequest;
+import com.everyonewaiter.presentation.owner.request.DeviceReadRequest;
 import com.everyonewaiter.presentation.owner.request.DeviceWriteRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +35,28 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
   private final AccountService accountService;
   private final StoreService storeService;
   private final DeviceService deviceService;
+
+  @Override
+  @StoreOwner
+  @GetMapping("/stores/{storeId}/devices")
+  public ResponseEntity<Paging<DeviceResponse.PageView>> getDevices(
+      @PathVariable Long storeId,
+      @ModelAttribute @Valid DeviceReadRequest.PageView request,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    return ResponseEntity.ok(deviceService.readAll(storeId, request.toDomainDto()));
+  }
+
+  @Override
+  @StoreOwner
+  @GetMapping("/stores/{storeId}/devices/{deviceId}")
+  public ResponseEntity<DeviceResponse.Detail> getDevice(
+      @PathVariable Long storeId,
+      @PathVariable Long deviceId,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    return ResponseEntity.ok(deviceService.read(deviceId, storeId));
+  }
 
   @Override
   @PostMapping("/stores/{storeId}/devices")
