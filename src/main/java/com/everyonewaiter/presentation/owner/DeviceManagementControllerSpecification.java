@@ -175,4 +175,38 @@ interface DeviceManagementControllerSpecification {
       @RequestBody AuthWriteRequest.VerifyAuthCode request
   );
 
+  @Operation(summary = "기기 정보 수정", description = "기기 정보 수정 API")
+  @ApiResponse(responseCode = "204", description = "기기 정보 수정 성공")
+  @ApiErrorResponses(
+      summary = "기기 정보 수정 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.ALREADY_USE_DEVICE_NAME,
+              exampleName = "매장 내에서 이미 사용 중인 기기 이름인 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "사장님 권한이 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장 ID로 사장님 소유의 매장을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.DEVICE_NOT_FOUND,
+              exampleName = "기기 ID로 사장님 매장에 등록된 기기를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> update(
+      Long storeId,
+      Long deviceId,
+      @RequestBody DeviceWriteRequest.Update request,
+      @Parameter(hidden = true) Account account
+  );
+
 }

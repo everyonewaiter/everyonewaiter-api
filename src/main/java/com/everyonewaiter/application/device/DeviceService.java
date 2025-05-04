@@ -48,6 +48,33 @@ public class DeviceService {
     return DeviceResponse.Create.from(deviceRepository.save(device));
   }
 
+  @Transactional
+  public void update(Long deviceId, Long storeId, DeviceWrite.Update request) {
+    Device device = deviceRepository.findByIdAndStoreIdOrThrow(deviceId, storeId);
+    deviceValidator.validateUniqueExcludeId(deviceId, storeId, request.name());
+
+    switch (request.purpose()) {
+      case POS -> deviceValidator.validatePos(request.ksnetDeviceNo());
+      case TABLE -> deviceValidator.validateTable(
+          request.tableNo(),
+          request.ksnetDeviceNo(),
+          request.paymentType()
+      );
+      default -> {
+        // No validation needed for other purposes
+      }
+    }
+
+    device.update(
+        request.name(),
+        request.purpose(),
+        request.tableNo(),
+        request.ksnetDeviceNo(),
+        request.paymentType()
+    );
+    deviceRepository.save(device);
+  }
+
   public Paging<DeviceResponse.PageView> readAll(Long storeId, DeviceRead.PageView request) {
     return deviceRepository.findAll(storeId, request.pagination())
         .map(DeviceResponse.PageView::from);

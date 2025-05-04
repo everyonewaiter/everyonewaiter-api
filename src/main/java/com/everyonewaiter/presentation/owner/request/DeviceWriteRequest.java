@@ -53,4 +53,37 @@ public class DeviceWriteRequest {
 
   }
 
+  @Schema(name = "DeviceWriteRequest.Update")
+  public record Update(
+      @Schema(description = "기기 이름", example = "1번 테이블", requiredMode = Schema.RequiredMode.REQUIRED)
+      @NotBlank(message = "기기 이름을 입력해 주세요.")
+      @Size(min = 1, max = 20, message = "기기 이름은 1자 이상 20자 이하로 입력해 주세요.")
+      String name,
+
+      @Schema(description = "기기 사용 용도", example = "TABLE", requiredMode = Schema.RequiredMode.REQUIRED)
+      @NotNull(message = "기기 사용 용도가 누락되었습니다.")
+      Device.Purpose purpose,
+
+      @Schema(description = "테이블 번호", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+      @NotNull(message = "테이블 번호가 누락되었습니다.")
+      @Min(value = 0, message = "테이블 번호는 0 이상으로 입력해 주세요.")
+      @Max(value = 100, message = "테이블 번호는 100 이하로 입력해 주세요.")
+      Integer tableNo,
+
+      @Schema(description = "KSNET 단말기 번호", example = "DPTOTEST01", requiredMode = Schema.RequiredMode.REQUIRED)
+      @NotNull(message = "KSNET 단말기 번호가 누락되었습니다.")
+      @Size(max = 30, message = "KSNET 단말기 번호는 30자 이하로 입력해 주세요.")
+      String ksnetDeviceNo,
+
+      @Schema(description = "결제 타입 (선결제, 후결제)", example = "POSTPAID", requiredMode = Schema.RequiredMode.REQUIRED)
+      @NotNull(message = "결제 타입이 누락되었습니다.")
+      Device.PaymentType paymentType
+  ) {
+
+    public DeviceWrite.Update toDomainDto() {
+      return new DeviceWrite.Update(name, purpose, tableNo, ksnetDeviceNo, paymentType);
+    }
+
+  }
+
 }

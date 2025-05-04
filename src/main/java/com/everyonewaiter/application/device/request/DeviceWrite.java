@@ -14,4 +14,14 @@ public class DeviceWrite {
 
   }
 
+  public record Update(
+      String name,
+      Device.Purpose purpose,
+      int tableNo,
+      String ksnetDeviceNo,
+      Device.PaymentType paymentType
+  ) {
+
+  }
+
 }

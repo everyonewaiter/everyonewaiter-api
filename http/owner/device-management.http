@@ -72,5 +72,18 @@ GET {{url}}/v1/stores/706810975107825958/devices
 Authorization: Bearer {{accessToken}}
 
 ### 5. 기기 상세 조회
-GET {{url}}/v1/stores/706810975107825958/devices/706811885561201592
+GET {{url}}/v1/stores/706810975107825958/devices/706811170872772290
 Authorization: Bearer {{accessToken}}
+
+### 6. 기기 정보 수정
+PUT {{url}}/v1/stores/706810975107825958/devices/706811170872772290
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "name": "30번 테이블",
+  "purpose": "TABLE",
+  "tableNo": 30,
+  "ksnetDeviceNo": "DPTOTEST01",
+  "paymentType": "POSTPAID"
+}

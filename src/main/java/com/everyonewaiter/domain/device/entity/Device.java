@@ -113,4 +113,18 @@ public class Device extends AggregateRoot<Device> {
     return this.purpose == purpose;
   }
 
+  public void update(
+      String name,
+      Purpose purpose,
+      int tableNo,
+      String ksnetDeviceNo,
+      PaymentType paymentType
+  ) {
+    this.name = name;
+    this.purpose = purpose;
+    this.tableNo = tableNo;
+    this.ksnetDeviceNo = ksnetDeviceNo;
+    this.paymentType = paymentType;
+  }
+
 }

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -89,6 +90,19 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
     authService.verifyAuthCode(request.toDomainDto(AuthPurpose.CREATE_DEVICE));
     Long accountId = accountService.getAccountIdByPhone(request.phoneNumber());
     return ResponseEntity.ok(storeService.readAllSimpleView(accountId));
+  }
+
+  @Override
+  @StoreOwner
+  @PutMapping("/stores/{storeId}/devices/{deviceId}")
+  public ResponseEntity<Void> update(
+      @PathVariable Long storeId,
+      @PathVariable Long deviceId,
+      @RequestBody @Valid DeviceWriteRequest.Update request,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    deviceService.update(deviceId, storeId, request.toDomainDto());
+    return ResponseEntity.noContent().build();
   }
 
 }

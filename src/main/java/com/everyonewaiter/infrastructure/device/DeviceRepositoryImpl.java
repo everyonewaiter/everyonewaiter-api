@@ -30,6 +30,20 @@ class DeviceRepositoryImpl implements DeviceRepository {
   }
 
   @Override
+  public boolean existsByStoreIdAndNameExcludeId(Long deviceId, Long storeId, String name) {
+    Integer deviceCount = queryFactory
+        .selectOne()
+        .from(device)
+        .where(
+            device.id.ne(deviceId),
+            device.storeId.eq(storeId),
+            device.name.eq(name)
+        )
+        .fetchFirst();
+    return deviceCount != null;
+  }
+
+  @Override
   public Paging<DeviceView.Page> findAll(Long storeId, Pagination pagination) {
     List<DeviceView.Page> views = queryFactory
         .select(

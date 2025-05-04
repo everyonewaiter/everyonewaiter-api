@@ -10,6 +10,8 @@ public interface DeviceRepository {
 
   boolean existsByStoreIdAndName(Long storeId, String name);
 
+  boolean existsByStoreIdAndNameExcludeId(Long deviceId, Long storeId, String name);
+
   Paging<DeviceView.Page> findAll(Long storeId, Pagination pagination);
 
   Optional<Device> findById(Long deviceId);

@@ -21,6 +21,12 @@ public class DeviceValidator {
     }
   }
 
+  public void validateUniqueExcludeId(Long deviceId, Long storeId, String name) {
+    if (deviceRepository.existsByStoreIdAndNameExcludeId(deviceId, storeId, name)) {
+      throw new BusinessException(ErrorCode.ALREADY_USE_DEVICE_NAME);
+    }
+  }
+
   public void validatePos(String ksnetDeviceNo) {
     validateKsnetDeviceNo(ksnetDeviceNo);
   }
