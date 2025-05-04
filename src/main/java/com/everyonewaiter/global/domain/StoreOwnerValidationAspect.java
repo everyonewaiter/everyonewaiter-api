@@ -1,4 +1,4 @@
-package com.everyonewaiter.global.support;
+package com.everyonewaiter.global.domain;
 
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.store.service.StoreValidator;
