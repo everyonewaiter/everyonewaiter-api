@@ -1,0 +1,96 @@
+### 1. 매장 등록 신청
+POST {{url}}/v1/stores/registrations
+Content-Type: multipart/form-data boundary=RegistrationBoundary
+Authorization: Bearer {{accessToken}}
+
+--RegistrationBoundary
+Content-Disposition: form-data; name="name"
+
+나루
+
+--RegistrationBoundary
+Content-Disposition: form-data; name="ceoName"
+
+손정웅
+
+--RegistrationBoundary
+Content-Disposition: form-data; name="address"
+
+경남 창녕군
+
+--RegistrationBoundary
+Content-Disposition: form-data; name="landline"
+
+055-123-4567
+
+--RegistrationBoundary
+Content-Disposition: form-data; name="license"
+
+111-11-11111
+
+--RegistrationBoundary
+Content-Disposition: form-data; name="file"; filename="_logo.png"
+Content-Type: image/png
+
+< ./_logo.png
+
+--RegistrationBoundary--
+
+### 2. 매장 등록 재신청
+PUT {{url}}/v1/stores/registrations/706810740088390266
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "name": "나루",
+  "ceoName": "손정웅",
+  "address": "경남 창녕군",
+  "landline": "055-123-4567",
+  "license": "111-11-11111"
+}
+
+### 2. 매장 등록 재신청 (이미지 포함)
+PUT {{url}}/v1/stores/registrations/706810740088390266/with-image
+Content-Type: multipart/form-data boundary=RegistrationReapplyBoundary
+Authorization: Bearer {{accessToken}}
+
+--RegistrationReapplyBoundary
+Content-Disposition: form-data; name="name"
+
+나루
+
+--RegistrationReapplyBoundary
+Content-Disposition: form-data; name="ceoName"
+
+손정웅
+
+--RegistrationReapplyBoundary
+Content-Disposition: form-data; name="address"
+
+경남 창녕군
+
+--RegistrationReapplyBoundary
+Content-Disposition: form-data; name="landline"
+
+055-123-4567
+
+--RegistrationReapplyBoundary
+Content-Disposition: form-data; name="license"
+
+111-11-11111
+
+--RegistrationReapplyBoundary
+Content-Disposition: form-data; name="file"; filename="_logo.png"
+Content-Type: image/png
+
+< ./_logo.png
+
+--RegistrationReapplyBoundary--
+
+### 3. 매장 등록 신청 목록 조회
+GET {{url}}/v1/stores/registrations
+Authorization: Bearer {{accessToken}}
+
+### 4. 매장 등록 신청 상세 조회
+GET {{url}}/v1/stores/registrations/706810740088390266
+Authorization: Bearer {{accessToken}}

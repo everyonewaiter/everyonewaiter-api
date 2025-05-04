@@ -1,0 +1,28 @@
+### 1. 매장 등록 신청 목록 조회
+GET {{url}}/v1/admins/stores/registrations?
+    page=1&
+    size=20
+Authorization: Bearer {{accessToken}}
+
+### 1. 매장 등록 신청 목록 조회 (검색)
+GET {{url}}/v1/admins/stores/registrations?
+    email=ad&
+    name=나루&
+    status=APPLY&
+    page=1&
+    size=20
+Authorization: Bearer {{accessToken}}
+
+### 2. 매장 등록 신청 상세 조회
+GET {{url}}/v1/admins/stores/registrations/706810740088390266
+Authorization: Bearer {{accessToken}}
+
+### 3. 매장 등록 신청 승인
+POST {{url}}/v1/admins/stores/registrations/706810740088390266/approve
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### 4. 매장 등록 신청 반려
+POST {{url}}/v1/admins/stores/registrations/706810740088390266/reject
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
