@@ -5,7 +5,7 @@ import com.everyonewaiter.domain.device.repository.DeviceRepository;
 import com.everyonewaiter.domain.device.service.DeviceValidator;
 import com.everyonewaiter.global.annotation.AuthenticationDevice;
 import com.everyonewaiter.global.exception.AuthenticationException;
-import com.everyonewaiter.global.extension.HttpRequestParser;
+import com.everyonewaiter.global.support.HttpRequestParser;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.Objects;

@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AuthWriteRequest {
@@ -62,6 +63,13 @@ public class AuthWriteRequest {
       @NotBlank(message = "리프레시 토큰을 입력해 주세요.")
       String refreshToken
   ) {
+
+    @Override
+    public @NonNull String toString() {
+      return "RenewToken(" +
+          "refreshToken='BLIND'" +
+          ')';
+    }
 
   }
 

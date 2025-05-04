@@ -1,4 +1,4 @@
-package com.everyonewaiter.global.extension;
+package com.everyonewaiter.global.support;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;

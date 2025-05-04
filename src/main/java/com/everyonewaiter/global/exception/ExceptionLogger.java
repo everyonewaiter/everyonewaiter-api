@@ -1,6 +1,6 @@
 package com.everyonewaiter.global.exception;
 
-import com.everyonewaiter.global.extension.HttpRequestParser;
+import com.everyonewaiter.global.support.HttpRequestParser;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

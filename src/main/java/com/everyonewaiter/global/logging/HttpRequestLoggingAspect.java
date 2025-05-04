@@ -1,12 +1,7 @@
 package com.everyonewaiter.global.logging;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -25,12 +20,6 @@ import org.springframework.stereotype.Component;
 class HttpRequestLoggingAspect {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequestLoggingAspect.class);
-  private static final List<String> MASKING_KEYWORDS = List.of("password", "token");
-  private static final Map<String, Pattern> MASKING_PATTERNS = MASKING_KEYWORDS.stream()
-      .collect(Collectors.toUnmodifiableMap(
-          keyword -> keyword,
-          keyword -> Pattern.compile("(?i)(" + Pattern.quote(keyword) + "=)([^,)]*)")
-      ));
   private static final String DELIMITER = ", ";
 
   @Pointcut("execution(* com.everyonewaiter.presentation..*.*(..))")
@@ -41,7 +30,7 @@ class HttpRequestLoggingAspect {
   @Before("controller()")
   public void before(JoinPoint joinPoint) {
     String handler = getHandlerName(joinPoint);
-    String parameters = masking(getParameters(joinPoint));
+    String parameters = getParameters(joinPoint);
 
     String requestId = MDC.get("requestId");
     String requestMethod = MDC.get("requestMethod");
@@ -72,22 +61,6 @@ class HttpRequestLoggingAspect {
         .filter(Objects::nonNull)
         .map(Objects::toString)
         .collect(Collectors.joining(DELIMITER));
-  }
-
-  private String masking(String parameters) {
-    for (Entry<String, Pattern> entry : MASKING_PATTERNS.entrySet()) {
-      Pattern pattern = entry.getValue();
-      Matcher matcher = pattern.matcher(parameters);
-
-      StringBuilder stringBuilder = new StringBuilder();
-      while (matcher.find()) {
-        matcher.appendReplacement(stringBuilder, matcher.group(1) + "BLIND");
-      }
-      matcher.appendTail(stringBuilder);
-
-      parameters = stringBuilder.toString();
-    }
-    return parameters;
   }
 
 }

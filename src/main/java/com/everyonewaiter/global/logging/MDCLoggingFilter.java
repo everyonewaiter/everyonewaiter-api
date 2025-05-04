@@ -1,6 +1,6 @@
 package com.everyonewaiter.global.logging;
 
-import com.everyonewaiter.global.extension.HttpRequestParser;
+import com.everyonewaiter.global.support.HttpRequestParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

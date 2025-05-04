@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountWriteRequest {
@@ -35,6 +36,15 @@ public class AccountWriteRequest {
       return new AccountWrite.Create(email, password, phoneNumber);
     }
 
+    @Override
+    public @NonNull String toString() {
+      return "Create(" +
+          "email='" + email + '\'' +
+          ", password='BLIND'" +
+          ", phoneNumber='" + phoneNumber + '\'' +
+          ')';
+    }
+
   }
 
   @Schema(name = "AccountWriteRequest.SignIn")
@@ -55,6 +65,14 @@ public class AccountWriteRequest {
 
     public AccountWrite.SignIn toDomainDto() {
       return new AccountWrite.SignIn(email, password);
+    }
+
+    @Override
+    public @NonNull String toString() {
+      return "SignIn(" +
+          "email='" + email + '\'' +
+          ", password='BLIND'" +
+          ')';
     }
 
   }
