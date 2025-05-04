@@ -1,0 +1,76 @@
+### 1. 휴대폰 인증 번호 전송
+POST {{url}}/v1/devices/send-auth-code
+Content-Type: application/json
+
+{
+  "phoneNumber": "{{phoneNumber}}"
+}
+
+### 2. 휴대폰 인증 번호 검증
+POST {{url}}/v1/devices/verify-auth-code
+Content-Type: application/json
+
+{
+  "phoneNumber": "{{phoneNumber}}",
+  "code": 849031
+}
+
+### 3. 기기 생성 (POS)
+POST {{url}}/v1/stores/706810975107825958/devices
+Content-Type: application/json
+
+{
+  "phoneNumber": "{{phoneNumber}}",
+  "name": "POS",
+  "purpose": "POS",
+  "tableNo": 0,
+  "ksnetDeviceNo": "DPTOTEST01",
+  "paymentType": "POSTPAID"
+}
+
+### 3. 기기 생성 (HALL)
+POST {{url}}/v1/stores/706810975107825958/devices
+Content-Type: application/json
+
+{
+  "phoneNumber": "{{phoneNumber}}",
+  "name": "홀 관리",
+  "purpose": "HALL",
+  "tableNo": 0,
+  "ksnetDeviceNo": "",
+  "paymentType": "POSTPAID"
+}
+
+### 3. 기기 생성 (테이블)
+POST {{url}}/v1/stores/706810975107825958/devices
+Content-Type: application/json
+
+{
+  "phoneNumber": "{{phoneNumber}}",
+  "name": "1번 테이블",
+  "purpose": "TABLE",
+  "tableNo": 1,
+  "ksnetDeviceNo": "DPTOTEST01",
+  "paymentType": "PREPAID"
+}
+
+### 3. 기기 생성 (웨이팅)
+POST {{url}}/v1/stores/706810975107825958/devices
+Content-Type: application/json
+
+{
+  "phoneNumber": "{{phoneNumber}}",
+  "name": "웨이팅 관리",
+  "purpose": "WAITING",
+  "tableNo": 0,
+  "ksnetDeviceNo": "",
+  "paymentType": "POSTPAID"
+}
+
+### 4. 기기 목록 조회
+GET {{url}}/v1/stores/706810975107825958/devices
+Authorization: Bearer {{accessToken}}
+
+### 5. 기기 상세 조회
+GET {{url}}/v1/stores/706810975107825958/devices/706811885561201592
+Authorization: Bearer {{accessToken}}
