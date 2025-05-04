@@ -209,4 +209,33 @@ interface DeviceManagementControllerSpecification {
       @Parameter(hidden = true) Account account
   );
 
+  @Operation(summary = "기기 삭제", description = "기기 삭제 API")
+  @ApiResponse(responseCode = "204", description = "기기 삭제 성공")
+  @ApiErrorResponses(
+      summary = "기기 삭제 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "사장님 권한이 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장 ID로 사장님 소유의 매장을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.DEVICE_NOT_FOUND,
+              exampleName = "기기 ID로 사장님 매장에 등록된 기기를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> delete(
+      Long storeId,
+      Long deviceId,
+      @Parameter(hidden = true) Account account
+  );
+
 }

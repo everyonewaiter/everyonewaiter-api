@@ -93,4 +93,9 @@ class DeviceRepositoryImpl implements DeviceRepository {
     return deviceJpaRepository.save(device);
   }
 
+  @Override
+  public void delete(Device device) {
+    deviceJpaRepository.delete(device);
+  }
+
 }

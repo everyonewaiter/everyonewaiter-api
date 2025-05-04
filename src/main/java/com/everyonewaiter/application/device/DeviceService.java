@@ -75,6 +75,12 @@ public class DeviceService {
     deviceRepository.save(device);
   }
 
+  @Transactional
+  public void delete(Long deviceId, Long storeId) {
+    Device device = deviceRepository.findByIdAndStoreIdOrThrow(deviceId, storeId);
+    deviceRepository.delete(device);
+  }
+
   public Paging<DeviceResponse.PageView> readAll(Long storeId, DeviceRead.PageView request) {
     return deviceRepository.findAll(storeId, request.pagination())
         .map(DeviceResponse.PageView::from);

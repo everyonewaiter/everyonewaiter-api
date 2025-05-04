@@ -87,3 +87,7 @@ Authorization: Bearer {{accessToken}}
   "ksnetDeviceNo": "DPTOTEST01",
   "paymentType": "POSTPAID"
 }
+
+### 7. 기기 삭제
+DELETE {{url}}/v1/stores/705784448266289247/devices/706019682264162802
+Authorization: Bearer {{accessToken}}

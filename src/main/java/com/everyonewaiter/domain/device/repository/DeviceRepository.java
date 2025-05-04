@@ -20,4 +20,6 @@ public interface DeviceRepository {
 
   Device save(Device device);
 
+  void delete(Device device);
+
 }
