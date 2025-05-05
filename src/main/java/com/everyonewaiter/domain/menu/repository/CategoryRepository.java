@@ -19,4 +19,6 @@ public interface CategoryRepository {
 
   Category save(Category category);
 
+  void shiftPosition(Category source);
+
 }

@@ -16,5 +16,14 @@ Authorization: Bearer {{accessToken}}
   "name": "피자"
 }
 
-### 3. 카테고리 목록 조회
+### 3. 카테고리 순서 이동
+POST {{url}}/v1/stores/706810975107825958/categories/707128332224704434/move/707128248988741217
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "where": "NEXT"
+}
+
+### 4. 카테고리 목록 조회
 GET {{url}}/v1/stores/706810975107825958/categories

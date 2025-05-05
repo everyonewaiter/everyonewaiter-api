@@ -74,4 +74,17 @@ class CategoryRepositoryImpl implements CategoryRepository {
     return categoryJpaRepository.save(category);
   }
 
+  @Override
+  public void shiftPosition(Category source) {
+    queryFactory
+        .update(category)
+        .set(category.position.value, category.position.value.add(1))
+        .where(
+            category.id.ne(source.getId()),
+            category.storeId.eq(source.getStoreId()),
+            category.position.value.goe(source.getPosition().getValue())
+        )
+        .execute();
+  }
+
 }

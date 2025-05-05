@@ -38,6 +38,23 @@ public class CategoryService {
     categoryRepository.save(category);
   }
 
+  @Transactional
+  public void movePosition(
+      Long sourceId,
+      Long targetId,
+      Long storeId,
+      CategoryWrite.MovePosition request
+  ) {
+    Category source = categoryRepository.findByIdAndStoreIdOrThrow(sourceId, storeId);
+    Category target = categoryRepository.findByIdAndStoreIdOrThrow(targetId, storeId);
+
+    boolean isMoved = source.movePosition(target, request.where());
+    if (isMoved) {
+      categoryRepository.shiftPosition(source);
+      categoryRepository.save(source);
+    }
+  }
+
   public CategoryResponse.Simples readAll(Long storeId) {
     List<Category> categories = categoryRepository.findAll(storeId);
     return CategoryResponse.Simples.from(categories);

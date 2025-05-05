@@ -40,4 +40,8 @@ public class Category extends AggregateRoot<Category> {
     this.name = name;
   }
 
+  public boolean movePosition(Category other, Position.Move where) {
+    return this.position.move(other.position, where);
+  }
+
 }

@@ -33,8 +33,14 @@ public class Position {
     this.value = value;
   }
 
-  public void move(Position other, Move move) {
-    this.value = other.value + move.getMoveCount();
+  public boolean move(Position other, Move move) {
+    int movedPosition = other.value + move.getMoveCount();
+    if (this.value == movedPosition) {
+      return false;
+    } else {
+      this.value = movedPosition;
+      return true;
+    }
   }
 
 }

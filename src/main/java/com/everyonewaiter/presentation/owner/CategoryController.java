@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1")
-class MenuController implements MenuControllerSpecification {
+class CategoryController implements CategoryControllerSpecification {
 
   private final StoreService storeService;
   private final CategoryService categoryService;
@@ -37,7 +37,7 @@ class MenuController implements MenuControllerSpecification {
   @Override
   @StoreOwner
   @PostMapping("/stores/{storeId}/categories")
-  public ResponseEntity<Void> createCategory(
+  public ResponseEntity<Void> create(
       @PathVariable Long storeId,
       @RequestBody @Valid CategoryWriteRequest.Create request,
       @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
@@ -49,13 +49,27 @@ class MenuController implements MenuControllerSpecification {
   @Override
   @StoreOwner
   @PutMapping("/stores/{storeId}/categories/{categoryId}")
-  public ResponseEntity<Void> updateCategory(
+  public ResponseEntity<Void> update(
       @PathVariable Long storeId,
       @PathVariable Long categoryId,
       @RequestBody @Valid CategoryWriteRequest.Update request,
       @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
   ) {
     categoryService.update(categoryId, storeId, request.toDomainDto());
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @StoreOwner
+  @PostMapping("/stores/{storeId}/categories/{sourceId}/move/{targetId}")
+  public ResponseEntity<Void> movePosition(
+      @PathVariable Long storeId,
+      @PathVariable Long sourceId,
+      @PathVariable Long targetId,
+      @RequestBody @Valid CategoryWriteRequest.MovePosition request,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    categoryService.movePosition(sourceId, targetId, storeId, request.toDomainDto());
     return ResponseEntity.noContent().build();
   }
 
