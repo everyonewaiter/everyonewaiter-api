@@ -58,6 +58,10 @@ public enum ErrorCode {
   // DEVICE
   ALREADY_USE_DEVICE_NAME(BAD_REQUEST, "입력하신 기기 이름은 이미 사용 중이에요. 다른 기기 이름을 입력해 주세요."),
   DEVICE_NOT_FOUND(NOT_FOUND, "기기를 찾을 수 없어요."),
+
+  // CATEGORY
+  ALREADY_USE_CATEGORY_NAME(BAD_REQUEST, "입력하신 카테고리 이름은 이미 사용 중이에요. 다른 카테고리 이름을 입력해 주세요."),
+  CATEGORY_NOT_FOUND(NOT_FOUND, "카테고리를 찾을 수 없어요."),
   ;
 
   private final HttpStatus status;

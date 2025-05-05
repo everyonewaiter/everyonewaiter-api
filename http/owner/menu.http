@@ -1,0 +1,8 @@
+### 1. 카테고리 생성
+POST {{url}}/v1/stores/706810975107825958/categories
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "name": "스테이크"
+}

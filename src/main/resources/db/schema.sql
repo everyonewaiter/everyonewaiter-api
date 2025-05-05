@@ -64,6 +64,7 @@ create table store
     last_closed_at datetime(6)            not null,
     created_at     datetime(6)            not null,
     updated_at     datetime(6)            not null,
+    constraint uk_store_setting_id unique (setting_id),
     constraint fk_store_setting_id foreign key (setting_id) references store_setting (id)
 );
 
@@ -81,4 +82,15 @@ create table device
     created_at      datetime(6)                              not null,
     updated_at      datetime(6)                              not null,
     constraint uk_device_store_id_name unique (store_id, name)
+);
+
+create table category
+(
+    id         bigint primary key,
+    store_id   bigint      not null,
+    name       varchar(20) not null,
+    position   int         not null,
+    created_at datetime(6) not null,
+    updated_at datetime(6) not null,
+    constraint uk_category_store_id_name unique (store_id, name)
 );
