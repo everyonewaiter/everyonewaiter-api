@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface CategoryRepository {
 
+  Long countByStoreId(Long storeId);
+
   boolean existsByStoreIdAndName(Long storeId, String name);
 
   boolean existsByStoreIdAndNameExcludeId(Long categoryId, Long storeId, String name);

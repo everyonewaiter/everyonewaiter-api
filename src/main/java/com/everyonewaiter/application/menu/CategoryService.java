@@ -19,6 +19,7 @@ public class CategoryService {
 
   @Transactional
   public Long create(Long storeId, CategoryWrite.Create request) {
+    categoryValidator.validateExceedMaxCount(storeId);
     categoryValidator.validateUnique(storeId, request.name());
 
     int lastPosition = categoryRepository.findLastPositionByStoreId(storeId);

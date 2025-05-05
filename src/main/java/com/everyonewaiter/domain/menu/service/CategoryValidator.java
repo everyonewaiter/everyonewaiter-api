@@ -12,6 +12,13 @@ public class CategoryValidator {
 
   private final CategoryRepository categoryRepository;
 
+  public void validateExceedMaxCount(Long storeId) {
+    Long categoryCount = categoryRepository.countByStoreId(storeId);
+    if (categoryCount >= 30) {
+      throw new BusinessException(ErrorCode.EXCEED_MAXIMUM_CATEGORY_COUNT);
+    }
+  }
+
   public void validateUnique(Long storeId, String name) {
     if (categoryRepository.existsByStoreIdAndName(storeId, name)) {
       throw new BusinessException(ErrorCode.ALREADY_USE_CATEGORY_NAME);

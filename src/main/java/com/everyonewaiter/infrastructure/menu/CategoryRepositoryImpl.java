@@ -20,6 +20,11 @@ class CategoryRepositoryImpl implements CategoryRepository {
   private final CategoryJpaRepository categoryJpaRepository;
 
   @Override
+  public Long countByStoreId(Long storeId) {
+    return categoryJpaRepository.countByStoreId(storeId);
+  }
+
+  @Override
   public boolean existsByStoreIdAndName(Long storeId, String name) {
     return categoryJpaRepository.existsByStoreIdAndName(storeId, name);
   }

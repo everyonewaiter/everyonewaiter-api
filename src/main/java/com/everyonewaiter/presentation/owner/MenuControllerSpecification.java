@@ -33,6 +33,10 @@ interface MenuControllerSpecification {
       summary = "카테고리 생성 실패",
       value = {
           @ApiErrorResponse(
+              code = ErrorCode.EXCEED_MAXIMUM_CATEGORY_COUNT,
+              exampleName = "카테고리 생성 가능 최대 개수(30)를 초과한 경우"
+          ),
+          @ApiErrorResponse(
               code = ErrorCode.ALREADY_USE_CATEGORY_NAME,
               exampleName = "매장 내에서 이미 사용중인 카테고리 이름인 경우"
           ),
