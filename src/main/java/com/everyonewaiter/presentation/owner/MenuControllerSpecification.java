@@ -1,5 +1,6 @@
 package com.everyonewaiter.presentation.owner;
 
+import com.everyonewaiter.application.menu.response.CategoryResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
@@ -9,11 +10,22 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "메뉴")
 interface MenuControllerSpecification {
+
+  @SecurityRequirements
+  @Operation(summary = "카테고리 목록 조회", description = "카테고리 목록 조회 API")
+  @ApiResponse(responseCode = "200", description = "카테고리 목록 조회 성공")
+  @ApiErrorResponse(
+      summary = "카테고리 목록 조회 실패",
+      code = ErrorCode.STORE_NOT_FOUND,
+      exampleName = "매장을 찾을 수 없는 경우"
+  )
+  ResponseEntity<CategoryResponse.Simples> getCategories(Long storeId);
 
   @Operation(summary = "카테고리 생성", description = "카테고리 생성 API")
   @ApiResponse(responseCode = "201", description = "카테고리 생성 성공")

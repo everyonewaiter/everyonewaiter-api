@@ -7,6 +7,7 @@ import com.everyonewaiter.domain.menu.repository.CategoryRepository;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -35,6 +36,16 @@ class CategoryRepositoryImpl implements CategoryRepository {
         )
         .fetchFirst();
     return categoryCount != null;
+  }
+
+  @Override
+  public List<Category> findAll(Long storeId) {
+    return queryFactory
+        .select(category)
+        .from(category)
+        .where(category.storeId.eq(storeId))
+        .orderBy(category.position.value.asc())
+        .fetch();
   }
 
   @Override

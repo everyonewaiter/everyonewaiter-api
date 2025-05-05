@@ -12,6 +12,12 @@ public class StoreValidator {
 
   private final StoreRepository storeRepository;
 
+  public void validateExists(Long storeId) {
+    if (!storeRepository.existsById(storeId)) {
+      throw new BusinessException(ErrorCode.STORE_NOT_FOUND);
+    }
+  }
+
   public void validateOwner(Long storeId, Long accountId) {
     if (!storeRepository.existsByIdAndAccountId(storeId, accountId)) {
       throw new BusinessException(ErrorCode.STORE_NOT_FOUND);

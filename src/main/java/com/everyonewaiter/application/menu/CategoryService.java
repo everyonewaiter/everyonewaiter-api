@@ -1,9 +1,11 @@
 package com.everyonewaiter.application.menu;
 
 import com.everyonewaiter.application.menu.request.CategoryWrite;
+import com.everyonewaiter.application.menu.response.CategoryResponse;
 import com.everyonewaiter.domain.menu.entity.Category;
 import com.everyonewaiter.domain.menu.repository.CategoryRepository;
 import com.everyonewaiter.domain.menu.service.CategoryValidator;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,11 @@ public class CategoryService {
     category.update(request.name());
 
     categoryRepository.save(category);
+  }
+
+  public CategoryResponse.Simples readAll(Long storeId) {
+    List<Category> categories = categoryRepository.findAll(storeId);
+    return CategoryResponse.Simples.from(categories);
   }
 
 }

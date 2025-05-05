@@ -22,6 +22,10 @@ public class StoreService {
   private final StoreValidator storeValidator;
   private final StoreRepository storeRepository;
 
+  public void checkExistsStore(Long storeId) {
+    storeValidator.validateExists(storeId);
+  }
+
   public void checkStoreOwner(Long storeId, Long accountId) {
     storeValidator.validateOwner(storeId, accountId);
   }

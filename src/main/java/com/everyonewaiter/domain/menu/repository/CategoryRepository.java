@@ -1,12 +1,15 @@
 package com.everyonewaiter.domain.menu.repository;
 
 import com.everyonewaiter.domain.menu.entity.Category;
+import java.util.List;
 
 public interface CategoryRepository {
 
   boolean existsByStoreIdAndName(Long storeId, String name);
 
   boolean existsByStoreIdAndNameExcludeId(Long categoryId, Long storeId, String name);
+
+  List<Category> findAll(Long storeId);
 
   int findLastPositionByStoreId(Long storeId);
 
