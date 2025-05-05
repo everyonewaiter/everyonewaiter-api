@@ -4,6 +4,8 @@ import static com.everyonewaiter.domain.menu.entity.QCategory.category;
 
 import com.everyonewaiter.domain.menu.entity.Category;
 import com.everyonewaiter.domain.menu.repository.CategoryRepository;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,20 @@ class CategoryRepositoryImpl implements CategoryRepository {
   }
 
   @Override
+  public boolean existsByStoreIdAndNameExcludeId(Long categoryId, Long storeId, String name) {
+    Integer categoryCount = queryFactory
+        .selectOne()
+        .from(category)
+        .where(
+            category.id.ne(categoryId),
+            category.storeId.eq(storeId),
+            category.name.eq(name)
+        )
+        .fetchFirst();
+    return categoryCount != null;
+  }
+
+  @Override
   public int findLastPositionByStoreId(Long storeId) {
     Integer lastPosition = queryFactory
         .select(category.position.value.max())
@@ -29,6 +45,12 @@ class CategoryRepositoryImpl implements CategoryRepository {
         .where(category.storeId.eq(storeId))
         .fetchOne();
     return Objects.requireNonNullElse(lastPosition, 0);
+  }
+
+  @Override
+  public Category findByIdAndStoreIdOrThrow(Long categoryId, Long storeId) {
+    return categoryJpaRepository.findByIdAndStoreId(categoryId, storeId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
   }
 
   @Override

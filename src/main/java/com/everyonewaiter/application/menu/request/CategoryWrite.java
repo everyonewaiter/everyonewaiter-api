@@ -10,4 +10,8 @@ public class CategoryWrite {
 
   }
 
+  public record Update(String name) {
+
+  }
+
 }

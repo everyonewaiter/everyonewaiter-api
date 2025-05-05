@@ -18,4 +18,10 @@ public class CategoryValidator {
     }
   }
 
+  public void validateUniqueExcludeId(Long categoryId, Long storeId, String name) {
+    if (categoryRepository.existsByStoreIdAndNameExcludeId(categoryId, storeId, name)) {
+      throw new BusinessException(ErrorCode.ALREADY_USE_CATEGORY_NAME);
+    }
+  }
+
 }

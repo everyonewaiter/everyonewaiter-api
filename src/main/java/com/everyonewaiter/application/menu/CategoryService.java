@@ -25,4 +25,14 @@ public class CategoryService {
     return categoryRepository.save(category).getId();
   }
 
+  @Transactional
+  public void update(Long categoryId, Long storeId, CategoryWrite.Update request) {
+    categoryValidator.validateUniqueExcludeId(categoryId, storeId, request.name());
+
+    Category category = categoryRepository.findByIdAndStoreIdOrThrow(categoryId, storeId);
+    category.update(request.name());
+
+    categoryRepository.save(category);
+  }
+
 }

@@ -92,5 +92,6 @@ create table category
     position   int         not null,
     created_at datetime(6) not null,
     updated_at datetime(6) not null,
-    constraint uk_category_store_id_name unique (store_id, name)
+    constraint uk_category_store_id_name unique (store_id, name),
+    constraint uk_category_store_id_position unique (store_id, position)
 );

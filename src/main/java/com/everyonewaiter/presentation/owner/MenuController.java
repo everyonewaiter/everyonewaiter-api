@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,19 @@ class MenuController implements MenuControllerSpecification {
   ) {
     Long categoryId = categoryService.create(storeId, request.toDomainDto());
     return ResponseEntity.created(URI.create(categoryId.toString())).build();
+  }
+
+  @Override
+  @StoreOwner
+  @PutMapping("/stores/{storeId}/categories/{categoryId}")
+  public ResponseEntity<Void> updateCategory(
+      @PathVariable Long storeId,
+      @PathVariable Long categoryId,
+      @RequestBody @Valid CategoryWriteRequest.Update request,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    categoryService.update(categoryId, storeId, request.toDomainDto());
+    return ResponseEntity.noContent().build();
   }
 
 }

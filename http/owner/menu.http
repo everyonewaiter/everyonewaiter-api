@@ -6,3 +6,12 @@ Authorization: Bearer {{accessToken}}
 {
   "name": "스테이크"
 }
+
+### 2. 카테고리 수정
+PUT {{url}}/v1/stores/706810975107825958/categories/707128332224704434
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "name": "피자"
+}

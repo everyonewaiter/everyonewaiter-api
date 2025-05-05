@@ -24,4 +24,18 @@ public class CategoryWriteRequest {
 
   }
 
+  @Schema(name = "CategoryWriteRequest.Update")
+  public record Update(
+      @Schema(description = "카테고리 이름", example = "스테이크", requiredMode = Schema.RequiredMode.REQUIRED)
+      @NotBlank(message = "카테고리 이름을 입력해 주세요.")
+      @Size(min = 1, max = 20, message = "카테고리 이름은 1자 이상 20자 이하로 입력해 주세요.")
+      String name
+  ) {
+
+    public CategoryWrite.Update toDomainDto() {
+      return new CategoryWrite.Update(name);
+    }
+
+  }
+
 }

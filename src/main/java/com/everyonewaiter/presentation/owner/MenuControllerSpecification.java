@@ -18,7 +18,7 @@ interface MenuControllerSpecification {
   @Operation(summary = "카테고리 생성", description = "카테고리 생성 API")
   @ApiResponse(responseCode = "201", description = "카테고리 생성 성공")
   @ApiErrorResponses(
-      summary = "카테고리 생성 실패 실패",
+      summary = "카테고리 생성 실패",
       value = {
           @ApiErrorResponse(
               code = ErrorCode.ALREADY_USE_CATEGORY_NAME,
@@ -41,6 +41,40 @@ interface MenuControllerSpecification {
   ResponseEntity<Void> createCategory(
       Long storeId,
       @RequestBody CategoryWriteRequest.Create request,
+      @Parameter(hidden = true) Account account
+  );
+
+  @Operation(summary = "카테고리 수정", description = "카테고리 수정 API")
+  @ApiResponse(responseCode = "204", description = "카테고리 수정 성공")
+  @ApiErrorResponses(
+      summary = "카테고리 수정 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.ALREADY_USE_CATEGORY_NAME,
+              exampleName = "매장 내에서 이미 사용중인 카테고리 이름인 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "사장님 권한이 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장 ID로 사장님 소유의 매장을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.CATEGORY_NOT_FOUND,
+              exampleName = "카테고리 ID로 사장님 매장에 등록된 카테고리를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> updateCategory(
+      Long storeId,
+      Long categoryId,
+      @RequestBody CategoryWriteRequest.Update request,
       @Parameter(hidden = true) Account account
   );
 
