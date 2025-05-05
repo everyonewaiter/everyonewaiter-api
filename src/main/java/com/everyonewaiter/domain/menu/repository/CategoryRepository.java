@@ -21,4 +21,6 @@ public interface CategoryRepository {
 
   void shiftPosition(Category source);
 
+  void delete(Category category);
+
 }

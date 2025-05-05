@@ -25,5 +25,9 @@ Authorization: Bearer {{accessToken}}
   "where": "NEXT"
 }
 
-### 4. 카테고리 목록 조회
+### 4. 카테고리 삭제
+DELETE {{url}}/v1/stores/706810975107825958/categories/707259305706519717
+Authorization: Bearer {{accessToken}}
+
+### 5. 카테고리 목록 조회
 GET {{url}}/v1/stores/706810975107825958/categories

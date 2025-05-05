@@ -55,6 +55,12 @@ public class CategoryService {
     }
   }
 
+  @Transactional
+  public void delete(Long categoryId, Long storeId) {
+    Category category = categoryRepository.findByIdAndStoreIdOrThrow(categoryId, storeId);
+    categoryRepository.delete(category);
+  }
+
   public CategoryResponse.Simples readAll(Long storeId) {
     List<Category> categories = categoryRepository.findAll(storeId);
     return CategoryResponse.Simples.from(categories);

@@ -87,4 +87,9 @@ class CategoryRepositoryImpl implements CategoryRepository {
         .execute();
   }
 
+  @Override
+  public void delete(Category category) {
+    categoryJpaRepository.delete(category);
+  }
+
 }

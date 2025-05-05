@@ -94,10 +94,15 @@ interface CategoryControllerSpecification {
       @Parameter(hidden = true) Account account
   );
 
-  @Operation(summary = "카테고리 수정", description = "카테고리 수정 API")
-  @ApiResponse(responseCode = "204", description = "카테고리 수정 성공")
+  @Operation(
+      summary = "카테고리 순서 이동",
+      description = "카테고리 순서 이동 API<br/><br/>"
+          + "- sourceId와 targetId로 카테고리를 찾습니다.<br/>"
+          + "- sourceId 카테고리의 위치를 targetId 카테고리의 위치 전,후로 이동합니다.<br/>"
+  )
+  @ApiResponse(responseCode = "204", description = "카테고리 순서 이동 성공")
   @ApiErrorResponses(
-      summary = "카테고리 수정 실패",
+      summary = "카테고리 순서 이동 실패",
       value = {
           @ApiErrorResponse(
               code = ErrorCode.UNAUTHORIZED,
@@ -122,6 +127,35 @@ interface CategoryControllerSpecification {
       Long sourceId,
       Long targetId,
       @RequestBody CategoryWriteRequest.MovePosition request,
+      @Parameter(hidden = true) Account account
+  );
+
+  @Operation(summary = "카테고리 삭제", description = "카테고리 삭제 API")
+  @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공")
+  @ApiErrorResponses(
+      summary = "카테고리 삭제 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "사장님 권한이 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장 ID로 사장님 소유의 매장을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.CATEGORY_NOT_FOUND,
+              exampleName = "카테고리 ID로 사장님 매장에 등록된 카테고리를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> delete(
+      Long storeId,
+      Long categoryId,
       @Parameter(hidden = true) Account account
   );
 
