@@ -39,11 +39,11 @@ public class Setting extends Aggregate {
 
   @Column(name = "country_of_origins", nullable = false)
   @Convert(converter = CountryOfOriginToListConverter.class)
-  private final List<CountryOfOrigin> countryOfOrigins = new ArrayList<>();
+  private List<CountryOfOrigin> countryOfOrigins = new ArrayList<>();
 
   @Column(name = "staff_call_options", nullable = false)
   @Convert(converter = StaffCallOptionToListConverter.class)
-  private final List<StaffCallOption> staffCallOptions = new ArrayList<>();
+  private List<StaffCallOption> staffCallOptions = new ArrayList<>();
 
   public void update(
       int extraTableCount,
