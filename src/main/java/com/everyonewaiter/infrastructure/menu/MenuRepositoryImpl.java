@@ -27,7 +27,7 @@ class MenuRepositoryImpl implements MenuRepository {
     Integer lastPosition = queryFactory
         .select(menu.position.value.max())
         .from(menu)
-        .where(menu.categoryId.eq(categoryId))
+        .where(menu.category.id.eq(categoryId))
         .fetchOne();
     return Objects.requireNonNullElse(lastPosition, 0);
   }
@@ -46,7 +46,7 @@ class MenuRepositoryImpl implements MenuRepository {
   public void deleteAllByCategoryId(Long categoryId) {
     queryFactory
         .delete(menu)
-        .where(menu.categoryId.eq(categoryId))
+        .where(menu.category.id.eq(categoryId))
         .execute();
   }
 
