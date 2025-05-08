@@ -2,7 +2,6 @@ package com.everyonewaiter.presentation.owner;
 
 import com.everyonewaiter.application.menu.CategoryService;
 import com.everyonewaiter.application.menu.response.CategoryResponse;
-import com.everyonewaiter.application.store.StoreService;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.global.annotation.StoreOwner;
@@ -23,16 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1")
-class CategoryController implements CategoryControllerSpecification {
+class CategoryManagementController implements CategoryManagementControllerSpecification {
 
-  private final StoreService storeService;
   private final CategoryService categoryService;
 
   @Override
+  @StoreOwner
   @GetMapping("/stores/{storeId}/categories")
-  public ResponseEntity<CategoryResponse.Simples> getCategories(@PathVariable Long storeId) {
-    storeService.checkExistsStore(storeId);
-    return ResponseEntity.ok(categoryService.readAll(storeId));
+  public ResponseEntity<CategoryResponse.Simples> getCategories(
+      @PathVariable Long storeId,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    return ResponseEntity.ok(categoryService.readAllSimples(storeId));
   }
 
   @Override

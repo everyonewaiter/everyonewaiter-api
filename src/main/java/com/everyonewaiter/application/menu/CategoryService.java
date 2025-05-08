@@ -62,7 +62,7 @@ public class CategoryService {
     categoryRepository.delete(category);
   }
 
-  public CategoryResponse.Simples readAll(Long storeId) {
+  public CategoryResponse.Simples readAllSimples(Long storeId) {
     List<Category> categories = categoryRepository.findAll(storeId);
     return CategoryResponse.Simples.from(categories);
   }

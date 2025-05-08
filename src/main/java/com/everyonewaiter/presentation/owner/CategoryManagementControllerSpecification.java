@@ -15,17 +15,32 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "메뉴 카테고리")
-interface CategoryControllerSpecification {
+interface CategoryManagementControllerSpecification {
 
   @SecurityRequirements
   @Operation(summary = "카테고리 목록 조회", description = "카테고리 목록 조회 API")
   @ApiResponse(responseCode = "200", description = "카테고리 목록 조회 성공")
-  @ApiErrorResponse(
+  @ApiErrorResponses(
       summary = "카테고리 목록 조회 실패",
-      code = ErrorCode.STORE_NOT_FOUND,
-      exampleName = "매장을 찾을 수 없는 경우"
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "사장님 권한이 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장을 찾을 수 없는 경우"
+          ),
+      }
   )
-  ResponseEntity<CategoryResponse.Simples> getCategories(Long storeId);
+  ResponseEntity<CategoryResponse.Simples> getCategories(
+      Long storeId,
+      @Parameter(hidden = true) Account account
+  );
 
   @Operation(summary = "카테고리 생성", description = "카테고리 생성 API")
   @ApiResponse(responseCode = "201", description = "카테고리 생성 성공")
