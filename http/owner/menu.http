@@ -1,0 +1,70 @@
+### 1. 메뉴 생성
+POST {{url}}/v1/stores/706810975107825958/categories/707128248988741217/menus
+Content-Type: multipart/form-data boundary=MenuBoundary
+Authorization: Bearer {{accessToken}}
+
+--MenuBoundary
+Content-Disposition: form-data; name="file"; filename="_logo.png"
+Content-Type: image/png
+
+< ./_logo.png
+
+--MenuBoundary
+Content-Disposition: form-data; name="request"
+Content-Type: application/json
+
+{
+  "name": "안심 스테이크",
+  "description": "",
+  "price": 34900,
+  "spicy": 0,
+  "state": "DEFAULT",
+  "label": "RECOMMEND",
+  "printEnabled": true,
+  "menuOptionGroups": [
+    {
+      "name": "굽기",
+      "type": "MANDATORY",
+      "printEnabled": true,
+      "menuOptions": [
+        {
+          "name": "레어",
+          "price": 0
+        },
+        {
+          "name": "미디움 레어",
+          "price": 0
+        },
+        {
+          "name": "미디움",
+          "price": 0
+        },
+        {
+          "name": "미디움 웰던",
+          "price": 0
+        },
+        {
+          "name": "웰던",
+          "price": 0
+        }
+      ]
+    },
+    {
+      "name": "사이드",
+      "type": "OPTIONAL",
+      "printEnabled": true,
+      "menuOptions": [
+        {
+          "name": "크림 스프",
+          "price": 1000
+        },
+        {
+          "name": "감자튀김",
+          "price": 2000
+        }
+      ]
+    }
+  ]
+}
+
+--MenuBoundary--

@@ -94,3 +94,40 @@ create table category
     updated_at datetime(6) not null,
     constraint uk_category_store_id_name unique (store_id, name)
 );
+
+create table menu
+(
+    id            bigint primary key,
+    category_id   bigint                                       not null,
+    name          varchar(30)                                  not null,
+    description   varchar(100)                                 not null,
+    price         bigint                                       not null,
+    spicy         int                                          not null,
+    state         enum ('DEFAULT', 'HIDE', 'SOLD_OUT')         not null,
+    label         enum ('DEFAULT', 'NEW', 'BEST', 'RECOMMEND') not null,
+    image         char(30)                                     not null,
+    print_enabled boolean                                      not null,
+    position      int                                          not null,
+    created_at    datetime(6)                                  not null,
+    updated_at    datetime(6)                                  not null,
+    constraint fk_menu_category_id foreign key (category_id) references category (id) on delete cascade
+);
+
+create table menu_option_group
+(
+    id            bigint primary key,
+    menu_id       bigint                         not null,
+    name          varchar(30)                    not null,
+    type          enum ('MANDATORY', 'OPTIONAL') not null,
+    print_enabled boolean                        not null,
+    constraint fk_menu_option_group_menu_id foreign key (menu_id) references menu (id) on delete cascade
+);
+
+create table menu_option
+(
+    id                   bigint primary key,
+    menu_option_group_id bigint      not null,
+    name                 varchar(30) not null,
+    price                bigint      not null,
+    constraint fk_menu_option_menu_option_group_id foreign key (menu_option_group_id) references menu_option_group (id) on delete cascade
+);
