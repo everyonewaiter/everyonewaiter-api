@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1")
-class MenuController implements MenuControllerSpecification {
+class MenuManagementController implements MenuManagementControllerSpecification {
 
   private final MenuService menuService;
 

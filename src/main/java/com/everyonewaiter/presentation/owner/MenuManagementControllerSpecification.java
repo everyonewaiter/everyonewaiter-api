@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "메뉴")
-interface MenuControllerSpecification {
+interface MenuManagementControllerSpecification {
 
   @Operation(summary = "메뉴 생성", description = "메뉴 생성 API")
   @ApiResponse(responseCode = "201", description = "메뉴 생성 성공")
