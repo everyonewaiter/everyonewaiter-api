@@ -9,6 +9,7 @@ import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
 import com.everyonewaiter.domain.menu.repository.CategoryRepository;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
 import com.everyonewaiter.domain.menu.service.MenuValidator;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ public class MenuService {
     menuValidator.validateExceedMaxCount(categoryId);
 
     int lastPosition = menuRepository.findLastPositionByCategoryId(categoryId);
+    AtomicInteger menuOptionGroupPosition = new AtomicInteger(1);
     Menu menu = Menu.create(
         category,
         request.name(),
@@ -41,18 +43,25 @@ public class MenuService {
         lastPosition,
         request.menuOptionGroups()
             .stream()
-            .map(menuOptionGroup ->
-                MenuOptionGroup.create(
-                    menuOptionGroup.name(),
-                    menuOptionGroup.type(),
-                    menuOptionGroup.printEnabled(),
-                    menuOptionGroup.menuOptions()
-                        .stream()
-                        .map(menuOption ->
-                            MenuOption.create(menuOption.name(), menuOption.price())
-                        )
-                        .toList()
-                )
+            .map(menuOptionGroup -> {
+                  AtomicInteger menuOptionPosition = new AtomicInteger(1);
+                  return MenuOptionGroup.create(
+                      menuOptionGroup.name(),
+                      menuOptionGroup.type(),
+                      menuOptionGroup.printEnabled(),
+                      menuOptionGroupPosition.getAndIncrement(),
+                      menuOptionGroup.menuOptions()
+                          .stream()
+                          .map(menuOption ->
+                              MenuOption.create(
+                                  menuOption.name(),
+                                  menuOption.price(),
+                                  menuOptionPosition.getAndIncrement()
+                              )
+                          )
+                          .toList()
+                  );
+                }
             )
             .toList()
     );

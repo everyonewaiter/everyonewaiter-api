@@ -120,6 +120,7 @@ create table menu_option_group
     name          varchar(30)                    not null,
     type          enum ('MANDATORY', 'OPTIONAL') not null,
     print_enabled boolean                        not null,
+    position      int                            not null,
     constraint fk_menu_option_group_menu_id foreign key (menu_id) references menu (id) on delete cascade
 );
 
@@ -129,5 +130,6 @@ create table menu_option
     menu_option_group_id bigint      not null,
     name                 varchar(30) not null,
     price                bigint      not null,
+    position             int         not null,
     constraint fk_menu_option_menu_option_group_id foreign key (menu_option_group_id) references menu_option_group (id) on delete cascade
 );

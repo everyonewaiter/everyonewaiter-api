@@ -12,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,7 @@ public class Menu extends AggregateRoot<Menu> {
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "menu_id", nullable = false, updatable = false)
+  @OrderBy("position asc, id asc")
   private List<MenuOptionGroup> menuOptionGroups = new ArrayList<>();
 
   public static Menu create(
