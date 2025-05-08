@@ -34,8 +34,11 @@ public class Menu extends AggregateRoot<Menu> {
 
   public enum Label {DEFAULT, NEW, BEST, RECOMMEND}
 
+  @Column(name = "store_id", nullable = false, updatable = false)
+  private Long storeId;
+
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "category_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+  @JoinColumn(name = "category_id", nullable = false, updatable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   private Category category;
 
   @Column(name = "name", nullable = false)
@@ -86,6 +89,7 @@ public class Menu extends AggregateRoot<Menu> {
       List<MenuOptionGroup> menuOptionGroups
   ) {
     Menu menu = new Menu();
+    menu.storeId = category.getStoreId();
     menu.category = category;
     menu.name = name;
     menu.description = description;

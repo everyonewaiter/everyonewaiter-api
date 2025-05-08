@@ -98,6 +98,7 @@ create table category
 create table menu
 (
     id            bigint primary key,
+    store_id      bigint                                       not null,
     category_id   bigint                                       not null,
     name          varchar(30)                                  not null,
     description   varchar(100)                                 not null,
