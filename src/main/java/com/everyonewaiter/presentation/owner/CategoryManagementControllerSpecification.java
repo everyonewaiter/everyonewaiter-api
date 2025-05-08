@@ -10,14 +10,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "메뉴 카테고리")
 interface CategoryManagementControllerSpecification {
 
-  @SecurityRequirements
   @Operation(summary = "카테고리 목록 조회", description = "카테고리 목록 조회 API")
   @ApiResponse(responseCode = "200", description = "카테고리 목록 조회 성공")
   @ApiErrorResponses(
