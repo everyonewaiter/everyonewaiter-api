@@ -58,6 +58,7 @@ public class CategoryService {
   @Transactional
   public void delete(Long categoryId, Long storeId) {
     Category category = categoryRepository.findByIdAndStoreIdOrThrow(categoryId, storeId);
+    category.delete();
     categoryRepository.delete(category);
   }
 

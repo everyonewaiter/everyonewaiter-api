@@ -31,7 +31,7 @@ public class MenuService {
     int lastPosition = menuRepository.findLastPositionByCategoryId(categoryId);
     AtomicInteger menuOptionGroupPosition = new AtomicInteger(1);
     Menu menu = Menu.create(
-        category,
+        category.getId(),
         request.name(),
         request.description(),
         request.price(),

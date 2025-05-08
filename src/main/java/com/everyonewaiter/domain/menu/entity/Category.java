@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.menu.entity;
 
+import com.everyonewaiter.domain.menu.event.CategoryDeleteEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.domain.entity.Position;
 import jakarta.persistence.Column;
@@ -42,6 +43,10 @@ public class Category extends AggregateRoot<Category> {
 
   public boolean movePosition(Category other, Position.Move where) {
     return this.position.move(other.position, where);
+  }
+
+  public void delete() {
+    registerEvent(new CategoryDeleteEvent(getId()));
   }
 
 }

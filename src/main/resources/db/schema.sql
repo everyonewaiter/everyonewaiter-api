@@ -109,8 +109,7 @@ create table menu
     print_enabled boolean                                      not null,
     position      int                                          not null,
     created_at    datetime(6)                                  not null,
-    updated_at    datetime(6)                                  not null,
-    constraint fk_menu_category_id foreign key (category_id) references category (id) on delete cascade
+    updated_at    datetime(6)                                  not null
 );
 
 create table menu_option_group

@@ -5,6 +5,7 @@ import static com.everyonewaiter.domain.menu.entity.QMenu.menu;
 import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -26,14 +27,27 @@ class MenuRepositoryImpl implements MenuRepository {
     Integer lastPosition = queryFactory
         .select(menu.position.value.max())
         .from(menu)
-        .where(menu.category.id.eq(categoryId))
+        .where(menu.categoryId.eq(categoryId))
         .fetchOne();
     return Objects.requireNonNullElse(lastPosition, 0);
   }
 
   @Override
+  public List<Menu> findAllByCategoryId(Long categoryId) {
+    return menuJpaRepository.findAllByCategoryId(categoryId);
+  }
+
+  @Override
   public Menu save(Menu menu) {
     return menuJpaRepository.save(menu);
+  }
+
+  @Override
+  public void deleteAllByCategoryId(Long categoryId) {
+    queryFactory
+        .delete(menu)
+        .where(menu.categoryId.eq(categoryId))
+        .execute();
   }
 
 }
