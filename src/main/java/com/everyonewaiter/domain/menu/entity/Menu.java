@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.menu.entity;
 
+import com.everyonewaiter.domain.menu.event.MenuDeleteEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.domain.entity.Position;
 import jakarta.persistence.CascadeType;
@@ -22,6 +23,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Table(name = "menu")
 @Entity
@@ -38,7 +41,7 @@ public class Menu extends AggregateRoot<Menu> {
   private Long storeId;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "category_id", nullable = false, updatable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+  @JoinColumn(name = "category_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   private Category category;
 
   @Column(name = "name", nullable = false)
@@ -70,9 +73,9 @@ public class Menu extends AggregateRoot<Menu> {
   @Embedded
   private Position position;
 
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "menu_id", nullable = false, updatable = false)
+  @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST, orphanRemoval = true)
   @OrderBy("position asc, id asc")
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private List<MenuOptionGroup> menuOptionGroups = new ArrayList<>();
 
   public static Menu create(
@@ -85,8 +88,7 @@ public class Menu extends AggregateRoot<Menu> {
       Label label,
       String image,
       boolean printEnabled,
-      int lastPosition,
-      List<MenuOptionGroup> menuOptionGroups
+      int lastPosition
   ) {
     Menu menu = new Menu();
     menu.storeId = category.getStoreId();
@@ -100,8 +102,16 @@ public class Menu extends AggregateRoot<Menu> {
     menu.image = image;
     menu.printEnabled = printEnabled;
     menu.position = new Position(lastPosition + 1);
-    menu.menuOptionGroups.addAll(menuOptionGroups);
+    category.addMenu(menu);
     return menu;
+  }
+
+  public void addMenuOptionGroup(MenuOptionGroup menuOptionGroup) {
+    this.menuOptionGroups.add(menuOptionGroup);
+  }
+
+  public void delete() {
+    registerEvent(new MenuDeleteEvent(image));
   }
 
 }

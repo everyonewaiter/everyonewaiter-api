@@ -4,6 +4,8 @@ import static com.everyonewaiter.domain.menu.entity.QMenu.menu;
 
 import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Objects;
@@ -38,8 +40,19 @@ class MenuRepositoryImpl implements MenuRepository {
   }
 
   @Override
+  public Menu findByIdAndCategoryIdAndStoreIdOrThrow(Long menuId, Long categoryId, Long storeId) {
+    return menuJpaRepository.findByIdAndCategoryIdAndStoreId(menuId, categoryId, storeId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.MENU_NOT_FOUND));
+  }
+
+  @Override
   public Menu save(Menu menu) {
     return menuJpaRepository.save(menu);
+  }
+
+  @Override
+  public void delete(Menu menu) {
+    menuJpaRepository.delete(menu);
   }
 
   @Override

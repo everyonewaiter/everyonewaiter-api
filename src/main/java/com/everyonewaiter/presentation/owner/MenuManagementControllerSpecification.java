@@ -50,4 +50,34 @@ interface MenuManagementControllerSpecification {
       @Parameter(hidden = true) Account account
   );
 
+  @Operation(summary = "메뉴 삭제", description = "메뉴 삭제 API")
+  @ApiResponse(responseCode = "204", description = "메뉴 삭제 성공")
+  @ApiErrorResponses(
+      summary = "메뉴 삭제 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "사장님 권한이 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장 ID로 사장님 소유의 매장을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.MENU_NOT_FOUND,
+              exampleName = "카테고리 ID 및 메뉴 ID로 매장의 메뉴를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> delete(
+      Long storeId,
+      Long categoryId,
+      Long menuId,
+      @Parameter(hidden = true) Account account
+  );
+
 }

@@ -66,6 +66,7 @@ public enum ErrorCode {
 
   // MENU
   EXCEED_MAXIMUM_MENU_COUNT(BAD_REQUEST, "메뉴는 카테고리당 최대 50개까지 등록할 수 있어요."),
+  MENU_NOT_FOUND(NOT_FOUND, "메뉴를 찾을 수 없어요."),
   ;
 
   private final HttpStatus status;

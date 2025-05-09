@@ -10,6 +10,7 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,19 @@ class MenuManagementController implements MenuManagementControllerSpecification 
   ) {
     Long menuId = menuService.create(categoryId, storeId, request.toDomainDto(file));
     return ResponseEntity.created(URI.create(menuId.toString())).build();
+  }
+
+  @Override
+  @StoreOwner
+  @DeleteMapping("/stores/{storeId}/categories/{categoryId}/menus/{menuId}")
+  public ResponseEntity<Void> delete(
+      @PathVariable Long storeId,
+      @PathVariable Long categoryId,
+      @PathVariable Long menuId,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    menuService.delete(menuId, categoryId, storeId);
+    return ResponseEntity.noContent().build();
   }
 
 }

@@ -1,5 +1,5 @@
 ### 1. 메뉴 생성
-POST {{url}}/v1/stores/706810975107825958/categories/707128248988741217/menus
+POST {{url}}/v1/stores/706810975107825958/categories/708358198990457858/menus
 Content-Type: multipart/form-data boundary=MenuBoundary
 Authorization: Bearer {{accessToken}}
 
@@ -68,3 +68,7 @@ Content-Type: application/json
 }
 
 --MenuBoundary--
+
+### 메뉴 삭제
+DELETE {{url}}/v1/stores/706810975107825958/categories/708358198990457858/menus/708540761083242528
+Authorization: Bearer {{accessToken}}

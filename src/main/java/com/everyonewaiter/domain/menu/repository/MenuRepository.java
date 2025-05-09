@@ -11,7 +11,11 @@ public interface MenuRepository {
 
   List<Menu> findAllByCategoryId(Long categoryId);
 
+  Menu findByIdAndCategoryIdAndStoreIdOrThrow(Long menuId, Long categoryId, Long storeId);
+
   Menu save(Menu menu);
+
+  void delete(Menu menu);
 
   void deleteAllByCategoryId(Long categoryId);
 

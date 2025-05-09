@@ -29,7 +29,6 @@ public class MenuService {
     menuValidator.validateExceedMaxCount(categoryId);
 
     int lastPosition = menuRepository.findLastPositionByCategoryId(categoryId);
-    AtomicInteger menuOptionGroupPosition = new AtomicInteger(1);
     Menu menu = Menu.create(
         category,
         request.name(),
@@ -40,33 +39,38 @@ public class MenuService {
         request.label(),
         imageManager.upload(request.file(), "menu"),
         request.printEnabled(),
-        lastPosition,
-        request.menuOptionGroups()
-            .stream()
-            .map(menuOptionGroup -> {
-                  AtomicInteger menuOptionPosition = new AtomicInteger(1);
-                  return MenuOptionGroup.create(
-                      menuOptionGroup.name(),
-                      menuOptionGroup.type(),
-                      menuOptionGroup.printEnabled(),
-                      menuOptionGroupPosition.getAndIncrement(),
-                      menuOptionGroup.menuOptions()
-                          .stream()
-                          .map(menuOption ->
-                              MenuOption.create(
-                                  menuOption.name(),
-                                  menuOption.price(),
-                                  menuOptionPosition.getAndIncrement()
-                              )
-                          )
-                          .toList()
-                  );
-                }
-            )
-            .toList()
+        lastPosition
     );
 
+    AtomicInteger menuOptionGroupPosition = new AtomicInteger(1);
+    for (MenuWrite.CreateOptionGroup createOptionGroup : request.menuOptionGroups()) {
+      MenuOptionGroup menuOptionGroup = MenuOptionGroup.create(
+          menu,
+          createOptionGroup.name(),
+          createOptionGroup.type(),
+          createOptionGroup.printEnabled(),
+          menuOptionGroupPosition.getAndIncrement()
+      );
+
+      AtomicInteger menuOptionPosition = new AtomicInteger(1);
+      for (MenuWrite.CreateOption createOption : createOptionGroup.menuOptions()) {
+        MenuOption.create(
+            menuOptionGroup,
+            createOption.name(),
+            createOption.price(),
+            menuOptionPosition.getAndIncrement()
+        );
+      }
+    }
+
     return menuRepository.save(menu).getId();
+  }
+
+  @Transactional
+  public void delete(Long menuId, Long categoryId, Long storeId) {
+    Menu menu = menuRepository.findByIdAndCategoryIdAndStoreIdOrThrow(menuId, categoryId, storeId);
+    menu.delete();
+    menuRepository.delete(menu);
   }
 
 }

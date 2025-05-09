@@ -8,7 +8,9 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
@@ -18,15 +20,21 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Table(name = "menu_option_group")
 @Entity
 @Getter
-@ToString(exclude = "menuOptions", callSuper = true)
+@ToString(exclude = {"menu", "menuOptions"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MenuOptionGroup extends Aggregate {
 
   public enum Type {MANDATORY, OPTIONAL}
+
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "menu_id", nullable = false)
+  private Menu menu;
 
   @Column(name = "name", nullable = false)
   private String name;
@@ -41,25 +49,30 @@ public class MenuOptionGroup extends Aggregate {
   @Embedded
   private Position position;
 
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "menu_option_group_id", nullable = false, updatable = false)
+  @OneToMany(mappedBy = "menuOptionGroup", cascade = CascadeType.PERSIST, orphanRemoval = true)
   @OrderBy("position asc, id asc")
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private List<MenuOption> menuOptions = new ArrayList<>();
 
   public static MenuOptionGroup create(
+      Menu menu,
       String name,
       Type type,
       boolean printEnabled,
-      int position,
-      List<MenuOption> menuOptions
+      int position
   ) {
     MenuOptionGroup menuOptionGroup = new MenuOptionGroup();
+    menuOptionGroup.menu = menu;
     menuOptionGroup.name = name;
     menuOptionGroup.type = type;
     menuOptionGroup.printEnabled = printEnabled;
     menuOptionGroup.position = new Position(position);
-    menuOptionGroup.menuOptions.addAll(menuOptions);
+    menu.addMenuOptionGroup(menuOptionGroup);
     return menuOptionGroup;
+  }
+
+  public void addMenuOption(MenuOption menuOption) {
+    this.menuOptions.add(menuOption);
   }
 
 }
