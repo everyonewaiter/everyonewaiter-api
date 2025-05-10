@@ -11,9 +11,13 @@ public interface MenuRepository {
 
   List<Menu> findAllByCategoryId(Long categoryId);
 
-  Menu findByIdAndCategoryIdAndStoreIdOrThrow(Long menuId, Long categoryId, Long storeId);
+  Menu findByIdAndStoreId(Long menuId, Long storeId);
+
+  Menu findByIdAndStoreIdAndCategoryIdOrThrow(Long menuId, Long storeId, Long categoryId);
 
   Menu save(Menu menu);
+
+  void shiftPosition(Menu source);
 
   void delete(Menu menu);
 

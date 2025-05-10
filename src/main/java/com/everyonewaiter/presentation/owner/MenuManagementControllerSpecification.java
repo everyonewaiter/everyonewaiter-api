@@ -7,6 +7,7 @@ import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.presentation.owner.request.MenuWriteRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,42 @@ interface MenuManagementControllerSpecification {
       Long categoryId,
       MultipartFile file,
       MenuWriteRequest.Create request,
+      @Parameter(hidden = true) Account account
+  );
+
+  @Operation(
+      summary = "메뉴 순서 이동",
+      description = "메뉴 순서 이동 API<br/><br/>"
+          + "- sourceId와 targetId로 메뉴를 찾습니다.<br/>"
+          + "- sourceId 메뉴의 위치를 targetId 메뉴의 위치 전,후로 이동합니다.<br/>"
+  )
+  @ApiResponse(responseCode = "204", description = "메뉴 순서 이동 성공")
+  @ApiErrorResponses(
+      summary = "메뉴 순서 이동 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "사장님 권한이 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장 ID로 사장님 소유의 매장을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.MENU_NOT_FOUND,
+              exampleName = "메뉴 ID로 사장님 매장에 등록된 메뉴를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> movePosition(
+      Long storeId,
+      Long sourceId,
+      Long targetId,
+      @RequestBody MenuWriteRequest.MovePosition request,
       @Parameter(hidden = true) Account account
   );
 

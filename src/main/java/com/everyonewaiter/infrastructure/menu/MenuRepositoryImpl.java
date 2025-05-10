@@ -40,14 +40,33 @@ class MenuRepositoryImpl implements MenuRepository {
   }
 
   @Override
-  public Menu findByIdAndCategoryIdAndStoreIdOrThrow(Long menuId, Long categoryId, Long storeId) {
-    return menuJpaRepository.findByIdAndCategoryIdAndStoreId(menuId, categoryId, storeId)
+  public Menu findByIdAndStoreId(Long menuId, Long storeId) {
+    return menuJpaRepository.findByIdAndStoreId(menuId, storeId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.MENU_NOT_FOUND));
+  }
+
+  @Override
+  public Menu findByIdAndStoreIdAndCategoryIdOrThrow(Long menuId, Long storeId, Long categoryId) {
+    return menuJpaRepository.findByIdAndStoreIdAndCategoryId(menuId, storeId, categoryId)
         .orElseThrow(() -> new BusinessException(ErrorCode.MENU_NOT_FOUND));
   }
 
   @Override
   public Menu save(Menu menu) {
     return menuJpaRepository.save(menu);
+  }
+
+  @Override
+  public void shiftPosition(Menu source) {
+    queryFactory
+        .update(menu)
+        .set(menu.position.value, menu.position.value.add(1))
+        .where(
+            menu.id.ne(source.getId()),
+            menu.storeId.eq(source.getStoreId()),
+            menu.position.value.goe(source.getPosition().getValue())
+        )
+        .execute();
   }
 
   @Override

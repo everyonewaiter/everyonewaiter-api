@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,6 +45,20 @@ class MenuManagementController implements MenuManagementControllerSpecification 
 
   @Override
   @StoreOwner
+  @PostMapping("/stores/{storeId}/menus/{sourceId}/move/{targetId}")
+  public ResponseEntity<Void> movePosition(
+      @PathVariable Long storeId,
+      @PathVariable Long sourceId,
+      @PathVariable Long targetId,
+      @RequestBody @Valid MenuWriteRequest.MovePosition request,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    menuService.movePosition(sourceId, targetId, storeId, request.toDomainDto());
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @StoreOwner
   @DeleteMapping("/stores/{storeId}/categories/{categoryId}/menus/{menuId}")
   public ResponseEntity<Void> delete(
       @PathVariable Long storeId,
@@ -51,7 +66,7 @@ class MenuManagementController implements MenuManagementControllerSpecification 
       @PathVariable Long menuId,
       @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
   ) {
-    menuService.delete(menuId, categoryId, storeId);
+    menuService.delete(menuId, storeId, categoryId);
     return ResponseEntity.noContent().build();
   }
 

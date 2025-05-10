@@ -67,8 +67,25 @@ public class MenuService {
   }
 
   @Transactional
-  public void delete(Long menuId, Long categoryId, Long storeId) {
-    Menu menu = menuRepository.findByIdAndCategoryIdAndStoreIdOrThrow(menuId, categoryId, storeId);
+  public void movePosition(
+      Long sourceId,
+      Long targetId,
+      Long storeId,
+      MenuWrite.MovePosition request
+  ) {
+    Menu source = menuRepository.findByIdAndStoreId(sourceId, storeId);
+    Menu target = menuRepository.findByIdAndStoreId(targetId, storeId);
+
+    boolean isMoved = source.movePosition(target, request.where());
+    if (isMoved) {
+      menuRepository.shiftPosition(source);
+      menuRepository.save(source);
+    }
+  }
+
+  @Transactional
+  public void delete(Long menuId, Long storeId, Long categoryId) {
+    Menu menu = menuRepository.findByIdAndStoreIdAndCategoryIdOrThrow(menuId, storeId, categoryId);
     menu.delete();
     menuRepository.delete(menu);
   }

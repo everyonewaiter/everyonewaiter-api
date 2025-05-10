@@ -3,6 +3,7 @@ package com.everyonewaiter.presentation.owner.request;
 import com.everyonewaiter.application.menu.request.MenuWrite;
 import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
+import com.everyonewaiter.global.domain.entity.Position;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -128,6 +129,19 @@ public class MenuWriteRequest {
 
     public MenuWrite.CreateOption toDomainDto() {
       return new MenuWrite.CreateOption(name, price);
+    }
+
+  }
+
+  @Schema(name = "MenuWriteRequest.MovePosition")
+  public record MovePosition(
+      @Schema(description = "대상 메뉴로 이동할 위치(전,후)", example = "NEXT", requiredMode = Schema.RequiredMode.REQUIRED)
+      @NotNull(message = "이동할 위치가 누락되었습니다.")
+      Position.Move where
+  ) {
+
+    public MenuWrite.MovePosition toDomainDto() {
+      return new MenuWrite.MovePosition(where);
     }
 
   }

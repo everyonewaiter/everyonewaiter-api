@@ -110,6 +110,10 @@ public class Menu extends AggregateRoot<Menu> {
     this.menuOptionGroups.add(menuOptionGroup);
   }
 
+  public boolean movePosition(Menu other, Position.Move where) {
+    return this.position.move(other.position, where);
+  }
+
   public void delete() {
     registerEvent(new MenuDeleteEvent(image));
   }
