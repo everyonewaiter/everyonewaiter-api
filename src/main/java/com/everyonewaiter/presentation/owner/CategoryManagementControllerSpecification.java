@@ -31,7 +31,7 @@ interface CategoryManagementControllerSpecification {
           ),
           @ApiErrorResponse(
               code = ErrorCode.STORE_NOT_FOUND,
-              exampleName = "매장을 찾을 수 없는 경우"
+              exampleName = "매장 ID로 사장님 소유의 매장을 찾을 수 없는 경우"
           ),
       }
   )

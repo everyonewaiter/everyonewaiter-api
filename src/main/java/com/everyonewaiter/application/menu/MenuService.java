@@ -97,4 +97,10 @@ public class MenuService {
     return MenuResponse.Simples.from(menus);
   }
 
+  @Transactional(readOnly = true)
+  public MenuResponse.Detail readDetail(Long menuId, Long storeId, Long categoryId) {
+    Menu menu = menuRepository.findByIdAndStoreIdAndCategoryIdOrThrow(menuId, storeId, categoryId);
+    return MenuResponse.Detail.from(menu);
+  }
+
 }

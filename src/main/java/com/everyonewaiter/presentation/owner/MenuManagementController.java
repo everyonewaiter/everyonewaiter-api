@@ -41,6 +41,18 @@ class MenuManagementController implements MenuManagementControllerSpecification 
 
   @Override
   @StoreOwner
+  @GetMapping("/stores/{storeId}/categories/{categoryId}/menus/{menuId}")
+  public ResponseEntity<MenuResponse.Detail> getMenu(
+      @PathVariable Long storeId,
+      @PathVariable Long categoryId,
+      @PathVariable Long menuId,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    return ResponseEntity.ok(menuService.readDetail(menuId, storeId, categoryId));
+  }
+
+  @Override
+  @StoreOwner
   @PostMapping(
       value = "/stores/{storeId}/categories/{categoryId}/menus",
       consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}
