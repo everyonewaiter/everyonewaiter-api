@@ -74,7 +74,7 @@ public class RegistrationAdminResponse {
       @Schema(description = "사업자 등록번호", example = "홍길동")
       String license,
 
-      @Schema(description = "사업자 등록증 이미지명", example = "홍길동")
+      @Schema(description = "사업자 등록증 이미지명", example = "license/202504/0KA652ZFZ26DG.webp")
       String image,
 
       @Schema(description = "매장 등록 신청 상태", example = "APPLY")
