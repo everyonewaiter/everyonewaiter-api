@@ -1,5 +1,6 @@
 package com.everyonewaiter.presentation.owner;
 
+import com.everyonewaiter.application.menu.response.MenuResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
@@ -15,6 +16,31 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "메뉴")
 interface MenuManagementControllerSpecification {
+
+  @Operation(summary = "메뉴 목록 조회", description = "메뉴 목록 조회 API")
+  @ApiResponse(responseCode = "200", description = "메뉴 목록 조회 성공")
+  @ApiErrorResponses(
+      summary = "메뉴 목록 조회 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "사장님 권한이 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<MenuResponse.Simples> getMenus(
+      Long storeId,
+      Long categoryId,
+      @Parameter(hidden = true) Account account
+  );
 
   @Operation(summary = "메뉴 생성", description = "메뉴 생성 API")
   @ApiResponse(responseCode = "201", description = "메뉴 생성 성공")

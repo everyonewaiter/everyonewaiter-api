@@ -36,7 +36,25 @@ class MenuRepositoryImpl implements MenuRepository {
 
   @Override
   public List<Menu> findAllByCategoryId(Long categoryId) {
-    return menuJpaRepository.findAllByCategoryId(categoryId);
+    return queryFactory
+        .select(menu)
+        .from(menu)
+        .where(menu.category.id.eq(categoryId))
+        .orderBy(menu.position.value.asc(), menu.id.asc())
+        .fetch();
+  }
+
+  @Override
+  public List<Menu> findAllByStoreIdAndCategoryId(Long storeId, Long categoryId) {
+    return queryFactory
+        .select(menu)
+        .from(menu)
+        .where(
+            menu.storeId.eq(storeId),
+            menu.category.id.eq(categoryId)
+        )
+        .orderBy(menu.position.value.asc(), menu.id.asc())
+        .fetch();
   }
 
   @Override

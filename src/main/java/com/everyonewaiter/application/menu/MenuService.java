@@ -1,6 +1,7 @@
 package com.everyonewaiter.application.menu;
 
 import com.everyonewaiter.application.menu.request.MenuWrite;
+import com.everyonewaiter.application.menu.response.MenuResponse;
 import com.everyonewaiter.domain.image.service.ImageManager;
 import com.everyonewaiter.domain.menu.entity.Category;
 import com.everyonewaiter.domain.menu.entity.Menu;
@@ -9,6 +10,7 @@ import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
 import com.everyonewaiter.domain.menu.repository.CategoryRepository;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
 import com.everyonewaiter.domain.menu.service.MenuValidator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -88,6 +90,11 @@ public class MenuService {
     Menu menu = menuRepository.findByIdAndStoreIdAndCategoryIdOrThrow(menuId, storeId, categoryId);
     menu.delete();
     menuRepository.delete(menu);
+  }
+
+  public MenuResponse.Simples readAllSimples(Long storeId, Long categoryId) {
+    List<Menu> menus = menuRepository.findAllByStoreIdAndCategoryId(storeId, categoryId);
+    return MenuResponse.Simples.from(menus);
   }
 
 }

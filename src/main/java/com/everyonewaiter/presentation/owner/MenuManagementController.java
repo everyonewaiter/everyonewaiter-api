@@ -1,6 +1,7 @@
 package com.everyonewaiter.presentation.owner;
 
 import com.everyonewaiter.application.menu.MenuService;
+import com.everyonewaiter.application.menu.response.MenuResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import com.everyonewaiter.global.annotation.StoreOwner;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +27,17 @@ import org.springframework.web.multipart.MultipartFile;
 class MenuManagementController implements MenuManagementControllerSpecification {
 
   private final MenuService menuService;
+
+  @Override
+  @StoreOwner
+  @GetMapping("/stores/{storeId}/categories/{categoryId}/menus")
+  public ResponseEntity<MenuResponse.Simples> getMenus(
+      @PathVariable Long storeId,
+      @PathVariable Long categoryId,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    return ResponseEntity.ok(menuService.readAllSimples(storeId, categoryId));
+  }
 
   @Override
   @StoreOwner

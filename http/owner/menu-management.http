@@ -81,3 +81,7 @@ Authorization: Bearer {{accessToken}}
 ### 3. 메뉴 삭제
 DELETE {{url}}/v1/stores/706810975107825958/categories/708358198990457858/menus/708540761083242528
 Authorization: Bearer {{accessToken}}
+
+### 4. 메뉴 목록 조회
+GET {{url}}/v1/stores/706810975107825958/categories/708358198990457858/menus
+Authorization: Bearer {{accessToken}}
