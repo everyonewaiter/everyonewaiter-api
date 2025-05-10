@@ -63,6 +63,8 @@ public class MenuService {
             menuOptionPosition.getAndIncrement()
         );
       }
+
+      menuValidator.validateOptionPrice(menuOptionGroup);
     }
 
     return menuRepository.save(menu).getId();

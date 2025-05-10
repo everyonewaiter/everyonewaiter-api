@@ -122,7 +122,7 @@ public class MenuWriteRequest {
 
       @Schema(description = "메뉴 옵션 가격", example = "1000", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotNull(message = "메뉴 옵션 가격 정보가 누락되었습니다.")
-      @Min(value = 0, message = "메뉴 옵션 가격은 0 이상으로 입력해 주세요.")
+      @Min(value = -10_000_000, message = "메뉴 옵션 가격은 -10,000,000 이상으로 입력해 주세요.")
       @Max(value = 10_000_000, message = "메뉴 옵션 가격은 10,000,000 이하로 입력해 주세요.")
       long price
   ) {

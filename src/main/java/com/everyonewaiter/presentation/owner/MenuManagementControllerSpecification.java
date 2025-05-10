@@ -82,6 +82,10 @@ interface MenuManagementControllerSpecification {
               exampleName = "카테고리당 메뉴 생성 가능 최대 개수(50)를 초과한 경우"
           ),
           @ApiErrorResponse(
+              code = ErrorCode.INVALID_DISCOUNT_OPTION_PRICE,
+              exampleName = "메뉴 할인 옵션 가격이 메뉴 가격보다 큰 경우"
+          ),
+          @ApiErrorResponse(
               code = ErrorCode.UNAUTHORIZED,
               exampleName = "액세스 토큰이 유효하지 않은 경우"
           ),

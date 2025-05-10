@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.menu.service;
 
+import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
@@ -17,6 +18,18 @@ public class MenuValidator {
     if (menuCount >= 50) {
       throw new BusinessException(ErrorCode.EXCEED_MAXIMUM_MENU_COUNT);
     }
+  }
+
+  public void validateOptionPrice(MenuOptionGroup menuOptionGroup) {
+    long menuPrice = menuOptionGroup.getMenu().getPrice();
+    menuOptionGroup.getMenuOptions()
+        .stream()
+        .filter(menuOption -> menuOption.getPrice() < 0)
+        .forEach(menuOption -> {
+          if (Math.abs(menuOption.getPrice()) > menuPrice) {
+            throw new BusinessException(ErrorCode.INVALID_DISCOUNT_OPTION_PRICE);
+          }
+        });
   }
 
 }
