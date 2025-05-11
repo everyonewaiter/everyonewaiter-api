@@ -23,7 +23,12 @@ class StoreRepositoryImpl implements StoreRepository {
 
   @Override
   public boolean existsById(Long storeId) {
-    return storeJpaRepository.existsById(storeId);
+    Integer existsStore = queryFactory
+        .selectOne()
+        .from(store)
+        .where(store.id.eq(storeId))
+        .fetchFirst();
+    return existsStore != null;
   }
 
   @Override
