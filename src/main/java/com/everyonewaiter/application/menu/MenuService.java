@@ -10,9 +10,11 @@ import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
 import com.everyonewaiter.domain.menu.repository.CategoryRepository;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
 import com.everyonewaiter.domain.menu.service.MenuValidator;
+import com.everyonewaiter.global.support.CacheNameHolder;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,7 @@ public class MenuService {
   private final MenuRepository menuRepository;
 
   @Transactional
+  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
   public Long create(Long categoryId, Long storeId, MenuWrite.Create request) {
     Category category = categoryRepository.findByIdAndStoreIdOrThrow(categoryId, storeId);
     menuValidator.validateExceedMaxCount(categoryId);
@@ -71,6 +74,7 @@ public class MenuService {
   }
 
   @Transactional
+  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
   public void movePosition(
       Long sourceId,
       Long targetId,
@@ -88,6 +92,7 @@ public class MenuService {
   }
 
   @Transactional
+  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
   public void delete(Long menuId, Long storeId, Long categoryId) {
     Menu menu = menuRepository.findByIdAndStoreIdAndCategoryIdOrThrow(menuId, storeId, categoryId);
     menu.delete();

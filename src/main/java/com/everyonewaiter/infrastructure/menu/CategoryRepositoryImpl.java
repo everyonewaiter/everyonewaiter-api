@@ -49,7 +49,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
         .select(category)
         .from(category)
         .where(category.storeId.eq(storeId))
-        .orderBy(category.position.value.asc())
+        .orderBy(category.position.value.asc(), category.id.asc())
         .fetch();
   }
 
