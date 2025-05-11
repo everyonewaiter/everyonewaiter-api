@@ -67,4 +67,10 @@ public class CategoryService {
     return CategoryResponse.Simples.from(categories);
   }
 
+  @Transactional(readOnly = true)
+  public CategoryResponse.All readAllWithMenus(Long storeId) {
+    List<Category> categories = categoryRepository.findAll(storeId);
+    return CategoryResponse.All.from(categories);
+  }
+
 }

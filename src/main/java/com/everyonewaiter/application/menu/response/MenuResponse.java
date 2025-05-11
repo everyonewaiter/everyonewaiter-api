@@ -4,7 +4,6 @@ import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.menu.entity.MenuOption;
 import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -105,13 +104,7 @@ public class MenuResponse {
       boolean printEnabled,
 
       @Schema(description = "메뉴 옵션 그룹 목록")
-      List<OptionGroup> menuOptionGroups,
-
-      @Schema(description = "메뉴 생성일", example = "2025-01-01 12:00:00")
-      Instant createdAt,
-
-      @Schema(description = "메뉴 수정일", example = "2025-01-01 12:00:00")
-      Instant updatedAt
+      List<OptionGroup> menuOptionGroups
   ) {
 
     public static Detail from(Menu menu) {
@@ -129,9 +122,7 @@ public class MenuResponse {
           menu.getMenuOptionGroups()
               .stream()
               .map(OptionGroup::from)
-              .toList(),
-          menu.getCreatedAt(),
-          menu.getUpdatedAt()
+              .toList()
       );
     }
 

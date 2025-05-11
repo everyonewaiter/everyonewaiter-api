@@ -18,6 +18,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -73,7 +74,7 @@ public class Menu extends AggregateRoot<Menu> {
   @Embedded
   private Position position;
 
-  @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST, orphanRemoval = true)
+  @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderBy("position asc, id asc")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private List<MenuOptionGroup> menuOptionGroups = new ArrayList<>();
@@ -116,6 +117,10 @@ public class Menu extends AggregateRoot<Menu> {
 
   public void delete() {
     registerEvent(new MenuDeleteEvent(image));
+  }
+
+  public List<MenuOptionGroup> getMenuOptionGroups() {
+    return Collections.unmodifiableList(menuOptionGroups);
   }
 
 }

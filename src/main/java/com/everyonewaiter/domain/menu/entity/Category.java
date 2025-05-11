@@ -10,6 +10,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -59,6 +60,10 @@ public class Category extends AggregateRoot<Category> {
 
   public void delete() {
     registerEvent(new CategoryDeleteEvent(getId()));
+  }
+
+  public List<Menu> getMenus() {
+    return Collections.unmodifiableList(menus);
   }
 
 }
