@@ -51,12 +51,12 @@ public class BusinessLicense {
     return businessLicense;
   }
 
-  public void update(String landline) {
+  public void updateLandline(String landline) {
     this.landline = landline;
   }
 
-  public void update(String name, String ceoName, String address, String landline, String license) {
-    update(name, ceoName, address, landline, license, licenseImage);
+  public void updateLicenseImage(String licenseImage) {
+    this.licenseImage = licenseImage;
   }
 
   public void update(
@@ -64,15 +64,13 @@ public class BusinessLicense {
       String ceoName,
       String address,
       String landline,
-      String license,
-      String licenseImage
+      String license
   ) {
     this.name = name;
     this.ceoName = ceoName;
     this.address = address;
     this.landline = landline;
     this.license = license;
-    this.licenseImage = licenseImage;
   }
 
 }

@@ -60,15 +60,14 @@ public class RegistrationService {
   ) {
     Registration registration =
         registrationRepository.findByIdAndAccountIdOrThrow(registrationId, accountId);
-    registration.deleteLicenseImage();
     registration.reapply(
         request.name(),
         request.ceoName(),
         request.address(),
         request.landline(),
-        request.license(),
-        imageManager.upload(request.file(), "license")
+        request.license()
     );
+    registration.updateLicenseImage(imageManager.upload(request.file(), "license"));
     registrationRepository.save(registration);
   }
 

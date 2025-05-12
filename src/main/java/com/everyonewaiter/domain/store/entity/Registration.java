@@ -56,31 +56,23 @@ public class Registration extends AggregateRoot<Registration> {
       String landline,
       String license
   ) {
-    reapply(name, ceoName, address, landline, license, businessLicense.getLicenseImage());
-  }
-
-  public void reapply(
-      String name,
-      String ceoName,
-      String address,
-      String landline,
-      String license,
-      String licenseImage
-  ) {
     if (isRejected()) {
       this.status = Status.REAPPLY;
-      this.businessLicense.update(name, ceoName, address, landline, license, licenseImage);
+      this.businessLicense.update(name, ceoName, address, landline, license);
       registerEvent(new RegistrationReapplyEvent(businessLicense.getName(), rejectReason));
     } else {
       throw new BusinessException(ErrorCode.ONLY_REJECTED_REGISTRATION_CAN_BE_REAPPLY);
     }
   }
 
-  public void deleteLicenseImage() {
-    registerEvent(new LicenseImageDeleteEvent(
-        businessLicense.getName(),
-        businessLicense.getLicenseImage()
-    ));
+  public void updateLicenseImage(String licenseImage) {
+    registerEvent(
+        new LicenseImageDeleteEvent(
+            businessLicense.getName(),
+            businessLicense.getLicenseImage()
+        )
+    );
+    this.businessLicense.updateLicenseImage(licenseImage);
   }
 
   public void approve() {

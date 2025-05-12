@@ -63,7 +63,7 @@ public class Store extends AggregateRoot<Store> {
       List<CountryOfOrigin> countryOfOrigins,
       List<StaffCallOption> staffCallOptions
   ) {
-    this.businessLicense.update(landline);
+    this.businessLicense.updateLandline(landline);
     this.setting.update(
         extraTableCount,
         printerLocation,
