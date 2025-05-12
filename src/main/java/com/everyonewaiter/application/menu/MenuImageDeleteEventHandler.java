@@ -20,7 +20,7 @@ class MenuImageDeleteEventHandler {
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void consume(MenuImageDeleteEvent event) {
-    LOGGER.info("[메뉴 삭제] 이미지: {}", event.menuImage());
+    LOGGER.info("[메뉴 이미지 삭제] 이미지: {}", event.menuImage());
     imageManager.delete(event.menuImage());
   }
 
