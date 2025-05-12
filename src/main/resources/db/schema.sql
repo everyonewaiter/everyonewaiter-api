@@ -126,10 +126,10 @@ create table menu_option_group
 
 create table menu_option
 (
-    id                   bigint primary key,
     menu_option_group_id bigint      not null,
     name                 varchar(30) not null,
     price                bigint      not null,
     position             int         not null,
+    constraint pk_menu_option primary key (menu_option_group_id, name, price, position),
     constraint fk_menu_option_menu_option_group_id foreign key (menu_option_group_id) references menu_option_group (id) on delete cascade
 );

@@ -20,8 +20,7 @@ public class MenuValidator {
     }
   }
 
-  public void validateOptionPrice(MenuOptionGroup menuOptionGroup) {
-    long menuPrice = menuOptionGroup.getMenu().getPrice();
+  public void validateOptionPrice(long menuPrice, MenuOptionGroup menuOptionGroup) {
     menuOptionGroup.getMenuOptions()
         .stream()
         .filter(menuOption -> menuOption.getPrice() < 0)

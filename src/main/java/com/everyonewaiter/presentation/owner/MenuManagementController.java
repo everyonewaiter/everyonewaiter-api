@@ -1,6 +1,7 @@
 package com.everyonewaiter.presentation.owner;
 
 import com.everyonewaiter.application.menu.MenuService;
+import com.everyonewaiter.application.menu.request.MenuWrite;
 import com.everyonewaiter.application.menu.response.MenuResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -64,8 +66,44 @@ class MenuManagementController implements MenuManagementControllerSpecification 
       @RequestPart @Valid MenuWriteRequest.Create request,
       @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
   ) {
-    Long menuId = menuService.create(categoryId, storeId, request.toDomainDto(file));
+    MenuWrite.Create menuCreateRequest = request.toDomainDto(file);
+    Long menuId = menuService.create(categoryId, storeId, menuCreateRequest);
+    menuService.replaceMenuOptionGroups(menuId, storeId, menuCreateRequest.menuOptionGroups());
     return ResponseEntity.created(URI.create(menuId.toString())).build();
+  }
+
+  @Override
+  @StoreOwner
+  @PutMapping("/stores/{storeId}/menus/{menuId}")
+  public ResponseEntity<Void> update(
+      @PathVariable Long storeId,
+      @PathVariable Long menuId,
+      @RequestBody @Valid MenuWriteRequest.Update request,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    MenuWrite.Update menuUpdateRequest = request.toDomainDto();
+    menuService.update(menuId, storeId, menuUpdateRequest);
+    menuService.replaceMenuOptionGroups(menuId, storeId, menuUpdateRequest.menuOptionGroups());
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @StoreOwner
+  @PutMapping(
+      value = "/stores/{storeId}/menus/{menuId}/with-image",
+      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE}
+  )
+  public ResponseEntity<Void> updateWithImage(
+      @PathVariable Long storeId,
+      @PathVariable Long menuId,
+      @RequestPart MultipartFile file,
+      @RequestPart @Valid MenuWriteRequest.Update request,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    MenuWrite.Update menuUpdateRequest = request.toDomainDto();
+    menuService.update(menuId, storeId, menuUpdateRequest, file);
+    menuService.replaceMenuOptionGroups(menuId, storeId, menuUpdateRequest.menuOptionGroups());
+    return ResponseEntity.noContent().build();
   }
 
   @Override

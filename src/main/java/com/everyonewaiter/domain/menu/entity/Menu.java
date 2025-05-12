@@ -1,9 +1,8 @@
 package com.everyonewaiter.domain.menu.entity;
 
-import com.everyonewaiter.domain.menu.event.MenuDeleteEvent;
+import com.everyonewaiter.domain.menu.event.MenuImageDeleteEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.domain.entity.Position;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embedded;
@@ -24,8 +23,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Table(name = "menu")
 @Entity
@@ -74,9 +71,8 @@ public class Menu extends AggregateRoot<Menu> {
   @Embedded
   private Position position;
 
-  @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "menu")
   @OrderBy("position asc, id asc")
-  @OnDelete(action = OnDeleteAction.CASCADE)
   private List<MenuOptionGroup> menuOptionGroups = new ArrayList<>();
 
   public static Menu create(
@@ -103,12 +99,30 @@ public class Menu extends AggregateRoot<Menu> {
     menu.image = image;
     menu.printEnabled = printEnabled;
     menu.position = new Position(lastPosition + 1);
-    category.addMenu(menu);
     return menu;
   }
 
-  public void addMenuOptionGroup(MenuOptionGroup menuOptionGroup) {
-    this.menuOptionGroups.add(menuOptionGroup);
+  public void update(
+      String name,
+      String description,
+      long price,
+      int spicy,
+      State state,
+      Label label,
+      boolean printEnabled
+  ) {
+    this.name = name;
+    this.description = description;
+    this.price = price;
+    this.spicy = spicy;
+    this.state = state;
+    this.label = label;
+    this.printEnabled = printEnabled;
+  }
+
+  public void updateMenuImage(String image) {
+    registerEvent(new MenuImageDeleteEvent(this.image));
+    this.image = image;
   }
 
   public boolean movePosition(Menu other, Position.Move where) {
@@ -116,7 +130,7 @@ public class Menu extends AggregateRoot<Menu> {
   }
 
   public void delete() {
-    registerEvent(new MenuDeleteEvent(image));
+    registerEvent(new MenuImageDeleteEvent(image));
   }
 
   public List<MenuOptionGroup> getMenuOptionGroups() {

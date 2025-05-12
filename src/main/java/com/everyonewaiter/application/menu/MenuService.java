@@ -11,12 +11,14 @@ import com.everyonewaiter.domain.menu.repository.CategoryRepository;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
 import com.everyonewaiter.domain.menu.service.MenuValidator;
 import com.everyonewaiter.global.support.CacheNameHolder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -47,30 +49,82 @@ public class MenuService {
         lastPosition
     );
 
+    return menuRepository.save(menu).getId();
+  }
+
+  @Transactional
+  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  public void update(Long menuId, Long storeId, MenuWrite.Update request) {
+    Menu menu = menuRepository.findByIdAndStoreIdOrThrow(menuId, storeId);
+    menu.update(
+        request.name(),
+        request.description(),
+        request.price(),
+        request.spicy(),
+        request.state(),
+        request.label(),
+        request.printEnabled()
+    );
+    menuRepository.save(menu);
+  }
+
+  @Transactional
+  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  public void update(
+      Long menuId,
+      Long storeId,
+      MenuWrite.Update request,
+      MultipartFile file
+  ) {
+    Menu menu = menuRepository.findByIdAndStoreIdOrThrow(menuId, storeId);
+    menu.update(
+        request.name(),
+        request.description(),
+        request.price(),
+        request.spicy(),
+        request.state(),
+        request.label(),
+        request.printEnabled()
+    );
+    menu.updateMenuImage(imageManager.upload(file, "menu"));
+    menuRepository.save(menu);
+  }
+
+  @Transactional
+  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  public void replaceMenuOptionGroups(
+      Long menuId,
+      Long storeId,
+      List<MenuWrite.OptionGroup> request
+  ) {
+    Menu menu = menuRepository.findByIdAndStoreIdOrThrow(menuId, storeId);
+    List<MenuOptionGroup> menuOptionGroups = new ArrayList<>();
+
     AtomicInteger menuOptionGroupPosition = new AtomicInteger(1);
-    for (MenuWrite.CreateOptionGroup createOptionGroup : request.menuOptionGroups()) {
+    for (MenuWrite.OptionGroup optionGroup : request) {
       MenuOptionGroup menuOptionGroup = MenuOptionGroup.create(
           menu,
-          createOptionGroup.name(),
-          createOptionGroup.type(),
-          createOptionGroup.printEnabled(),
+          optionGroup.name(),
+          optionGroup.type(),
+          optionGroup.printEnabled(),
           menuOptionGroupPosition.getAndIncrement()
       );
 
       AtomicInteger menuOptionPosition = new AtomicInteger(1);
-      for (MenuWrite.CreateOption createOption : createOptionGroup.menuOptions()) {
-        MenuOption.create(
-            menuOptionGroup,
-            createOption.name(),
-            createOption.price(),
+      for (MenuWrite.Option option : optionGroup.menuOptions()) {
+        MenuOption menuOption = MenuOption.create(
+            option.name(),
+            option.price(),
             menuOptionPosition.getAndIncrement()
         );
+        menuOptionGroup.addMenuOption(menuOption);
       }
 
-      menuValidator.validateOptionPrice(menuOptionGroup);
+      menuValidator.validateOptionPrice(menu.getPrice(), menuOptionGroup);
+      menuOptionGroups.add(menuOptionGroup);
     }
 
-    return menuRepository.save(menu).getId();
+    menuRepository.saveAllMenuOptionGroups(menu.getId(), menuOptionGroups);
   }
 
   @Transactional
@@ -81,8 +135,8 @@ public class MenuService {
       Long storeId,
       MenuWrite.MovePosition request
   ) {
-    Menu source = menuRepository.findByIdAndStoreId(sourceId, storeId);
-    Menu target = menuRepository.findByIdAndStoreId(targetId, storeId);
+    Menu source = menuRepository.findByIdAndStoreIdOrThrow(sourceId, storeId);
+    Menu target = menuRepository.findByIdAndStoreIdOrThrow(targetId, storeId);
 
     boolean isMoved = source.movePosition(target, request.where());
     if (isMoved) {

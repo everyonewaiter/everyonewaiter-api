@@ -163,9 +163,6 @@ public class MenuResponse {
 
   @Schema(name = "MenuResponse.Option")
   public record Option(
-      @Schema(description = "메뉴 옵션 ID", example = "\"694865267482835533\"")
-      String menuOptionId,
-
       @Schema(description = "메뉴 옵션명", example = "미디움")
       String name,
 
@@ -175,7 +172,6 @@ public class MenuResponse {
 
     public static Option from(MenuOption menuOption) {
       return new Option(
-          Objects.requireNonNull(menuOption.getId()).toString(),
           menuOption.getName(),
           menuOption.getPrice()
       );

@@ -19,22 +19,35 @@ public class MenuWrite {
       Menu.State state,
       Menu.Label label,
       boolean printEnabled,
-      List<CreateOptionGroup> menuOptionGroups,
+      List<OptionGroup> menuOptionGroups,
       MultipartFile file
   ) {
 
   }
 
-  public record CreateOptionGroup(
+  public record Update(
       String name,
-      MenuOptionGroup.Type type,
+      String description,
+      long price,
+      int spicy,
+      Menu.State state,
+      Menu.Label label,
       boolean printEnabled,
-      List<CreateOption> menuOptions
+      List<OptionGroup> menuOptionGroups
   ) {
 
   }
 
-  public record CreateOption(String name, long price) {
+  public record OptionGroup(
+      String name,
+      MenuOptionGroup.Type type,
+      boolean printEnabled,
+      List<Option> menuOptions
+  ) {
+
+  }
+
+  public record Option(String name, long price) {
 
   }
 

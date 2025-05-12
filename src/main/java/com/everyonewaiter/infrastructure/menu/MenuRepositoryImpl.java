@@ -3,6 +3,7 @@ package com.everyonewaiter.infrastructure.menu;
 import static com.everyonewaiter.domain.menu.entity.QMenu.menu;
 
 import com.everyonewaiter.domain.menu.entity.Menu;
+import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
@@ -18,6 +19,7 @@ class MenuRepositoryImpl implements MenuRepository {
 
   private final JPAQueryFactory queryFactory;
   private final MenuJpaRepository menuJpaRepository;
+  private final MenuOptionGroupJpaRepository menuOptionGroupJpaRepository;
 
   @Override
   public Long countByCategoryId(Long categoryId) {
@@ -58,7 +60,7 @@ class MenuRepositoryImpl implements MenuRepository {
   }
 
   @Override
-  public Menu findByIdAndStoreId(Long menuId, Long storeId) {
+  public Menu findByIdAndStoreIdOrThrow(Long menuId, Long storeId) {
     return menuJpaRepository.findByIdAndStoreId(menuId, storeId)
         .orElseThrow(() -> new BusinessException(ErrorCode.MENU_NOT_FOUND));
   }
@@ -72,6 +74,12 @@ class MenuRepositoryImpl implements MenuRepository {
   @Override
   public Menu save(Menu menu) {
     return menuJpaRepository.save(menu);
+  }
+
+  @Override
+  public void saveAllMenuOptionGroups(Long menuId, List<MenuOptionGroup> menuOptionGroups) {
+    menuOptionGroupJpaRepository.deleteAllByMenuId(menuId);
+    menuOptionGroupJpaRepository.saveAll(menuOptionGroups);
   }
 
   @Override

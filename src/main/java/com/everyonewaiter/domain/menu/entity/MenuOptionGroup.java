@@ -2,8 +2,9 @@ package com.everyonewaiter.domain.menu.entity;
 
 import com.everyonewaiter.global.domain.entity.Aggregate;
 import com.everyonewaiter.global.domain.entity.Position;
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,7 +12,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
@@ -35,6 +35,7 @@ public class MenuOptionGroup extends Aggregate {
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "menu_id", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private Menu menu;
 
   @Column(name = "name", nullable = false)
@@ -50,9 +51,9 @@ public class MenuOptionGroup extends Aggregate {
   @Embedded
   private Position position;
 
-  @OneToMany(mappedBy = "menuOptionGroup", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderBy("position asc, id asc")
-  @OnDelete(action = OnDeleteAction.CASCADE)
+  @ElementCollection
+  @CollectionTable(name = "menu_option", joinColumns = @JoinColumn(name = "menu_option_group_id"))
+  @OrderBy("position asc")
   private List<MenuOption> menuOptions = new ArrayList<>();
 
   public static MenuOptionGroup create(
@@ -68,7 +69,6 @@ public class MenuOptionGroup extends Aggregate {
     menuOptionGroup.type = type;
     menuOptionGroup.printEnabled = printEnabled;
     menuOptionGroup.position = new Position(position);
-    menu.addMenuOptionGroup(menuOptionGroup);
     return menuOptionGroup;
   }
 

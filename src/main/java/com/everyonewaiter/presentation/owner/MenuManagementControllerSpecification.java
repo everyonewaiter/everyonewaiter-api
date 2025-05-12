@@ -111,6 +111,75 @@ interface MenuManagementControllerSpecification {
       @Parameter(hidden = true) Account account
   );
 
+  @Operation(summary = "메뉴 수정", description = "메뉴 수정 API")
+  @ApiResponse(responseCode = "204", description = "메뉴 수정 성공")
+  @ApiErrorResponses(
+      summary = "메뉴 수정 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.INVALID_DISCOUNT_OPTION_PRICE,
+              exampleName = "메뉴 할인 옵션 가격이 메뉴 가격보다 큰 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "사장님 권한이 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장 ID로 사장님 소유의 매장을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.MENU_NOT_FOUND,
+              exampleName = "메뉴 ID로 매장의 메뉴를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> update(
+      Long storeId,
+      Long menuId,
+      @RequestBody MenuWriteRequest.Update request,
+      @Parameter(hidden = true) Account account
+  );
+
+  @Operation(summary = "메뉴 수정 (이미지 포함)", description = "메뉴 수정 (이미지 포함) API")
+  @ApiResponse(responseCode = "204", description = "메뉴 수정 (이미지 포함) 성공")
+  @ApiErrorResponses(
+      summary = "메뉴 수정 (이미지 포함) 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.INVALID_DISCOUNT_OPTION_PRICE,
+              exampleName = "메뉴 할인 옵션 가격이 메뉴 가격보다 큰 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "사장님 권한이 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장 ID로 사장님 소유의 매장을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.MENU_NOT_FOUND,
+              exampleName = "메뉴 ID로 매장의 메뉴를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> updateWithImage(
+      Long storeId,
+      Long menuId,
+      MultipartFile file,
+      MenuWriteRequest.Update request,
+      @Parameter(hidden = true) Account account
+  );
+
   @Operation(
       summary = "메뉴 순서 이동",
       description = "메뉴 순서 이동 API<br/><br/>"

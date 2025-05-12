@@ -69,7 +69,105 @@ Content-Type: application/json
 
 --MenuBoundary--
 
-### 2. 메뉴 순서 이동
+### 2. 메뉴 수정
+PUT {{url}}/v1/stores/706810975107825958/menus/709828383803558269
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "name": "등심 스테이크",
+  "description": "",
+  "price": 39900,
+  "spicy": 0,
+  "state": "DEFAULT",
+  "label": "BEST",
+  "printEnabled": true,
+  "menuOptionGroups": [
+    {
+      "name": "굽기",
+      "type": "MANDATORY",
+      "printEnabled": true,
+      "menuOptions": [
+        {
+          "name": "레어",
+          "price": 0
+        },
+        {
+          "name": "미디움 레어",
+          "price": 0
+        },
+        {
+          "name": "미디움",
+          "price": 0
+        },
+        {
+          "name": "미디움 웰던",
+          "price": 0
+        },
+        {
+          "name": "웰던",
+          "price": 0
+        }
+      ]
+    }
+  ]
+}
+
+### 3. 메뉴 수정 (이미지 포함)
+PUT {{url}}/v1/stores/706810975107825958/menus/709828383803558269/with-image
+Content-Type: multipart/form-data boundary=MenuBoundary
+Authorization: Bearer {{accessToken}}
+
+--MenuBoundary
+Content-Disposition: form-data; name="file"; filename="_logo.png"
+Content-Type: image/png
+
+< ./_logo.png
+
+--MenuBoundary
+Content-Disposition: form-data; name="request"
+Content-Type: application/json
+
+{
+  "name": "등심 스테이크",
+  "description": "",
+  "price": 39900,
+  "spicy": 0,
+  "state": "DEFAULT",
+  "label": "BEST",
+  "printEnabled": true,
+  "menuOptionGroups": [
+    {
+      "name": "굽기",
+      "type": "MANDATORY",
+      "printEnabled": true,
+      "menuOptions": [
+        {
+          "name": "레어",
+          "price": 0
+        },
+        {
+          "name": "미디움 레어",
+          "price": 0
+        },
+        {
+          "name": "미디움",
+          "price": 0
+        },
+        {
+          "name": "미디움 웰던",
+          "price": 0
+        },
+        {
+          "name": "웰던",
+          "price": 0
+        }
+      ]
+    }
+  ]
+}
+
+### 4. 메뉴 순서 이동
 POST {{url}}/v1/stores/706810975107825958/menus/708742442351738707/move/708742740151516678
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
@@ -78,14 +176,14 @@ Authorization: Bearer {{accessToken}}
   "where": "NEXT"
 }
 
-### 3. 메뉴 삭제
+### 5. 메뉴 삭제
 DELETE {{url}}/v1/stores/706810975107825958/categories/708358198990457858/menus/708540761083242528
 Authorization: Bearer {{accessToken}}
 
-### 4. 메뉴 목록 조회
+### 6. 메뉴 목록 조회
 GET {{url}}/v1/stores/706810975107825958/categories/708358198990457858/menus
 Authorization: Bearer {{accessToken}}
 
-### 5. 메뉴 상세 조회
+### 7. 메뉴 상세 조회
 GET {{url}}/v1/stores/706810975107825958/categories/708358198990457858/menus/708742740151516678
 Authorization: Bearer {{accessToken}}

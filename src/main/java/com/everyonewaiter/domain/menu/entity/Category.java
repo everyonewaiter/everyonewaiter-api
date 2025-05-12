@@ -46,10 +46,6 @@ public class Category extends AggregateRoot<Category> {
     return category;
   }
 
-  public void addMenu(Menu menu) {
-    this.menus.add(menu);
-  }
-
   public void update(String name) {
     this.name = name;
   }

@@ -1,6 +1,7 @@
 package com.everyonewaiter.domain.menu.repository;
 
 import com.everyonewaiter.domain.menu.entity.Menu;
+import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
 import java.util.List;
 
 public interface MenuRepository {
@@ -13,11 +14,13 @@ public interface MenuRepository {
 
   List<Menu> findAllByStoreIdAndCategoryId(Long storeId, Long categoryId);
 
-  Menu findByIdAndStoreId(Long menuId, Long storeId);
+  Menu findByIdAndStoreIdOrThrow(Long menuId, Long storeId);
 
   Menu findByIdAndStoreIdAndCategoryIdOrThrow(Long menuId, Long storeId, Long categoryId);
 
   Menu save(Menu menu);
+
+  void saveAllMenuOptionGroups(Long menuId, List<MenuOptionGroup> menuOptionGroups);
 
   void shiftPosition(Menu source);
 
