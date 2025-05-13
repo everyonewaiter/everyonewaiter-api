@@ -133,3 +133,20 @@ create table menu_option
     constraint pk_menu_option primary key (menu_option_group_id, name, price, position),
     constraint fk_menu_option_menu_option_group_id foreign key (menu_option_group_id) references menu_option_group (id) on delete cascade
 );
+
+create table waiting
+(
+    id                      bigint primary key,
+    store_id                bigint                                      not null,
+    phone_number            char(11)                                    not null,
+    adult                   int                                         not null,
+    infant                  int                                         not null,
+    number                  int                                         not null,
+    init_waiting_team_count int                                         not null,
+    access_key              varchar(30)                                 not null,
+    call_count              int                                         not null,
+    last_call_time          datetime(6)                                 not null,
+    status                  enum ('REGISTRATION', 'CANCEL', 'COMPLETE') not null,
+    created_at              datetime(6)                                 not null,
+    updated_at              datetime(6)                                 not null
+);

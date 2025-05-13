@@ -70,6 +70,9 @@ public enum ErrorCode {
   EXCEED_MAXIMUM_MENU_COUNT(BAD_REQUEST, "메뉴는 카테고리당 최대 50개까지 등록할 수 있어요."),
   INVALID_DISCOUNT_OPTION_PRICE(BAD_REQUEST, "할인 옵션의 가격은 메뉴 가격보다 작아야 해요."),
   MENU_NOT_FOUND(NOT_FOUND, "메뉴를 찾을 수 없어요."),
+
+  // WAITING
+  EXCEED_MAXIMUM_CUSTOMER_CALL_COUNT(BAD_REQUEST, "손님 입장 안내 호출은 최대 5회까지 가능해요."),
   ;
 
   private final HttpStatus status;
