@@ -146,7 +146,7 @@ create table waiting
     access_key              varchar(30)                                 not null,
     call_count              int                                         not null,
     last_call_time          datetime(6)                                 not null,
-    status                  enum ('REGISTRATION', 'CANCEL', 'COMPLETE') not null,
+    state                   enum ('REGISTRATION', 'CANCEL', 'COMPLETE') not null,
     created_at              datetime(6)                                 not null,
     updated_at              datetime(6)                                 not null
 );

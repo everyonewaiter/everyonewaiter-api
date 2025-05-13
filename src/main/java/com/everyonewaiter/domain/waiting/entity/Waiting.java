@@ -1,6 +1,7 @@
 package com.everyonewaiter.domain.waiting.entity;
 
 import com.everyonewaiter.domain.store.entity.Store;
+import com.everyonewaiter.domain.waiting.event.WaitingRegistrationEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.support.Tsid;
 import jakarta.persistence.Column;
@@ -25,7 +26,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Waiting extends AggregateRoot<Waiting> {
 
-  public enum Status {REGISTRATION, CANCEL, COMPLETE}
+  public enum State {REGISTRATION, CANCEL, COMPLETE}
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "store_id", nullable = false)
@@ -53,7 +54,37 @@ public class Waiting extends AggregateRoot<Waiting> {
   private CustomerCallCount customerCallCount = new CustomerCallCount(0, Instant.ofEpochMilli(0));
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "status", nullable = false)
-  private Status status = Status.REGISTRATION;
+  @Column(name = "state", nullable = false)
+  private State state = State.REGISTRATION;
+
+  public static Waiting create(
+      Store store,
+      String phoneNumber,
+      int adult,
+      int infant,
+      int lastWaitingNumber,
+      int initWaitingTeamCount
+  ) {
+    Waiting waiting = new Waiting();
+    waiting.store = store;
+    waiting.phoneNumber = phoneNumber;
+    waiting.adult = adult;
+    waiting.infant = infant;
+    waiting.number = lastWaitingNumber + 1;
+    waiting.initWaitingTeamCount = initWaitingTeamCount;
+    waiting.registerEvent(
+        new WaitingRegistrationEvent(
+            store.getId(),
+            store.getBusinessLicense().getName(),
+            store.getBusinessLicense().getLandline(),
+            waiting.phoneNumber,
+            waiting.adult,
+            waiting.infant,
+            waiting.number,
+            waiting.accessKey
+        )
+    );
+    return waiting;
+  }
 
 }
