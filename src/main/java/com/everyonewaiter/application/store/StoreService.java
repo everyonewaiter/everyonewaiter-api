@@ -30,17 +30,6 @@ public class StoreService {
     storeValidator.validateOwner(storeId, accountId);
   }
 
-  public StoreResponse.Simples readAllSimpleView(Long accountId) {
-    List<StoreView.Simple> views = storeRepository.findAllSimpleViewByAccountId(accountId);
-    return StoreResponse.Simples.from(views);
-  }
-
-  public StoreResponse.Detail read(Long storeId, Long accountId) {
-    return storeRepository.findByIdAndAccountId(storeId, accountId)
-        .map(StoreResponse.Detail::from)
-        .orElseThrow(() -> new BusinessException(ErrorCode.STORE_NOT_FOUND));
-  }
-
   @Transactional
   public void update(Long storeId, Long accountId, StoreWrite.Update request) {
     Store store = storeRepository.findByIdAndAccountIdOrThrow(storeId, accountId);
@@ -62,6 +51,31 @@ public class StoreService {
             .toList()
     );
     storeRepository.save(store);
+  }
+
+  @Transactional
+  public void open(Long storeId) {
+    Store store = storeRepository.findByIdOrThrow(storeId);
+    store.open();
+    storeRepository.save(store);
+  }
+
+  @Transactional
+  public void close(Long storeId) {
+    Store store = storeRepository.findByIdOrThrow(storeId);
+    store.close();
+    storeRepository.save(store);
+  }
+
+  public StoreResponse.Simples readAllSimpleView(Long accountId) {
+    List<StoreView.Simple> views = storeRepository.findAllSimpleViewByAccountId(accountId);
+    return StoreResponse.Simples.from(views);
+  }
+
+  public StoreResponse.Detail read(Long storeId, Long accountId) {
+    return storeRepository.findByIdAndAccountId(storeId, accountId)
+        .map(StoreResponse.Detail::from)
+        .orElseThrow(() -> new BusinessException(ErrorCode.STORE_NOT_FOUND));
   }
 
 }

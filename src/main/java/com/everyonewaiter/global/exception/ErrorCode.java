@@ -49,6 +49,8 @@ public enum ErrorCode {
   EXPIRED_VERIFICATION_EMAIL(BAD_REQUEST, "이메일 인증 유효기간이 만료되었어요. 이메일 인증을 다시 진행해 주세요."),
 
   // STORE
+  ALREADY_STORE_OPENED(BAD_REQUEST, "이미 영업중인 매장입니다."),
+  ALREADY_STORE_CLOSED(BAD_REQUEST, "이미 마감이 완료된 매장입니다."),
   ONLY_APPLY_OR_REAPPLY_STATUS_CAN_BE_APPROVE(BAD_REQUEST, "접수 또는 재접수된 매장 등록 신청만 승인할 수 있어요."),
   ONLY_REJECTED_REGISTRATION_CAN_BE_REAPPLY(BAD_REQUEST, "거부된 매장 등록 신청만 재신청할 수 있어요."),
   ONLY_APPLY_OR_REAPPLY_STATUS_CAN_BE_REJECT(BAD_REQUEST, "접수 또는 재접수된 매장 등록 신청만 거부할 수 있어요."),

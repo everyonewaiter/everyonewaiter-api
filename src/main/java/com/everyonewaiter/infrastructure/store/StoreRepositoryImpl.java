@@ -57,6 +57,12 @@ class StoreRepositoryImpl implements StoreRepository {
   }
 
   @Override
+  public Store findByIdOrThrow(Long storeId) {
+    return storeJpaRepository.findById(storeId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.STORE_NOT_FOUND));
+  }
+
+  @Override
   public Store findByIdAndAccountIdOrThrow(Long storeId, Long accountId) {
     return findByIdAndAccountId(storeId, accountId)
         .orElseThrow(() -> new BusinessException(ErrorCode.STORE_NOT_FOUND));

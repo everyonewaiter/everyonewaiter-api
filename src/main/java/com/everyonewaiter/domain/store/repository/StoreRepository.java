@@ -15,6 +15,8 @@ public interface StoreRepository {
 
   Optional<Store> findByIdAndAccountId(Long storeId, Long accountId);
 
+  Store findByIdOrThrow(Long storeId);
+
   Store findByIdAndAccountIdOrThrow(Long storeId, Long accountId);
 
   Store save(Store store);
