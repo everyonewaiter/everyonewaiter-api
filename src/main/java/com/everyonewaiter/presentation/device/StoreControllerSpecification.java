@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "매장")
 interface StoreControllerSpecification {
 
-  @Operation(summary = "매장 오픈", description = "[POS] 매장 오픈 API")
+  @Operation(summary = "[POS] 매장 오픈", description = "매장 오픈 API")
   @ApiResponse(responseCode = "204", description = "매장 오픈 성공")
   @ApiErrorResponses(
       summary = "매장 오픈 실패",
@@ -38,7 +38,7 @@ interface StoreControllerSpecification {
   )
   ResponseEntity<Void> open(@Parameter(hidden = true) Device device);
 
-  @Operation(summary = "매장 마감", description = "[POS] 매장 마감 API")
+  @Operation(summary = "[POS] 매장 마감", description = "매장 마감 API")
   @ApiResponse(responseCode = "204", description = "매장 마감 성공")
   @ApiErrorResponses(
       summary = "매장 마감 실패",
