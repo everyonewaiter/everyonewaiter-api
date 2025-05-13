@@ -5,6 +5,8 @@ import static com.everyonewaiter.domain.waiting.entity.QWaiting.waiting;
 
 import com.everyonewaiter.domain.waiting.entity.Waiting;
 import com.everyonewaiter.domain.waiting.repository.WaitingRepository;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Objects;
@@ -67,6 +69,12 @@ class WaitingRepositoryImpl implements WaitingRepository {
             waiting.createdAt.gt(store.lastOpenedAt)
         )
         .fetch();
+  }
+
+  @Override
+  public Waiting findByIdAndStoreIdOrThrow(Long waitingId, Long storeId) {
+    return waitingJpaRepository.findByIdAndStoreId(waitingId, storeId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.WAITING_NOT_FOUND));
   }
 
   @Override

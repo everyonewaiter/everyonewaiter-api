@@ -10,6 +10,7 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,16 @@ class WaitingController implements WaitingControllerSpecification {
   ) {
     Long waitingId = waitingService.create(device.getStoreId(), request.toDomainDto());
     return ResponseEntity.created(URI.create(waitingId.toString())).build();
+  }
+
+  @Override
+  @PostMapping("/{waitingId}/complete")
+  public ResponseEntity<Void> complete(
+      @PathVariable Long waitingId,
+      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+  ) {
+    waitingService.complete(waitingId, device.getStoreId());
+    return ResponseEntity.noContent().build();
   }
 
 }

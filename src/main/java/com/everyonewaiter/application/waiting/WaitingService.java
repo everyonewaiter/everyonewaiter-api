@@ -42,6 +42,13 @@ public class WaitingService {
     return waitingRepository.save(waiting).getId();
   }
 
+  @Transactional
+  public void complete(Long waitingId, Long storeId) {
+    Waiting waiting = waitingRepository.findByIdAndStoreIdOrThrow(waitingId, storeId);
+    waiting.complete();
+    waitingRepository.save(waiting);
+  }
+
   public WaitingResponse.RegistrationCount getRegistrationCount(Long storeId) {
     int count = waitingRepository.countByStoreIdAndState(storeId, Waiting.State.REGISTRATION);
     return WaitingResponse.RegistrationCount.from(count);

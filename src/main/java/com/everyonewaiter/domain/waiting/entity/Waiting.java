@@ -3,6 +3,8 @@ package com.everyonewaiter.domain.waiting.entity;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.domain.waiting.event.WaitingRegistrationEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.support.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -85,6 +87,18 @@ public class Waiting extends AggregateRoot<Waiting> {
         )
     );
     return waiting;
+  }
+
+  public boolean isRegistration() {
+    return this.state == State.REGISTRATION;
+  }
+
+  public void complete() {
+    if (isRegistration()) {
+      this.state = State.COMPLETE;
+    } else {
+      throw new BusinessException(ErrorCode.ONLY_REGISTRATION_STATE_CAN_BE_COMPLETE);
+    }
   }
 
 }

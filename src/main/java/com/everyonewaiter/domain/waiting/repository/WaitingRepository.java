@@ -13,6 +13,8 @@ public interface WaitingRepository {
 
   List<Waiting> findAllByStoreIdAndState(Long storeId, Waiting.State state);
 
+  Waiting findByIdAndStoreIdOrThrow(Long waitingId, Long storeId);
+
   Waiting save(Waiting waiting);
 
 }
