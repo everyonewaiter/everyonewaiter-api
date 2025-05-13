@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
@@ -149,5 +150,48 @@ interface WaitingControllerSpecification {
       }
   )
   ResponseEntity<Void> complete(Long waitingId, @Parameter(hidden = true) Device device);
+
+  @Operation(summary = "[HALL] 웨이팅 취소", description = "웨이팅 취소 API")
+  @ApiResponse(responseCode = "204", description = "웨이팅 취소 성공")
+  @ApiErrorResponses(
+      summary = "웨이팅 취소 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.ONLY_REGISTRATION_STATE_CAN_BE_CANCEL,
+              exampleName = "웨이팅이 'REGISTRATION' 상태가 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "서명(시그니처)이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 HALL이 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.WAITING_NOT_FOUND,
+              exampleName = "웨이팅 ID로 매장의 웨이팅을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> cancel(Long waitingId, @Parameter(hidden = true) Device device);
+
+  @SecurityRequirements
+  @Operation(summary = "웨이팅 취소", description = "웨이팅 취소 API")
+  @ApiResponse(responseCode = "204", description = "웨이팅 취소 성공")
+  @ApiErrorResponses(
+      summary = "웨이팅 취소 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.ONLY_REGISTRATION_STATE_CAN_BE_CANCEL,
+              exampleName = "웨이팅이 'REGISTRATION' 상태가 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.WAITING_NOT_FOUND,
+              exampleName = "웨이팅 액세스 키로 매장의 웨이팅을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> cancel(Long storeId, String accessKey);
 
 }

@@ -78,6 +78,12 @@ class WaitingRepositoryImpl implements WaitingRepository {
   }
 
   @Override
+  public Waiting findByStoreIdAndAccessKey(Long storeId, String accessKey) {
+    return waitingJpaRepository.findByStoreIdAndAccessKey(storeId, accessKey)
+        .orElseThrow(() -> new BusinessException(ErrorCode.WAITING_NOT_FOUND));
+  }
+
+  @Override
   public Waiting save(Waiting waiting) {
     return waitingJpaRepository.save(waiting);
   }

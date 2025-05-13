@@ -76,6 +76,7 @@ public enum ErrorCode {
   ALREADY_REGISTERED_WAITING(BAD_REQUEST, "이미 웨이팅에 등록되어 있는 휴대폰 번호에요."),
   EXCEED_MAXIMUM_CUSTOMER_CALL_COUNT(BAD_REQUEST, "손님 입장 안내 호출은 최대 5회까지 가능해요."),
   ONLY_REGISTRATION_STATE_CAN_BE_CALL(BAD_REQUEST, "등록 상태의 웨이팅만 손님 입장 안내 호출을 할 수 있어요."),
+  ONLY_REGISTRATION_STATE_CAN_BE_CANCEL(BAD_REQUEST, "등록 상태의 웨이팅만 취소 처리를 할 수 있어요."),
   ONLY_REGISTRATION_STATE_CAN_BE_COMPLETE(BAD_REQUEST, "등록 상태의 웨이팅만 입장 완료 처리를 할 수 있어요."),
   WAITING_NOT_FOUND(NOT_FOUND, "웨이팅을 찾을 수 없어요."),
   ;

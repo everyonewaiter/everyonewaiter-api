@@ -109,4 +109,12 @@ public class Waiting extends AggregateRoot<Waiting> {
     }
   }
 
+  public void cancel() {
+    if (isRegistration()) {
+      this.state = State.CANCEL;
+    } else {
+      throw new BusinessException(ErrorCode.ONLY_REGISTRATION_STATE_CAN_BE_CANCEL);
+    }
+  }
+
 }

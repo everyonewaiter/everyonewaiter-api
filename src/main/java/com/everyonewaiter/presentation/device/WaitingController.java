@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/waitings")
+@RequestMapping("/v1")
 class WaitingController implements WaitingControllerSpecification {
 
   private final WaitingService waitingService;
 
   @Override
-  @GetMapping
+  @GetMapping("/waitings")
   public ResponseEntity<WaitingResponse.Details> getWaitings(
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
   ) {
@@ -32,7 +32,7 @@ class WaitingController implements WaitingControllerSpecification {
   }
 
   @Override
-  @GetMapping("/count")
+  @GetMapping("/waitings/count")
   public ResponseEntity<WaitingResponse.RegistrationCount> count(
       @AuthenticationDevice(purpose = Device.Purpose.WAITING) Device device
   ) {
@@ -40,7 +40,7 @@ class WaitingController implements WaitingControllerSpecification {
   }
 
   @Override
-  @PostMapping
+  @PostMapping("/waitings")
   public ResponseEntity<Void> create(
       @RequestBody @Valid WaitingWriteRequest.Create request,
       @AuthenticationDevice(purpose = Device.Purpose.WAITING) Device device
@@ -50,7 +50,7 @@ class WaitingController implements WaitingControllerSpecification {
   }
 
   @Override
-  @PostMapping("/{waitingId}/call")
+  @PostMapping("/waitings/{waitingId}/call")
   public ResponseEntity<Void> call(
       @PathVariable Long waitingId,
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
@@ -60,12 +60,29 @@ class WaitingController implements WaitingControllerSpecification {
   }
 
   @Override
-  @PostMapping("/{waitingId}/complete")
+  @PostMapping("/waitings/{waitingId}/complete")
   public ResponseEntity<Void> complete(
       @PathVariable Long waitingId,
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
   ) {
     waitingService.complete(waitingId, device.getStoreId());
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @PostMapping("/waitings/{waitingId}/cancel")
+  public ResponseEntity<Void> cancel(
+      @PathVariable Long waitingId,
+      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+  ) {
+    waitingService.cancel(waitingId, device.getStoreId());
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @PostMapping("/stores/{storeId}/waitings/{accessKey}/cancel")
+  public ResponseEntity<Void> cancel(@PathVariable Long storeId, @PathVariable String accessKey) {
+    waitingService.cancel(storeId, accessKey);
     return ResponseEntity.noContent().build();
   }
 

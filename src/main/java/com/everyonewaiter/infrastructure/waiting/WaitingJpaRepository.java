@@ -10,4 +10,6 @@ interface WaitingJpaRepository extends JpaRepository<Waiting, Long> {
 
   Optional<Waiting> findByIdAndStoreId(Long id, Long storeId);
 
+  Optional<Waiting> findByStoreIdAndAccessKey(Long storeId, String accessKey);
+
 }

@@ -15,6 +15,8 @@ public interface WaitingRepository {
 
   Waiting findByIdAndStoreIdOrThrow(Long waitingId, Long storeId);
 
+  Waiting findByStoreIdAndAccessKey(Long storeId, String accessKey);
+
   Waiting save(Waiting waiting);
 
 }
