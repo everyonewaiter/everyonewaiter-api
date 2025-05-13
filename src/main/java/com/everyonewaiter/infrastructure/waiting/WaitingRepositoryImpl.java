@@ -50,6 +50,22 @@ class WaitingRepositoryImpl implements WaitingRepository {
   }
 
   @Override
+  public int countByIdAndStoreIdAndState(Long waitingId, Long storeId, Waiting.State state) {
+    Long waitingCount = queryFactory
+        .select(waiting.count())
+        .from(waiting)
+        .innerJoin(waiting.store, store)
+        .where(
+            waiting.id.lt(waitingId),
+            waiting.store.id.eq(storeId),
+            waiting.state.eq(state),
+            waiting.createdAt.gt(store.lastOpenedAt)
+        )
+        .fetchFirst();
+    return Math.toIntExact(Objects.requireNonNullElse(waitingCount, 0L));
+  }
+
+  @Override
   public boolean existsByPhoneNumberAndState(String phoneNumber, Waiting.State state) {
     return waitingJpaRepository.existsByPhoneNumberAndState(phoneNumber, state);
   }

@@ -61,6 +61,21 @@ interface WaitingControllerSpecification {
   )
   ResponseEntity<WaitingResponse.RegistrationCount> count(@Parameter(hidden = true) Device device);
 
+  @SecurityRequirements
+  @Operation(
+      summary = "내 앞 대기팀 수 조회",
+      description = "내 앞 대기팀 수 조회 API<br/><br/>"
+          + "손님의 휴대폰으로 전송된 알림톡 내용 중 '내 순서 확인하기' 버튼을 통해 내 앞 대기팀 수 를 조회할 수 있습니다.<br/>"
+          + "상태가 취소 또는 완료인 경우 출력할 문구에 대한 분기처리가 필요합니다."
+  )
+  @ApiResponse(responseCode = "200", description = "내 앞 대기팀 수 조회 성공")
+  @ApiErrorResponse(
+      summary = "내 앞 대기팀 수 조회 실패",
+      code = ErrorCode.WAITING_NOT_FOUND,
+      exampleName = "웨이팅 액세스 키로 매장의 웨이팅을 찾을 수 없는 경우"
+  )
+  ResponseEntity<WaitingResponse.MyTurn> myTurn(Long storeId, String accessKey);
+
   @Operation(summary = "[WAITING] 웨이팅 등록", description = "웨이팅 등록 API")
   @ApiResponse(
       responseCode = "201",

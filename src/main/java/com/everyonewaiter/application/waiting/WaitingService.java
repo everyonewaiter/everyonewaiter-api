@@ -75,6 +75,16 @@ public class WaitingService {
     return WaitingResponse.RegistrationCount.from(count);
   }
 
+  public WaitingResponse.MyTurn getMyTurn(Long storeId, String accessKey) {
+    Waiting waiting = waitingRepository.findByStoreIdAndAccessKey(storeId, accessKey);
+    int currentWaitingTeamCount = waitingRepository.countByIdAndStoreIdAndState(
+        waiting.getId(),
+        storeId,
+        Waiting.State.REGISTRATION
+    );
+    return WaitingResponse.MyTurn.of(waiting, currentWaitingTeamCount);
+  }
+
   public WaitingResponse.Details readAll(Long storeId) {
     List<Waiting> waitings = waitingRepository.findAllByStoreIdAndState(
         storeId,

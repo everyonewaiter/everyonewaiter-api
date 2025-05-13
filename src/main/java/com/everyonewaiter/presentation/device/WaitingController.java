@@ -40,6 +40,15 @@ class WaitingController implements WaitingControllerSpecification {
   }
 
   @Override
+  @GetMapping("/stores/{storeId}/waitings/{accessKey}/my-turn")
+  public ResponseEntity<WaitingResponse.MyTurn> myTurn(
+      @PathVariable Long storeId,
+      @PathVariable String accessKey
+  ) {
+    return ResponseEntity.ok(waitingService.getMyTurn(storeId, accessKey));
+  }
+
+  @Override
   @PostMapping("/waitings")
   public ResponseEntity<Void> create(
       @RequestBody @Valid WaitingWriteRequest.Create request,

@@ -23,6 +23,32 @@ public class WaitingResponse {
 
   }
 
+  @Schema(name = "WaitingResponse.MyTurn")
+  public record MyTurn(
+      @Schema(description = "대기 번호", example = "1")
+      int number,
+
+      @Schema(description = "웨이팅 등록 당시 내 앞 대기팀 수", example = "0")
+      int initWaitingTeamCount,
+
+      @Schema(description = "현재 내 앞 대기팀 수", example = "0")
+      int currentWaitingTeamCount,
+
+      @Schema(description = "상태", example = "REGISTRATION")
+      Waiting.State state
+  ) {
+
+    public static MyTurn of(Waiting waiting, int currentWaitingTeamCount) {
+      return new MyTurn(
+          waiting.getNumber(),
+          waiting.getInitWaitingTeamCount(),
+          currentWaitingTeamCount,
+          waiting.getState()
+      );
+    }
+
+  }
+
   @Schema(name = "WaitingResponse.Details")
   public record Details(List<Detail> waitings) {
 

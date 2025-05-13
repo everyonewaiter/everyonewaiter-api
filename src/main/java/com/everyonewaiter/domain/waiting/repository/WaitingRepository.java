@@ -9,6 +9,8 @@ public interface WaitingRepository {
 
   int countByStoreIdAndState(Long storeId, Waiting.State state);
 
+  int countByIdAndStoreIdAndState(Long waitingId, Long storeId, Waiting.State state);
+
   boolean existsByPhoneNumberAndState(String phoneNumber, Waiting.State state);
 
   List<Waiting> findAllByStoreIdAndState(Long storeId, Waiting.State state);

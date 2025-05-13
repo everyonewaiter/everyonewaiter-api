@@ -199,3 +199,7 @@ x-ew-timestamp: {{timestamp}}
 ### 7. 웨이팅 취소 (손님)
 POST {{url}}/v1/stores/706810975107825958/waitings/0KPQ8TTHBRPQF/cancel
 Content-Type: application/json
+
+### 8. 내 순서 확인하기 (손님)
+GET {{url}}/v1/stores/706810975107825958/waitings/0KPQ8TTHBRPQF/my-turn
+Content-Type: application/json
