@@ -67,3 +67,35 @@ Content-Type: application/json
 x-ew-access-key: {{accessKey}}
 x-ew-signature: {{signature}}
 x-ew-timestamp: {{timestamp}}
+
+### 3. 웨이팅 목록 조회
+< {%
+  const deviceId = request.environment.get("devices.hall.id");
+  const deviceName = request.environment.get("devices.hall.name");
+  const devicePurpose = request.environment.get("devices.hall.purpose");
+  const secretKey = request.environment.get("devices.hall.secretKey");
+
+  const method = request.method;
+  const uri = request.url
+  .tryGetSubstituted()
+  .split(request.environment.get("url"))[1];
+  const timestamp = Date.now().toString();
+
+  const signature = crypto.hmac.sha256()
+  .withTextSecret(secretKey)
+  .updateWithText(`${method} ${uri}\n`)
+  .updateWithText(`${deviceId} ${devicePurpose} ${deviceName}\n`)
+  .updateWithText(`${timestamp}`)
+  .digest()
+  .toBase64();
+
+  request.variables.set("accessKey", deviceId);
+  request.variables.set("signature", signature);
+  request.variables.set("timestamp", timestamp);
+%}
+
+GET {{url}}/v1/waitings
+Content-Type: application/json
+x-ew-access-key: {{accessKey}}
+x-ew-signature: {{signature}}
+x-ew-timestamp: {{timestamp}}

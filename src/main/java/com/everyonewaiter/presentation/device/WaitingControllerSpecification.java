@@ -18,7 +18,32 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "웨이팅")
 interface WaitingControllerSpecification {
 
-  @Operation(summary = "웨이팅 수 조회", description = "[WAITING] 웨이팅 수 조회 API")
+  @Operation(
+      summary = "웨이팅 목록 조회",
+      description = "[HALL] 웨이팅 목록 조회 API<br/><br/>"
+          + "마지막 손님 호출 시간의 경우 생성할 때 기본으로 UTC 1970-01-01으로 생성하고 있으니, 호출 횟수가 1 이상일 때만 호출 시간을 표시해야 합니다."
+  )
+  @ApiResponse(responseCode = "200", description = "웨이팅 목록 조회 성공")
+  @ApiErrorResponses(
+      summary = "웨이팅 목록 조회 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "서명(시그니처)이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 HALL이 아닌 경우"
+          ),
+      }
+  )
+  ResponseEntity<WaitingResponse.Details> getWaitings(@Parameter(hidden = true) Device device);
+
+  @Operation(
+      summary = "웨이팅 수 조회",
+      description = "[WAITING] 웨이팅 수 조회 API<br/><br/>"
+          + "현재 매장에 'REGISTRATION' 상태의 웨이팅 수를 조회합니다."
+  )
   @ApiResponse(responseCode = "200", description = "웨이팅 수 조회 성공")
   @ApiErrorResponses(
       summary = "웨이팅 수 조회 실패",

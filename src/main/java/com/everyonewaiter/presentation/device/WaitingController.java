@@ -23,6 +23,14 @@ class WaitingController implements WaitingControllerSpecification {
   private final WaitingService waitingService;
 
   @Override
+  @GetMapping
+  public ResponseEntity<WaitingResponse.Details> getWaitings(
+      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+  ) {
+    return ResponseEntity.ok(waitingService.readAll(device.getStoreId()));
+  }
+
+  @Override
   @GetMapping("/count")
   public ResponseEntity<WaitingResponse.RegistrationCount> count(
       @AuthenticationDevice(purpose = Device.Purpose.WAITING) Device device

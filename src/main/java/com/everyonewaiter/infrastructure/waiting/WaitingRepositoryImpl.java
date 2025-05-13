@@ -6,6 +6,7 @@ import static com.everyonewaiter.domain.waiting.entity.QWaiting.waiting;
 import com.everyonewaiter.domain.waiting.entity.Waiting;
 import com.everyonewaiter.domain.waiting.repository.WaitingRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,7 @@ class WaitingRepositoryImpl implements WaitingRepository {
   private final WaitingJpaRepository waitingJpaRepository;
 
   @Override
-  public int countByStoreIdAndAfterLastOpenedAt(Long storeId) {
+  public int countByStoreId(Long storeId) {
     Long waitingCount = queryFactory
         .select(waiting.count())
         .from(waiting)
@@ -32,7 +33,7 @@ class WaitingRepositoryImpl implements WaitingRepository {
   }
 
   @Override
-  public int countByStoreIdAndStateAndAfterLastOpenedAt(Long storeId, Waiting.State state) {
+  public int countByStoreIdAndState(Long storeId, Waiting.State state) {
     Long waitingCount = queryFactory
         .select(waiting.count())
         .from(waiting)
@@ -49,6 +50,23 @@ class WaitingRepositoryImpl implements WaitingRepository {
   @Override
   public boolean existsByPhoneNumberAndState(String phoneNumber, Waiting.State state) {
     return waitingJpaRepository.existsByPhoneNumberAndState(phoneNumber, state);
+  }
+
+  @Override
+  public List<Waiting> findAllByStoreIdAndState(
+      Long storeId,
+      Waiting.State state
+  ) {
+    return queryFactory
+        .select(waiting)
+        .from(waiting)
+        .innerJoin(waiting.store, store)
+        .where(
+            waiting.store.id.eq(storeId),
+            waiting.state.eq(state),
+            waiting.createdAt.gt(store.lastOpenedAt)
+        )
+        .fetch();
   }
 
   @Override

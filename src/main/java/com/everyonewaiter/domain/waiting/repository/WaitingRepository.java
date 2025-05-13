@@ -1,14 +1,17 @@
 package com.everyonewaiter.domain.waiting.repository;
 
 import com.everyonewaiter.domain.waiting.entity.Waiting;
+import java.util.List;
 
 public interface WaitingRepository {
 
-  int countByStoreIdAndAfterLastOpenedAt(Long storeId);
+  int countByStoreId(Long storeId);
 
-  int countByStoreIdAndStateAndAfterLastOpenedAt(Long storeId, Waiting.State state);
+  int countByStoreIdAndState(Long storeId, Waiting.State state);
 
   boolean existsByPhoneNumberAndState(String phoneNumber, Waiting.State state);
+
+  List<Waiting> findAllByStoreIdAndState(Long storeId, Waiting.State state);
 
   Waiting save(Waiting waiting);
 

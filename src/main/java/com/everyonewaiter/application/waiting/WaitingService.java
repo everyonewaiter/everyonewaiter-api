@@ -7,6 +7,7 @@ import com.everyonewaiter.domain.store.repository.StoreRepository;
 import com.everyonewaiter.domain.waiting.entity.Waiting;
 import com.everyonewaiter.domain.waiting.repository.WaitingRepository;
 import com.everyonewaiter.domain.waiting.service.WaitingValidator;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +25,8 @@ public class WaitingService {
     waitingValidator.validateRegistration(storeId, request.phoneNumber());
 
     Store store = storeRepository.findByIdOrThrow(storeId);
-    int lastWaitingNumber = waitingRepository.countByStoreIdAndAfterLastOpenedAt(storeId);
-    int initWaitingTeamCount = waitingRepository.countByStoreIdAndStateAndAfterLastOpenedAt(
+    int lastWaitingNumber = waitingRepository.countByStoreId(storeId);
+    int currentWaitingCount = waitingRepository.countByStoreIdAndState(
         storeId,
         Waiting.State.REGISTRATION
     );
@@ -35,18 +36,23 @@ public class WaitingService {
         request.adult(),
         request.infant(),
         lastWaitingNumber,
-        initWaitingTeamCount
+        currentWaitingCount
     );
 
     return waitingRepository.save(waiting).getId();
   }
 
   public WaitingResponse.RegistrationCount getRegistrationCount(Long storeId) {
-    int count = waitingRepository.countByStoreIdAndStateAndAfterLastOpenedAt(
+    int count = waitingRepository.countByStoreIdAndState(storeId, Waiting.State.REGISTRATION);
+    return WaitingResponse.RegistrationCount.from(count);
+  }
+
+  public WaitingResponse.Details readAll(Long storeId) {
+    List<Waiting> waitings = waitingRepository.findAllByStoreIdAndState(
         storeId,
         Waiting.State.REGISTRATION
     );
-    return WaitingResponse.RegistrationCount.from(count);
+    return WaitingResponse.Details.from(waitings);
   }
 
 }
