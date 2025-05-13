@@ -100,7 +100,39 @@ x-ew-access-key: {{accessKey}}
 x-ew-signature: {{signature}}
 x-ew-timestamp: {{timestamp}}
 
-### 4. 웨이팅 손님 입장 완료
+### 4. 웨이팅 손님 입장 안내 호출
+< {%
+  const deviceId = request.environment.get("devices.hall.id");
+  const deviceName = request.environment.get("devices.hall.name");
+  const devicePurpose = request.environment.get("devices.hall.purpose");
+  const secretKey = request.environment.get("devices.hall.secretKey");
+
+  const method = request.method;
+  const uri = request.url
+  .tryGetSubstituted()
+  .split(request.environment.get("url"))[1];
+  const timestamp = Date.now().toString();
+
+  const signature = crypto.hmac.sha256()
+  .withTextSecret(secretKey)
+  .updateWithText(`${method} ${uri}\n`)
+  .updateWithText(`${deviceId} ${devicePurpose} ${deviceName}\n`)
+  .updateWithText(`${timestamp}`)
+  .digest()
+  .toBase64();
+
+  request.variables.set("accessKey", deviceId);
+  request.variables.set("signature", signature);
+  request.variables.set("timestamp", timestamp);
+%}
+
+POST {{url}}/v1/waitings/710135899815172846/call
+Content-Type: application/json
+x-ew-access-key: {{accessKey}}
+x-ew-signature: {{signature}}
+x-ew-timestamp: {{timestamp}}
+
+### 5. 웨이팅 손님 입장 완료
 < {%
   const deviceId = request.environment.get("devices.hall.id");
   const deviceName = request.environment.get("devices.hall.name");

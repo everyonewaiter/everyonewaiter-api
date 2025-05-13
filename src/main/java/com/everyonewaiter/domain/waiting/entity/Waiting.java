@@ -93,6 +93,14 @@ public class Waiting extends AggregateRoot<Waiting> {
     return this.state == State.REGISTRATION;
   }
 
+  public void call() {
+    if (isRegistration()) {
+      this.customerCallCount.increase();
+    } else {
+      throw new BusinessException(ErrorCode.ONLY_REGISTRATION_STATE_CAN_BE_CALL);
+    }
+  }
+
   public void complete() {
     if (isRegistration()) {
       this.state = State.COMPLETE;

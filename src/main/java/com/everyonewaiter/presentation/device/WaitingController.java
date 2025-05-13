@@ -50,6 +50,16 @@ class WaitingController implements WaitingControllerSpecification {
   }
 
   @Override
+  @PostMapping("/{waitingId}/call")
+  public ResponseEntity<Void> call(
+      @PathVariable Long waitingId,
+      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+  ) {
+    waitingService.call(waitingId, device.getStoreId());
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
   @PostMapping("/{waitingId}/complete")
   public ResponseEntity<Void> complete(
       @PathVariable Long waitingId,

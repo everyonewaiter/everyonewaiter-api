@@ -43,6 +43,13 @@ public class WaitingService {
   }
 
   @Transactional
+  public void call(Long waitingId, Long storeId) {
+    Waiting waiting = waitingRepository.findByIdAndStoreIdOrThrow(waitingId, storeId);
+    waiting.call();
+    waitingRepository.save(waiting);
+  }
+
+  @Transactional
   public void complete(Long waitingId, Long storeId) {
     Waiting waiting = waitingRepository.findByIdAndStoreIdOrThrow(waitingId, storeId);
     waiting.complete();

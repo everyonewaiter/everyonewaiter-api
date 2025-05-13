@@ -96,6 +96,35 @@ interface WaitingControllerSpecification {
       @Parameter(hidden = true) Device device
   );
 
+  @Operation(summary = "[HALL] 손님 입장 안내 호출", description = "손님 입장 안내 호출 API")
+  @ApiResponse(responseCode = "204", description = "손님 입장 입장 안내 호출 성공")
+  @ApiErrorResponses(
+      summary = "손님 입장 입장 안내 호출 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.EXCEED_MAXIMUM_CUSTOMER_CALL_COUNT,
+              exampleName = "손님 입장 안내 호출 최대 횟수(5)를 초과한 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ONLY_REGISTRATION_STATE_CAN_BE_CALL,
+              exampleName = "웨이팅이 'REGISTRATION' 상태가 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "서명(시그니처)이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 HALL이 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.WAITING_NOT_FOUND,
+              exampleName = "웨이팅 ID로 매장의 웨이팅을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> call(Long waitingId, @Parameter(hidden = true) Device device);
+
   @Operation(summary = "[HALL] 손님 입장 완료", description = "손님 입장 완료 API")
   @ApiResponse(responseCode = "204", description = "손님 입장 완료 성공")
   @ApiErrorResponses(
