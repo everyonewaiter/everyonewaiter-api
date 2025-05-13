@@ -26,19 +26,19 @@ public class StoreResponse {
       );
     }
 
-    @Schema(name = "StoreResponse.Simple")
-    public record Simple(
-        @Schema(description = "매장 ID", example = "\"694865267482835533\"")
-        String storeId,
+  }
 
-        @Schema(description = "매장 이름", example = "홍길동식당")
-        String name
-    ) {
+  @Schema(name = "StoreResponse.Simple")
+  public record Simple(
+      @Schema(description = "매장 ID", example = "\"694865267482835533\"")
+      String storeId,
 
-      public static Simple from(StoreView.Simple view) {
-        return new Simple(view.id().toString(), view.name());
-      }
+      @Schema(description = "매장 이름", example = "홍길동식당")
+      String name
+  ) {
 
+    public static Simple from(StoreView.Simple view) {
+      return new Simple(view.id().toString(), view.name());
     }
 
   }
