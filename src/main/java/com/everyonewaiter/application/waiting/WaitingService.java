@@ -1,6 +1,7 @@
 package com.everyonewaiter.application.waiting;
 
 import com.everyonewaiter.application.waiting.request.WaitingWrite;
+import com.everyonewaiter.application.waiting.response.WaitingResponse;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.domain.store.repository.StoreRepository;
 import com.everyonewaiter.domain.waiting.entity.Waiting;
@@ -38,6 +39,14 @@ public class WaitingService {
     );
 
     return waitingRepository.save(waiting).getId();
+  }
+
+  public WaitingResponse.RegistrationCount getRegistrationCount(Long storeId) {
+    int count = waitingRepository.countByStoreIdAndStateAndAfterLastOpenedAt(
+        storeId,
+        Waiting.State.REGISTRATION
+    );
+    return WaitingResponse.RegistrationCount.from(count);
   }
 
 }
