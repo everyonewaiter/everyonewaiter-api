@@ -19,6 +19,10 @@ interface StoreControllerSpecification {
       summary = "매장 오픈 실패",
       value = {
           @ApiErrorResponse(
+              code = ErrorCode.ALREADY_STORE_OPENED,
+              exampleName = "이미 매장이 영업중인 경우"
+          ),
+          @ApiErrorResponse(
               code = ErrorCode.UNAUTHORIZED,
               exampleName = "서명(시그니처)이 유효하지 않은 경우"
           ),
@@ -28,7 +32,7 @@ interface StoreControllerSpecification {
           ),
           @ApiErrorResponse(
               code = ErrorCode.STORE_NOT_FOUND,
-              exampleName = "매장 ID로 매장을 찾을 수 없는 경우"
+              exampleName = "기기에 등록되어 있는 매장 ID로 매장을 찾을 수 없는 경우"
           ),
       }
   )
@@ -40,6 +44,10 @@ interface StoreControllerSpecification {
       summary = "매장 마감 실패",
       value = {
           @ApiErrorResponse(
+              code = ErrorCode.ALREADY_STORE_OPENED,
+              exampleName = "이미 매장이 마감되어 있는 경우"
+          ),
+          @ApiErrorResponse(
               code = ErrorCode.UNAUTHORIZED,
               exampleName = "서명(시그니처)이 유효하지 않은 경우"
           ),
@@ -49,7 +57,7 @@ interface StoreControllerSpecification {
           ),
           @ApiErrorResponse(
               code = ErrorCode.STORE_NOT_FOUND,
-              exampleName = "매장 ID로 매장을 찾을 수 없는 경우"
+              exampleName = "기기에 등록되어 있는 매장 ID로 매장을 찾을 수 없는 경우"
           ),
       }
   )
