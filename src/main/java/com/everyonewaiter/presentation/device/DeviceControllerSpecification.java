@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "기기")
 interface DeviceControllerSpecification {
 
-  @Operation(summary = "기기 상세 조회", description = "기기 상세 조회 API")
+  @Operation(summary = "기기 상세 조회", description = "[ALL] 기기 상세 조회 API")
   @ApiResponse(responseCode = "200", description = "기기 상세 조회 성공")
   @ApiErrorResponse(
       summary = "기기 상세 조회 실패",
