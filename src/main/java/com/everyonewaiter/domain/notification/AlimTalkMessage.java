@@ -10,7 +10,11 @@ public record AlimTalkMessage(
 ) {
 
   public AlimTalkMessage(String to, String content) {
-    this(to, content, true, List.of());
+    this(to, content, List.of());
+  }
+
+  public AlimTalkMessage(String to, String content, List<AlimTalkButton> buttons) {
+    this(to, content, true, buttons);
   }
 
 }
