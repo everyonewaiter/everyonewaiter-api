@@ -10,6 +10,7 @@ import com.everyonewaiter.global.exception.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -78,9 +79,9 @@ class WaitingRepositoryImpl implements WaitingRepository {
     return queryFactory
         .select(waiting)
         .from(waiting)
-        .innerJoin(waiting.store, store)
+        .innerJoin(waiting.store, store).fetchJoin()
         .where(
-            waiting.store.id.eq(storeId),
+            store.id.eq(storeId),
             waiting.state.eq(state),
             waiting.createdAt.gt(store.lastOpenedAt)
         )
@@ -89,13 +90,33 @@ class WaitingRepositoryImpl implements WaitingRepository {
 
   @Override
   public Waiting findByIdAndStoreIdOrThrow(Long waitingId, Long storeId) {
-    return waitingJpaRepository.findByIdAndStoreId(waitingId, storeId)
+    return Optional.ofNullable(
+            queryFactory
+                .select(waiting)
+                .from(waiting)
+                .innerJoin(waiting.store, store).fetchJoin()
+                .where(
+                    waiting.id.eq(waitingId),
+                    store.id.eq(storeId)
+                )
+                .fetchFirst()
+        )
         .orElseThrow(() -> new BusinessException(ErrorCode.WAITING_NOT_FOUND));
   }
 
   @Override
   public Waiting findByStoreIdAndAccessKey(Long storeId, String accessKey) {
-    return waitingJpaRepository.findByStoreIdAndAccessKey(storeId, accessKey)
+    return Optional.ofNullable(
+            queryFactory
+                .select(waiting)
+                .from(waiting)
+                .innerJoin(waiting.store, store).fetchJoin()
+                .where(
+                    store.id.eq(storeId),
+                    waiting.accessKey.eq(accessKey)
+                )
+                .fetchFirst()
+        )
         .orElseThrow(() -> new BusinessException(ErrorCode.WAITING_NOT_FOUND));
   }
 

@@ -1,6 +1,7 @@
 package com.everyonewaiter.domain.waiting.entity;
 
 import com.everyonewaiter.domain.store.entity.Store;
+import com.everyonewaiter.domain.waiting.event.WaitingCustomerCallEvent;
 import com.everyonewaiter.domain.waiting.event.WaitingRegistrationEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
@@ -96,6 +97,15 @@ public class Waiting extends AggregateRoot<Waiting> {
   public void call() {
     if (isRegistration()) {
       this.customerCallCount.increase();
+      registerEvent(
+          new WaitingCustomerCallEvent(
+              store.getId(),
+              store.getBusinessLicense().getName(),
+              phoneNumber,
+              number,
+              accessKey
+          )
+      );
     } else {
       throw new BusinessException(ErrorCode.ONLY_REGISTRATION_STATE_CAN_BE_CALL);
     }
