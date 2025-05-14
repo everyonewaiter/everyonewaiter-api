@@ -59,14 +59,14 @@ public class WaitingService {
   @Transactional
   public void cancel(Long waitingId, Long storeId) {
     Waiting waiting = waitingRepository.findByIdAndStoreIdOrThrow(waitingId, storeId);
-    waiting.cancel();
+    waiting.cancelByStore();
     waitingRepository.save(waiting);
   }
 
   @Transactional
   public void cancel(Long storeId, String accessKey) {
     Waiting waiting = waitingRepository.findByStoreIdAndAccessKey(storeId, accessKey);
-    waiting.cancel();
+    waiting.cancelByCustomer();
     waitingRepository.save(waiting);
   }
 

@@ -1,6 +1,8 @@
 package com.everyonewaiter.domain.waiting.entity;
 
 import com.everyonewaiter.domain.store.entity.Store;
+import com.everyonewaiter.domain.waiting.event.WaitingCancelByCustomerEvent;
+import com.everyonewaiter.domain.waiting.event.WaitingCancelByStoreEvent;
 import com.everyonewaiter.domain.waiting.event.WaitingCustomerCallEvent;
 import com.everyonewaiter.domain.waiting.event.WaitingRegistrationEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
@@ -119,12 +121,36 @@ public class Waiting extends AggregateRoot<Waiting> {
     }
   }
 
-  public void cancel() {
+  private void cancel() {
     if (isRegistration()) {
       this.state = State.CANCEL;
     } else {
       throw new BusinessException(ErrorCode.ONLY_REGISTRATION_STATE_CAN_BE_CANCEL);
     }
+  }
+
+  public void cancelByCustomer() {
+    cancel();
+    registerEvent(
+        new WaitingCancelByCustomerEvent(
+            store.getId(),
+            store.getBusinessLicense().getName(),
+            phoneNumber,
+            number
+        )
+    );
+  }
+
+  public void cancelByStore() {
+    cancel();
+    registerEvent(
+        new WaitingCancelByStoreEvent(
+            store.getId(),
+            store.getBusinessLicense().getName(),
+            phoneNumber,
+            number
+        )
+    );
   }
 
 }
