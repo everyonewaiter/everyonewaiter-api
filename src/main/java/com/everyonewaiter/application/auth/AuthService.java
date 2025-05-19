@@ -17,12 +17,14 @@ import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.security.JwtPayload;
 import com.everyonewaiter.global.security.JwtProvider;
+import jakarta.persistence.OptimisticLockException;
 import java.time.Duration;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -106,6 +108,8 @@ public class AuthService {
     } catch (BusinessException exception) {
       LOGGER.warn("토큰 탈취가 의심되어 로그아웃을 진행합니다. accountId: {}", refTokenEntity.getAccountId());
       refreshTokenRepository.delete(refTokenEntity);
+      return Optional.empty();
+    } catch (OptimisticLockException | ObjectOptimisticLockingFailureException exception) {
       return Optional.empty();
     }
   }
