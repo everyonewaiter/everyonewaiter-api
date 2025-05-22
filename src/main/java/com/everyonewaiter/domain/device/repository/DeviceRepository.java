@@ -4,6 +4,7 @@ import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.domain.device.view.DeviceView;
 import com.everyonewaiter.global.support.Pagination;
 import com.everyonewaiter.global.support.Paging;
+import java.util.List;
 import java.util.Optional;
 
 public interface DeviceRepository {
@@ -13,6 +14,8 @@ public interface DeviceRepository {
   boolean existsByStoreIdAndNameExcludeId(Long deviceId, Long storeId, String name);
 
   Paging<DeviceView.Page> findAll(Long storeId, Pagination pagination);
+
+  List<Device> findAllActiveByPurpose(Long storeId, Device.Purpose purpose);
 
   Optional<Device> findById(Long deviceId);
 

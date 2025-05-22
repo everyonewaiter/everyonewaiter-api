@@ -78,6 +78,20 @@ class DeviceRepositoryImpl implements DeviceRepository {
   }
 
   @Override
+  public List<Device> findAllActiveByPurpose(Long storeId, Device.Purpose purpose) {
+    return queryFactory
+        .select(device)
+        .from(device)
+        .where(
+            device.storeId.eq(storeId),
+            device.purpose.eq(purpose),
+            device.state.eq(Device.State.ACTIVE)
+        )
+        .orderBy(device.tableNo.asc(), device.id.desc())
+        .fetch();
+  }
+
+  @Override
   public Optional<Device> findById(Long deviceId) {
     return deviceJpaRepository.findById(deviceId);
   }

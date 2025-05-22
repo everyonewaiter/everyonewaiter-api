@@ -150,3 +150,12 @@ create table waiting
     created_at              datetime(6)                                 not null,
     updated_at              datetime(6)                                 not null
 );
+
+create table pos_table
+(
+    id       bigint primary key,
+    store_id bigint                      not null,
+    name     varchar(20)                 not null,
+    table_no int                         not null,
+    state    enum ('ACTIVE', 'INACTIVE') not null
+)
