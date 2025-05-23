@@ -24,4 +24,10 @@ public class StoreValidator {
     }
   }
 
+  public void validateOpen(Long storeId) {
+    if (storeRepository.findByIdOrThrow(storeId).isClosed()) {
+      throw new BusinessException(ErrorCode.STORE_IS_CLOSED);
+    }
+  }
+
 }

@@ -3,6 +3,8 @@ package com.everyonewaiter.domain.pos.entity;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,13 +30,18 @@ public class PosTable extends AggregateRoot<PosTable> {
   @Column(name = "table_no", nullable = false)
   private int tableNo;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "state", nullable = false)
   private State state = State.ACTIVE;
 
   public static PosTable create(Long storeId, String prefix, int tableNo) {
+    return create(storeId, prefix, String.valueOf(tableNo), tableNo);
+  }
+
+  public static PosTable create(Long storeId, String prefix, String suffix, int tableNo) {
     PosTable posTable = new PosTable();
     posTable.storeId = storeId;
-    posTable.name = prefix + "-" + tableNo;
+    posTable.name = prefix + "-" + suffix;
     posTable.tableNo = tableNo;
     return posTable;
   }

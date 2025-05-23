@@ -20,7 +20,7 @@ class PosTableRepositoryImpl implements PosTableRepository {
   public void close(Long storeId) {
     queryFactory
         .update(posTable)
-        .set(posTable.state, PosTable.State.ACTIVE)
+        .set(posTable.state, PosTable.State.INACTIVE)
         .where(
             posTable.storeId.eq(storeId),
             posTable.state.eq(PosTable.State.ACTIVE)
@@ -31,6 +31,11 @@ class PosTableRepositoryImpl implements PosTableRepository {
   @Override
   public void saveAll(List<PosTable> tables) {
     posTableJpaRepository.saveAll(tables);
+  }
+
+  @Override
+  public List<PosTable> findAllActiveByStoreId(Long storeId) {
+    return posTableJpaRepository.findAllByStoreIdAndState(storeId, PosTable.State.ACTIVE);
   }
 
 }

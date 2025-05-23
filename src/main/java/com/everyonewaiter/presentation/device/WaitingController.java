@@ -4,6 +4,7 @@ import com.everyonewaiter.application.waiting.WaitingService;
 import com.everyonewaiter.application.waiting.response.WaitingResponse;
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.global.annotation.AuthenticationDevice;
+import com.everyonewaiter.global.annotation.StoreOpen;
 import com.everyonewaiter.presentation.device.request.WaitingWriteRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -49,6 +50,7 @@ class WaitingController implements WaitingControllerSpecification {
   }
 
   @Override
+  @StoreOpen
   @PostMapping("/waitings")
   public ResponseEntity<Void> create(
       @RequestBody @Valid WaitingWriteRequest.Create request,

@@ -22,7 +22,7 @@ public class WaitingService {
 
   @Transactional
   public Long create(Long storeId, WaitingWrite.Create request) {
-    waitingValidator.validateRegistration(storeId, request.phoneNumber());
+    waitingValidator.validateRegistration(request.phoneNumber());
 
     Store store = storeRepository.findByIdOrThrow(storeId);
     int lastWaitingNumber = waitingRepository.countByStoreId(storeId);
