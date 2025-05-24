@@ -14,7 +14,7 @@ class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
 
   @Override
   public RefreshToken findByIdOrThrow(Long refreshTokenId) {
-    return refreshTokenJpaRepository.findById(refreshTokenId)
+    return refreshTokenJpaRepository.findByIdWithPessimisticLock(refreshTokenId)
         .orElseThrow(AuthenticationException::new);
   }
 
