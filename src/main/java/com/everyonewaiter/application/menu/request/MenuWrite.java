@@ -55,4 +55,8 @@ public class MenuWrite {
 
   }
 
+  public record Delete(List<Long> menuIds) {
+
+  }
+
 }

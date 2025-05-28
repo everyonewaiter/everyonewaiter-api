@@ -205,4 +205,18 @@ public class MenuWriteRequest {
 
   }
 
+  @Schema(name = "MenuWriteRequest.Delete")
+  public record Delete(
+      @Schema(description = "삭제할 메뉴 ID 목록", requiredMode = Schema.RequiredMode.REQUIRED)
+      @NotNull(message = "삭제할 메뉴 ID 목록이 누락되었습니다.")
+      @Size(min = 1, message = "삭제할 메뉴 ID 목록을 1개 이상 입력해 주세요.")
+      List<Long> menuIds
+  ) {
+
+    public MenuWrite.Delete toDomainDto() {
+      return new MenuWrite.Delete(menuIds);
+    }
+
+  }
+
 }

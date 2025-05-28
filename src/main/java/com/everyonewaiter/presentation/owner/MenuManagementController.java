@@ -133,4 +133,16 @@ class MenuManagementController implements MenuManagementControllerSpecification 
     return ResponseEntity.noContent().build();
   }
 
+  @Override
+  @StoreOwner
+  @PostMapping("/stores/{storeId}/menus/delete")
+  public ResponseEntity<Void> deleteAll(
+      @PathVariable Long storeId,
+      @RequestBody @Valid MenuWriteRequest.Delete request,
+      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+  ) {
+    menuService.deleteAll(storeId, request.toDomainDto());
+    return ResponseEntity.noContent().build();
+  }
+
 }

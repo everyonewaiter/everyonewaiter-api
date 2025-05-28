@@ -180,10 +180,22 @@ Authorization: Bearer {{accessToken}}
 DELETE {{url}}/v1/stores/706810975107825958/categories/708358198990457858/menus/708540761083242528
 Authorization: Bearer {{accessToken}}
 
-### 6. 메뉴 목록 조회
+### 6. 메뉴 다중 삭제
+POST {{url}}/v1/stores/706810975107825958/menus/delete
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "menuIds": [
+    715549909455680950,
+    715549916711826921
+  ]
+}
+
+### 7. 메뉴 목록 조회
 GET {{url}}/v1/stores/706810975107825958/categories/708358198990457858/menus
 Authorization: Bearer {{accessToken}}
 
-### 7. 메뉴 상세 조회
+### 8. 메뉴 상세 조회
 GET {{url}}/v1/stores/706810975107825958/categories/708358198990457858/menus/708742740151516678
 Authorization: Bearer {{accessToken}}

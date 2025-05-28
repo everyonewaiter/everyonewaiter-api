@@ -14,6 +14,8 @@ public interface MenuRepository {
 
   List<Menu> findAllByStoreIdAndCategoryId(Long storeId, Long categoryId);
 
+  List<Menu> findAllByStoreIdAndIds(Long storeId, List<Long> menuIds);
+
   Menu findByIdAndStoreIdOrThrow(Long menuId, Long storeId);
 
   Menu findByIdAndStoreIdAndCategoryIdOrThrow(Long menuId, Long storeId, Long categoryId);
@@ -25,6 +27,8 @@ public interface MenuRepository {
   void shiftPosition(Menu source);
 
   void delete(Menu menu);
+
+  void deleteAll(List<Menu> menus);
 
   void deleteAllByCategoryId(Long categoryId);
 

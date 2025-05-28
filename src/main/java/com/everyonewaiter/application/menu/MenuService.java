@@ -10,6 +10,8 @@ import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
 import com.everyonewaiter.domain.menu.repository.CategoryRepository;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
 import com.everyonewaiter.domain.menu.service.MenuValidator;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.support.CacheNameHolder;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,6 +153,18 @@ public class MenuService {
     Menu menu = menuRepository.findByIdAndStoreIdAndCategoryIdOrThrow(menuId, storeId, categoryId);
     menu.delete();
     menuRepository.delete(menu);
+  }
+
+  @Transactional
+  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  public void deleteAll(Long storeId, MenuWrite.Delete request) {
+    List<Menu> menus = menuRepository.findAllByStoreIdAndIds(storeId, request.menuIds());
+    if (menus.size() == request.menuIds().size()) {
+      menus.forEach(Menu::delete);
+      menuRepository.deleteAll(menus);
+    } else {
+      throw new BusinessException(ErrorCode.MENU_NOT_FOUND);
+    }
   }
 
   public MenuResponse.Simples readAllSimples(Long storeId, Long categoryId) {

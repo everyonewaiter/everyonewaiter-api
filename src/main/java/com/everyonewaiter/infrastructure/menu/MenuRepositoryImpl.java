@@ -60,6 +60,19 @@ class MenuRepositoryImpl implements MenuRepository {
   }
 
   @Override
+  public List<Menu> findAllByStoreIdAndIds(Long storeId, List<Long> menuIds) {
+    return queryFactory
+        .select(menu)
+        .from(menu)
+        .where(
+            menu.storeId.eq(storeId),
+            menu.id.in(menuIds)
+        )
+        .orderBy(menu.position.value.asc(), menu.id.asc())
+        .fetch();
+  }
+
+  @Override
   public Menu findByIdAndStoreIdOrThrow(Long menuId, Long storeId) {
     return menuJpaRepository.findByIdAndStoreId(menuId, storeId)
         .orElseThrow(() -> new BusinessException(ErrorCode.MENU_NOT_FOUND));
@@ -98,6 +111,11 @@ class MenuRepositoryImpl implements MenuRepository {
   @Override
   public void delete(Menu menu) {
     menuJpaRepository.delete(menu);
+  }
+
+  @Override
+  public void deleteAll(List<Menu> menus) {
+    menuJpaRepository.deleteAllInBatch(menus);
   }
 
   @Override
