@@ -63,7 +63,9 @@ class RedissonLockAspect {
       Thread.currentThread().interrupt();
       return false;
     } finally {
-      lock.unlock();
+      if (lock.isLocked() && lock.isHeldByCurrentThread()) {
+        lock.unlock();
+      }
     }
   }
 

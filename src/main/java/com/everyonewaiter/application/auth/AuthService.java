@@ -12,6 +12,7 @@ import com.everyonewaiter.domain.auth.event.AuthMailSendEvent;
 import com.everyonewaiter.domain.auth.repository.AuthRepository;
 import com.everyonewaiter.domain.auth.repository.RefreshTokenRepository;
 import com.everyonewaiter.domain.auth.service.AuthValidator;
+import com.everyonewaiter.global.annotation.RedissonLock;
 import com.everyonewaiter.global.exception.AuthenticationException;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
@@ -91,6 +92,7 @@ public class AuthService {
   }
 
   @Transactional
+  @RedissonLock(key = "#refreshToken")
   public Optional<TokenResponse.All> renewToken(String refreshToken) {
     JwtPayload payload = jwtProvider.decode(refreshToken).orElseThrow(AuthenticationException::new);
     RefreshToken refTokenEntity = refreshTokenRepository.findByIdOrThrow(payload.id());
@@ -116,8 +118,10 @@ public class AuthService {
       Long currentTokenId
   ) {
     String subject = currentTokenId.toString();
-    String accessToken = generateToken(new JwtPayload(accountId, subject), Duration.ofHours(12));
-    String refreshToken = generateToken(new JwtPayload(rootTokenId, subject), Duration.ofDays(14));
+//    String accessToken = generateToken(new JwtPayload(accountId, subject), Duration.ofHours(12));
+//    String refreshToken = generateToken(new JwtPayload(rootTokenId, subject), Duration.ofDays(14));
+    String accessToken = generateToken(new JwtPayload(accountId, subject), Duration.ofMinutes(30));
+    String refreshToken = generateToken(new JwtPayload(rootTokenId, subject), Duration.ofHours(2));
     return new TokenResponse.All(accessToken, refreshToken);
   }
 
