@@ -1,5 +1,6 @@
 package com.everyonewaiter.global.config;
 
+import com.everyonewaiter.global.support.ProfileChecker;
 import lombok.RequiredArgsConstructor;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -19,6 +20,7 @@ class RedisConfiguration {
   private static final String REDISSON_HOST_PREFIX = "redis://";
 
   private final RedisProperties redisProperties;
+  private final ProfileChecker profileChecker;
 
   @Bean
   public LettuceConnectionFactory redisConnectionFactory() {
@@ -38,6 +40,7 @@ class RedisConfiguration {
 
   @Bean
   public RedissonClient redissonClient() {
+    boolean usePassword = profileChecker.isProduction() || profileChecker.isDevelopment();
     Config config = new Config();
     config.useSingleServer()
         .setAddress(
@@ -46,7 +49,7 @@ class RedisConfiguration {
                 + ":"
                 + redisProperties.getPort()
         )
-        .setPassword(redisProperties.getPassword());
+        .setPassword(usePassword ? redisProperties.getPassword() : null);
     return Redisson.create(config);
   }
 
