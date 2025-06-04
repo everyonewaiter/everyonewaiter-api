@@ -1,4 +1,4 @@
-package com.everyonewaiter.global.logging;
+package com.everyonewaiter.global.aop;
 
 import java.util.Arrays;
 import java.util.Objects;

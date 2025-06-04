@@ -45,8 +45,8 @@ class CategoryDeleteEventHandler {
               .toList()
       );
     } catch (InterruptedException exception) {
-      Thread.currentThread().interrupt();
       LOGGER.error("[카테고리 메뉴 이미지 삭제 중단] 카테고리 ID: {}", event.categoryId(), exception);
+      Thread.currentThread().interrupt();
     }
 
     menuRepository.deleteAllByCategoryId(event.categoryId());

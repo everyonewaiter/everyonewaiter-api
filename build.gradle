@@ -49,6 +49,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6") {
         exclude group: "org.webjars", module: "swagger-ui"
     }
+    implementation 'org.redisson:redisson-spring-boot-starter:3.48.0'
     implementation 'com.github.f4b6a3:tsid-creator:5.2.6'
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
     implementation 'io.github.openfeign.querydsl:querydsl-core:6.11'
