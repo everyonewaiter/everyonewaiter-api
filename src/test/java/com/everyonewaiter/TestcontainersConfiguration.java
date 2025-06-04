@@ -1,5 +1,7 @@
 package com.everyonewaiter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +12,9 @@ import org.testcontainers.utility.DockerImageName;
 @TestConfiguration(proxyBeanMethods = false)
 class TestcontainersConfiguration {
 
+  @Autowired
+  RedisProperties redisProperties;
+
   @Bean
   @ServiceConnection
   MySQLContainer<?> mysqlContainer() {
@@ -19,10 +24,12 @@ class TestcontainersConfiguration {
   @Bean
   @ServiceConnection(name = "redis")
   GenericContainer<?> redisContainer() {
-    try (GenericContainer<?> container =
-        new GenericContainer<>(DockerImageName.parse("redis:7.4.1-alpine"))
+    try (
+        GenericContainer<?> container =
+            new GenericContainer<>(DockerImageName.parse("redis:7.4.1-alpine"))
     ) {
-      return container.withExposedPorts(6379);
+      return container.withExposedPorts(6379)
+          .withCommand("redis-server", "--requirepass", redisProperties.getPassword());
     }
   }
 
