@@ -154,10 +154,20 @@ create table waiting
 create table pos_table
 (
     id         bigint primary key,
-    store_id   bigint                      not null,
-    name       varchar(20)                 not null,
-    table_no   int                         not null,
-    state      enum ('ACTIVE', 'INACTIVE') not null,
-    created_at datetime(6)                 not null,
-    updated_at datetime(6)                 not null
-)
+    store_id   bigint      not null,
+    name       varchar(20) not null,
+    table_no   int         not null,
+    active     boolean     not null,
+    created_at datetime(6) not null,
+    updated_at datetime(6) not null
+);
+
+create table pos_table_activity
+(
+    id           bigint primary key,
+    pos_table_id bigint      not null,
+    discount     bigint      not null,
+    active       boolean     not null,
+    created_at   datetime(6) not null,
+    updated_at   datetime(6) not null
+);

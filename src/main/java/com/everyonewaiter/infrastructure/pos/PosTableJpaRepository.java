@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 interface PosTableJpaRepository extends JpaRepository<PosTable, Long> {
 
-  List<PosTable> findAllByStoreIdAndState(Long storeId, PosTable.State state);
+  List<PosTable> findAllByStoreIdAndActive(Long storeId, boolean active);
 
 }
