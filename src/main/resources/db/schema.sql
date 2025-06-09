@@ -165,9 +165,82 @@ create table pos_table
 create table pos_table_activity
 (
     id           bigint primary key,
+    store_id     bigint      not null,
     pos_table_id bigint      not null,
     discount     bigint      not null,
     active       boolean     not null,
     created_at   datetime(6) not null,
     updated_at   datetime(6) not null
+);
+
+create table orders
+(
+    id                    bigint primary key,
+    store_id              bigint                         not null,
+    pos_table_activity_id bigint                         not null,
+    category              enum ('INITIAL', 'ADDITIONAL') not null,
+    type                  enum ('PREPAID', 'POSTPAID')   not null,
+    state                 enum ('ORDER', 'CANCEL')       not null,
+    memo                  varchar(30)                    not null,
+    served                boolean                        not null,
+    served_time           datetime(6)                    not null,
+    created_at            datetime(6)                    not null,
+    updated_at            datetime(6)                    not null
+);
+
+create table orders_menu
+(
+    id            bigint primary key,
+    orders_id     bigint      not null,
+    name          varchar(30) not null,
+    price         bigint      not null,
+    count         int         not null,
+    served        boolean     not null,
+    served_time   datetime(6) not null,
+    print_enabled boolean     not null,
+    constraint fk_orders_menu_orders_id foreign key (orders_id) references orders (id) on delete cascade
+);
+
+create table orders_option_group
+(
+    id             bigint primary key,
+    orders_menu_id bigint      not null,
+    name           varchar(30) not null,
+    print_enabled  boolean     not null,
+    constraint fk_orders_option_group_orders_menu_id foreign key (orders_menu_id) references orders_menu (id) on delete cascade
+);
+
+create table orders_option
+(
+    orders_option_group_id bigint      not null,
+    name                   varchar(30) not null,
+    price                  bigint      not null,
+    position               int         not null,
+    constraint pk_orders_option primary key (orders_option_group_id, name, price, position),
+    constraint fk_orders_option_orders_option_group_id foreign key (orders_option_group_id) references orders_option_group (id) on delete cascade
+);
+
+create table orders_payment
+(
+    id                    bigint primary key,
+    store_id              bigint                              not null,
+    pos_table_activity_id bigint                              not null,
+    method                enum ('CASH', 'CARD')               not null,
+    state                 enum ('APPROVE', 'CANCEL')          not null,
+    amount                bigint                              not null,
+    cancellable           boolean                             not null,
+    approval_no           varchar(30)                         not null,
+    installment           varchar(10)                         not null,
+    card_no               varchar(30)                         not null,
+    issuer_name           varchar(30)                         not null,
+    purchase_name         varchar(30)                         not null,
+    merchant_no           varchar(30)                         not null,
+    trade_time            varchar(20)                         not null,
+    trade_unique_no       varchar(30)                         not null,
+    vat                   bigint                              not null,
+    supply_amount         bigint                              not null,
+    cash_receipt_no       varchar(30)                         not null,
+    cash_receipt_type     enum ('NONE', 'DEDUCTION', 'PROOF') not null,
+    created_at            datetime(6)                         not null,
+    updated_at            datetime(6)                         not null
 );
