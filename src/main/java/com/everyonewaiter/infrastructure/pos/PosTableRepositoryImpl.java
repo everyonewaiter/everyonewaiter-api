@@ -4,6 +4,8 @@ import static com.everyonewaiter.domain.pos.entity.QPosTable.posTable;
 
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,12 @@ class PosTableRepositoryImpl implements PosTableRepository {
   @Override
   public void saveAll(List<PosTable> tables) {
     posTableJpaRepository.saveAll(tables);
+  }
+
+  @Override
+  public PosTable findActiveByStoreIdAndTableNo(Long storeId, int tableNo) {
+    return posTableJpaRepository.findByStoreIdAndTableNoAndActive(storeId, tableNo, true)
+        .orElseThrow(() -> new BusinessException(ErrorCode.POS_TABLE_NOT_FOUND));
   }
 
   @Override

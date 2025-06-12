@@ -43,6 +43,24 @@ public class OrderOptionGroup extends Aggregate {
   @OrderBy("position asc")
   private List<OrderOption> orderOptions = new ArrayList<>();
 
+  public static OrderOptionGroup create(OrderMenu orderMenu, String name, boolean printEnabled) {
+    OrderOptionGroup orderOptionGroup = new OrderOptionGroup();
+    orderOptionGroup.orderMenu = orderMenu;
+    orderOptionGroup.name = name;
+    orderOptionGroup.printEnabled = printEnabled;
+    return orderOptionGroup;
+  }
+
+  public void addOrderOption(OrderOption orderOption) {
+    orderOptions.add(orderOption);
+  }
+
+  public long getOrderOptionPrice() {
+    return getOrderOptions().stream()
+        .mapToLong(OrderOption::getPrice)
+        .sum();
+  }
+
   public List<OrderOption> getOrderOptions() {
     return Collections.unmodifiableList(orderOptions);
   }

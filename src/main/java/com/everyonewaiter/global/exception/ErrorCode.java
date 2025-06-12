@@ -71,6 +71,8 @@ public enum ErrorCode {
   EXCEED_MAXIMUM_MENU_COUNT(BAD_REQUEST, "메뉴는 카테고리당 최대 50개까지 등록할 수 있어요."),
   INVALID_DISCOUNT_OPTION_PRICE(BAD_REQUEST, "할인 옵션의 가격은 메뉴 가격보다 작아야 해요."),
   MENU_NOT_FOUND(NOT_FOUND, "메뉴를 찾을 수 없어요."),
+  MENU_OPTION_GROUP_NOT_FOUND(NOT_FOUND, "메뉴 옵션 그룹을 찾을 수 없어요."),
+  MENU_OPTION_NOT_FOUND(NOT_FOUND, "메뉴 옵션을 찾을 수 없어요."),
 
   // WAITING
   ALREADY_REGISTERED_WAITING(BAD_REQUEST, "이미 웨이팅에 등록되어 있는 휴대폰 번호에요."),
@@ -79,6 +81,13 @@ public enum ErrorCode {
   ONLY_REGISTRATION_STATE_CAN_BE_CANCEL(BAD_REQUEST, "등록 상태의 웨이팅만 취소 처리를 할 수 있어요."),
   ONLY_REGISTRATION_STATE_CAN_BE_COMPLETE(BAD_REQUEST, "등록 상태의 웨이팅만 입장 완료 처리를 할 수 있어요."),
   WAITING_NOT_FOUND(NOT_FOUND, "웨이팅을 찾을 수 없어요."),
+
+  // POS & ORDER
+  NOT_EMPTY_ORDER_MENU(BAD_REQUEST, "장바구니에 메뉴를 담아주세요."),
+  INCLUDE_SOLD_OUT_MENU(BAD_REQUEST, "주문하려는 메뉴 중 품절된 메뉴가 있어요."),
+  ORDER_MENU_QUANTITY_POSITIVE(BAD_REQUEST, "주문하려는 메뉴의 수량은 1개 이상이어야 해요."),
+  ORDER_MENU_NOT_FOUND(NOT_FOUND, "주문하려는 메뉴를 찾을 수 없어요."),
+  POS_TABLE_NOT_FOUND(NOT_FOUND, "POS 테이블을 찾을 수 없어요."),
   ;
 
   private final HttpStatus status;

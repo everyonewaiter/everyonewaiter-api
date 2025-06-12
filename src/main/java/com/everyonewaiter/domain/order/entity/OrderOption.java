@@ -26,4 +26,12 @@ public class OrderOption {
   @Embedded
   private Position position;
 
+  public static OrderOption create(String name, long price, int position) {
+    OrderOption orderOption = new OrderOption();
+    orderOption.name = name;
+    orderOption.price = price;
+    orderOption.position = new Position(position);
+    return orderOption;
+  }
+
 }

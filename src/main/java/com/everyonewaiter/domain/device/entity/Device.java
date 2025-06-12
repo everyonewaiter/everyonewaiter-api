@@ -109,6 +109,10 @@ public class Device extends AggregateRoot<Device> {
     return state == State.ACTIVE;
   }
 
+  public boolean isPrepaid() {
+    return purpose == Purpose.TABLE && paymentType == PaymentType.PREPAID;
+  }
+
   public boolean hasPurpose(Purpose purpose) {
     return this.purpose == purpose;
   }

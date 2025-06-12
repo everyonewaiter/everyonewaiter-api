@@ -2,6 +2,8 @@ package com.everyonewaiter.domain.menu.entity;
 
 import com.everyonewaiter.global.domain.entity.Aggregate;
 import com.everyonewaiter.global.domain.entity.Position;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -74,6 +76,15 @@ public class MenuOptionGroup extends Aggregate {
 
   public void addMenuOption(MenuOption menuOption) {
     this.menuOptions.add(menuOption);
+  }
+
+  public MenuOption getMenuOption(String name, long price) {
+    return menuOptions.stream()
+        .filter(menuOption ->
+            menuOption.getName().equals(name) && menuOption.getPrice() == price
+        )
+        .findFirst()
+        .orElseThrow(() -> new BusinessException(ErrorCode.MENU_OPTION_NOT_FOUND));
   }
 
   public List<MenuOption> getMenuOptions() {

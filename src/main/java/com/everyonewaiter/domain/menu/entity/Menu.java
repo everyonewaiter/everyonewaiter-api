@@ -3,6 +3,8 @@ package com.everyonewaiter.domain.menu.entity;
 import com.everyonewaiter.domain.menu.event.MenuImageDeleteEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.domain.entity.Position;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embedded;
@@ -19,6 +21,7 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -131,6 +134,20 @@ public class Menu extends AggregateRoot<Menu> {
 
   public void delete() {
     registerEvent(new MenuImageDeleteEvent(image));
+  }
+
+  public boolean canOrder() {
+    return state == State.DEFAULT;
+  }
+
+  public MenuOptionGroup getMenuOptionGroup(Long menuOptionGroupId) {
+    return getMenuOptionGroups()
+        .stream()
+        .filter(menuOptionGroup ->
+            Objects.requireNonNull(menuOptionGroup.getId()).equals(menuOptionGroupId)
+        )
+        .findFirst()
+        .orElseThrow(() -> new BusinessException(ErrorCode.MENU_OPTION_GROUP_NOT_FOUND));
   }
 
   public List<MenuOptionGroup> getMenuOptionGroups() {

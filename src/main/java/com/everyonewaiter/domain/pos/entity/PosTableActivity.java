@@ -57,6 +57,10 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
     return posTableActivity;
   }
 
+  public boolean hasOrder() {
+    return !getOrders().isEmpty();
+  }
+
   public List<Order> getOrders() {
     return Collections.unmodifiableList(orders);
   }

@@ -1,0 +1,62 @@
+### 1. 주문 생성
+< {%
+  const deviceId = request.environment.get("devices.pos.id");
+  const deviceName = request.environment.get("devices.pos.name");
+  const devicePurpose = request.environment.get("devices.pos.purpose");
+  const secretKey = request.environment.get("devices.pos.secretKey");
+
+  const method = request.method;
+  const uri = request.url
+  .tryGetSubstituted()
+  .split(request.environment.get("url"))[1];
+  const timestamp = Date.now().toString();
+
+  const signature = crypto.hmac.sha256()
+  .withTextSecret(secretKey)
+  .updateWithText(`${method} ${uri}\n`)
+  .updateWithText(`${deviceId} ${devicePurpose} ${deviceName}\n`)
+  .updateWithText(`${timestamp}`)
+  .digest()
+  .toBase64();
+
+  request.variables.set("accessKey", deviceId);
+  request.variables.set("signature", signature);
+  request.variables.set("timestamp", timestamp);
+%}
+
+POST {{url}}/v1/orders
+Content-Type: application/json
+x-ew-access-key: {{accessKey}}
+x-ew-signature: {{signature}}
+x-ew-timestamp: {{timestamp}}
+
+{
+  "tableNo": 1,
+  "memo": "",
+  "orderMenus": [
+    {
+      "menuId": 720877060705463585,
+      "quantity": 1,
+      "menuOptionGroups": []
+    },
+    {
+      "menuId": 720877103952931652,
+      "quantity": 2,
+      "menuOptionGroups": [
+        {
+          "menuOptionGroupId": 720877104015844743,
+          "orderOptions": [
+            {
+              "name": "크림 스프",
+              "price": 1000
+            },
+            {
+              "name": "감자튀김",
+              "price": 2000
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

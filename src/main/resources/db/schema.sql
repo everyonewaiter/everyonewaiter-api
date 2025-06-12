@@ -194,7 +194,7 @@ create table orders_menu
     orders_id     bigint      not null,
     name          varchar(30) not null,
     price         bigint      not null,
-    count         int         not null,
+    quantity      int         not null,
     served        boolean     not null,
     served_time   datetime(6) not null,
     print_enabled boolean     not null,

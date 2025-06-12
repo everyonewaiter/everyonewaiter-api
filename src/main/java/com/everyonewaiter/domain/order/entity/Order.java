@@ -55,17 +55,31 @@ public class Order extends AggregateRoot<Order> {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "state", nullable = false)
-  private State state;
+  private State state = State.ORDER;
 
   @Column(name = "memo", nullable = false)
   private String memo;
 
   @Embedded
-  private Serving serving;
+  private Serving serving = new Serving();
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderBy("id asc")
   private List<OrderMenu> orderMenus = new ArrayList<>();
+
+  public static Order create(PosTableActivity posTableActivity, Type type, String memo) {
+    Order order = new Order();
+    order.storeId = posTableActivity.getStoreId();
+    order.posTableActivity = posTableActivity;
+    order.category = posTableActivity.hasOrder() ? Category.ADDITIONAL : Category.INITIAL;
+    order.type = type;
+    order.memo = memo;
+    return order;
+  }
+
+  public void addOrderMenu(OrderMenu orderMenu) {
+    this.orderMenus.add(orderMenu);
+  }
 
   public List<OrderMenu> getOrderMenus() {
     return Collections.unmodifiableList(orderMenus);

@@ -1,6 +1,8 @@
 package com.everyonewaiter.domain.order.entity;
 
 import com.everyonewaiter.global.domain.entity.Aggregate;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -40,11 +42,11 @@ public class OrderMenu extends Aggregate {
   @Column(name = "price", nullable = false)
   private long price;
 
-  @Column(name = "count", nullable = false)
-  private int count;
+  @Column(name = "quantity", nullable = false)
+  private int quantity;
 
   @Embedded
-  private Serving serving;
+  private Serving serving = new Serving();
 
   @Column(name = "print_enabled", nullable = false)
   private boolean printEnabled;
@@ -52,6 +54,38 @@ public class OrderMenu extends Aggregate {
   @OneToMany(mappedBy = "orderMenu", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderBy("id asc")
   private List<OrderOptionGroup> orderOptionGroups = new ArrayList<>();
+
+  public static OrderMenu create(
+      Order order,
+      String name,
+      long price,
+      int quantity,
+      boolean printEnabled
+  ) {
+    if (quantity > 0) {
+      OrderMenu orderMenu = new OrderMenu();
+      orderMenu.order = order;
+      orderMenu.name = name;
+      orderMenu.price = price;
+      orderMenu.quantity = quantity;
+      orderMenu.printEnabled = printEnabled;
+      return orderMenu;
+    } else {
+      throw new BusinessException(ErrorCode.ORDER_MENU_QUANTITY_POSITIVE);
+    }
+  }
+
+  public void addOrderOptionGroup(OrderOptionGroup orderOptionGroup) {
+    orderOptionGroups.add(orderOptionGroup);
+  }
+
+  public long calculateTotalPrice() {
+    long totalPrice = price;
+    for (OrderOptionGroup orderOptionGroup : orderOptionGroups) {
+      totalPrice += orderOptionGroup.getOrderOptionPrice();
+    }
+    return totalPrice * quantity;
+  }
 
   public List<OrderOptionGroup> getOrderOptionGroups() {
     return Collections.unmodifiableList(orderOptionGroups);
