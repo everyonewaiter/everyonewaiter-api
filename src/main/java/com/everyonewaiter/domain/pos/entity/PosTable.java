@@ -1,11 +1,14 @@
 package com.everyonewaiter.domain.pos.entity;
 
+import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,8 +53,67 @@ public class PosTable extends AggregateRoot<PosTable> {
     return posTable;
   }
 
+  public boolean hasActivity() {
+    return !activities.isEmpty();
+  }
+
+  public boolean hasOrder() {
+    return !getOrders().isEmpty();
+  }
+
+  @Nullable
+  public Order.Type getTablePaymentType() {
+    List<Order> orders = getOrders(Order.State.ORDER);
+    if (orders.isEmpty()) {
+      return null;
+    } else {
+      return orders.stream().allMatch(order -> order.getType() == Order.Type.PREPAID)
+          ? Order.Type.PREPAID
+          : Order.Type.POSTPAID;
+    }
+  }
+
+  @Nullable
+  public Instant getLastActivityTime() {
+    return hasActivity() ? activities.getLast().getCreatedAt() : null;
+  }
+
+  public long getTotalOrderPrice() {
+    return getOrders().stream()
+        .mapToLong(Order::calculateTotalOrderPrice)
+        .sum();
+  }
+
+  @Nullable
+  public String getFirstOrderMenuName() {
+    List<Order> orders = getOrders(Order.State.ORDER);
+    if (orders.isEmpty()) {
+      return null;
+    } else {
+      return orders.getFirst().getFirstOrderMenuName();
+    }
+  }
+
+  public int getOrderMenuCount() {
+    return getOrders(Order.State.ORDER).stream()
+        .mapToInt(Order::getOrderMenuCount)
+        .sum();
+  }
+
   public List<PosTableActivity> getActivities() {
     return Collections.unmodifiableList(activities);
+  }
+
+  public List<Order> getOrders() {
+    return getActivities().stream()
+        .flatMap(activity -> activity.getOrders().stream())
+        .toList();
+  }
+
+  public List<Order> getOrders(Order.State state) {
+    return getOrders().stream()
+        .filter(order -> order.getState() == state)
+        .toList();
   }
 
 }

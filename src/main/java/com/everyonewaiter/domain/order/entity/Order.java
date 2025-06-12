@@ -2,6 +2,7 @@ package com.everyonewaiter.domain.order.entity;
 
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -79,6 +80,32 @@ public class Order extends AggregateRoot<Order> {
 
   public void addOrderMenu(OrderMenu orderMenu) {
     this.orderMenus.add(orderMenu);
+  }
+
+  public long calculateTotalOrderPrice() {
+    if (state == State.CANCEL) {
+      return 0L;
+    } else {
+      return getOrderMenus().stream()
+          .mapToLong(OrderMenu::calculateTotalPrice)
+          .sum();
+    }
+  }
+
+  @Nullable
+  public String getFirstOrderMenuName() {
+    List<String> orderMenuNames = getOrderMenus().stream()
+        .map(OrderMenu::getName)
+        .toList();
+    if (orderMenuNames.isEmpty()) {
+      return null;
+    } else {
+      return orderMenuNames.getFirst();
+    }
+  }
+
+  public int getOrderMenuCount() {
+    return orderMenus.size();
   }
 
   public List<OrderMenu> getOrderMenus() {
