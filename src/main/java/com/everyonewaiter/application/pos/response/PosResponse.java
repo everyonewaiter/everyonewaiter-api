@@ -65,7 +65,7 @@ public class PosResponse {
     public static Table from(PosTable posTable) {
       return new Table(
           Objects.requireNonNull(posTable.getId()).toString(),
-          posTable.getStoreId().toString(),
+          Objects.requireNonNull(posTable.getStore().getId()).toString(),
           posTable.getName(),
           posTable.getTableNo(),
           posTable.hasOrder(),

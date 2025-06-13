@@ -82,7 +82,7 @@ public class Store extends AggregateRoot<Store> {
     if (isClosed()) {
       this.status = Status.OPEN;
       this.lastOpenedAt = Instant.now();
-      registerEvent(new StoreOpenEvent(getId(), getExtraTableCount()));
+      registerEvent(new StoreOpenEvent(getId()));
     } else {
       throw new BusinessException(ErrorCode.ALREADY_STORE_OPENED);
     }

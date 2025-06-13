@@ -1,6 +1,7 @@
 package com.everyonewaiter.domain.order.entity;
 
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
+import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -21,7 +22,7 @@ import lombok.ToString;
 @Table(name = "orders_payment")
 @Entity
 @Getter
-@ToString(exclude = {"posTableActivity"}, callSuper = true)
+@ToString(exclude = {"store", "posTableActivity"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderPayment extends AggregateRoot<OrderPayment> {
 
@@ -31,8 +32,9 @@ public class OrderPayment extends AggregateRoot<OrderPayment> {
 
   public enum CashReceiptType {NONE, DEDUCTION, PROOF}
 
-  @Column(name = "store_id", nullable = false, updatable = false)
-  private Long storeId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "store_id", nullable = false)
+  private Store store;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "pos_table_activity_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))

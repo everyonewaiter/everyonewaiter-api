@@ -2,6 +2,7 @@ package com.everyonewaiter.domain.pos.entity;
 
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.order.entity.OrderPayment;
+import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -25,12 +26,13 @@ import lombok.ToString;
 @Table(name = "pos_table_activity")
 @Entity
 @Getter
-@ToString(exclude = {"posTable", "orders", "payments"}, callSuper = true)
+@ToString(exclude = {"store", "posTable", "orders", "payments"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PosTableActivity extends AggregateRoot<PosTableActivity> {
 
-  @Column(name = "store_id", nullable = false, updatable = false)
-  private Long storeId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "store_id", nullable = false)
+  private Store store;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "pos_table_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
@@ -52,7 +54,7 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
 
   public static PosTableActivity create(PosTable posTable) {
     PosTableActivity posTableActivity = new PosTableActivity();
-    posTableActivity.storeId = posTable.getStoreId();
+    posTableActivity.store = posTable.getStore();
     posTableActivity.posTable = posTable;
     return posTableActivity;
   }

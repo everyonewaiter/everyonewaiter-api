@@ -25,7 +25,7 @@ class PosTableActivityRepositoryImpl implements PosTableActivityRepository {
             .from(posTableActivity)
             .innerJoin(posTableActivity.posTable, posTable).fetchJoin()
             .where(
-                posTableActivity.storeId.eq(storeId),
+                posTableActivity.store.id.eq(storeId),
                 posTableActivity.active.isTrue(),
                 posTableActivity.posTable.tableNo.eq(tableNo)
             )

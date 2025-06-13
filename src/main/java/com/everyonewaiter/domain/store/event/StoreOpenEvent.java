@@ -1,5 +1,5 @@
 package com.everyonewaiter.domain.store.event;
 
-public record StoreOpenEvent(Long storeId, int extraTableCount) {
+public record StoreOpenEvent(Long storeId) {
 
 }

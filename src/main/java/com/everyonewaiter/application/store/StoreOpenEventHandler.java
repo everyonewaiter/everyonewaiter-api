@@ -4,7 +4,9 @@ import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.domain.device.repository.DeviceRepository;
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
+import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.domain.store.event.StoreOpenEvent;
+import com.everyonewaiter.domain.store.repository.StoreRepository;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +23,14 @@ class StoreOpenEventHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(StoreOpenEventHandler.class);
 
+  private final StoreRepository storeRepository;
   private final DeviceRepository deviceRepository;
   private final PosTableRepository posTableRepository;
 
   @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
   public void consume(StoreOpenEvent event) {
     Long storeId = event.storeId();
+    Store store = storeRepository.findByIdOrThrow(storeId);
     LOGGER.info("[매장 영업 시작 이벤트] storeId: {}", storeId);
 
     Map<Integer, PosTable> tables = new LinkedHashMap<>();
@@ -34,12 +38,12 @@ class StoreOpenEventHandler {
     for (Device device : devices) {
       tables.computeIfAbsent(
           device.getTableNo(),
-          tableNo -> PosTable.create(storeId, "T", tableNo)
+          tableNo -> PosTable.create(store, "T", tableNo)
       );
     }
 
-    for (int i = 1; i <= event.extraTableCount(); i++) {
-      PosTable table = PosTable.create(storeId, "추가", String.valueOf(i), 10000 + i);
+    for (int i = 1; i <= store.getExtraTableCount(); i++) {
+      PosTable table = PosTable.create(store, "추가", String.valueOf(i), 10000 + i);
       tables.put(table.getTableNo(), table);
     }
 

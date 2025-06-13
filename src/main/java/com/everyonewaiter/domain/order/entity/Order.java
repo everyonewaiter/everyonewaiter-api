@@ -1,6 +1,7 @@
 package com.everyonewaiter.domain.order.entity;
 
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
+import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
@@ -29,7 +30,7 @@ import lombok.ToString;
 @Table(name = "orders")
 @Entity
 @Getter
-@ToString(exclude = {"posTableActivity", "orderMenus"}, callSuper = true)
+@ToString(exclude = {"store", "posTableActivity", "orderMenus"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends AggregateRoot<Order> {
 
@@ -39,8 +40,9 @@ public class Order extends AggregateRoot<Order> {
 
   public enum State {ORDER, CANCEL}
 
-  @Column(name = "store_id", nullable = false, updatable = false)
-  private Long storeId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "store_id", nullable = false)
+  private Store store;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "pos_table_activity_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
@@ -70,7 +72,7 @@ public class Order extends AggregateRoot<Order> {
 
   public static Order create(PosTableActivity posTableActivity, Type type, String memo) {
     Order order = new Order();
-    order.storeId = posTableActivity.getStoreId();
+    order.store = posTableActivity.getStore();
     order.posTableActivity = posTableActivity;
     order.category = posTableActivity.hasOrder() ? Category.ADDITIONAL : Category.INITIAL;
     order.type = type;
@@ -80,6 +82,10 @@ public class Order extends AggregateRoot<Order> {
 
   public void addOrderMenu(OrderMenu orderMenu) {
     this.orderMenus.add(orderMenu);
+  }
+
+  public boolean isServed() {
+    return serving.isServed();
   }
 
   public long calculateTotalOrderPrice() {

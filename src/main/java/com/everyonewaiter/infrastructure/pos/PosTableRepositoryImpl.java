@@ -24,7 +24,7 @@ class PosTableRepositoryImpl implements PosTableRepository {
         .update(posTable)
         .set(posTable.active, false)
         .where(
-            posTable.storeId.eq(storeId),
+            posTable.store.id.eq(storeId),
             posTable.active.isTrue()
         )
         .execute();
