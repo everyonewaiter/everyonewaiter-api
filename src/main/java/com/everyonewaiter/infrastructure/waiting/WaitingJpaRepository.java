@@ -7,4 +7,6 @@ interface WaitingJpaRepository extends JpaRepository<Waiting, Long> {
 
   boolean existsByPhoneNumberAndState(String phoneNumber, Waiting.State state);
 
+  boolean existsByStoreIdAndState(Long storeId, Waiting.State state);
+
 }

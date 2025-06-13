@@ -48,6 +48,18 @@ interface StoreControllerSpecification {
               exampleName = "이미 매장이 마감되어 있는 경우"
           ),
           @ApiErrorResponse(
+              code = ErrorCode.INCOMPLETE_POS_TABLE_ACTIVITY,
+              exampleName = "완료되지 않은 주문이 있는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.INCOMPLETE_ORDER_SERVING,
+              exampleName = "완료되지 않은 주문 서빙 내역이 있는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.INCOMPLETE_WAITING,
+              exampleName = "완료되지 않은 웨이팅이 있는 경우"
+          ),
+          @ApiErrorResponse(
               code = ErrorCode.UNAUTHORIZED,
               exampleName = "서명(시그니처)이 유효하지 않은 경우"
           ),

@@ -72,10 +72,12 @@ class WaitingRepositoryImpl implements WaitingRepository {
   }
 
   @Override
-  public List<Waiting> findAllByStoreIdAndState(
-      Long storeId,
-      Waiting.State state
-  ) {
+  public boolean existsByStoreIdAndState(Long storeId, Waiting.State state) {
+    return waitingJpaRepository.existsByStoreIdAndState(storeId, state);
+  }
+
+  @Override
+  public List<Waiting> findAllByStoreIdAndState(Long storeId, Waiting.State state) {
     return queryFactory
         .select(waiting)
         .from(waiting)

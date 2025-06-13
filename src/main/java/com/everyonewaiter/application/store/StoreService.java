@@ -64,6 +64,7 @@ public class StoreService {
   public void close(Long storeId) {
     Store store = storeRepository.findByIdOrThrow(storeId);
     store.close();
+    storeValidator.validateClose(storeId);
     storeRepository.save(store);
   }
 

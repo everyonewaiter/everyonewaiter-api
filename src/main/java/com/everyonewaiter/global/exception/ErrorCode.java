@@ -80,12 +80,15 @@ public enum ErrorCode {
   ONLY_REGISTRATION_STATE_CAN_BE_CALL(BAD_REQUEST, "등록 상태의 웨이팅만 손님 입장 안내 호출을 할 수 있어요."),
   ONLY_REGISTRATION_STATE_CAN_BE_CANCEL(BAD_REQUEST, "등록 상태의 웨이팅만 취소 처리를 할 수 있어요."),
   ONLY_REGISTRATION_STATE_CAN_BE_COMPLETE(BAD_REQUEST, "등록 상태의 웨이팅만 입장 완료 처리를 할 수 있어요."),
+  INCOMPLETE_WAITING(BAD_REQUEST, "완료되지 않은 웨이팅이 있어요. 홀 관리 페이지에서 웨이팅을 완료 처리 해주세요."),
   WAITING_NOT_FOUND(NOT_FOUND, "웨이팅을 찾을 수 없어요."),
 
   // POS & ORDER
   NOT_EMPTY_ORDER_MENU(BAD_REQUEST, "장바구니에 메뉴를 담아주세요."),
   INCLUDE_SOLD_OUT_MENU(BAD_REQUEST, "주문하려는 메뉴 중 품절된 메뉴가 있어요."),
   ORDER_MENU_QUANTITY_POSITIVE(BAD_REQUEST, "주문하려는 메뉴의 수량은 1개 이상이어야 해요."),
+  INCOMPLETE_POS_TABLE_ACTIVITY(BAD_REQUEST, "완료되지 않은 주문이 있어요. POS에서 주문을 완료해 주세요."),
+  INCOMPLETE_ORDER_SERVING(BAD_REQUEST, "완료되지 않은 주문 서빙 내역이 있어요. 홀 관리 페이지에서 주문 서빙을 완료 처리 해주세요."),
   ORDER_MENU_NOT_FOUND(NOT_FOUND, "주문하려는 메뉴를 찾을 수 없어요."),
   POS_TABLE_NOT_FOUND(NOT_FOUND, "POS 테이블을 찾을 수 없어요."),
   ;

@@ -13,6 +13,8 @@ public interface WaitingRepository {
 
   boolean existsByPhoneNumberAndState(String phoneNumber, Waiting.State state);
 
+  boolean existsByStoreIdAndState(Long storeId, Waiting.State state);
+
   List<Waiting> findAllByStoreIdAndState(Long storeId, Waiting.State state);
 
   Waiting findByIdAndStoreIdOrThrow(Long waitingId, Long storeId);
