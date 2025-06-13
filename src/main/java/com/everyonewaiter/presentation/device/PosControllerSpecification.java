@@ -14,7 +14,15 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "POS")
 interface PosControllerSpecification {
 
-  @Operation(summary = "[POS] 테이블 목록 조회", description = "테이블 목록 조회 API")
+  @Operation(
+      summary = "[POS] 테이블 목록 조회",
+      description = "테이블 목록 조회 API<br/><br/>"
+          + "응답의 `orderType`, `orderedAt`, `orderMenuName` 필드는 **nullable** 값 입니다.<br/>"
+          + "`hasOrder`가 **true**인 경우 해당 필드들은 값이 존재하며, **false**인 경우 null 입니다.<br/><br/>"
+          + "**메뉴명 예제**<br/>"
+          + "- `orderMenuCount`가 1인 경우: `orderMenuName`<br/>"
+          + "- `orderMenuCount`가 2 이상인 경우: `orderMenuName 외 (orderMenuCount-1)개`"
+  )
   @ApiResponse(responseCode = "200", description = "테이블 목록 조회 성공")
   @ApiErrorResponses(
       summary = "테이블 목록 조회 실패",

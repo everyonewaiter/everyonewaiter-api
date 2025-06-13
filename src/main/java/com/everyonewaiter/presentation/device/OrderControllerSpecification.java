@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
-@Tag(name = "POS")
+@Tag(name = "주문")
 interface OrderControllerSpecification {
 
   @Operation(summary = "[TABLE, POS] 주문 생성", description = "주문 생성 API")
