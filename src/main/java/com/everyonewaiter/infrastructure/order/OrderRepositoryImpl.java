@@ -1,7 +1,13 @@
 package com.everyonewaiter.infrastructure.order;
 
+import static com.everyonewaiter.domain.order.entity.QOrder.order;
+import static com.everyonewaiter.domain.order.entity.QOrderMenu.orderMenu;
+import static com.everyonewaiter.domain.store.entity.QStore.store;
+
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.order.repository.OrderRepository;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +15,23 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 class OrderRepositoryImpl implements OrderRepository {
 
+  private final JPAQueryFactory queryFactory;
   private final OrderJpaRepository orderJpaRepository;
+
+  @Override
+  public List<Order> findAllByStoreIdAndServed(Long storeId, boolean served) {
+    return queryFactory
+        .select(order)
+        .from(order)
+        .innerJoin(order.store, store).fetchJoin()
+        .leftJoin(order.orderMenus, orderMenu).fetchJoin()
+        .where(
+            order.store.id.eq(storeId),
+            order.serving.served.eq(served),
+            order.createdAt.gt(store.lastOpenedAt)
+        )
+        .fetch();
+  }
 
   @Override
   public Order save(Order order) {

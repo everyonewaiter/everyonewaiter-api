@@ -1,6 +1,7 @@
 package com.everyonewaiter.presentation.device;
 
 import com.everyonewaiter.application.order.OrderService;
+import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.global.annotation.AuthenticationDevice;
@@ -10,9 +11,11 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,6 +24,16 @@ import org.springframework.web.bind.annotation.RestController;
 class OrderController implements OrderControllerSpecification {
 
   private final OrderService orderService;
+
+  @Override
+  @StoreOpen
+  @GetMapping("/hall")
+  public ResponseEntity<OrderResponse.Details> getOrdersByHall(
+      @RequestParam boolean served,
+      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+  ) {
+    return ResponseEntity.ok(orderService.readAllByHall(device.getStoreId(), served));
+  }
 
   @Override
   @StoreOpen

@@ -1,6 +1,7 @@
 package com.everyonewaiter.application.order;
 
 import com.everyonewaiter.application.order.request.OrderWrite;
+import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
 import com.everyonewaiter.domain.order.entity.Order;
@@ -10,6 +11,7 @@ import com.everyonewaiter.domain.order.repository.OrderRepository;
 import com.everyonewaiter.domain.order.service.OrderFactory;
 import com.everyonewaiter.domain.order.service.OrderValidator;
 import com.everyonewaiter.global.annotation.RedissonLock;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -64,6 +66,12 @@ public class OrderService {
     return menuRepository.findAllByStoreIdAndIds(storeId, menuIds.stream().toList())
         .stream()
         .collect(Collectors.toMap(Menu::getId, menu -> menu));
+  }
+
+  @Transactional(readOnly = true)
+  public OrderResponse.Details readAllByHall(Long storeId, boolean served) {
+    List<Order> orders = orderRepository.findAllByStoreIdAndServed(storeId, served);
+    return OrderResponse.Details.from(orders);
   }
 
 }
