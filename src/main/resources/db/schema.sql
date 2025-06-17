@@ -181,6 +181,7 @@ create table orders
     category              enum ('INITIAL', 'ADDITIONAL') not null,
     type                  enum ('PREPAID', 'POSTPAID')   not null,
     state                 enum ('ORDER', 'CANCEL')       not null,
+    price                 bigint                         not null,
     memo                  varchar(30)                    not null,
     served                boolean                        not null,
     served_time           datetime(6)                    not null,

@@ -60,6 +60,9 @@ public class Order extends AggregateRoot<Order> {
   @Column(name = "state", nullable = false)
   private State state = State.ORDER;
 
+  @Column(name = "price", nullable = false)
+  private long price;
+
   @Column(name = "memo", nullable = false)
   private String memo;
 
@@ -82,20 +85,15 @@ public class Order extends AggregateRoot<Order> {
 
   public void addOrderMenu(OrderMenu orderMenu) {
     this.orderMenus.add(orderMenu);
+    this.price += orderMenu.calculateTotalPrice();
   }
 
   public boolean isServed() {
     return serving.isServed();
   }
 
-  public long calculateTotalOrderPrice() {
-    if (state == State.CANCEL) {
-      return 0L;
-    } else {
-      return getOrderMenus().stream()
-          .mapToLong(OrderMenu::calculateTotalPrice)
-          .sum();
-    }
+  public long getTotalOrderPrice() {
+    return state == State.CANCEL ? 0L : price;
   }
 
   @Nullable

@@ -95,7 +95,7 @@ public class PosTable extends AggregateRoot<PosTable> {
 
   public long getTotalOrderPrice() {
     return getOrders().stream()
-        .mapToLong(Order::calculateTotalOrderPrice)
+        .mapToLong(Order::getTotalOrderPrice)
         .sum();
   }
 
