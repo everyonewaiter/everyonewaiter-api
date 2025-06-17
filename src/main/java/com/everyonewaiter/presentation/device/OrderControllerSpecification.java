@@ -161,6 +161,30 @@ interface OrderControllerSpecification {
       @Parameter(hidden = true) Device device
   );
 
+  @Operation(summary = "[HALL] 직원 호출 완료", description = "직원 호출 완료 API")
+  @ApiResponse(responseCode = "204", description = "직원 호출 완료 성공")
+  @ApiErrorResponses(
+      summary = "직원 호출 완료 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_IS_CLOSED,
+              exampleName = "매장이 영업중이지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ALREADY_COMPLETED_STAFF_CALL,
+              exampleName = "이미 완료된 직원 호출인 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STAFF_CALL_NOT_FOUND,
+              exampleName = "직원 호출을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> completeStaffCall(
+      Long staffCallId,
+      @Parameter(hidden = true) Device device
+  );
+
   @Operation(summary = "[TABLE] 직원 호출", description = "직원 호출 API")
   @ApiResponse(responseCode = "201", description = "직원 호출 성공")
   @ApiErrorResponses(

@@ -29,6 +29,13 @@ public class StaffCallService {
     return staffCallRepository.save(staffCall).getId();
   }
 
+  @Transactional
+  public void complete(Long storeId, Long staffCallId) {
+    StaffCall staffCall = staffCallRepository.findByIdAndStoreIdOrThrow(staffCallId, storeId);
+    staffCall.complete();
+    staffCallRepository.save(staffCall);
+  }
+
   public OrderResponse.StaffCallDetails readAllIncomplete(Long storeId) {
     List<StaffCall> staffCalls = staffCallRepository.findAllIncompleteByStoreId(storeId);
     return OrderResponse.StaffCallDetails.from(staffCalls);

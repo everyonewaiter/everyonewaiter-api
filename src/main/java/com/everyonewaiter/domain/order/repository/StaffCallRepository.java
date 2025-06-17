@@ -9,6 +9,8 @@ public interface StaffCallRepository {
 
   List<StaffCall> findAllIncompleteByStoreId(Long storeId);
 
+  StaffCall findByIdAndStoreIdOrThrow(Long staffCallId, Long storeId);
+
   StaffCall save(StaffCall staffCall);
 
 }
