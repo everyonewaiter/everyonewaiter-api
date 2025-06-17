@@ -79,6 +79,20 @@ public class OrderMenu extends Aggregate {
     orderOptionGroups.add(orderOptionGroup);
   }
 
+  public void serving() {
+    if (!this.serving.isServed()) {
+      this.serving.complete();
+    }
+  }
+
+  public void servingOrCancel() {
+    if (this.serving.isServed()) {
+      this.serving.cancel();
+    } else {
+      this.serving.complete();
+    }
+  }
+
   public long calculateTotalPrice() {
     long totalPrice = price;
     for (OrderOptionGroup orderOptionGroup : orderOptionGroups) {

@@ -12,6 +12,7 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +50,29 @@ class OrderController implements OrderControllerSpecification {
         request.toDomainDto(orderType)
     );
     return ResponseEntity.created(URI.create(orderId.toString())).build();
+  }
+
+  @Override
+  @StoreOpen
+  @PostMapping("/{orderId}/serving")
+  public ResponseEntity<Void> servingOrder(
+      @PathVariable Long orderId,
+      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+  ) {
+    orderService.servingOrder(device.getStoreId(), orderId);
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @StoreOpen
+  @PostMapping("/{orderId}/menus/{orderMenuId}/serving")
+  public ResponseEntity<Void> servingOrderMenu(
+      @PathVariable Long orderId,
+      @PathVariable Long orderMenuId,
+      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+  ) {
+    orderService.servingOrderMenu(device.getStoreId(), orderId, orderMenuId);
+    return ResponseEntity.noContent().build();
   }
 
 }

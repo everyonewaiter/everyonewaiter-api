@@ -68,6 +68,20 @@ public class OrderService {
         .collect(Collectors.toMap(Menu::getId, menu -> menu));
   }
 
+  @Transactional
+  public void servingOrder(Long storeId, Long orderId) {
+    Order order = orderRepository.findByIdAndStoreIdOrThrow(orderId, storeId);
+    order.serving();
+    orderRepository.save(order);
+  }
+
+  @Transactional
+  public void servingOrderMenu(Long storeId, Long orderId, Long orderMenuId) {
+    Order order = orderRepository.findByIdAndStoreIdOrThrow(orderId, storeId);
+    order.servingMenu(orderMenuId);
+    orderRepository.save(order);
+  }
+
   @Transactional(readOnly = true)
   public OrderResponse.Details readAllByHall(Long storeId, boolean served) {
     List<Order> orders = orderRepository.findAllByStoreIdAndServed(storeId, served);

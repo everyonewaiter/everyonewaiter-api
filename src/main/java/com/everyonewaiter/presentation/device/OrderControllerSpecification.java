@@ -88,4 +88,62 @@ interface OrderControllerSpecification {
       @Parameter(hidden = true) Device device
   );
 
+  @Operation(summary = "[HALL] 주문 서빙", description = "주문 서빙 API")
+  @ApiResponse(responseCode = "204", description = "주문 서빙 성공")
+  @ApiErrorResponses(
+      summary = "주문 서빙 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_IS_CLOSED,
+              exampleName = "매장이 영업중이지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ALREADY_COMPLETED_SERVING,
+              exampleName = "이미 서빙이 완료된 주문인 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ORDER_NOT_FOUND,
+              exampleName = "주문을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> servingOrder(
+      Long orderId,
+      @Parameter(hidden = true) Device device
+  );
+
+  @Operation(
+      summary = "[HALL] 주문 메뉴 서빙",
+      description = "주문 메뉴 서빙 API<br/><br/>"
+          + "- 서빙이 완료되지 않은 주문 메뉴 -> 서빙 완료 처리<br/>"
+          + "- 서빙이 완료된 주문 메뉴 -> 서빙 완료 취소 처리"
+  )
+  @ApiResponse(responseCode = "204", description = "주문 메뉴 서빙 성공")
+  @ApiErrorResponses(
+      summary = "주문 메뉴 서빙 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_IS_CLOSED,
+              exampleName = "매장이 영업중이지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ALREADY_COMPLETED_SERVING,
+              exampleName = "이미 서빙이 완료된 주문인 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ORDER_NOT_FOUND,
+              exampleName = "주문을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ORDER_MENU_NOT_FOUND,
+              exampleName = "주문 메뉴를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> servingOrderMenu(
+      Long orderId,
+      Long orderMenuId,
+      @Parameter(hidden = true) Device device
+  );
+
 }

@@ -22,4 +22,18 @@ public class Serving {
   @Column(name = "served_time", nullable = false)
   private Instant servedTime = Instant.ofEpochMilli(0L);
 
+  public void complete() {
+    if (!this.served) {
+      this.served = true;
+      this.servedTime = Instant.now();
+    }
+  }
+
+  public void cancel() {
+    if (this.served) {
+      this.served = false;
+      this.servedTime = Instant.ofEpochSecond(0L);
+    }
+  }
+
 }

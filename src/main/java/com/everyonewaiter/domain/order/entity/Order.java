@@ -3,6 +3,8 @@ package com.everyonewaiter.domain.order.entity;
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -21,6 +23,7 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -88,6 +91,23 @@ public class Order extends AggregateRoot<Order> {
     this.price += orderMenu.calculateTotalPrice();
   }
 
+  public void serving() {
+    if (this.serving.isServed()) {
+      throw new BusinessException(ErrorCode.ALREADY_COMPLETED_SERVING);
+    } else {
+      this.serving.complete();
+      getOrderMenus().forEach(OrderMenu::serving);
+    }
+  }
+
+  public void servingMenu(Long orderMenuId) {
+    if (this.serving.isServed()) {
+      throw new BusinessException(ErrorCode.ALREADY_COMPLETED_SERVING);
+    } else {
+      getOrderMenu(orderMenuId).servingOrCancel();
+    }
+  }
+
   public boolean isServed() {
     return serving.isServed();
   }
@@ -110,6 +130,13 @@ public class Order extends AggregateRoot<Order> {
 
   public int getOrderMenuCount() {
     return orderMenus.size();
+  }
+
+  public OrderMenu getOrderMenu(Long orderMenuId) {
+    return getOrderMenus().stream()
+        .filter(orderMenu -> Objects.requireNonNull(orderMenu.getId()).equals(orderMenuId))
+        .findFirst()
+        .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_MENU_NOT_FOUND));
   }
 
   public List<OrderMenu> getOrderMenus() {

@@ -9,4 +9,6 @@ public interface OrderRepository {
 
   Order save(Order order);
 
+  Order findByIdAndStoreIdOrThrow(Long orderId, Long storeId);
+
 }

@@ -92,3 +92,67 @@ Content-Type: application/json
 x-ew-access-key: {{accessKey}}
 x-ew-signature: {{signature}}
 x-ew-timestamp: {{timestamp}}
+
+### 3. [홀 관리] 주문 서빙
+< {%
+  const deviceId = request.environment.get("devices.hall.id");
+  const deviceName = request.environment.get("devices.hall.name");
+  const devicePurpose = request.environment.get("devices.hall.purpose");
+  const secretKey = request.environment.get("devices.hall.secretKey");
+
+  const method = request.method;
+  const uri = request.url
+  .tryGetSubstituted()
+  .split(request.environment.get("url"))[1];
+  const timestamp = Date.now().toString();
+
+  const signature = crypto.hmac.sha256()
+  .withTextSecret(secretKey)
+  .updateWithText(`${method} ${uri}\n`)
+  .updateWithText(`${deviceId} ${devicePurpose} ${deviceName}\n`)
+  .updateWithText(`${timestamp}`)
+  .digest()
+  .toBase64();
+
+  request.variables.set("accessKey", deviceId);
+  request.variables.set("signature", signature);
+  request.variables.set("timestamp", timestamp);
+%}
+
+POST {{url}}/v1/orders/722613598859389799/serving
+Content-Type: application/json
+x-ew-access-key: {{accessKey}}
+x-ew-signature: {{signature}}
+x-ew-timestamp: {{timestamp}}
+
+### 4. [홀 관리] 주문 메뉴 서빙
+< {%
+  const deviceId = request.environment.get("devices.hall.id");
+  const deviceName = request.environment.get("devices.hall.name");
+  const devicePurpose = request.environment.get("devices.hall.purpose");
+  const secretKey = request.environment.get("devices.hall.secretKey");
+
+  const method = request.method;
+  const uri = request.url
+  .tryGetSubstituted()
+  .split(request.environment.get("url"))[1];
+  const timestamp = Date.now().toString();
+
+  const signature = crypto.hmac.sha256()
+  .withTextSecret(secretKey)
+  .updateWithText(`${method} ${uri}\n`)
+  .updateWithText(`${deviceId} ${devicePurpose} ${deviceName}\n`)
+  .updateWithText(`${timestamp}`)
+  .digest()
+  .toBase64();
+
+  request.variables.set("accessKey", deviceId);
+  request.variables.set("signature", signature);
+  request.variables.set("timestamp", timestamp);
+%}
+
+POST {{url}}/v1/orders/720884294758628965/menus/720884294783794262/serving
+Content-Type: application/json
+x-ew-access-key: {{accessKey}}
+x-ew-signature: {{signature}}
+x-ew-timestamp: {{timestamp}}
