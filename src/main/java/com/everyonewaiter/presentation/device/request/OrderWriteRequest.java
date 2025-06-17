@@ -119,4 +119,14 @@ public class OrderWriteRequest {
 
   }
 
+  @Schema(name = "OrderWriteRequest.StaffCallOption")
+  public record StaffCallOption(
+      @Schema(description = "직원 호출 옵션명", example = "직원 호출", requiredMode = Schema.RequiredMode.REQUIRED)
+      @NotBlank(message = "직원 호출 옵션명을 입력해 주세요.")
+      @Size(min = 1, max = 10, message = "직원 호출 옵션명은 1자 이상 10자 이하로 입력해 주세요.")
+      String optionName
+  ) {
+
+  }
+
 }

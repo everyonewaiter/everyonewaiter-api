@@ -146,4 +146,28 @@ interface OrderControllerSpecification {
       @Parameter(hidden = true) Device device
   );
 
+  @Operation(summary = "[TABLE] 직원 호출", description = "직원 호출 API")
+  @ApiResponse(responseCode = "201", description = "직원 호출 성공")
+  @ApiErrorResponses(
+      summary = "직원 호출 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_IS_CLOSED,
+              exampleName = "매장이 영업중이지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STAFF_CALL_OPTION_NOT_FOUND,
+              exampleName = "매장에 등록되어 있는 직원 호출 옵션명을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> callStaff(
+      @RequestBody OrderWriteRequest.StaffCallOption request,
+      @Parameter(hidden = true) Device device
+  );
+
 }

@@ -63,6 +63,11 @@ public class Setting extends Aggregate {
     this.staffCallOptions.addAll(staffCallOptions);
   }
 
+  public boolean hasStaffCallOption(String staffCallOptionName) {
+    return this.staffCallOptions.stream()
+        .anyMatch(staffCallOption -> staffCallOption.optionName().equals(staffCallOptionName));
+  }
+
   public List<CountryOfOrigin> getCountryOfOrigins() {
     return Collections.unmodifiableList(countryOfOrigins);
   }

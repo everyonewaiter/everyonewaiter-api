@@ -245,3 +245,15 @@ create table orders_payment
     created_at            datetime(6)                         not null,
     updated_at            datetime(6)                         not null
 );
+
+create table staff_call
+(
+    id            bigint primary key,
+    store_id      bigint                          not null,
+    table_no      int                             not null,
+    name          varchar(20)                     not null,
+    state         enum ('INCOMPLETE' ,'COMPLETE') not null,
+    complete_time datetime(6)                     not null,
+    created_at    datetime(6)                     not null,
+    updated_at    datetime(6)                     not null
+);

@@ -1,0 +1,64 @@
+package com.everyonewaiter.domain.order.entity;
+
+import com.everyonewaiter.domain.store.entity.Store;
+import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Table(name = "staff_call")
+@Entity
+@Getter
+@ToString(exclude = "store", callSuper = true)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class StaffCall extends AggregateRoot<StaffCall> {
+
+  public enum State {INCOMPLETE, COMPLETE}
+
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "store_id", nullable = false)
+  private Store store;
+
+  @Column(name = "table_no", nullable = false)
+  private int tableNo;
+
+  @Column(name = "name", nullable = false)
+  private String name;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "state", nullable = false)
+  private State state = State.INCOMPLETE;
+
+  @Column(name = "complete_time", nullable = false)
+  private Instant completeTime = Instant.ofEpochMilli(0L);
+
+  public static StaffCall create(Store store, int tableNo, String name) {
+    StaffCall staffCall = new StaffCall();
+    staffCall.store = store;
+    staffCall.tableNo = tableNo;
+    staffCall.name = name;
+    return staffCall;
+  }
+
+  public void complete() {
+    if (this.state == State.INCOMPLETE) {
+      this.state = State.COMPLETE;
+      this.completeTime = Instant.now();
+    } else {
+      throw new BusinessException(ErrorCode.ALREADY_COMPLETED_STAFF_CALL);
+    }
+  }
+
+}

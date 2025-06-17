@@ -106,6 +106,10 @@ public class Store extends AggregateRoot<Store> {
     return this.status == Status.CLOSE;
   }
 
+  public boolean hasStaffCallOption(String staffCallOptionName) {
+    return this.setting.hasStaffCallOption(staffCallOptionName);
+  }
+
   public int getExtraTableCount() {
     return this.setting.getExtraTableCount();
   }

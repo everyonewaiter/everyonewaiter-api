@@ -1,6 +1,7 @@
 package com.everyonewaiter.presentation.device;
 
 import com.everyonewaiter.application.order.OrderService;
+import com.everyonewaiter.application.order.StaffCallService;
 import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.domain.order.entity.Order;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 class OrderController implements OrderControllerSpecification {
 
   private final OrderService orderService;
+  private final StaffCallService staffCallService;
 
   @Override
   @StoreOpen
@@ -73,6 +75,21 @@ class OrderController implements OrderControllerSpecification {
   ) {
     orderService.servingOrderMenu(device.getStoreId(), orderId, orderMenuId);
     return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @StoreOpen
+  @PostMapping("/staff-call")
+  public ResponseEntity<Void> callStaff(
+      @RequestBody @Valid OrderWriteRequest.StaffCallOption request,
+      @AuthenticationDevice(purpose = Device.Purpose.TABLE) Device device
+  ) {
+    Long staffCallId = staffCallService.callStaff(
+        device.getStoreId(),
+        device.getTableNo(),
+        request.optionName()
+    );
+    return ResponseEntity.created(URI.create(staffCallId.toString())).build();
   }
 
 }
