@@ -79,7 +79,16 @@ class OrderController implements OrderControllerSpecification {
 
   @Override
   @StoreOpen
-  @PostMapping("/staff-call")
+  @GetMapping("/staff-calls")
+  public ResponseEntity<OrderResponse.StaffCallDetails> getStaffCalls(
+      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+  ) {
+    return ResponseEntity.ok(staffCallService.readAllIncomplete(device.getStoreId()));
+  }
+
+  @Override
+  @StoreOpen
+  @PostMapping("/staff-calls")
   public ResponseEntity<Void> callStaff(
       @RequestBody @Valid OrderWriteRequest.StaffCallOption request,
       @AuthenticationDevice(purpose = Device.Purpose.TABLE) Device device

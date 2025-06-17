@@ -91,6 +91,7 @@ public enum ErrorCode {
   ORDER_MENU_QUANTITY_POSITIVE(BAD_REQUEST, "주문하려는 메뉴의 수량은 1개 이상이어야 해요."),
   INCOMPLETE_POS_TABLE_ACTIVITY(BAD_REQUEST, "완료되지 않은 주문이 있어요. POS에서 주문을 완료해 주세요."),
   INCOMPLETE_ORDER_SERVING(BAD_REQUEST, "완료되지 않은 주문 서빙 내역이 있어요. 홀 관리 페이지에서 주문 서빙을 완료 처리 해주세요."),
+  INCOMPLETE_STAFF_CALL(BAD_REQUEST, "완료되지 않은 직원 호출 내역이 있어요. 홀 관리 페이지에서 직원 호출을 완료 처리 해주세요."),
   ORDER_NOT_FOUND(NOT_FOUND, "주문을 찾을 수 없어요."),
   ORDER_MENU_NOT_FOUND(NOT_FOUND, "주문하려는 메뉴를 찾을 수 없어요."),
   POS_TABLE_NOT_FOUND(NOT_FOUND, "POS 테이블을 찾을 수 없어요."),

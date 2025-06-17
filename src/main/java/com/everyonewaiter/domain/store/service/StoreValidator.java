@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.store.service;
 
+import com.everyonewaiter.domain.order.repository.StaffCallRepository;
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.domain.store.repository.StoreRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class StoreValidator {
 
   private final StoreRepository storeRepository;
+  private final StaffCallRepository staffCallRepository;
   private final WaitingRepository waitingRepository;
   private final PosTableRepository posTableRepository;
 
@@ -45,6 +47,9 @@ public class StoreValidator {
     }
     if (posTables.stream().anyMatch(PosTable::hasNotServedOrder)) {
       throw new BusinessException(ErrorCode.INCOMPLETE_ORDER_SERVING);
+    }
+    if (staffCallRepository.existsIncompleteByStoreId(storeId)) {
+      throw new BusinessException(ErrorCode.INCOMPLETE_STAFF_CALL);
     }
     if (waitingRepository.existsByStoreIdAndState(storeId, Waiting.State.REGISTRATION)) {
       throw new BusinessException(ErrorCode.INCOMPLETE_WAITING);

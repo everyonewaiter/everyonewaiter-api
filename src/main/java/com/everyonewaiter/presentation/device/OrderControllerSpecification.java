@@ -146,6 +146,21 @@ interface OrderControllerSpecification {
       @Parameter(hidden = true) Device device
   );
 
+  @Operation(summary = "[HALL] 직원 호출 목록 조회", description = "직원 호출 목록 조회 API")
+  @ApiResponse(responseCode = "200", description = "직원 호출 목록 조회 성공")
+  @ApiErrorResponses(
+      summary = "직원 호출 목록 조회 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_IS_CLOSED,
+              exampleName = "매장이 영업중이지 않은 경우"
+          ),
+      }
+  )
+  ResponseEntity<OrderResponse.StaffCallDetails> getStaffCalls(
+      @Parameter(hidden = true) Device device
+  );
+
   @Operation(summary = "[TABLE] 직원 호출", description = "직원 호출 API")
   @ApiResponse(responseCode = "201", description = "직원 호출 성공")
   @ApiErrorResponses(
