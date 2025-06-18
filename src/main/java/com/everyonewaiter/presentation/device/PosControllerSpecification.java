@@ -7,7 +7,10 @@ import com.everyonewaiter.global.annotation.ApiErrorResponses;
 import com.everyonewaiter.global.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
@@ -42,5 +45,42 @@ interface PosControllerSpecification {
       }
   )
   ResponseEntity<PosResponse.Tables> getTables(@Parameter(hidden = true) Device device);
+
+  @Operation(summary = "[TABLE, POS] 테이블 액티비티 상세 조회", description = "테이블 액티비티 상세 조회 API")
+  @ApiResponses(
+      value = {
+          @ApiResponse(responseCode = "200", description = "테이블 액티비티 상세 조회 성공"),
+          @ApiResponse(
+              responseCode = "204",
+              description = "활성 상태의 테이블 액티비티를 찾지 못한 경우",
+              content = @Content(schema = @Schema(type = "null"))
+          ),
+      }
+  )
+  @ApiErrorResponses(
+      summary = "테이블 액티비티 상세 조회 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_IS_CLOSED,
+              exampleName = "매장이 영업중이지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 TABLE 또는 POS가 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.POS_TABLE_NOT_FOUND,
+              exampleName = "매장 ID와 테이블 번호로 POS 테이블을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<PosResponse.TableActivityDetail> getTableActivity(
+      int tableNo,
+      @Parameter(hidden = true) Device device
+  );
 
 }

@@ -102,6 +102,14 @@ interface OrderControllerSpecification {
               exampleName = "이미 서빙이 완료된 주문인 경우"
           ),
           @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 HALL이 아닌 경우"
+          ),
+          @ApiErrorResponse(
               code = ErrorCode.ORDER_NOT_FOUND,
               exampleName = "주문을 찾을 수 없는 경우"
           ),
@@ -131,6 +139,14 @@ interface OrderControllerSpecification {
               exampleName = "이미 서빙이 완료된 주문인 경우"
           ),
           @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 HALL이 아닌 경우"
+          ),
+          @ApiErrorResponse(
               code = ErrorCode.ORDER_NOT_FOUND,
               exampleName = "주문을 찾을 수 없는 경우"
           ),
@@ -155,6 +171,14 @@ interface OrderControllerSpecification {
               code = ErrorCode.STORE_IS_CLOSED,
               exampleName = "매장이 영업중이지 않은 경우"
           ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 HALL이 아닌 경우"
+          ),
       }
   )
   ResponseEntity<OrderResponse.StaffCallDetails> getStaffCalls(
@@ -175,6 +199,14 @@ interface OrderControllerSpecification {
               exampleName = "이미 완료된 직원 호출인 경우"
           ),
           @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 HALL이 아닌 경우"
+          ),
+          @ApiErrorResponse(
               code = ErrorCode.STAFF_CALL_NOT_FOUND,
               exampleName = "직원 호출을 찾을 수 없는 경우"
           ),
@@ -193,6 +225,14 @@ interface OrderControllerSpecification {
           @ApiErrorResponse(
               code = ErrorCode.STORE_IS_CLOSED,
               exampleName = "매장이 영업중이지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 TABLE이 아닌 경우"
           ),
           @ApiErrorResponse(
               code = ErrorCode.STORE_NOT_FOUND,

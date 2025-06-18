@@ -5,8 +5,6 @@ import java.util.List;
 
 public interface StaffCallRepository {
 
-  boolean existsIncompleteByStoreId(Long storeId);
-
   List<StaffCall> findAllIncompleteByStoreId(Long storeId);
 
   StaffCall findByIdAndStoreIdOrThrow(Long staffCallId, Long storeId);

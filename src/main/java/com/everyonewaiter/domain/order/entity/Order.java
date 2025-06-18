@@ -5,7 +5,6 @@ import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -24,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -108,24 +108,30 @@ public class Order extends AggregateRoot<Order> {
     }
   }
 
+  public boolean isPrepaid() {
+    return type == Type.PREPAID;
+  }
+
   public boolean isServed() {
     return serving.isServed();
   }
 
-  public long getTotalOrderPrice() {
-    return state == State.CANCEL ? 0L : price;
+  public boolean isOrdered() {
+    return state == State.ORDER;
   }
 
-  @Nullable
-  public String getFirstOrderMenuName() {
-    List<String> orderMenuNames = getOrderMenus().stream()
+  public boolean isCanceled() {
+    return state == State.CANCEL;
+  }
+
+  public long getTotalOrderPrice() {
+    return isCanceled() ? 0L : price;
+  }
+
+  public Optional<String> getFirstOrderMenuName() {
+    return getOrderMenus().stream()
         .map(OrderMenu::getName)
-        .toList();
-    if (orderMenuNames.isEmpty()) {
-      return null;
-    } else {
-      return orderMenuNames.getFirst();
-    }
+        .findFirst();
   }
 
   public int getOrderMenuCount() {

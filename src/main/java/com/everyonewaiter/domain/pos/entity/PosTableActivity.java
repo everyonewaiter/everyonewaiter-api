@@ -63,8 +63,26 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
     return !getOrders().isEmpty();
   }
 
+  public long getTotalOrderPrice() {
+    return getOrderedOrders().stream()
+        .mapToLong(Order::getTotalOrderPrice)
+        .sum();
+  }
+
   public List<Order> getOrders() {
     return Collections.unmodifiableList(orders);
+  }
+
+  public List<Order> getOrderedOrders() {
+    return getOrders().stream()
+        .filter(Order::isOrdered)
+        .toList();
+  }
+
+  public List<Order> getCanceledOrders() {
+    return getOrders().stream()
+        .filter(Order::isCanceled)
+        .toList();
   }
 
   public List<OrderPayment> getPayments() {

@@ -45,6 +45,9 @@ public class OrderResponse {
       @Schema(description = "주문 상태", example = "ORDER")
       Order.State state,
 
+      @Schema(description = "주문 금액", example = "34900")
+      long price,
+
       @Schema(description = "주문 메모", example = "13시 포장")
       String memo,
 
@@ -65,6 +68,7 @@ public class OrderResponse {
           order.getCategory(),
           order.getType(),
           order.getState(),
+          order.getPrice(),
           order.getMemo(),
           order.getServing().isServed(),
           order.getServing().getServedTime(),

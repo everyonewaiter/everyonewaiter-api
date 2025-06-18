@@ -52,14 +52,6 @@ interface StoreControllerSpecification {
               exampleName = "완료되지 않은 주문이 있는 경우"
           ),
           @ApiErrorResponse(
-              code = ErrorCode.INCOMPLETE_ORDER_SERVING,
-              exampleName = "완료되지 않은 주문 서빙 내역이 있는 경우"
-          ),
-          @ApiErrorResponse(
-              code = ErrorCode.INCOMPLETE_STAFF_CALL,
-              exampleName = "완료되지 않은 직원 호출 내역이 있는 경우"
-          ),
-          @ApiErrorResponse(
               code = ErrorCode.INCOMPLETE_WAITING,
               exampleName = "완료되지 않은 웨이팅이 있는 경우"
           ),

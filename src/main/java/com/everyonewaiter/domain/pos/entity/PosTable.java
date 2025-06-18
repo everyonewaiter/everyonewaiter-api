@@ -3,7 +3,6 @@ package com.everyonewaiter.domain.pos.entity;
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,6 +15,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,59 +58,52 @@ public class PosTable extends AggregateRoot<PosTable> {
     return posTable;
   }
 
-  public boolean hasActivity() {
-    return !activities.isEmpty();
-  }
-
   public boolean hasActiveActivity() {
-    return getActivities().stream().anyMatch(PosTableActivity::isActive);
+    return getActiveActivity().isPresent();
   }
 
-  public boolean hasOrder() {
-    return !getOrders().isEmpty();
+  public boolean hasActiveOrder() {
+    return !getActiveOrderedOrders().isEmpty();
   }
 
-  public boolean hasNotServedOrder() {
-    return getOrders(Order.State.ORDER)
-        .stream()
-        .anyMatch(order -> !order.isServed());
-  }
-
-  @Nullable
-  public Order.Type getTablePaymentType() {
-    List<Order> orders = getOrders(Order.State.ORDER);
+  public Optional<Order.Type> getActiveTablePaymentType() {
+    List<Order> orders = getActiveOrderedOrders();
     if (orders.isEmpty()) {
-      return null;
+      return Optional.empty();
     } else {
-      return orders.stream().allMatch(order -> order.getType() == Order.Type.PREPAID)
-          ? Order.Type.PREPAID
-          : Order.Type.POSTPAID;
+      return Optional.of(
+          orders.stream().allMatch(Order::isPrepaid)
+              ? Order.Type.PREPAID
+              : Order.Type.POSTPAID
+      );
     }
   }
 
-  @Nullable
-  public Instant getLastActivityTime() {
-    return hasActivity() ? activities.getLast().getCreatedAt() : null;
+  public Optional<Instant> getActiveActivityTime() {
+    return getActiveActivity().map(PosTableActivity::getCreatedAt);
   }
 
-  public long getTotalOrderPrice() {
-    return getOrders().stream()
+  public long getActiveTotalOrderPrice() {
+    return getActiveOrderedOrders().stream()
         .mapToLong(Order::getTotalOrderPrice)
         .sum();
   }
 
-  @Nullable
-  public String getFirstOrderMenuName() {
-    List<Order> orders = getOrders(Order.State.ORDER);
+  public long getActiveDiscountPrice() {
+    return getActiveActivity().map(PosTableActivity::getDiscount).orElse(0L);
+  }
+
+  public Optional<String> getFirstOrderMenuName() {
+    List<Order> orders = getActiveOrderedOrders();
     if (orders.isEmpty()) {
-      return null;
+      return Optional.empty();
     } else {
       return orders.getFirst().getFirstOrderMenuName();
     }
   }
 
-  public int getOrderMenuCount() {
-    return getOrders(Order.State.ORDER).stream()
+  public int getActiveOrderMenuCount() {
+    return getActiveOrderedOrders().stream()
         .mapToInt(Order::getOrderMenuCount)
         .sum();
   }
@@ -119,15 +112,15 @@ public class PosTable extends AggregateRoot<PosTable> {
     return Collections.unmodifiableList(activities);
   }
 
-  public List<Order> getOrders() {
+  public Optional<PosTableActivity> getActiveActivity() {
     return getActivities().stream()
-        .flatMap(activity -> activity.getOrders().stream())
-        .toList();
+        .filter(PosTableActivity::isActive)
+        .findAny();
   }
 
-  public List<Order> getOrders(Order.State state) {
-    return getOrders().stream()
-        .filter(order -> order.getState() == state)
+  public List<Order> getActiveOrderedOrders() {
+    return getActiveActivity().stream()
+        .flatMap(posTableActivity -> posTableActivity.getOrderedOrders().stream())
         .toList();
   }
 
