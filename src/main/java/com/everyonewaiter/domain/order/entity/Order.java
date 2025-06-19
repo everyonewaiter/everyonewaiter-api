@@ -91,6 +91,11 @@ public class Order extends AggregateRoot<Order> {
     this.price += orderMenu.calculateTotalPrice();
   }
 
+  public void moveTable(PosTableActivity posTableActivity) {
+    this.posTableActivity = posTableActivity;
+    posTableActivity.addOrder(this);
+  }
+
   public void serving() {
     if (this.serving.isServed()) {
       throw new BusinessException(ErrorCode.ALREADY_COMPLETED_SERVING);

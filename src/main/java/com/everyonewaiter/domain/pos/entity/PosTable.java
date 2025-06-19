@@ -60,6 +60,22 @@ public class PosTable extends AggregateRoot<PosTable> {
     return posTable;
   }
 
+  public void addActivity(PosTableActivity posTableActivity) {
+    this.activities.add(posTableActivity);
+  }
+
+  public void merge(PosTable sourcePosTable) {
+    PosTableActivity sourcePosTableActivity = sourcePosTable.getActiveActivityOrThrow();
+    PosTableActivity targetPosTableActivity = getActiveActivityOrThrow();
+    targetPosTableActivity.mergeTableActivity(sourcePosTableActivity);
+  }
+
+  public void move(PosTable targetPosTable) {
+    PosTableActivity sourcePosTableActivity = getActiveActivityOrThrow();
+    sourcePosTableActivity.moveTable(targetPosTable);
+    this.activities.remove(sourcePosTableActivity);
+  }
+
   public void cancelOrder(Long orderId) {
     PosTableActivity posTableActivity = getActiveActivityOrThrow();
     posTableActivity.cancelOrder(orderId);

@@ -91,4 +91,9 @@ public class OrderPayment extends AggregateRoot<OrderPayment> {
   @Column(name = "cash_receipt_type", nullable = false)
   private CashReceiptType cashReceiptType; // 현금 영수증 타입
 
+  public void moveTable(PosTableActivity posTableActivity) {
+    this.posTableActivity = posTableActivity;
+    posTableActivity.addPayment(this);
+  }
+
 }
