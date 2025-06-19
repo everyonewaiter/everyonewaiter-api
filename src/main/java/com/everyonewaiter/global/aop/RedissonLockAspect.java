@@ -2,6 +2,9 @@ package com.everyonewaiter.global.aop;
 
 import com.everyonewaiter.global.annotation.RedissonLock;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -40,20 +43,26 @@ class RedissonLockAspect {
     Method method = signature.getMethod();
     RedissonLock redissonLock = Objects.requireNonNull(method.getAnnotation(RedissonLock.class));
 
-    String lockKey = LOCK_KEY_PREFIX + parseLockKey(
-        redissonLock.key(),
-        signature.getParameterNames(),
-        joinPoint.getArgs()
-    );
-    RLock lock = redissonClient.getLock(lockKey);
+    List<RLock> locks = Arrays.stream(redissonLock.key())
+        .map(key ->
+            LOCK_KEY_PREFIX + parseLockKey(key, signature.getParameterNames(), joinPoint.getArgs())
+        )
+        .map(redissonClient::getLock)
+        .toList();
 
     try {
-      boolean isLocked = lock.tryLock(
-          redissonLock.waitTime(),
-          redissonLock.leaseTime(),
-          redissonLock.timeUnit()
-      );
-      if (isLocked) {
+      List<Boolean> lockConditions = new ArrayList<>();
+      for (RLock lock : locks) {
+        lockConditions.add(
+            lock.tryLock(
+                redissonLock.waitTime(),
+                redissonLock.leaseTime(),
+                redissonLock.timeUnit()
+            )
+        );
+      }
+
+      if (lockConditions.stream().allMatch(Boolean::booleanValue)) {
         return aopTransaction.proceed(joinPoint);
       } else {
         return false;
@@ -63,8 +72,10 @@ class RedissonLockAspect {
       Thread.currentThread().interrupt();
       return false;
     } finally {
-      if (lock.isLocked() && lock.isHeldByCurrentThread()) {
-        lock.unlock();
+      for (RLock lock : locks) {
+        if (lock.isLocked() && lock.isHeldByCurrentThread()) {
+          lock.unlock();
+        }
       }
     }
   }
