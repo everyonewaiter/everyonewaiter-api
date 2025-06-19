@@ -83,4 +83,41 @@ interface PosControllerSpecification {
       @Parameter(hidden = true) Device device
   );
 
+  @Operation(summary = "[POS] 주문 취소", description = "주문 취소 API")
+  @ApiResponse(responseCode = "204", description = "주문 취소 성공")
+  @ApiErrorResponses(
+      summary = "주문 취소 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_IS_CLOSED,
+              exampleName = "매장이 영업중이지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ALREADY_CANCELED_ORDER,
+              exampleName = "이미 취소된 주문인 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 POS가 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.POS_TABLE_ACTIVE_ACTIVITY_NOT_FOUND,
+              exampleName = "활성화 된 POS 테이블 액티비티를 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ORDER_NOT_FOUND,
+              exampleName = "주문을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> cancelOrder(
+      int tableNo,
+      Long orderId,
+      @Parameter(hidden = true) Device device
+  );
+
 }

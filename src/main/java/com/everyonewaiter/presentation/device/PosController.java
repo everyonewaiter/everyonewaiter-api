@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,6 +42,18 @@ class PosController implements PosControllerSpecification {
         device.hasPurpose(Device.Purpose.TABLE) ? device.getTableNo() : tableNo
     );
     return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+  }
+
+  @Override
+  @StoreOpen
+  @PostMapping("/tables/{tableNo}/orders/{orderId}/cancel")
+  public ResponseEntity<Void> cancelOrder(
+      @PathVariable int tableNo,
+      @PathVariable Long orderId,
+      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+  ) {
+    posService.cancelOrder(device.getStoreId(), tableNo, orderId);
+    return ResponseEntity.noContent().build();
   }
 
 }

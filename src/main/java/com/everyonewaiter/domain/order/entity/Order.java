@@ -108,6 +108,14 @@ public class Order extends AggregateRoot<Order> {
     }
   }
 
+  public void cancel() {
+    if (this.state == State.ORDER) {
+      this.state = State.CANCEL;
+    } else {
+      throw new BusinessException(ErrorCode.ALREADY_CANCELED_ORDER);
+    }
+  }
+
   public boolean isPrepaid() {
     return type == Type.PREPAID;
   }

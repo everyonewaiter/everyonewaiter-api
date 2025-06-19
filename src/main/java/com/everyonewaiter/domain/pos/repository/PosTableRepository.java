@@ -7,7 +7,9 @@ public interface PosTableRepository {
 
   void close(Long storeId);
 
-  void saveAll(List<PosTable> tables);
+  PosTable save(PosTable posTable);
+
+  void saveAll(List<PosTable> posTables);
 
   PosTable findActiveByStoreIdAndTableNo(Long storeId, int tableNo);
 

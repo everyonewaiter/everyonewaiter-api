@@ -3,6 +3,8 @@ package com.everyonewaiter.domain.pos.entity;
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -58,6 +60,11 @@ public class PosTable extends AggregateRoot<PosTable> {
     return posTable;
   }
 
+  public void cancelOrder(Long orderId) {
+    PosTableActivity posTableActivity = getActiveActivityOrThrow();
+    posTableActivity.cancelOrder(orderId);
+  }
+
   public boolean hasActiveActivity() {
     return getActiveActivity().isPresent();
   }
@@ -67,16 +74,8 @@ public class PosTable extends AggregateRoot<PosTable> {
   }
 
   public Optional<Order.Type> getActiveTablePaymentType() {
-    List<Order> orders = getActiveOrderedOrders();
-    if (orders.isEmpty()) {
-      return Optional.empty();
-    } else {
-      return Optional.of(
-          orders.stream().allMatch(Order::isPrepaid)
-              ? Order.Type.PREPAID
-              : Order.Type.POSTPAID
-      );
-    }
+    Optional<PosTableActivity> posTableActivity = getActiveActivity();
+    return posTableActivity.map(PosTableActivity::getTablePaymentType);
   }
 
   public Optional<Instant> getActiveActivityTime() {
@@ -116,6 +115,11 @@ public class PosTable extends AggregateRoot<PosTable> {
     return getActivities().stream()
         .filter(PosTableActivity::isActive)
         .findAny();
+  }
+
+  public PosTableActivity getActiveActivityOrThrow() {
+    return getActiveActivity()
+        .orElseThrow(() -> new BusinessException(ErrorCode.POS_TABLE_ACTIVE_ACTIVITY_NOT_FOUND));
   }
 
   public List<Order> getActiveOrderedOrders() {

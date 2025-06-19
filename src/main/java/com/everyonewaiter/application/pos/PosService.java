@@ -15,6 +15,13 @@ public class PosService {
 
   private final PosTableRepository posTableRepository;
 
+  @Transactional
+  public void cancelOrder(Long storeId, int tableNo, Long orderId) {
+    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    posTable.cancelOrder(orderId);
+    posTableRepository.save(posTable);
+  }
+
   @Transactional(readOnly = true)
   public Optional<PosResponse.TableActivityDetail> readActiveTable(Long storeId, int tableNo) {
     PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);

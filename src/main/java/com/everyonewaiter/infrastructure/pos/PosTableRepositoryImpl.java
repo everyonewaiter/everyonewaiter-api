@@ -31,8 +31,13 @@ class PosTableRepositoryImpl implements PosTableRepository {
   }
 
   @Override
-  public void saveAll(List<PosTable> tables) {
-    posTableJpaRepository.saveAll(tables);
+  public PosTable save(PosTable posTable) {
+    return posTableJpaRepository.save(posTable);
+  }
+
+  @Override
+  public void saveAll(List<PosTable> posTables) {
+    posTableJpaRepository.saveAll(posTables);
   }
 
   @Override

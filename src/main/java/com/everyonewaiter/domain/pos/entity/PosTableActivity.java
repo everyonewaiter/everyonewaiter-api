@@ -4,6 +4,8 @@ import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.order.entity.OrderPayment;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -17,6 +19,7 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,14 +62,40 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
     return posTableActivity;
   }
 
+  public void cancelOrder(Long orderId) {
+    Order order = getOrder(orderId);
+    order.cancel();
+
+    if (!hasOrderedOrder()) {
+      this.active = false;
+    }
+  }
+
   public boolean hasOrder() {
     return !getOrders().isEmpty();
+  }
+
+  public boolean hasOrderedOrder() {
+    return !getOrderedOrders().isEmpty();
   }
 
   public long getTotalOrderPrice() {
     return getOrderedOrders().stream()
         .mapToLong(Order::getTotalOrderPrice)
         .sum();
+  }
+
+  public Order.Type getTablePaymentType() {
+    return getOrderedOrders().stream().allMatch(Order::isPrepaid)
+        ? Order.Type.PREPAID
+        : Order.Type.POSTPAID;
+  }
+
+  public Order getOrder(Long orderId) {
+    return getOrders().stream()
+        .filter(order -> Objects.requireNonNull(order.getId()).equals(orderId))
+        .findAny()
+        .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
   }
 
   public List<Order> getOrders() {
