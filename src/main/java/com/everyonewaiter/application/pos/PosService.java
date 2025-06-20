@@ -43,6 +43,14 @@ public class PosService {
 
   @Transactional
   @RedissonLock(key = "#storeId + '-' + #tableNo")
+  public void discount(Long storeId, int tableNo, long discountPrice) {
+    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    posTable.discount(discountPrice);
+    posTableRepository.save(posTable);
+  }
+
+  @Transactional
+  @RedissonLock(key = "#storeId + '-' + #tableNo")
   public void cancelOrder(Long storeId, int tableNo, Long orderId) {
     PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
     posTable.cancelOrder(orderId);

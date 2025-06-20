@@ -5,6 +5,7 @@ import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
 import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.presentation.device.request.PosWriteRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "POS")
 interface PosControllerSpecification {
@@ -113,6 +115,39 @@ interface PosControllerSpecification {
   ResponseEntity<Void> moveTable(
       int sourceTableNo,
       int targetTableNo,
+      @Parameter(hidden = true) Device device
+  );
+
+  @Operation(summary = "[POS] 테이블 주문 할인", description = "테이블 주문 할인 API")
+  @ApiResponse(responseCode = "204", description = "테이블 주문 할인 성공")
+  @ApiErrorResponses(
+      summary = "테이블 주문 할인 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_IS_CLOSED,
+              exampleName = "매장이 영업중이지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 POS가 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.POS_TABLE_NOT_FOUND,
+              exampleName = "활성화 된 POS 테이블 액티비티를 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.POS_TABLE_ACTIVE_ACTIVITY_NOT_FOUND,
+              exampleName = "활성화 된 POS 테이블 액티비티를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> discount(
+      int tableNo,
+      @RequestBody PosWriteRequest.Discount request,
       @Parameter(hidden = true) Device device
   );
 

@@ -76,6 +76,10 @@ public class PosTable extends AggregateRoot<PosTable> {
     this.activities.remove(sourcePosTableActivity);
   }
 
+  public void discount(long discountPrice) {
+    getActiveActivityOrThrow().discount(discountPrice);
+  }
+
   public void cancelOrder(Long orderId) {
     PosTableActivity posTableActivity = getActiveActivityOrThrow();
     posTableActivity.cancelOrder(orderId);

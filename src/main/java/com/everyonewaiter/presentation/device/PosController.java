@@ -5,12 +5,15 @@ import com.everyonewaiter.application.pos.response.PosResponse;
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.global.annotation.AuthenticationDevice;
 import com.everyonewaiter.global.annotation.StoreOpen;
+import com.everyonewaiter.presentation.device.request.PosWriteRequest;
+import jakarta.validation.Valid;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,6 +58,18 @@ class PosController implements PosControllerSpecification {
     if (sourceTableNo != targetTableNo) {
       posService.moveTable(device.getStoreId(), sourceTableNo, targetTableNo);
     }
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @StoreOpen
+  @PostMapping("/tables/{tableNo}/discount")
+  public ResponseEntity<Void> discount(
+      @PathVariable int tableNo,
+      @RequestBody @Valid PosWriteRequest.Discount request,
+      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+  ) {
+    posService.discount(device.getStoreId(), tableNo, request.discountPrice());
     return ResponseEntity.noContent().build();
   }
 

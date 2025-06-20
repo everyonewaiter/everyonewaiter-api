@@ -88,9 +88,17 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
     posTable.addActivity(this);
   }
 
+  public void discount(long discountPrice) {
+    // TODO: 할인 금액 > (총 주문 금액 - 결제된 금액) 인 경우 할인 금액 정정
+
+    this.discount = discountPrice;
+  }
+
   public void cancelOrder(Long orderId) {
     Order order = getOrder(orderId);
     order.cancel();
+
+    // TODO: 할인 금액 > (총 주문 금액 - 결제된 금액) 인 경우 할인 금액 정정
 
     if (!hasOrderedOrder()) {
       this.active = false;
