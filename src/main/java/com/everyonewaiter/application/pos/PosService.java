@@ -19,6 +19,14 @@ public class PosService {
   private final PosTableRepository posTableRepository;
 
   @Transactional
+  @RedissonLock(key = "#storeId + '-' + #tableNo")
+  public void completeActivity(Long storeId, int tableNo) {
+    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    posTable.completeActiveActivity();
+    posTableRepository.save(posTable);
+  }
+
+  @Transactional
   @RedissonLock(key = {"#storeId + '-' + #sourceTableNo", "#storeId + '-' + #targetTableNo"})
   public void moveTable(Long storeId, int sourceTableNo, int targetTableNo) {
     List<PosTable> posTables = posTableRepository.findAllActiveByStoreId(storeId);

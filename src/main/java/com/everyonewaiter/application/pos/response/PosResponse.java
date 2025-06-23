@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.pos.response;
 
+import com.everyonewaiter.application.order.response.OrderPaymentResponse;
 import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.pos.entity.PosTable;
@@ -102,6 +103,9 @@ public class PosResponse {
       @Schema(description = "테이블 번호", example = "1")
       int tableNo,
 
+      @Schema(description = "테이블 결제 타입", example = "POSTPAID")
+      Order.Type orderType,
+
       @Schema(description = "총 주문 금액", example = "10000")
       long totalOrderPrice,
 
@@ -118,7 +122,10 @@ public class PosResponse {
       boolean active,
 
       @Schema(description = "주문 목록")
-      List<OrderResponse.Detail> orders
+      List<OrderResponse.Detail> orders,
+
+      @Schema(description = "주문 결제 목록")
+      List<OrderPaymentResponse.Detail> orderPayments
   ) {
 
     public static TableActivityDetail from(PosTableActivity posTableActivity) {
@@ -128,6 +135,7 @@ public class PosResponse {
           Objects.requireNonNull(posTableActivity.getPosTable().getId()).toString(),
           posTableActivity.getPosTable().getName(),
           posTableActivity.getPosTable().getTableNo(),
+          posTableActivity.getTablePaymentType(),
           posTableActivity.getTotalOrderPrice(),
           posTableActivity.getTotalPaymentPrice(),
           posTableActivity.getDiscount(),
@@ -135,6 +143,9 @@ public class PosResponse {
           posTableActivity.isActive(),
           posTableActivity.getOrderedOrders().stream()
               .map(OrderResponse.Detail::from)
+              .toList(),
+          posTableActivity.getPayments().stream()
+              .map(OrderPaymentResponse.Detail::from)
               .toList()
       );
     }

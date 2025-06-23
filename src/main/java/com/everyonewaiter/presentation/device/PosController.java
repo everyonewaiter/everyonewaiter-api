@@ -49,6 +49,17 @@ class PosController implements PosControllerSpecification {
 
   @Override
   @StoreOpen
+  @PostMapping("/tables/{tableNo}/complete")
+  public ResponseEntity<Void> completeActivity(
+      @PathVariable int tableNo,
+      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+  ) {
+    posService.completeActivity(device.getStoreId(), tableNo);
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @StoreOpen
   @PostMapping("/tables/{sourceTableNo}/move/{targetTableNo}")
   public ResponseEntity<Void> moveTable(
       @PathVariable int sourceTableNo,

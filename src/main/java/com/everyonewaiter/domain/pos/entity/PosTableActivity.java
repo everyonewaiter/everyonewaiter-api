@@ -77,6 +77,13 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
     }
   }
 
+  public void complete() {
+    if (getRemainingPaymentPriceWithDiscount() > 0) {
+      throw new BusinessException(ErrorCode.HAS_REMAINING_PAYMENT_PRICE);
+    }
+    this.active = false;
+  }
+
   public void mergeTableActivity(PosTableActivity sourcePosTableActivity) {
     this.discount += sourcePosTableActivity.discount;
     sourcePosTableActivity.discount = 0;

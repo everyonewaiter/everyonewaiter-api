@@ -64,6 +64,11 @@ public class PosTable extends AggregateRoot<PosTable> {
     this.activities.add(posTableActivity);
   }
 
+  public void completeActiveActivity() {
+    PosTableActivity posTableActivity = getActiveActivityOrThrow();
+    posTableActivity.complete();
+  }
+
   public void merge(PosTable sourcePosTable) {
     PosTableActivity sourcePosTableActivity = sourcePosTable.getActiveActivityOrThrow();
     PosTableActivity targetPosTableActivity = getActiveActivityOrThrow();
