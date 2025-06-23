@@ -85,6 +85,7 @@ public enum ErrorCode {
 
   // POS & ORDER
   ALREADY_CANCELED_ORDER(BAD_REQUEST, "이미 취소된 주문이에요."),
+  ALREADY_CANCELED_ORDER_PAYMENT(BAD_REQUEST, "이미 취소된 주문 결제에요."),
   ALREADY_COMPLETED_SERVING(BAD_REQUEST, "이미 서빙이 완료된 주문이에요."),
   ALREADY_COMPLETED_STAFF_CALL(BAD_REQUEST, "이미 완료된 직원 호출이에요."),
   NOT_EMPTY_ORDER_MENU(BAD_REQUEST, "장바구니에 메뉴를 담아주세요."),
@@ -93,6 +94,7 @@ public enum ErrorCode {
   INCOMPLETE_POS_TABLE_ACTIVITY(BAD_REQUEST, "완료되지 않은 주문이 있어요. POS에서 주문을 완료해 주세요."),
   ORDER_NOT_FOUND(NOT_FOUND, "주문을 찾을 수 없어요."),
   ORDER_MENU_NOT_FOUND(NOT_FOUND, "주문하려는 메뉴를 찾을 수 없어요."),
+  ORDER_PAYMENT_NOT_FOUND(NOT_FOUND, "주문 결제 내역을 찾을 수 없어요."),
   POS_TABLE_NOT_FOUND(NOT_FOUND, "POS 테이블을 찾을 수 없어요."),
   POS_TABLE_ACTIVE_ACTIVITY_NOT_FOUND(NOT_FOUND, "현재 활성화 된 POS 테이블 액티비티를 찾을 수 없어요."),
   STAFF_CALL_NOT_FOUND(NOT_FOUND, "직원 호출을 찾을 수 없어요."),

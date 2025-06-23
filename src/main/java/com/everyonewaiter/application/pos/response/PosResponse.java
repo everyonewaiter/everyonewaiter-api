@@ -102,11 +102,17 @@ public class PosResponse {
       @Schema(description = "테이블 번호", example = "1")
       int tableNo,
 
-      @Schema(description = "총 주문 금액", example = "0")
+      @Schema(description = "총 주문 금액", example = "10000")
       long totalOrderPrice,
+
+      @Schema(description = "총 결제 금액", example = "0")
+      long totalPaymentPrice,
 
       @Schema(description = "할인 금액", example = "0")
       long discount,
+
+      @Schema(description = "잔여 결제 금액", example = "0")
+      long remainingPaymentPrice,
 
       @Schema(description = "POS 테이블 액티비티 활성화 여부", example = "true")
       boolean active,
@@ -123,7 +129,9 @@ public class PosResponse {
           posTableActivity.getPosTable().getName(),
           posTableActivity.getPosTable().getTableNo(),
           posTableActivity.getTotalOrderPrice(),
+          posTableActivity.getTotalPaymentPrice(),
           posTableActivity.getDiscount(),
+          posTableActivity.getRemainingPaymentPriceWithDiscount(),
           posTableActivity.isActive(),
           posTableActivity.getOrderedOrders().stream()
               .map(OrderResponse.Detail::from)

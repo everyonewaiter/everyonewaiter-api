@@ -256,3 +256,90 @@ x-ew-timestamp: {{timestamp}}
 {
   "optionName": "직원 호출"
 }
+
+### 8. [POS, 테이블] 주문 결제 승인
+< {%
+  const deviceId = request.environment.get("devices.pos.id");
+  const deviceName = request.environment.get("devices.pos.name");
+  const devicePurpose = request.environment.get("devices.pos.purpose");
+  const secretKey = request.environment.get("devices.pos.secretKey");
+
+  const method = request.method;
+  const uri = request.url
+  .tryGetSubstituted()
+  .split(request.environment.get("url"))[1];
+  const timestamp = Date.now().toString();
+
+  const signature = crypto.hmac.sha256()
+  .withTextSecret(secretKey)
+  .updateWithText(`${method} ${uri}\n`)
+  .updateWithText(`${deviceId} ${devicePurpose} ${deviceName}\n`)
+  .updateWithText(`${timestamp}`)
+  .digest()
+  .toBase64();
+
+  request.variables.set("accessKey", deviceId);
+  request.variables.set("signature", signature);
+  request.variables.set("timestamp", timestamp);
+%}
+
+POST {{url}}/v1/orders/payments/1/approve
+Content-Type: application/json
+x-ew-access-key: {{accessKey}}
+x-ew-signature: {{signature}}
+x-ew-timestamp: {{timestamp}}
+
+{
+  "method": "CARD",
+  "amount": 10000,
+  "approvalNo": "1234567890",
+  "installment": "00",
+  "cardNo": "950002******",
+  "issuerName": "국민카드",
+  "purchaseName": "BC카드",
+  "merchantNo": "1234567890",
+  "tradeTime": "250101120000",
+  "tradeUniqueNo": "1234567890",
+  "vat": 1000,
+  "supplyAmount": 9000,
+  "cashReceiptNo": "",
+  "cashReceiptType": "NONE"
+}
+
+### 8. [POS] 주문 결제 취소
+< {%
+  const deviceId = request.environment.get("devices.pos.id");
+  const deviceName = request.environment.get("devices.pos.name");
+  const devicePurpose = request.environment.get("devices.pos.purpose");
+  const secretKey = request.environment.get("devices.pos.secretKey");
+
+  const method = request.method;
+  const uri = request.url
+  .tryGetSubstituted()
+  .split(request.environment.get("url"))[1];
+  const timestamp = Date.now().toString();
+
+  const signature = crypto.hmac.sha256()
+  .withTextSecret(secretKey)
+  .updateWithText(`${method} ${uri}\n`)
+  .updateWithText(`${deviceId} ${devicePurpose} ${deviceName}\n`)
+  .updateWithText(`${timestamp}`)
+  .digest()
+  .toBase64();
+
+  request.variables.set("accessKey", deviceId);
+  request.variables.set("signature", signature);
+  request.variables.set("timestamp", timestamp);
+%}
+
+POST {{url}}/v1/orders/payments/724895495393373529/cancel
+Content-Type: application/json
+x-ew-access-key: {{accessKey}}
+x-ew-signature: {{signature}}
+x-ew-timestamp: {{timestamp}}
+
+{
+  "approvalNo": "1234567890",
+  "tradeTime": "250101120000",
+  "tradeUniqueNo": "1234567890"
+}

@@ -70,6 +70,13 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
     this.payments.add(orderPayment);
   }
 
+  public void addApprovePayment(OrderPayment orderPayment) {
+    addPayment(orderPayment);
+    if (isPostpaidTable() && getRemainingPaymentPriceWithDiscount() <= 0) {
+      this.active = false;
+    }
+  }
+
   public void mergeTableActivity(PosTableActivity sourcePosTableActivity) {
     this.discount += sourcePosTableActivity.discount;
     sourcePosTableActivity.discount = 0;
@@ -89,8 +96,10 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
   }
 
   public void discount(long discountPrice) {
-    // TODO: 할인 금액 > (총 주문 금액 - 결제된 금액) 인 경우 할인 금액 정정
-
+    long totalRemainingPrice = getRemainingPaymentPrice();
+    if (discountPrice > totalRemainingPrice) {
+      discountPrice = totalRemainingPrice;
+    }
     this.discount = discountPrice;
   }
 
@@ -98,7 +107,10 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
     Order order = getOrder(orderId);
     order.cancel();
 
-    // TODO: 할인 금액 > (총 주문 금액 - 결제된 금액) 인 경우 할인 금액 정정
+    long totalRemainingPrice = getRemainingPaymentPrice();
+    if (this.discount > totalRemainingPrice) {
+      this.discount = totalRemainingPrice;
+    }
 
     if (!hasOrderedOrder()) {
       this.active = false;
@@ -113,10 +125,28 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
     return !getOrderedOrders().isEmpty();
   }
 
+  public boolean isPostpaidTable() {
+    return getTablePaymentType() == Order.Type.POSTPAID;
+  }
+
   public long getTotalOrderPrice() {
     return getOrderedOrders().stream()
         .mapToLong(Order::getTotalOrderPrice)
         .sum();
+  }
+
+  public long getTotalPaymentPrice() {
+    return getPayments().stream()
+        .mapToLong(OrderPayment::getTotalPaymentPrice)
+        .sum();
+  }
+
+  public long getRemainingPaymentPrice() {
+    return getTotalOrderPrice() - getTotalPaymentPrice();
+  }
+
+  public long getRemainingPaymentPriceWithDiscount() {
+    return getTotalOrderPrice() - getTotalPaymentPrice() - discount;
   }
 
   public Order.Type getTablePaymentType() {

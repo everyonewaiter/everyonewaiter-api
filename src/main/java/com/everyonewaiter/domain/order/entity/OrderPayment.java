@@ -3,6 +3,8 @@ package com.everyonewaiter.domain.order.entity;
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -91,9 +93,97 @@ public class OrderPayment extends AggregateRoot<OrderPayment> {
   @Column(name = "cash_receipt_type", nullable = false)
   private CashReceiptType cashReceiptType; // 현금 영수증 타입
 
+  public static OrderPayment approve(
+      PosTableActivity posTableActivity,
+      Method method,
+      long amount,
+      String approvalNo,
+      String installment,
+      String cardNo,
+      String issuerName,
+      String purchaseName,
+      String merchantNo,
+      String tradeTime,
+      String tradeUniqueNo,
+      long vat,
+      long supplyAmount,
+      String cashReceiptNo,
+      CashReceiptType cashReceiptType
+  ) {
+    boolean isCard = method == Method.CARD;
+    OrderPayment orderPayment = new OrderPayment();
+    orderPayment.store = posTableActivity.getStore();
+    orderPayment.posTableActivity = posTableActivity;
+    orderPayment.method = method;
+    orderPayment.state = State.APPROVE;
+    orderPayment.amount = amount;
+    orderPayment.cancellable = true;
+    orderPayment.approvalNo = isCard ? approvalNo : "";
+    orderPayment.installment = isCard ? installment : "";
+    orderPayment.cardNo = isCard ? cardNo : "";
+    orderPayment.issuerName = isCard ? issuerName : "";
+    orderPayment.purchaseName = isCard ? purchaseName : "";
+    orderPayment.merchantNo = isCard ? merchantNo : "";
+    orderPayment.tradeTime = isCard ? tradeTime : "";
+    orderPayment.tradeUniqueNo = isCard ? tradeUniqueNo : "";
+    orderPayment.vat = vat;
+    orderPayment.supplyAmount = supplyAmount;
+    orderPayment.cashReceiptNo =
+        (isCard || cashReceiptType == CashReceiptType.NONE) ? "" : cashReceiptNo;
+    orderPayment.cashReceiptType = isCard ? CashReceiptType.NONE : cashReceiptType;
+    orderPayment.posTableActivity.addApprovePayment(orderPayment);
+    return orderPayment;
+  }
+
+  public static OrderPayment cancel(
+      OrderPayment approveOrderPayment,
+      String approvalNo,
+      String tradeTime,
+      String tradeUniqueNo
+  ) {
+    if (approveOrderPayment.cancellable) {
+      approveOrderPayment.cancellable = false;
+      OrderPayment orderPayment = new OrderPayment();
+      orderPayment.store = approveOrderPayment.store;
+      orderPayment.posTableActivity = approveOrderPayment.posTableActivity;
+      orderPayment.method = approveOrderPayment.method;
+      orderPayment.state = State.CANCEL;
+      orderPayment.amount = approveOrderPayment.amount;
+      orderPayment.cancellable = false;
+      orderPayment.approvalNo = approveOrderPayment.isCard() ? approvalNo : "";
+      orderPayment.installment = approveOrderPayment.installment;
+      orderPayment.cardNo = approveOrderPayment.cardNo;
+      orderPayment.issuerName = approveOrderPayment.issuerName;
+      orderPayment.purchaseName = approveOrderPayment.purchaseName;
+      orderPayment.merchantNo = approveOrderPayment.merchantNo;
+      orderPayment.tradeTime = approveOrderPayment.isCard() ? tradeTime : "";
+      orderPayment.tradeUniqueNo = approveOrderPayment.isCard() ? tradeUniqueNo : "";
+      orderPayment.vat = approveOrderPayment.vat;
+      orderPayment.supplyAmount = approveOrderPayment.supplyAmount;
+      orderPayment.cashReceiptNo = approveOrderPayment.cashReceiptNo;
+      orderPayment.cashReceiptType = approveOrderPayment.cashReceiptType;
+      orderPayment.posTableActivity.addPayment(orderPayment);
+      return orderPayment;
+    } else {
+      throw new BusinessException(ErrorCode.ALREADY_CANCELED_ORDER_PAYMENT);
+    }
+  }
+
   public void moveTable(PosTableActivity posTableActivity) {
     this.posTableActivity = posTableActivity;
     posTableActivity.addPayment(this);
+  }
+
+  public boolean isCard() {
+    return this.method == Method.CARD;
+  }
+
+  public boolean isCanceled() {
+    return state == State.CANCEL;
+  }
+
+  public long getTotalPaymentPrice() {
+    return isCanceled() ? amount * -1 : amount;
   }
 
 }

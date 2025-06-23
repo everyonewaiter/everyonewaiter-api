@@ -5,6 +5,8 @@ import static com.everyonewaiter.domain.pos.entity.QPosTableActivity.posTableAct
 
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
 import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
+import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.global.exception.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,12 @@ class PosTableActivityRepositoryImpl implements PosTableActivityRepository {
             )
             .fetchFirst()
     );
+  }
+
+  @Override
+  public PosTableActivity findByStoreIdAndTableNoOrThrow(Long storeId, int tableNo) {
+    return findByStoreIdAndTableNo(storeId, tableNo)
+        .orElseThrow(() -> new BusinessException(ErrorCode.POS_TABLE_ACTIVE_ACTIVITY_NOT_FOUND));
   }
 
   @Override

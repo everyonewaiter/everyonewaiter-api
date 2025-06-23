@@ -137,7 +137,7 @@ interface PosControllerSpecification {
           ),
           @ApiErrorResponse(
               code = ErrorCode.POS_TABLE_NOT_FOUND,
-              exampleName = "활성화 된 POS 테이블 액티비티를 찾을 수 없는 경우"
+              exampleName = "활성화 된 POS 테이블을 찾을 수 없는 경우"
           ),
           @ApiErrorResponse(
               code = ErrorCode.POS_TABLE_ACTIVE_ACTIVITY_NOT_FOUND,

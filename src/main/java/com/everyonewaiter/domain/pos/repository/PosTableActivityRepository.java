@@ -7,6 +7,8 @@ public interface PosTableActivityRepository {
 
   Optional<PosTableActivity> findByStoreIdAndTableNo(Long storeId, int tableNo);
 
+  PosTableActivity findByStoreIdAndTableNoOrThrow(Long storeId, int tableNo);
+
   PosTableActivity save(PosTableActivity posTableActivity);
 
 }
