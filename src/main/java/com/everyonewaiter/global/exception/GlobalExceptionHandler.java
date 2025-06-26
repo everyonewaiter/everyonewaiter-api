@@ -3,6 +3,8 @@ package com.everyonewaiter.global.exception;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -89,7 +92,7 @@ class GlobalExceptionHandler {
         .body(ErrorResponse.of(errorCode, message));
   }
 
-  @ExceptionHandler
+  @ExceptionHandler(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ErrorResponse> handleAuthentication(
       HttpServletRequest request,
       AuthenticationException exception
@@ -100,7 +103,19 @@ class GlobalExceptionHandler {
         .body(ErrorResponse.from(errorCode));
   }
 
-  @ExceptionHandler
+  @ExceptionHandler(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+  public ResponseEntity<String> handleAuthenticationForSse(
+      HttpServletRequest request,
+      AuthenticationException exception
+  ) {
+    ErrorCode errorCode = exception.getErrorCode();
+    ExceptionLogger.info(request, errorCode, exception);
+    return ResponseEntity.status(errorCode.getStatus())
+        .contentType(MediaType.TEXT_EVENT_STREAM)
+        .body("data: " + errorCode.getMessage() + "\n\n");
+  }
+
+  @ExceptionHandler(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ErrorResponse> handleAccessDenied(
       HttpServletRequest request,
       AccessDeniedException exception
@@ -109,6 +124,18 @@ class GlobalExceptionHandler {
     ExceptionLogger.info(request, errorCode, exception);
     return ResponseEntity.status(errorCode.getStatus())
         .body(ErrorResponse.from(errorCode));
+  }
+
+  @ExceptionHandler(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+  public ResponseEntity<String> handleAccessDeniedForSse(
+      HttpServletRequest request,
+      AccessDeniedException exception
+  ) {
+    ErrorCode errorCode = exception.getErrorCode();
+    ExceptionLogger.info(request, errorCode, exception);
+    return ResponseEntity.status(errorCode.getStatus())
+        .contentType(MediaType.TEXT_EVENT_STREAM)
+        .body("data: " + errorCode.getMessage() + "\n\n");
   }
 
   @ExceptionHandler
@@ -158,7 +185,15 @@ class GlobalExceptionHandler {
         .body(ErrorResponse.of(errorCode, message));
   }
 
-  @ExceptionHandler
+  @ExceptionHandler(AsyncRequestTimeoutException.class)
+  public ResponseEntity<String> handleAsyncRequestTimeout() {
+    return ResponseEntity
+        .status(HttpStatus.REQUEST_TIMEOUT)
+        .contentType(MediaType.TEXT_EVENT_STREAM)
+        .body("data: CLOSED\n\n");
+  }
+
+  @ExceptionHandler(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ErrorResponse> handleServer(
       HttpServletRequest request,
       Exception exception
@@ -170,6 +205,21 @@ class GlobalExceptionHandler {
     }
     return ResponseEntity.internalServerError()
         .body(ErrorResponse.from(errorCode));
+  }
+
+  @ExceptionHandler(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+  public ResponseEntity<String> handleServerForSse(
+      HttpServletRequest request,
+      Exception exception
+  ) {
+    ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+    String message = Objects.requireNonNullElse(exception.getMessage(), errorCode.getMessage());
+    if (!message.equalsIgnoreCase("Broken pipe")) {
+      ExceptionLogger.error(request, errorCode, exception);
+    }
+    return ResponseEntity.internalServerError()
+        .contentType(MediaType.TEXT_EVENT_STREAM)
+        .body("data: " + message + "\n\n");
   }
 
 }
