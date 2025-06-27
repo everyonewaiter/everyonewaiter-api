@@ -27,7 +27,7 @@ public class SseService {
     SseEmitter sseEmitter = createSseEmitter(key);
     sseEmitterRepository.save(key, sseEmitter);
 
-    sendEvent(prefix, CONNECT_EVENT);
+    sendEvent(sseEmitter, prefix, CONNECT_EVENT);
     if (StringUtils.hasText(lastEventId)) {
       sseEventRepository.findAllByScanKey(generateScanKey(prefix, SseKeyType.EVENT))
           .entrySet()
@@ -51,14 +51,14 @@ public class SseService {
       sseEmitter.complete();
     });
     sseEmitter.onError(throwable -> {
-      LOGGER.error("[SSE] Emitter error. key: {}", key, throwable);
+      LOGGER.debug("[SSE] Emitter error. key: {}", key, throwable);
       sseEmitter.completeWithError(throwable);
     });
 
     return sseEmitter;
   }
 
-  public void sendEvent(String prefix, Object event) {
+  public void sendEvent(String prefix, SseEvent event) {
     String key = generateKey(prefix, SseKeyType.EVENT);
     try {
       String stringEvent = objectMapper.writeValueAsString(event);

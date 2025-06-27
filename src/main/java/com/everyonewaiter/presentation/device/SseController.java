@@ -5,6 +5,7 @@ import com.everyonewaiter.global.annotation.AuthenticationDevice;
 import com.everyonewaiter.global.annotation.StoreOpen;
 import com.everyonewaiter.global.sse.SseService;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -33,7 +34,9 @@ class SseController implements SseControllerSpecification {
     response.setHeader(HttpHeaders.CONNECTION, "keep-alive");
     response.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
     response.setHeader("X-Accel-Buffering", "no");
-    return ResponseEntity.ok(sseService.connect(device.getStoreId().toString(), lastEventId));
+    return ResponseEntity.ok(sseService.connect(
+        Objects.requireNonNull(device.getStore().getId()).toString(), lastEventId)
+    );
   }
 
 }
