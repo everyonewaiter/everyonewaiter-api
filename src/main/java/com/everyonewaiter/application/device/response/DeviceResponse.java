@@ -76,6 +76,9 @@ public class DeviceResponse {
       @Schema(description = "매장 ID", example = "\"694865267482835533\"")
       String storeId,
 
+      @Schema(description = "매장명", example = "나루")
+      String storeName,
+
       @Schema(description = "기기명", example = "1번 테이블")
       String name,
 
@@ -104,7 +107,8 @@ public class DeviceResponse {
     public static Detail from(Device device) {
       return new Detail(
           Objects.requireNonNull(device.getId()).toString(),
-          device.getStoreId().toString(),
+          Objects.requireNonNull(device.getStore().getId()).toString(),
+          device.getStore().getBusinessLicense().getName(),
           device.getName(),
           device.getPurpose(),
           device.getTableNo(),

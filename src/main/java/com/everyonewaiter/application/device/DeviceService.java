@@ -6,6 +6,8 @@ import com.everyonewaiter.application.device.response.DeviceResponse;
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.domain.device.repository.DeviceRepository;
 import com.everyonewaiter.domain.device.service.DeviceValidator;
+import com.everyonewaiter.domain.store.entity.Store;
+import com.everyonewaiter.domain.store.repository.StoreRepository;
 import com.everyonewaiter.global.support.Paging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,19 +17,21 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DeviceService {
 
+  private final StoreRepository storeRepository;
   private final DeviceValidator deviceValidator;
   private final DeviceRepository deviceRepository;
 
   @Transactional
   public DeviceResponse.Create create(Long storeId, DeviceWrite.Create request) {
+    Store store = storeRepository.findByIdOrThrow(storeId);
     deviceValidator.validateUnique(storeId, request.name());
 
     Device device = switch (request.purpose()) {
       case POS -> {
         deviceValidator.validatePos(request.ksnetDeviceNo());
-        yield Device.pos(storeId, request.name(), request.ksnetDeviceNo());
+        yield Device.pos(store, request.name(), request.ksnetDeviceNo());
       }
-      case HALL -> Device.hall(storeId, request.name());
+      case HALL -> Device.hall(store, request.name());
       case TABLE -> {
         deviceValidator.validateTable(
             request.tableNo(),
@@ -35,14 +39,14 @@ public class DeviceService {
             request.paymentType()
         );
         yield Device.table(
-            storeId,
+            store,
             request.name(),
             request.tableNo(),
             request.ksnetDeviceNo(),
             request.paymentType()
         );
       }
-      case WAITING -> Device.waiting(storeId, request.name());
+      case WAITING -> Device.waiting(store, request.name());
     };
 
     return DeviceResponse.Create.from(deviceRepository.save(device));

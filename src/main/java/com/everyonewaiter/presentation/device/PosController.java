@@ -30,7 +30,7 @@ class PosController implements PosControllerSpecification {
   public ResponseEntity<PosResponse.Tables> getTables(
       @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
   ) {
-    return ResponseEntity.ok(posService.readAllActiveTables(device.getStoreId()));
+    return ResponseEntity.ok(posService.readAllActiveTables(device.getStore().getId()));
   }
 
   @Override
@@ -41,7 +41,7 @@ class PosController implements PosControllerSpecification {
       @AuthenticationDevice(purpose = {Device.Purpose.TABLE, Device.Purpose.POS}) Device device
   ) {
     Optional<PosResponse.TableActivityDetail> response = posService.readActiveTable(
-        device.getStoreId(),
+        device.getStore().getId(),
         device.hasPurpose(Device.Purpose.TABLE) ? device.getTableNo() : tableNo
     );
     return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
@@ -54,7 +54,7 @@ class PosController implements PosControllerSpecification {
       @PathVariable int tableNo,
       @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
   ) {
-    posService.completeActivity(device.getStoreId(), tableNo);
+    posService.completeActivity(device.getStore().getId(), tableNo);
     return ResponseEntity.noContent().build();
   }
 
@@ -67,7 +67,7 @@ class PosController implements PosControllerSpecification {
       @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
   ) {
     if (sourceTableNo != targetTableNo) {
-      posService.moveTable(device.getStoreId(), sourceTableNo, targetTableNo);
+      posService.moveTable(device.getStore().getId(), sourceTableNo, targetTableNo);
     }
     return ResponseEntity.noContent().build();
   }
@@ -80,7 +80,7 @@ class PosController implements PosControllerSpecification {
       @RequestBody @Valid PosWriteRequest.Discount request,
       @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
   ) {
-    posService.discount(device.getStoreId(), tableNo, request.discountPrice());
+    posService.discount(device.getStore().getId(), tableNo, request.discountPrice());
     return ResponseEntity.noContent().build();
   }
 
@@ -92,7 +92,7 @@ class PosController implements PosControllerSpecification {
       @PathVariable Long orderId,
       @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
   ) {
-    posService.cancelOrder(device.getStoreId(), tableNo, orderId);
+    posService.cancelOrder(device.getStore().getId(), tableNo, orderId);
     return ResponseEntity.noContent().build();
   }
 

@@ -44,7 +44,7 @@ public class Order extends AggregateRoot<Order> {
   public enum State {ORDER, CANCEL}
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "store_id", nullable = false)
+  @JoinColumn(name = "store_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   private Store store;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)

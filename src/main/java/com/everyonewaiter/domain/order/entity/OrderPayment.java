@@ -35,7 +35,7 @@ public class OrderPayment extends AggregateRoot<OrderPayment> {
   public enum CashReceiptType {NONE, DEDUCTION, PROOF}
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "store_id", nullable = false)
+  @JoinColumn(name = "store_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   private Store store;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)

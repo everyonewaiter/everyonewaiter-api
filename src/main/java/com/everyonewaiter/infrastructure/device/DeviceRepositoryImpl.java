@@ -1,6 +1,7 @@
 package com.everyonewaiter.infrastructure.device;
 
 import static com.everyonewaiter.domain.device.entity.QDevice.device;
+import static com.everyonewaiter.domain.store.entity.QStore.store;
 
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.domain.device.repository.DeviceRepository;
@@ -36,7 +37,7 @@ class DeviceRepositoryImpl implements DeviceRepository {
         .from(device)
         .where(
             device.id.ne(deviceId),
-            device.storeId.eq(storeId),
+            device.store.id.eq(storeId),
             device.name.eq(name)
         )
         .fetchFirst();
@@ -50,7 +51,7 @@ class DeviceRepositoryImpl implements DeviceRepository {
             Projections.constructor(
                 DeviceView.Page.class,
                 device.id,
-                device.storeId,
+                device.store.id,
                 device.name,
                 device.purpose,
                 device.state,
@@ -60,7 +61,7 @@ class DeviceRepositoryImpl implements DeviceRepository {
             )
         )
         .from(device)
-        .where(device.storeId.eq(storeId))
+        .where(device.store.id.eq(storeId))
         .orderBy(device.id.desc())
         .limit(pagination.limit())
         .offset(pagination.offset())
@@ -69,7 +70,7 @@ class DeviceRepositoryImpl implements DeviceRepository {
     Long count = queryFactory
         .select(device.count())
         .from(device)
-        .where(device.storeId.eq(storeId))
+        .where(device.store.id.eq(storeId))
         .orderBy(device.id.desc())
         .limit(pagination.countLimit())
         .fetchOne();
@@ -82,8 +83,9 @@ class DeviceRepositoryImpl implements DeviceRepository {
     return queryFactory
         .select(device)
         .from(device)
+        .innerJoin(device.store, store).fetchJoin()
         .where(
-            device.storeId.eq(storeId),
+            device.store.id.eq(storeId),
             device.purpose.eq(purpose),
             device.state.eq(Device.State.ACTIVE)
         )
@@ -98,7 +100,17 @@ class DeviceRepositoryImpl implements DeviceRepository {
 
   @Override
   public Device findByIdAndStoreIdOrThrow(Long deviceId, Long storeId) {
-    return deviceJpaRepository.findByIdAndStoreId(deviceId, storeId)
+    return Optional.ofNullable(
+            queryFactory
+                .select(device)
+                .from(device)
+                .innerJoin(device.store, store).fetchJoin()
+                .where(
+                    device.id.eq(deviceId),
+                    device.store.id.eq(storeId)
+                )
+                .fetchOne()
+        )
         .orElseThrow(() -> new BusinessException(ErrorCode.DEVICE_NOT_FOUND));
   }
 

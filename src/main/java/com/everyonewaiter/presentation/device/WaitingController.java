@@ -29,7 +29,7 @@ class WaitingController implements WaitingControllerSpecification {
   public ResponseEntity<WaitingResponse.Details> getWaitings(
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
   ) {
-    return ResponseEntity.ok(waitingService.readAll(device.getStoreId()));
+    return ResponseEntity.ok(waitingService.readAll(device.getStore().getId()));
   }
 
   @Override
@@ -37,7 +37,7 @@ class WaitingController implements WaitingControllerSpecification {
   public ResponseEntity<WaitingResponse.RegistrationCount> count(
       @AuthenticationDevice(purpose = Device.Purpose.WAITING) Device device
   ) {
-    return ResponseEntity.ok(waitingService.getRegistrationCount(device.getStoreId()));
+    return ResponseEntity.ok(waitingService.getRegistrationCount(device.getStore().getId()));
   }
 
   @Override
@@ -56,7 +56,7 @@ class WaitingController implements WaitingControllerSpecification {
       @RequestBody @Valid WaitingWriteRequest.Create request,
       @AuthenticationDevice(purpose = Device.Purpose.WAITING) Device device
   ) {
-    Long waitingId = waitingService.create(device.getStoreId(), request.toDomainDto());
+    Long waitingId = waitingService.create(device.getStore().getId(), request.toDomainDto());
     return ResponseEntity.created(URI.create(waitingId.toString())).build();
   }
 
@@ -66,7 +66,7 @@ class WaitingController implements WaitingControllerSpecification {
       @PathVariable Long waitingId,
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
   ) {
-    waitingService.call(waitingId, device.getStoreId());
+    waitingService.call(waitingId, device.getStore().getId());
     return ResponseEntity.noContent().build();
   }
 
@@ -76,7 +76,7 @@ class WaitingController implements WaitingControllerSpecification {
       @PathVariable Long waitingId,
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
   ) {
-    waitingService.complete(waitingId, device.getStoreId());
+    waitingService.complete(waitingId, device.getStore().getId());
     return ResponseEntity.noContent().build();
   }
 
@@ -86,7 +86,7 @@ class WaitingController implements WaitingControllerSpecification {
       @PathVariable Long waitingId,
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
   ) {
-    waitingService.cancel(waitingId, device.getStoreId());
+    waitingService.cancel(waitingId, device.getStore().getId());
     return ResponseEntity.noContent().build();
   }
 

@@ -35,7 +35,7 @@ class OrderController implements OrderControllerSpecification {
       @RequestParam boolean served,
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
   ) {
-    return ResponseEntity.ok(orderService.readAllByHall(device.getStoreId(), served));
+    return ResponseEntity.ok(orderService.readAllByHall(device.getStore().getId(), served));
   }
 
   @Override
@@ -47,7 +47,7 @@ class OrderController implements OrderControllerSpecification {
   ) {
     Order.Type orderType = device.isPrepaid() ? Order.Type.PREPAID : Order.Type.POSTPAID;
     Long orderId = orderService.createOrder(
-        device.getStoreId(),
+        device.getStore().getId(),
         request.tableNo(),
         request.toDomainDto(orderType)
     );
@@ -61,7 +61,7 @@ class OrderController implements OrderControllerSpecification {
       @PathVariable Long orderId,
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
   ) {
-    orderService.servingOrder(device.getStoreId(), orderId);
+    orderService.servingOrder(device.getStore().getId(), orderId);
     return ResponseEntity.noContent().build();
   }
 
@@ -73,7 +73,7 @@ class OrderController implements OrderControllerSpecification {
       @PathVariable Long orderMenuId,
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
   ) {
-    orderService.servingOrderMenu(device.getStoreId(), orderId, orderMenuId);
+    orderService.servingOrderMenu(device.getStore().getId(), orderId, orderMenuId);
     return ResponseEntity.noContent().build();
   }
 
@@ -83,7 +83,7 @@ class OrderController implements OrderControllerSpecification {
   public ResponseEntity<OrderResponse.StaffCallDetails> getStaffCalls(
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
   ) {
-    return ResponseEntity.ok(staffCallService.readAllIncomplete(device.getStoreId()));
+    return ResponseEntity.ok(staffCallService.readAllIncomplete(device.getStore().getId()));
   }
 
   @Override
@@ -93,7 +93,7 @@ class OrderController implements OrderControllerSpecification {
       @PathVariable Long staffCallId,
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
   ) {
-    staffCallService.complete(device.getStoreId(), staffCallId);
+    staffCallService.complete(device.getStore().getId(), staffCallId);
     return ResponseEntity.noContent().build();
   }
 
@@ -105,7 +105,7 @@ class OrderController implements OrderControllerSpecification {
       @AuthenticationDevice(purpose = Device.Purpose.TABLE) Device device
   ) {
     Long staffCallId = staffCallService.callStaff(
-        device.getStoreId(),
+        device.getStore().getId(),
         device.getTableNo(),
         request.optionName()
     );

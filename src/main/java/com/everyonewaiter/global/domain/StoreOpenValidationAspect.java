@@ -33,7 +33,7 @@ class StoreOpenValidationAspect {
     Object[] args = joinPoint.getArgs();
     for (Object arg : args) {
       if (arg instanceof Device device) {
-        storeValidator.validateOpen(device.getStoreId());
+        storeValidator.validateOpen(device.getStore().getId());
         break;
       }
     }

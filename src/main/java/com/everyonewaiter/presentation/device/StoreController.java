@@ -21,7 +21,7 @@ class StoreController implements StoreControllerSpecification {
   public ResponseEntity<Void> open(
       @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
   ) {
-    storeService.open(device.getStoreId());
+    storeService.open(device.getStore().getId());
     return ResponseEntity.noContent().build();
   }
 
@@ -30,7 +30,7 @@ class StoreController implements StoreControllerSpecification {
   public ResponseEntity<Void> close(
       @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
   ) {
-    storeService.close(device.getStoreId());
+    storeService.close(device.getStore().getId());
     return ResponseEntity.noContent().build();
   }
 

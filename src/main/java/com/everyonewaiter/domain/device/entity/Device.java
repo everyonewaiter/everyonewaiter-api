@@ -1,11 +1,17 @@
 package com.everyonewaiter.domain.device.entity;
 
+import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.support.Tsid;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
@@ -24,7 +30,7 @@ import lombok.ToString;
 )
 @Entity
 @Getter
-@ToString(callSuper = true)
+@ToString(exclude = "store", callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Device extends AggregateRoot<Device> {
 
@@ -34,8 +40,9 @@ public class Device extends AggregateRoot<Device> {
 
   public enum PaymentType {PREPAID, POSTPAID}
 
-  @Column(name = "store_id", nullable = false, updatable = false)
-  private Long storeId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "store_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+  private Store store;
 
   @Column(name = "name", nullable = false)
   private String name;
@@ -61,12 +68,12 @@ public class Device extends AggregateRoot<Device> {
   @Column(name = "secret_key", nullable = false)
   private String secretKey = Tsid.nextString();
 
-  private static Device create(Long storeId, String name, Purpose purpose) {
-    return create(storeId, name, purpose, 0, "", PaymentType.POSTPAID);
+  private static Device create(Store store, String name, Purpose purpose) {
+    return create(store, name, purpose, 0, "", PaymentType.POSTPAID);
   }
 
   private static Device create(
-      Long storeId,
+      Store store,
       String name,
       Purpose purpose,
       int tableNo,
@@ -74,7 +81,7 @@ public class Device extends AggregateRoot<Device> {
       PaymentType paymentType
   ) {
     Device device = new Device();
-    device.storeId = storeId;
+    device.store = store;
     device.name = name;
     device.purpose = purpose;
     device.tableNo = tableNo;
@@ -83,26 +90,26 @@ public class Device extends AggregateRoot<Device> {
     return device;
   }
 
-  public static Device pos(Long storeId, String name, String ksnetDeviceNo) {
-    return create(storeId, name, Purpose.POS, 0, ksnetDeviceNo, PaymentType.POSTPAID);
+  public static Device pos(Store store, String name, String ksnetDeviceNo) {
+    return create(store, name, Purpose.POS, 0, ksnetDeviceNo, PaymentType.POSTPAID);
   }
 
-  public static Device hall(Long storeId, String name) {
-    return create(storeId, name, Purpose.HALL);
+  public static Device hall(Store store, String name) {
+    return create(store, name, Purpose.HALL);
   }
 
   public static Device table(
-      Long storeId,
+      Store store,
       String name,
       int tableNo,
       String ksnetDeviceNo,
       PaymentType paymentType
   ) {
-    return create(storeId, name, Purpose.TABLE, tableNo, ksnetDeviceNo, paymentType);
+    return create(store, name, Purpose.TABLE, tableNo, ksnetDeviceNo, paymentType);
   }
 
-  public static Device waiting(Long storeId, String name) {
-    return create(storeId, name, Purpose.WAITING);
+  public static Device waiting(Store store, String name) {
+    return create(store, name, Purpose.WAITING);
   }
 
   public boolean isActive() {

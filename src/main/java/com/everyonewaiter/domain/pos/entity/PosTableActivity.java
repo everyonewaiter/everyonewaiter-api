@@ -34,7 +34,7 @@ import lombok.ToString;
 public class PosTableActivity extends AggregateRoot<PosTableActivity> {
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "store_id", nullable = false)
+  @JoinColumn(name = "store_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   private Store store;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
