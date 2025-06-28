@@ -52,6 +52,25 @@ class StoreRepositoryImpl implements StoreRepository {
   }
 
   @Override
+  public StoreView.SimpleWithStatus findSimpleWithStatusViewById(Long storeId) {
+    return Optional.ofNullable(
+            queryFactory
+                .select(
+                    Projections.constructor(
+                        StoreView.SimpleWithStatus.class,
+                        store.id,
+                        store.businessLicense.name,
+                        store.status
+                    )
+                )
+                .from(store)
+                .where(store.id.eq(storeId))
+                .fetchFirst()
+        )
+        .orElseThrow(() -> new BusinessException(ErrorCode.STORE_NOT_FOUND));
+  }
+
+  @Override
   public Optional<Store> findByIdAndAccountId(Long storeId, Long accountId) {
     return storeJpaRepository.findByIdAndAccountId(storeId, accountId);
   }

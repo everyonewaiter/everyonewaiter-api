@@ -13,6 +13,8 @@ public interface StoreRepository {
 
   List<StoreView.Simple> findAllSimpleViewByAccountId(Long accountId);
 
+  StoreView.SimpleWithStatus findSimpleWithStatusViewById(Long storeId);
+
   Optional<Store> findByIdAndAccountId(Long storeId, Long accountId);
 
   Store findByIdOrThrow(Long storeId);

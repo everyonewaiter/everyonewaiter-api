@@ -43,6 +43,24 @@ public class StoreResponse {
 
   }
 
+  @Schema(name = "StoreResponse.SimpleWithStatus")
+  public record SimpleWithStatus(
+      @Schema(description = "매장 ID", example = "\"694865267482835533\"")
+      String storeId,
+
+      @Schema(description = "매장 이름", example = "홍길동식당")
+      String name,
+
+      @Schema(description = "매장 영업 상태", example = "OPEN")
+      Store.Status status
+  ) {
+
+    public static SimpleWithStatus from(StoreView.SimpleWithStatus view) {
+      return new SimpleWithStatus(view.id().toString(), view.name(), view.status());
+    }
+
+  }
+
   @Schema(name = "StoreResponse.Detail")
   public record Detail(
       @Schema(description = "매장 ID", example = "\"694865267482835533\"")

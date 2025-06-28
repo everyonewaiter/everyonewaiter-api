@@ -73,6 +73,11 @@ public class StoreService {
     return StoreResponse.Simples.from(views);
   }
 
+  public StoreResponse.SimpleWithStatus readSimpleWithStatusView(Long storeId) {
+    StoreView.SimpleWithStatus view = storeRepository.findSimpleWithStatusViewById(storeId);
+    return StoreResponse.SimpleWithStatus.from(view);
+  }
+
   public StoreResponse.Detail read(Long storeId, Long accountId) {
     return storeRepository.findByIdAndAccountId(storeId, accountId)
         .map(StoreResponse.Detail::from)

@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1")
 class DeviceController implements DeviceControllerSpecification {
 
-private final DeviceService deviceService;
+  private final DeviceService deviceService;
 
   @Override
   @GetMapping("/devices")
   public ResponseEntity<DeviceResponse.Detail> getDevice(@AuthenticationDevice Device device) {
-    var response = deviceService.read(device.getId(), device.getStore().getId());
-    return ResponseEntity.ok(response);
+    return ResponseEntity.ok(deviceService.read(device.getId(), device.getStore().getId()));
   }
 
 }
