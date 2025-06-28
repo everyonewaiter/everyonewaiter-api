@@ -1,5 +1,6 @@
 package com.everyonewaiter.presentation.device;
 
+import com.everyonewaiter.application.device.DeviceService;
 import com.everyonewaiter.application.device.response.DeviceResponse;
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.global.annotation.AuthenticationDevice;
@@ -14,10 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1")
 class DeviceController implements DeviceControllerSpecification {
 
+private final DeviceService deviceService;
+
   @Override
   @GetMapping("/devices")
   public ResponseEntity<DeviceResponse.Detail> getDevice(@AuthenticationDevice Device device) {
-    return ResponseEntity.ok(DeviceResponse.Detail.from(device));
+    var response = deviceService.read(device.getId(), device.getStore().getId());
+    return ResponseEntity.ok(response));
   }
 
 }
