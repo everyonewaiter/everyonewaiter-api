@@ -21,7 +21,7 @@ private final DeviceService deviceService;
   @GetMapping("/devices")
   public ResponseEntity<DeviceResponse.Detail> getDevice(@AuthenticationDevice Device device) {
     var response = deviceService.read(device.getId(), device.getStore().getId());
-    return ResponseEntity.ok(response));
+    return ResponseEntity.ok(response);
   }
 
 }
