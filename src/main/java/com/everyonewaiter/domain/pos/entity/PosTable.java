@@ -92,6 +92,11 @@ public class PosTable extends AggregateRoot<PosTable> {
     posTableActivity.cancelOrder(orderId);
   }
 
+  public void updateMemo(Long orderId, String memo) {
+    PosTableActivity posTableActivity = getActiveActivityOrThrow();
+    posTableActivity.updateMemo(orderId, memo);
+  }
+
   public boolean hasActiveActivity() {
     return getActiveActivity().isPresent();
   }

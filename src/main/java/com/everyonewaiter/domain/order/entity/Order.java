@@ -121,6 +121,10 @@ public class Order extends AggregateRoot<Order> {
     }
   }
 
+  public void updateMemo(String memo) {
+    this.memo = memo;
+  }
+
   public boolean isPrepaid() {
     return type == Type.PREPAID;
   }

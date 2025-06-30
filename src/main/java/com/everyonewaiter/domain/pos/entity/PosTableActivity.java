@@ -124,6 +124,11 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
     }
   }
 
+  public void updateMemo(Long orderId, String memo) {
+    Order order = getOrder(orderId);
+    order.updateMemo(memo);
+  }
+
   public boolean hasOrder() {
     return !getOrders().isEmpty();
   }

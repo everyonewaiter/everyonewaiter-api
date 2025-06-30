@@ -65,6 +65,14 @@ public class PosService {
     posTableRepository.save(posTable);
   }
 
+  @Transactional
+  @RedissonLock(key = "#storeId + '-' + #tableNo")
+  public void updateMemo(Long storeId, int tableNo, Long orderId, String memo) {
+    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    posTable.updateMemo(orderId, memo);
+    posTableRepository.save(posTable);
+  }
+
   @Transactional(readOnly = true)
   public Optional<PosResponse.TableActivityDetail> readActiveTable(Long storeId, int tableNo) {
     PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -93,6 +94,19 @@ class PosController implements PosControllerSpecification {
       @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
   ) {
     posService.cancelOrder(device.getStore().getId(), tableNo, orderId);
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @StoreOpen
+  @PutMapping("/tables/{tableNo}/orders/{orderId}/memo")
+  public ResponseEntity<Void> updateMemo(
+      @PathVariable int tableNo,
+      @PathVariable Long orderId,
+      @RequestBody @Valid PosWriteRequest.UpdateMemo request,
+      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+  ) {
+    posService.updateMemo(device.getStore().getId(), tableNo, orderId, request.memo());
     return ResponseEntity.noContent().build();
   }
 
