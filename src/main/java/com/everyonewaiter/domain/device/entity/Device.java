@@ -2,6 +2,9 @@ package com.everyonewaiter.domain.device.entity;
 
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import com.everyonewaiter.global.sse.ServerAction;
+import com.everyonewaiter.global.sse.SseCategory;
+import com.everyonewaiter.global.sse.SseEvent;
 import com.everyonewaiter.global.support.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -87,6 +90,7 @@ public class Device extends AggregateRoot<Device> {
     device.tableNo = tableNo;
     device.ksnetDeviceNo = ksnetDeviceNo;
     device.paymentType = paymentType;
+    device.registerEvent(new SseEvent(store.getId(), SseCategory.DEVICE, ServerAction.CREATE));
     return device;
   }
 
@@ -136,6 +140,11 @@ public class Device extends AggregateRoot<Device> {
     this.tableNo = tableNo;
     this.ksnetDeviceNo = ksnetDeviceNo;
     this.paymentType = paymentType;
+    registerEvent(new SseEvent(store.getId(), SseCategory.DEVICE, ServerAction.UPDATE, getId()));
+  }
+
+  public void delete() {
+    registerEvent(new SseEvent(store.getId(), SseCategory.DEVICE, ServerAction.DELETE, getId()));
   }
 
 }
