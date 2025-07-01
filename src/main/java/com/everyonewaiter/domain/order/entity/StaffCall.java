@@ -4,6 +4,9 @@ import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.global.sse.ServerAction;
+import com.everyonewaiter.global.sse.SseCategory;
+import com.everyonewaiter.global.sse.SseEvent;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -51,6 +54,9 @@ public class StaffCall extends AggregateRoot<StaffCall> {
     staffCall.store = store;
     staffCall.tableNo = tableNo;
     staffCall.name = name;
+    staffCall.registerEvent(
+        new SseEvent(store.getId(), SseCategory.STAFF_CALL, ServerAction.CREATE)
+    );
     return staffCall;
   }
 
@@ -58,6 +64,7 @@ public class StaffCall extends AggregateRoot<StaffCall> {
     if (this.state == State.INCOMPLETE) {
       this.state = State.COMPLETE;
       this.completeTime = Instant.now();
+      registerEvent(new SseEvent(store.getId(), SseCategory.STAFF_CALL, ServerAction.UPDATE));
     } else {
       throw new BusinessException(ErrorCode.ALREADY_COMPLETED_STAFF_CALL);
     }
