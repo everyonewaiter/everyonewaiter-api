@@ -57,7 +57,7 @@ public class Category extends AggregateRoot<Category> {
 
   public boolean movePosition(Category other, Position.Move where) {
     boolean isMoved = this.position.move(other.position, where);
-    registerEvent(new SseEvent(storeId, SseCategory.CATEGORY, ServerAction.UPDATE, getId()));
+    registerEvent(new SseEvent(storeId, SseCategory.CATEGORY, ServerAction.UPDATE));
     return isMoved;
   }
 
