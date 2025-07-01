@@ -3,6 +3,9 @@ package com.everyonewaiter.domain.menu.entity;
 import com.everyonewaiter.domain.menu.event.CategoryDeleteEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.domain.entity.Position;
+import com.everyonewaiter.global.sse.ServerAction;
+import com.everyonewaiter.global.sse.SseCategory;
+import com.everyonewaiter.global.sse.SseEvent;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -43,19 +46,24 @@ public class Category extends AggregateRoot<Category> {
     category.storeId = storeId;
     category.name = name;
     category.position = new Position(lastPosition + 1);
+    category.registerEvent(new SseEvent(storeId, SseCategory.CATEGORY, ServerAction.CREATE));
     return category;
   }
 
   public void update(String name) {
     this.name = name;
+    registerEvent(new SseEvent(storeId, SseCategory.CATEGORY, ServerAction.UPDATE, getId()));
   }
 
   public boolean movePosition(Category other, Position.Move where) {
-    return this.position.move(other.position, where);
+    boolean isMoved = this.position.move(other.position, where);
+    registerEvent(new SseEvent(storeId, SseCategory.CATEGORY, ServerAction.UPDATE, getId()));
+    return isMoved;
   }
 
   public void delete() {
     registerEvent(new CategoryDeleteEvent(getId()));
+    registerEvent(new SseEvent(storeId, SseCategory.CATEGORY, ServerAction.DELETE, getId()));
   }
 
   public List<Menu> getMenus() {
