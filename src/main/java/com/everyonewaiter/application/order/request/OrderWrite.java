@@ -24,4 +24,16 @@ public class OrderWrite {
 
   }
 
+  public record UpdateOrders(List<UpdateOrder> orders) {
+
+  }
+
+  public record UpdateOrder(Long orderId, List<UpdateOrderMenu> orderMenus) {
+
+  }
+
+  public record UpdateOrderMenu(Long orderMenuId, int quantity) {
+
+  }
+
 }

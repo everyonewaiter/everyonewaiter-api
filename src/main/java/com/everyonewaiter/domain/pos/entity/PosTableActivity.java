@@ -124,6 +124,20 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
     }
   }
 
+  public void updateOrder(Long orderId, Long orderMenuId, int quantity) {
+    Order order = getOrderedOrder(orderId);
+    order.updateOrderMenu(orderMenuId, quantity);
+
+    long totalRemainingPrice = getRemainingPaymentPrice();
+    if (this.discount > totalRemainingPrice) {
+      this.discount = totalRemainingPrice;
+    }
+
+    if (!hasOrderedOrder()) {
+      this.active = false;
+    }
+  }
+
   public void updateMemo(Long orderId, String memo) {
     Order order = getOrder(orderId);
     order.updateMemo(memo);
@@ -176,6 +190,13 @@ public class PosTableActivity extends AggregateRoot<PosTableActivity> {
 
   public List<Order> getOrders() {
     return Collections.unmodifiableList(orders);
+  }
+
+  public Order getOrderedOrder(Long orderId) {
+    return getOrderedOrders().stream()
+        .filter(order -> Objects.requireNonNull(order.getId()).equals(orderId))
+        .findAny()
+        .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
   }
 
   public List<Order> getOrderedOrders() {

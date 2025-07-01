@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.pos;
 
+import com.everyonewaiter.application.order.request.OrderWrite;
 import com.everyonewaiter.application.pos.response.PosResponse;
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
@@ -60,6 +61,23 @@ public class PosService {
   public void cancelOrder(Long storeId, int tableNo, Long orderId) {
     PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
     posTable.cancelOrder(orderId);
+    posTableRepository.save(posTable);
+  }
+
+  @Transactional
+  @RedissonLock(key = "#storeId + '-' + #tableNo")
+  public void updateOrders(Long storeId, int tableNo, OrderWrite.UpdateOrders request) {
+    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+
+    for (OrderWrite.UpdateOrder order : request.orders()) {
+      Long orderId = order.orderId();
+
+      for (OrderWrite.UpdateOrderMenu orderMenu : order.orderMenus()) {
+        posTable.updateOrder(orderId, orderMenu.orderMenuId(), orderMenu.quantity());
+      }
+    }
+    posTable.registerSseUpdateEvent(tableNo);
+
     posTableRepository.save(posTable);
   }
 

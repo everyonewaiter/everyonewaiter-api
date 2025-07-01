@@ -93,6 +93,14 @@ public class OrderMenu extends Aggregate {
     }
   }
 
+  public void updateQuantity(int quantity) {
+    if (quantity > 0) {
+      this.quantity = quantity;
+    } else {
+      throw new BusinessException(ErrorCode.ORDER_MENU_QUANTITY_POSITIVE);
+    }
+  }
+
   public long calculateTotalPrice() {
     long totalPrice = price;
     for (OrderOptionGroup orderOptionGroup : orderOptionGroups) {

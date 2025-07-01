@@ -128,6 +128,19 @@ public class Order extends AggregateRoot<Order> {
     }
   }
 
+  public void updateOrderMenu(Long orderMenuId, int quantity) {
+    OrderMenu orderMenu = getOrderMenu(orderMenuId);
+    if (quantity <= 0) {
+      orderMenus.remove(orderMenu);
+    } else {
+      orderMenu.updateQuantity(quantity);
+    }
+
+    if (!hasOrderMenu()) {
+      this.state = State.CANCEL;
+    }
+  }
+
   public void updateMemo(String memo) {
     this.memo = memo;
   }
@@ -146,6 +159,10 @@ public class Order extends AggregateRoot<Order> {
 
   public boolean isCanceled() {
     return state == State.CANCEL;
+  }
+
+  public boolean hasOrderMenu() {
+    return !getOrderMenus().isEmpty();
   }
 
   public long getTotalOrderPrice() {

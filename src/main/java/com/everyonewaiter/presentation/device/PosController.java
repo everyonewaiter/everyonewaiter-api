@@ -99,6 +99,18 @@ class PosController implements PosControllerSpecification {
 
   @Override
   @StoreOpen
+  @PutMapping("/tables/{tableNo}/orders")
+  public ResponseEntity<Void> updateOrders(
+      @PathVariable int tableNo,
+      @RequestBody @Valid PosWriteRequest.UpdateOrders request,
+      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+  ) {
+    posService.updateOrders(device.getStore().getId(), tableNo, request.toDomainDto());
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @StoreOpen
   @PutMapping("/tables/{tableNo}/orders/{orderId}/memo")
   public ResponseEntity<Void> updateMemo(
       @PathVariable int tableNo,
