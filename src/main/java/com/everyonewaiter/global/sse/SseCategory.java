@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 public enum SseCategory {
   DEVICE,
   STORE,
-  SETTING,
   CATEGORY,
   MENU,
   WAITING,

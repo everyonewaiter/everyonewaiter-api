@@ -8,6 +8,9 @@ import com.everyonewaiter.domain.waiting.event.WaitingRegistrationEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.global.sse.ServerAction;
+import com.everyonewaiter.global.sse.SseCategory;
+import com.everyonewaiter.global.sse.SseEvent;
 import com.everyonewaiter.global.support.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -91,6 +94,7 @@ public class Waiting extends AggregateRoot<Waiting> {
             waiting.accessKey
         )
     );
+    waiting.registerEvent(new SseEvent(store.getId(), SseCategory.WAITING, ServerAction.CREATE));
     return waiting;
   }
 
@@ -118,6 +122,7 @@ public class Waiting extends AggregateRoot<Waiting> {
   public void complete() {
     if (isRegistration()) {
       this.state = State.COMPLETE;
+      registerEvent(new SseEvent(store.getId(), SseCategory.WAITING, ServerAction.UPDATE, getId()));
     } else {
       throw new BusinessException(ErrorCode.ONLY_REGISTRATION_STATE_CAN_BE_COMPLETE);
     }
@@ -126,6 +131,7 @@ public class Waiting extends AggregateRoot<Waiting> {
   private void cancel() {
     if (isRegistration()) {
       this.state = State.CANCEL;
+      registerEvent(new SseEvent(store.getId(), SseCategory.WAITING, ServerAction.UPDATE, getId()));
     } else {
       throw new BusinessException(ErrorCode.ONLY_REGISTRATION_STATE_CAN_BE_CANCEL);
     }
