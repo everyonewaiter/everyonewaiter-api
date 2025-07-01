@@ -5,6 +5,9 @@ import com.everyonewaiter.domain.store.event.StoreOpenEvent;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.global.sse.ServerAction;
+import com.everyonewaiter.global.sse.SseCategory;
+import com.everyonewaiter.global.sse.SseEvent;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -76,6 +79,7 @@ public class Store extends AggregateRoot<Store> {
         countryOfOrigins,
         staffCallOptions
     );
+    registerEvent(new SseEvent(getId(), SseCategory.STORE, ServerAction.UPDATE));
   }
 
   public void open() {
@@ -83,6 +87,7 @@ public class Store extends AggregateRoot<Store> {
       this.status = Status.OPEN;
       this.lastOpenedAt = Instant.now();
       registerEvent(new StoreOpenEvent(getId()));
+      registerEvent(new SseEvent(getId(), SseCategory.STORE, ServerAction.UPDATE, status.name()));
     } else {
       throw new BusinessException(ErrorCode.ALREADY_STORE_OPENED);
     }
@@ -93,6 +98,7 @@ public class Store extends AggregateRoot<Store> {
       this.status = Status.CLOSE;
       this.lastClosedAt = Instant.now();
       registerEvent(new StoreCloseEvent(getId()));
+      registerEvent(new SseEvent(getId(), SseCategory.STORE, ServerAction.UPDATE, status.name()));
     } else {
       throw new BusinessException(ErrorCode.ALREADY_STORE_CLOSED);
     }
