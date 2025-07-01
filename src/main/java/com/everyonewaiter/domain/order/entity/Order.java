@@ -5,6 +5,9 @@ import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.global.sse.ServerAction;
+import com.everyonewaiter.global.sse.SseCategory;
+import com.everyonewaiter.global.sse.SseEvent;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -83,6 +86,7 @@ public class Order extends AggregateRoot<Order> {
     order.category = posTableActivity.hasOrder() ? Category.ADDITIONAL : Category.INITIAL;
     order.type = type;
     order.memo = memo;
+    order.registerEvent(new SseEvent(order.store.getId(), SseCategory.ORDER, ServerAction.CREATE));
     return order;
   }
 
@@ -94,6 +98,7 @@ public class Order extends AggregateRoot<Order> {
   public void moveTable(PosTableActivity posTableActivity) {
     this.posTableActivity = posTableActivity;
     posTableActivity.addOrder(this);
+    registerEvent(new SseEvent(store.getId(), SseCategory.ORDER, ServerAction.UPDATE));
   }
 
   public void serving() {
@@ -102,6 +107,7 @@ public class Order extends AggregateRoot<Order> {
     } else {
       this.serving.complete();
       getOrderMenus().forEach(OrderMenu::serving);
+      registerEvent(new SseEvent(store.getId(), SseCategory.ORDER, ServerAction.UPDATE, getId()));
     }
   }
 
@@ -110,6 +116,7 @@ public class Order extends AggregateRoot<Order> {
       throw new BusinessException(ErrorCode.ALREADY_COMPLETED_SERVING);
     } else {
       getOrderMenu(orderMenuId).servingOrCancel();
+      registerEvent(new SseEvent(store.getId(), SseCategory.ORDER, ServerAction.UPDATE, getId()));
     }
   }
 
