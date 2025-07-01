@@ -5,6 +5,9 @@ import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.global.sse.ServerAction;
+import com.everyonewaiter.global.sse.SseCategory;
+import com.everyonewaiter.global.sse.SseEvent;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -69,32 +72,46 @@ public class PosTable extends AggregateRoot<PosTable> {
   public void completeActiveActivity() {
     PosTableActivity posTableActivity = getActiveActivityOrThrow();
     posTableActivity.complete();
+    registerEvent(new SseEvent(store.getId(), SseCategory.POS, ServerAction.UPDATE, getTableNo()));
   }
 
   public void merge(PosTable sourcePosTable) {
     PosTableActivity sourcePosTableActivity = sourcePosTable.getActiveActivityOrThrow();
     PosTableActivity targetPosTableActivity = getActiveActivityOrThrow();
     targetPosTableActivity.mergeTableActivity(sourcePosTableActivity);
+    registerEvent(new SseEvent(store.getId(), SseCategory.ORDER, ServerAction.UPDATE));
+    registerEvent(new SseEvent(store.getId(), SseCategory.POS, ServerAction.UPDATE));
   }
 
   public void move(PosTable targetPosTable) {
     PosTableActivity sourcePosTableActivity = getActiveActivityOrThrow();
     sourcePosTableActivity.moveTable(targetPosTable);
     this.activities.remove(sourcePosTableActivity);
+    registerEvent(new SseEvent(store.getId(), SseCategory.ORDER, ServerAction.UPDATE));
+    registerEvent(new SseEvent(store.getId(), SseCategory.POS, ServerAction.UPDATE));
   }
 
   public void discount(long discountPrice) {
     getActiveActivityOrThrow().discount(discountPrice);
+    registerEvent(new SseEvent(store.getId(), SseCategory.POS, ServerAction.UPDATE, getTableNo()));
   }
 
   public void cancelOrder(Long orderId) {
     PosTableActivity posTableActivity = getActiveActivityOrThrow();
     posTableActivity.cancelOrder(orderId);
+    registerEvent(
+        new SseEvent(store.getId(), SseCategory.ORDER, ServerAction.UPDATE, getTableNo())
+    );
+    registerEvent(new SseEvent(store.getId(), SseCategory.POS, ServerAction.UPDATE, getTableNo()));
   }
 
   public void updateMemo(Long orderId, String memo) {
     PosTableActivity posTableActivity = getActiveActivityOrThrow();
     posTableActivity.updateMemo(orderId, memo);
+    registerEvent(
+        new SseEvent(store.getId(), SseCategory.ORDER, ServerAction.UPDATE, getTableNo())
+    );
+    registerEvent(new SseEvent(store.getId(), SseCategory.POS, ServerAction.UPDATE, getTableNo()));
   }
 
   public boolean hasActiveActivity() {

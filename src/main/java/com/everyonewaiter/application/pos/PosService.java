@@ -38,8 +38,6 @@ public class PosService {
     } else {
       sourcePosTable.move(targetPosTable);
     }
-
-    // TODO: SSE 알림 이벤트 발행
   }
 
   private PosTable getPosTable(List<PosTable> posTables, int tableNo) {
