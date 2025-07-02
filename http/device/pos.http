@@ -225,3 +225,53 @@ Content-Type: application/json
 x-ew-access-key: {{accessKey}}
 x-ew-signature: {{signature}}
 x-ew-timestamp: {{timestamp}}
+
+### 7. 주문 수정
+< {%
+  const deviceId = request.environment.get("devices.pos.id");
+  const deviceName = request.environment.get("devices.pos.name");
+  const devicePurpose = request.environment.get("devices.pos.purpose");
+  const secretKey = request.environment.get("devices.pos.secretKey");
+
+  const method = request.method;
+  const uri = request.url
+  .tryGetSubstituted()
+  .split(request.environment.get("url"))[1];
+  const timestamp = Date.now().toString();
+
+  const signature = crypto.hmac.sha256()
+  .withTextSecret(secretKey)
+  .updateWithText(`${method} ${uri}\n`)
+  .updateWithText(`${deviceId} ${devicePurpose} ${deviceName}\n`)
+  .updateWithText(`${timestamp}`)
+  .digest()
+  .toBase64();
+
+  request.variables.set("accessKey", deviceId);
+  request.variables.set("signature", signature);
+  request.variables.set("timestamp", timestamp);
+%}
+
+PUT {{url}}/v1/pos/tables/1/orders
+Content-Type: application/json
+x-ew-access-key: {{accessKey}}
+x-ew-signature: {{signature}}
+x-ew-timestamp: {{timestamp}}
+
+{
+  "orders": [
+    {
+      "orderId": 728257503859058549,
+      "orderMenus": [
+        {
+          "orderMenuId": 728257503875835895,
+          "quantity": 1
+        },
+        {
+          "orderMenuId": 728257503875835896,
+          "quantity": 1
+        }
+      ]
+    }
+  ]
+}

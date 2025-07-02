@@ -137,15 +137,15 @@ public class Order extends AggregateRoot<Order> {
     } else {
       orderMenu.updateQuantity(quantity);
     }
-    calculatePrice();
+    this.price = calculatePrice();
 
     if (!hasOrderMenu()) {
       this.state = State.CANCEL;
     }
   }
 
-  private void calculatePrice() {
-    this.price = orderMenus.stream()
+  private long calculatePrice() {
+    return getOrderMenus().stream()
         .mapToLong(OrderMenu::calculateTotalPrice)
         .sum();
   }

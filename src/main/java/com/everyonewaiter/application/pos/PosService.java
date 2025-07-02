@@ -2,15 +2,20 @@ package com.everyonewaiter.application.pos;
 
 import com.everyonewaiter.application.order.request.OrderWrite;
 import com.everyonewaiter.application.pos.response.PosResponse;
+import com.everyonewaiter.domain.order.entity.OrderMenu;
 import com.everyonewaiter.domain.order.entity.Receipt;
+import com.everyonewaiter.domain.order.entity.ReceiptMenu;
 import com.everyonewaiter.domain.order.service.ReceiptFactory;
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.global.annotation.RedissonLock;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +70,37 @@ public class PosService {
     PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
     posTable.cancelOrder(orderId);
     posTableRepository.save(posTable);
+  }
+
+  @Transactional(readOnly = true)
+  public Receipt createDiffOrderReceipt(
+      Long storeId,
+      int tableNo,
+      OrderWrite.UpdateOrders request
+  ) {
+    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    Map<Long, OrderMenu> orderMenus = posTable.getActivePrintEnabledOrderedOrderMenus()
+        .stream()
+        .collect(Collectors.toMap(OrderMenu::getId, orderMenu -> orderMenu));
+
+    List<ReceiptMenu> receiptMenus = new ArrayList<>();
+    for (OrderWrite.UpdateOrder order : request.orders()) {
+      for (OrderWrite.UpdateOrderMenu updateOrderMenu : order.orderMenus()) {
+        if (!orderMenus.containsKey(updateOrderMenu.orderMenuId())) {
+          throw new BusinessException(ErrorCode.ORDER_MENU_NOT_FOUND);
+        }
+
+        OrderMenu orderMenu = orderMenus.get(updateOrderMenu.orderMenuId());
+        int updatedQuantity = updateOrderMenu.quantity() - orderMenu.getQuantity();
+
+        if (updatedQuantity != 0) {
+          ReceiptMenu receiptMenu = receiptFactory.createReceiptMenu(orderMenu, updatedQuantity);
+          receiptMenus.add(receiptMenu);
+        }
+      }
+    }
+
+    return receiptFactory.create(storeId, receiptMenus);
   }
 
   @Transactional

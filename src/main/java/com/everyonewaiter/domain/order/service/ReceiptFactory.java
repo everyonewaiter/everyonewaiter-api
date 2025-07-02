@@ -15,6 +15,12 @@ public class ReceiptFactory {
 
   private final ReceiptRepository receiptRepository;
 
+  public Receipt create(Long storeId, List<ReceiptMenu> receiptMenus) {
+    Receipt receipt = new Receipt("", receiptRepository.getPrintNo(storeId), receiptMenus);
+    receiptRepository.incrementPrintNo(storeId);
+    return receipt;
+  }
+
   public Receipt createReceipt(Order order) {
     receiptRepository.incrementPrintNo(order.getStore().getId());
     return createReceipt(
@@ -44,6 +50,17 @@ public class ReceiptFactory {
     return new ReceiptMenu(
         orderMenu.getName(),
         orderMenu.getQuantity(),
+        orderMenu.getPrintEnabledOrderOptionGroups()
+            .stream()
+            .flatMap(orderOptionGroup -> orderOptionGroup.getFormattedOrderOptions().stream())
+            .toList()
+    );
+  }
+
+  public ReceiptMenu createReceiptMenu(OrderMenu orderMenu, int quantity) {
+    return new ReceiptMenu(
+        orderMenu.getName(),
+        quantity,
         orderMenu.getPrintEnabledOrderOptionGroups()
             .stream()
             .flatMap(orderOptionGroup -> orderOptionGroup.getFormattedOrderOptions().stream())
