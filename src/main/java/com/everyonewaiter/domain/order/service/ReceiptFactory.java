@@ -5,6 +5,7 @@ import com.everyonewaiter.domain.order.entity.OrderMenu;
 import com.everyonewaiter.domain.order.entity.Receipt;
 import com.everyonewaiter.domain.order.entity.ReceiptMenu;
 import com.everyonewaiter.domain.order.repository.ReceiptRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,15 +16,27 @@ public class ReceiptFactory {
   private final ReceiptRepository receiptRepository;
 
   public Receipt createReceipt(Order order) {
-    Receipt receipt = new Receipt(
+    receiptRepository.incrementPrintNo(order.getStore().getId());
+    return createReceipt(
+        order.getStore().getId(),
         order.getMemo(),
-        receiptRepository.getPrintNo(order.getStore().getId()),
         order.getPrintEnabledOrderMenus()
-            .stream()
+    );
+  }
+
+  public Receipt createReceipt(Long storeId, List<OrderMenu> orderMenus) {
+    return createReceipt(storeId, "", orderMenus);
+  }
+
+  private Receipt createReceipt(Long storeId, String memo, List<OrderMenu> orderMenus) {
+    Receipt receipt = new Receipt(
+        memo,
+        receiptRepository.getPrintNo(storeId),
+        orderMenus.stream()
             .map(this::createReceiptMenu)
             .toList()
     );
-    receiptRepository.incrementPrintNo(order.getStore().getId());
+    receiptRepository.incrementPrintNo(storeId);
     return receipt;
   }
 

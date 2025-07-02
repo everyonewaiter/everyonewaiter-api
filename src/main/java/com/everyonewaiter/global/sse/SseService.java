@@ -60,6 +60,7 @@ public class SseService {
 
   public void sendEvent(String prefix, SseEvent event) {
     LOGGER.info("[SSE 이벤트 전송] 매장 ID: {}, 카테고리: {}", event.storeId(), event.category());
+    LOGGER.info("[SSE 이벤트 본문] data: {}", event.data());
     String key = generateKey(prefix, SseKeyType.EVENT);
     try {
       String stringEvent = objectMapper.writeValueAsString(event);

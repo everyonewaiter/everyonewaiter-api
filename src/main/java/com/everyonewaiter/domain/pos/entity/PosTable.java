@@ -1,6 +1,8 @@
 package com.everyonewaiter.domain.pos.entity;
 
 import com.everyonewaiter.domain.order.entity.Order;
+import com.everyonewaiter.domain.order.entity.OrderMenu;
+import com.everyonewaiter.domain.order.entity.Receipt;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
@@ -111,6 +113,10 @@ public class PosTable extends AggregateRoot<PosTable> {
     registerSseUpdateEvent(getTableNo());
   }
 
+  public void resendReceipt(Receipt receipt) {
+    registerEvent(new SseEvent(store.getId(), SseCategory.RECEIPT, ServerAction.GET, receipt));
+  }
+
   public void registerSseUpdateEvent() {
     registerSseUpdateEvent(null);
   }
@@ -180,6 +186,13 @@ public class PosTable extends AggregateRoot<PosTable> {
   public List<Order> getActiveOrderedOrders() {
     return getActiveActivity().stream()
         .flatMap(posTableActivity -> posTableActivity.getOrderedOrders().stream())
+        .toList();
+  }
+
+  public List<OrderMenu> getActivePrintEnabledOrderedOrderMenus() {
+    return getActiveOrderedOrders().stream()
+        .flatMap(order -> order.getOrderMenus().stream())
+        .filter(OrderMenu::isPrintEnabled)
         .toList();
   }
 

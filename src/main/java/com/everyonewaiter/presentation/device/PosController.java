@@ -122,4 +122,15 @@ class PosController implements PosControllerSpecification {
     return ResponseEntity.noContent().build();
   }
 
+  @Override
+  @StoreOpen
+  @PostMapping("/tables/{tableNo}/resend-receipt")
+  public ResponseEntity<Void> resendReceipt(
+      @PathVariable int tableNo,
+      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+  ) {
+    posService.resendReceipt(device.getStore().getId(), tableNo);
+    return ResponseEntity.noContent().build();
+  }
+
 }

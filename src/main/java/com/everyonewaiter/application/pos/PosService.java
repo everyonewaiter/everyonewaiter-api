@@ -2,6 +2,8 @@ package com.everyonewaiter.application.pos;
 
 import com.everyonewaiter.application.order.request.OrderWrite;
 import com.everyonewaiter.application.pos.response.PosResponse;
+import com.everyonewaiter.domain.order.entity.Receipt;
+import com.everyonewaiter.domain.order.service.ReceiptFactory;
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.global.annotation.RedissonLock;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PosService {
 
+  private final ReceiptFactory receiptFactory;
   private final PosTableRepository posTableRepository;
 
   @Transactional
@@ -86,6 +89,19 @@ public class PosService {
   public void updateMemo(Long storeId, int tableNo, Long orderId, String memo) {
     PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
     posTable.updateMemo(orderId, memo);
+    posTableRepository.save(posTable);
+  }
+
+  @Transactional(readOnly = true)
+  public void resendReceipt(Long storeId, int tableNo) {
+    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+
+    Receipt receipt = receiptFactory.createReceipt(
+        storeId,
+        posTable.getActivePrintEnabledOrderedOrderMenus()
+    );
+    posTable.resendReceipt(receipt);
+
     posTableRepository.save(posTable);
   }
 
