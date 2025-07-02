@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.order.entity;
 
+import com.everyonewaiter.domain.order.event.OrderCreateEvent;
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
@@ -86,6 +87,7 @@ public class Order extends AggregateRoot<Order> {
     order.category = posTableActivity.hasOrder() ? Category.ADDITIONAL : Category.INITIAL;
     order.type = type;
     order.memo = memo;
+    order.registerEvent(new OrderCreateEvent(order.getId(), order.store.getId()));
     order.registerEvent(new SseEvent(order.store.getId(), SseCategory.ORDER, ServerAction.CREATE));
     return order;
   }
@@ -195,6 +197,12 @@ public class Order extends AggregateRoot<Order> {
 
   public List<OrderMenu> getOrderMenus() {
     return Collections.unmodifiableList(orderMenus);
+  }
+
+  public List<OrderMenu> getPrintEnabledOrderMenus() {
+    return getOrderMenus().stream()
+        .filter(OrderMenu::isPrintEnabled)
+        .toList();
   }
 
 }

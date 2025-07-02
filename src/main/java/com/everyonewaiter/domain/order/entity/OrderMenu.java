@@ -113,4 +113,10 @@ public class OrderMenu extends Aggregate {
     return Collections.unmodifiableList(orderOptionGroups);
   }
 
+  public List<OrderOptionGroup> getPrintEnabledOrderOptionGroups() {
+    return getOrderOptionGroups().stream()
+        .filter(OrderOptionGroup::isPrintEnabled)
+        .toList();
+  }
+
 }

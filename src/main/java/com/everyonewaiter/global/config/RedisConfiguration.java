@@ -33,9 +33,7 @@ class RedisConfiguration {
 
   @Bean
   public RedisTemplate<String, String> redisTemplate(LettuceConnectionFactory connectionFactory) {
-    StringRedisTemplate redisTemplate = new StringRedisTemplate(connectionFactory);
-    redisTemplate.setEnableTransactionSupport(true);
-    return redisTemplate;
+    return new StringRedisTemplate(connectionFactory);
   }
 
   @Bean

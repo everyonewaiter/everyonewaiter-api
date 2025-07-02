@@ -41,6 +41,12 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @Override
+  public Order findByIdOrThrow(Long orderId) {
+    return orderJpaRepository.findById(orderId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
+  }
+
+  @Override
   public Order findByIdAndStoreIdOrThrow(Long orderId, Long storeId) {
     return orderJpaRepository.findByIdAndStoreId(orderId, storeId)
         .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));

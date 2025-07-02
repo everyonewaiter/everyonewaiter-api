@@ -65,4 +65,10 @@ public class OrderOptionGroup extends Aggregate {
     return Collections.unmodifiableList(orderOptions);
   }
 
+  public List<String> getFormattedOrderOptions() {
+    return getOrderOptions().stream()
+        .map(option -> "- %s: %s".formatted(name, option.getName()))
+        .toList();
+  }
+
 }
