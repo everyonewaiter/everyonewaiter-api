@@ -1,7 +1,9 @@
 package com.everyonewaiter.global.sse;
 
+import java.util.Objects;
+
 public record SseEvent(
-    Long storeId,
+    String storeId,
     SseCategory category,
     ServerAction action,
     boolean hasData,
@@ -13,7 +15,7 @@ public record SseEvent(
   }
 
   public SseEvent(Long storeId, SseCategory category, ServerAction action, Object data) {
-    this(storeId, category, action, data != null, data);
+    this(Objects.requireNonNull(storeId).toString(), category, action, data != null, data);
   }
 
 }

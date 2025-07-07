@@ -5,6 +5,9 @@ import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.global.sse.ServerAction;
+import com.everyonewaiter.global.sse.SseCategory;
+import com.everyonewaiter.global.sse.SseEvent;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -132,6 +135,12 @@ public class OrderPayment extends AggregateRoot<OrderPayment> {
         (isCard || cashReceiptType == CashReceiptType.NONE) ? "" : cashReceiptNo;
     orderPayment.cashReceiptType = isCard ? CashReceiptType.NONE : cashReceiptType;
     orderPayment.posTableActivity.addApprovePayment(orderPayment);
+    orderPayment.registerEvent(
+        new SseEvent(orderPayment.getStore().getId(), SseCategory.ORDER, ServerAction.UPDATE)
+    );
+    orderPayment.registerEvent(
+        new SseEvent(orderPayment.getStore().getId(), SseCategory.POS, ServerAction.UPDATE)
+    );
     return orderPayment;
   }
 
@@ -163,6 +172,12 @@ public class OrderPayment extends AggregateRoot<OrderPayment> {
       orderPayment.cashReceiptNo = approveOrderPayment.cashReceiptNo;
       orderPayment.cashReceiptType = approveOrderPayment.cashReceiptType;
       orderPayment.posTableActivity.addPayment(orderPayment);
+      orderPayment.registerEvent(
+          new SseEvent(orderPayment.getStore().getId(), SseCategory.ORDER, ServerAction.UPDATE)
+      );
+      orderPayment.registerEvent(
+          new SseEvent(orderPayment.getStore().getId(), SseCategory.POS, ServerAction.UPDATE)
+      );
       return orderPayment;
     } else {
       throw new BusinessException(ErrorCode.ALREADY_CANCELED_ORDER_PAYMENT);
