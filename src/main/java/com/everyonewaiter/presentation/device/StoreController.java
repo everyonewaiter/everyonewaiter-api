@@ -20,7 +20,7 @@ class StoreController implements StoreControllerSpecification {
 
   @Override
   @GetMapping("/status")
-  public ResponseEntity<StoreResponse.SimpleWithStatus> getStore(
+  public ResponseEntity<StoreResponse.DetailExcludeSettings> getStore(
       @AuthenticationDevice Device device
   ) {
     return ResponseEntity.ok(storeService.readSimpleWithStatusView(device.getStore().getId()));

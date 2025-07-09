@@ -14,10 +14,10 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "매장")
 interface StoreControllerSpecification {
 
-  @Operation(summary = "[ALL] 매장 영업 상태 조회", description = "매장 영업 상태 조회 API")
-  @ApiResponse(responseCode = "200", description = "매장 영업 상태 조회 성공")
+  @Operation(summary = "[ALL] 매장 정보 조회", description = "매장 정보 조회 API")
+  @ApiResponse(responseCode = "200", description = "매장 정보 조회 성공")
   @ApiErrorResponses(
-      summary = "매장 영업 상태 조회 실패",
+      summary = "매장 정보 조회 실패",
       value = {
           @ApiErrorResponse(
               code = ErrorCode.UNAUTHORIZED,
@@ -29,7 +29,9 @@ interface StoreControllerSpecification {
           ),
       }
   )
-  ResponseEntity<StoreResponse.SimpleWithStatus> getStore(@Parameter(hidden = true) Device device);
+  ResponseEntity<StoreResponse.DetailExcludeSettings> getStore(
+      @Parameter(hidden = true) Device device
+  );
 
   @Operation(summary = "[POS] 매장 오픈", description = "매장 오픈 API")
   @ApiResponse(responseCode = "204", description = "매장 오픈 성공")
