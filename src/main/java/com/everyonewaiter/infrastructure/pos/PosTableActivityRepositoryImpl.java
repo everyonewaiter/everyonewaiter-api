@@ -20,6 +20,22 @@ class PosTableActivityRepositoryImpl implements PosTableActivityRepository {
   private final PosTableActivityJpaRepository posTableActivityJpaRepository;
 
   @Override
+  public PosTableActivity findByIdAndStoreIdOrThrow(Long posTableActivityId, Long storeId) {
+    return Optional.ofNullable(
+            queryFactory
+                .select(posTableActivity)
+                .from(posTableActivity)
+                .innerJoin(posTableActivity.posTable, posTable).fetchJoin()
+                .where(
+                    posTableActivity.id.eq(posTableActivityId),
+                    posTableActivity.store.id.eq(storeId)
+                )
+                .fetchFirst()
+        )
+        .orElseThrow(() -> new BusinessException(ErrorCode.POS_TABLE_ACTIVITY_NOT_FOUND));
+  }
+
+  @Override
   public Optional<PosTableActivity> findByStoreIdAndTableNo(Long storeId, int tableNo) {
     return Optional.ofNullable(
         queryFactory

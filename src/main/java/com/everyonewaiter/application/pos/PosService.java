@@ -7,6 +7,8 @@ import com.everyonewaiter.domain.order.entity.Receipt;
 import com.everyonewaiter.domain.order.entity.ReceiptMenu;
 import com.everyonewaiter.domain.order.service.ReceiptFactory;
 import com.everyonewaiter.domain.pos.entity.PosTable;
+import com.everyonewaiter.domain.pos.entity.PosTableActivity;
+import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.global.annotation.RedissonLock;
 import com.everyonewaiter.global.exception.BusinessException;
@@ -26,6 +28,7 @@ public class PosService {
 
   private final ReceiptFactory receiptFactory;
   private final PosTableRepository posTableRepository;
+  private final PosTableActivityRepository posTableActivityRepository;
 
   @Transactional
   @RedissonLock(key = "#storeId + '-' + #tableNo")
@@ -139,6 +142,13 @@ public class PosService {
     posTable.resendReceipt(receipt);
 
     posTableRepository.save(posTable);
+  }
+
+  @Transactional(readOnly = true)
+  public PosResponse.TableActivityDetail readTableActivity(Long storeId, Long posTableActivityId) {
+    PosTableActivity activity =
+        posTableActivityRepository.findByIdAndStoreIdOrThrow(posTableActivityId, storeId);
+    return PosResponse.TableActivityDetail.from(activity);
   }
 
   @Transactional(readOnly = true)

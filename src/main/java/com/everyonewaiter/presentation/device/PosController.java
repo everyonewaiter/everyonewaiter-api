@@ -42,9 +42,22 @@ class PosController implements PosControllerSpecification {
   }
 
   @Override
+  @GetMapping("/tables/activities/{posTableActivityId}")
+  public ResponseEntity<PosResponse.TableActivityDetail> getTableActivity(
+      @PathVariable Long posTableActivityId,
+      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+  ) {
+    PosResponse.TableActivityDetail response = posService.readTableActivity(
+        device.getStore().getId(),
+        posTableActivityId
+    );
+    return ResponseEntity.ok(response);
+  }
+
+  @Override
   @StoreOpen
   @GetMapping("/tables/{tableNo}")
-  public ResponseEntity<PosResponse.TableActivityDetail> getTableActivity(
+  public ResponseEntity<PosResponse.TableActivityDetail> getActiveTableActivity(
       @PathVariable int tableNo,
       @AuthenticationDevice(purpose = {Device.Purpose.TABLE, Device.Purpose.POS}) Device device
   ) {

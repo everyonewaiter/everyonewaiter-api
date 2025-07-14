@@ -48,6 +48,30 @@ interface PosControllerSpecification {
   )
   ResponseEntity<PosResponse.Tables> getTables(@Parameter(hidden = true) Device device);
 
+  @Operation(summary = "[POS] 테이블 액티비티 상세 조회", description = "테이블 액티비티 상세 조회 API")
+  @ApiResponse(responseCode = "200", description = "테이블 액티비티 상세 조회 성공")
+  @ApiErrorResponses(
+      summary = "테이블 액티비티 상세 조회 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 TABLE 또는 POS가 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.POS_TABLE_ACTIVITY_NOT_FOUND,
+              exampleName = "POS 테이블 액티비티 ID로 POS 테이블 액티비티를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<PosResponse.TableActivityDetail> getTableActivity(
+      Long posTableActivityId,
+      @Parameter(hidden = true) Device device
+  );
+
   @Operation(summary = "[TABLE, POS] 테이블 액티비티 상세 조회", description = "테이블 액티비티 상세 조회 API")
   @ApiResponses(
       value = {
@@ -80,7 +104,7 @@ interface PosControllerSpecification {
           ),
       }
   )
-  ResponseEntity<PosResponse.TableActivityDetail> getTableActivity(
+  ResponseEntity<PosResponse.TableActivityDetail> getActiveTableActivity(
       int tableNo,
       @Parameter(hidden = true) Device device
   );

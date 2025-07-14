@@ -98,6 +98,7 @@ public enum ErrorCode {
   ORDER_MENU_NOT_FOUND(NOT_FOUND, "주문하려는 메뉴를 찾을 수 없어요."),
   ORDER_PAYMENT_NOT_FOUND(NOT_FOUND, "주문 결제 내역을 찾을 수 없어요."),
   POS_TABLE_NOT_FOUND(NOT_FOUND, "POS 테이블을 찾을 수 없어요."),
+  POS_TABLE_ACTIVITY_NOT_FOUND(NOT_FOUND, "POS 테이블 액티비티를 찾을 수 없어요."),
   POS_TABLE_ACTIVE_ACTIVITY_NOT_FOUND(NOT_FOUND, "현재 활성화 된 POS 테이블 액티비티를 찾을 수 없어요."),
   STAFF_CALL_NOT_FOUND(NOT_FOUND, "직원 호출을 찾을 수 없어요."),
   STAFF_CALL_OPTION_NOT_FOUND(NOT_FOUND, "직원 호출 옵션을 찾을 수 없어요."),
