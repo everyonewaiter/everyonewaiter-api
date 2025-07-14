@@ -1,18 +1,22 @@
 package com.everyonewaiter.presentation.device;
 
 import com.everyonewaiter.application.order.OrderPaymentService;
+import com.everyonewaiter.application.order.response.OrderPaymentResponse;
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.global.annotation.AuthenticationDevice;
 import com.everyonewaiter.global.annotation.StoreOpen;
+import com.everyonewaiter.global.support.DateFormatter;
 import com.everyonewaiter.presentation.device.request.OrderPaymentWriteRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,6 +25,20 @@ import org.springframework.web.bind.annotation.RestController;
 class OrderPaymentController implements OrderPaymentControllerSpecification {
 
   private final OrderPaymentService orderPaymentService;
+
+  @Override
+  @GetMapping
+  public ResponseEntity<OrderPaymentResponse.Details> getOrderPaymentsByPos(
+      @RequestParam(value = "date", required = false) String date,
+      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+  ) {
+    OrderPaymentResponse.Details response = orderPaymentService.readAllByPos(
+        device.getStore().getId(),
+        DateFormatter.kstDateStringToUtcStartInstant(date),
+        DateFormatter.kstDateStringToUtcEndInstant(date)
+    );
+    return ResponseEntity.ok(response);
+  }
 
   @Override
   @StoreOpen

@@ -343,3 +343,35 @@ x-ew-timestamp: {{timestamp}}
   "tradeTime": "250101120000",
   "tradeUniqueNo": "1234567890"
 }
+
+### 9. [POS] 주문 결제 내역 조회
+< {%
+  const deviceId = request.environment.get("devices.pos.id");
+  const deviceName = request.environment.get("devices.pos.name");
+  const devicePurpose = request.environment.get("devices.pos.purpose");
+  const secretKey = request.environment.get("devices.pos.secretKey");
+
+  const method = request.method;
+  const uri = request.url
+  .tryGetSubstituted()
+  .split(request.environment.get("url"))[1];
+  const timestamp = Date.now().toString();
+
+  const signature = crypto.hmac.sha256()
+  .withTextSecret(secretKey)
+  .updateWithText(`${method} ${uri}\n`)
+  .updateWithText(`${deviceId} ${devicePurpose} ${deviceName}\n`)
+  .updateWithText(`${timestamp}`)
+  .digest()
+  .toBase64();
+
+  request.variables.set("accessKey", deviceId);
+  request.variables.set("signature", signature);
+  request.variables.set("timestamp", timestamp);
+%}
+
+GET {{url}}/v1/orders/payments?date=20250623
+Content-Type: application/json
+x-ew-access-key: {{accessKey}}
+x-ew-signature: {{signature}}
+x-ew-timestamp: {{timestamp}}

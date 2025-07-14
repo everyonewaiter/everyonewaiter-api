@@ -3,6 +3,7 @@ package com.everyonewaiter.application.order.response;
 import com.everyonewaiter.domain.order.entity.OrderPayment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class OrderPaymentResponse {
 
   @Schema(name = "OrderPaymentResponse.Details")
-  public record Details(List<Detail> orders) {
+  public record Details(List<Detail> orderPayments) {
 
     public static Details from(List<OrderPayment> orderPayments) {
       return new Details(
@@ -79,7 +80,10 @@ public class OrderPaymentResponse {
       String cashReceiptNo,
 
       @Schema(description = "현금 영수증 타입", example = "DEDUCTION")
-      OrderPayment.CashReceiptType cashReceiptType
+      OrderPayment.CashReceiptType cashReceiptType,
+
+      @Schema(description = "주문 결제 생성일", example = "2025-01-01 12:00:00")
+      Instant createdAt
   ) {
 
     public static Detail from(OrderPayment orderPayment) {
@@ -101,7 +105,8 @@ public class OrderPaymentResponse {
           orderPayment.getVat(),
           orderPayment.getSupplyAmount(),
           orderPayment.getCashReceiptNo(),
-          orderPayment.getCashReceiptType()
+          orderPayment.getCashReceiptType(),
+          orderPayment.getCreatedAt()
       );
     }
 

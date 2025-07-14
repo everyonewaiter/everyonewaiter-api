@@ -1,11 +1,14 @@
 package com.everyonewaiter.application.order;
 
 import com.everyonewaiter.application.order.request.OrderPaymentWrite;
+import com.everyonewaiter.application.order.response.OrderPaymentResponse;
 import com.everyonewaiter.domain.order.entity.OrderPayment;
 import com.everyonewaiter.domain.order.repository.OrderPaymentRepository;
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
 import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
 import com.everyonewaiter.global.annotation.RedissonLock;
+import java.time.Instant;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +64,12 @@ public class OrderPaymentService {
     );
 
     return orderPaymentRepository.save(cancelOrderPayment).getId();
+  }
+
+  public OrderPaymentResponse.Details readAllByPos(Long storeId, Instant start, Instant end) {
+    List<OrderPayment> payments =
+        orderPaymentRepository.findAllByStoreIdAndDate(storeId, start, end);
+    return OrderPaymentResponse.Details.from(payments);
   }
 
 }

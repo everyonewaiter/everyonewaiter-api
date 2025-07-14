@@ -47,7 +47,7 @@ public class DeviceValidator {
       throw new IllegalArgumentException("KSNET 단말기 번호를 입력해 주세요.");
     }
     if (ksnetDeviceNo.length() > 30) {
-      throw new IllegalArgumentException("옳바른 KSNET 단말기 번호를 입력해 주세요.");
+      throw new IllegalArgumentException("올바른 KSNET 단말기 번호를 입력해 주세요.");
     }
   }
 

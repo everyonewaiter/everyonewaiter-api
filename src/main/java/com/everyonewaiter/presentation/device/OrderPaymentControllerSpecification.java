@@ -1,5 +1,6 @@
 package com.everyonewaiter.presentation.device;
 
+import com.everyonewaiter.application.order.response.OrderPaymentResponse;
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
@@ -16,6 +17,34 @@ import org.springframework.http.ResponseEntity;
 
 @Tag(name = "주문 결제")
 interface OrderPaymentControllerSpecification {
+
+  @Operation(
+      summary = "[POS] 결제 내역 조회",
+      description = "결제 내역 조회 API<br/><br/>"
+          + "날짜 포맷은 KST `yyyyMMdd` 형식이어야 합니다. 예시: `20250101`"
+  )
+  @ApiResponse(responseCode = "200", description = "결제 내역 조회 성공")
+  @ApiErrorResponses(
+      summary = "결제 내역 조회 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.INVALID_DATE_FORMAT,
+              exampleName = "날짜 포맷이 올바르지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 POS가 아닌 경우"
+          ),
+      }
+  )
+  ResponseEntity<OrderPaymentResponse.Details> getOrderPaymentsByPos(
+      String date,
+      @Parameter(hidden = true) Device device
+  );
 
   @Operation(summary = "[TABLE, POS] 주문 결제 승인", description = "주문 결제 승인 API")
   @ApiResponse(

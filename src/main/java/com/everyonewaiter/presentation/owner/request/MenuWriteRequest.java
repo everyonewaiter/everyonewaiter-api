@@ -44,11 +44,11 @@ public class MenuWriteRequest {
       int spicy,
 
       @Schema(description = "메뉴 상태", example = "DEFAULT", requiredMode = Schema.RequiredMode.REQUIRED)
-      @NotNull(message = "메뉴 상태가 누락되었거나 옳바르지 않습니다.")
+      @NotNull(message = "메뉴 상태가 누락되었거나 올바르지 않습니다.")
       Menu.State state,
 
       @Schema(description = "메뉴 라벨", example = "BEST", requiredMode = Schema.RequiredMode.REQUIRED)
-      @NotNull(message = "메뉴 라벨이 누락되었거나 옳바르지 않습니다.")
+      @NotNull(message = "메뉴 라벨이 누락되었거나 올바르지 않습니다.")
       Menu.Label label,
 
       @Schema(description = "주방 프린트 출력 여부", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -104,11 +104,11 @@ public class MenuWriteRequest {
       int spicy,
 
       @Schema(description = "메뉴 상태", example = "DEFAULT", requiredMode = Schema.RequiredMode.REQUIRED)
-      @NotNull(message = "메뉴 상태가 누락되었거나 옳바르지 않습니다.")
+      @NotNull(message = "메뉴 상태가 누락되었거나 올바르지 않습니다.")
       Menu.State state,
 
       @Schema(description = "메뉴 라벨", example = "BEST", requiredMode = Schema.RequiredMode.REQUIRED)
-      @NotNull(message = "메뉴 라벨이 누락되었거나 옳바르지 않습니다.")
+      @NotNull(message = "메뉴 라벨이 누락되었거나 올바르지 않습니다.")
       Menu.Label label,
 
       @Schema(description = "주방 프린트 출력 여부", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -146,7 +146,7 @@ public class MenuWriteRequest {
       String name,
 
       @Schema(description = "메뉴 옵션 그룹 타입 (필수, 옵셔널)", example = "MANDATORY", requiredMode = Schema.RequiredMode.REQUIRED)
-      @NotNull(message = "메뉴 옵션 그룹 타입이 누락되었거나 옳바르지 않습니다.")
+      @NotNull(message = "메뉴 옵션 그룹 타입이 누락되었거나 올바르지 않습니다.")
       MenuOptionGroup.Type type,
 
       @Schema(description = "주방 프린트 출력 여부", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)

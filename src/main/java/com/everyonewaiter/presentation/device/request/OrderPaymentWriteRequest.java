@@ -15,7 +15,7 @@ public class OrderPaymentWriteRequest {
   @Schema(name = "OrderPaymentWriteRequest.Approve")
   public record Approve(
       @Schema(description = "결제 수단", example = "CARD", requiredMode = Schema.RequiredMode.REQUIRED)
-      @NotNull(message = "결제 수단이 누락되었거나 옳바르지 않습니다.")
+      @NotNull(message = "결제 수단이 누락되었거나 올바르지 않습니다.")
       OrderPayment.Method method,
 
       @Schema(description = "결제 금액", example = "10000", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -71,7 +71,7 @@ public class OrderPaymentWriteRequest {
       String cashReceiptNo,
 
       @Schema(description = "현금 영수증 타입", example = "DEDUCTION", requiredMode = Schema.RequiredMode.REQUIRED)
-      @NotNull(message = "현금 영수증 타입이 누락되었거나 옳바르지 않습니다.")
+      @NotNull(message = "현금 영수증 타입이 누락되었거나 올바르지 않습니다.")
       OrderPayment.CashReceiptType cashReceiptType
   ) {
 

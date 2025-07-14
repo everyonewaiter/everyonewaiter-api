@@ -1,6 +1,7 @@
 package com.everyonewaiter.global.config;
 
 import com.everyonewaiter.global.support.DateFormatter;
+import com.everyonewaiter.global.support.TimeZone;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -12,8 +13,6 @@ import org.springframework.boot.jackson.JsonComponent;
 @JsonComponent
 class InstantJsonSerializer extends JsonSerializer<Instant> {
 
-  private static final String ZONE_ID = "Asia/Seoul";
-
   @Override
   public void serialize(
       Instant instant,
@@ -22,7 +21,7 @@ class InstantJsonSerializer extends JsonSerializer<Instant> {
   ) throws IOException {
     jsonGenerator.writeString(
         DateFormatter.SERIALIZE
-            .withZone(ZoneId.of(ZONE_ID))
+            .withZone(ZoneId.of(TimeZone.ASIA_SEOUL.getId()))
             .format(instant)
     );
   }
