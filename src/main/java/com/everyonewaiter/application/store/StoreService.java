@@ -8,8 +8,6 @@ import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.domain.store.repository.StoreRepository;
 import com.everyonewaiter.domain.store.service.StoreValidator;
 import com.everyonewaiter.domain.store.view.StoreView;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -73,15 +71,9 @@ public class StoreService {
     return StoreResponse.Simples.from(views);
   }
 
-  public StoreResponse.DetailExcludeSettings readSimpleWithStatusView(Long storeId) {
+  public StoreResponse.Detail read(Long storeId) {
     Store store = storeRepository.findByIdOrThrow(storeId);
-    return StoreResponse.DetailExcludeSettings.from(store);
-  }
-
-  public StoreResponse.Detail read(Long storeId, Long accountId) {
-    return storeRepository.findByIdAndAccountId(storeId, accountId)
-        .map(StoreResponse.Detail::from)
-        .orElseThrow(() -> new BusinessException(ErrorCode.STORE_NOT_FOUND));
+    return StoreResponse.Detail.from(store);
   }
 
 }

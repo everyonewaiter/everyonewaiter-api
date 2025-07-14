@@ -43,56 +43,6 @@ public class StoreResponse {
 
   }
 
-  @Schema(name = "StoreResponse.DetailExcludeSettings")
-  public record DetailExcludeSettings(
-      @Schema(description = "매장 ID", example = "\"694865267482835533\"")
-      String storeId,
-
-      @Schema(description = "매장 이름", example = "홍길동식당")
-      String name,
-
-      @Schema(description = "대표자명", example = "홍길동")
-      String ceoName,
-
-      @Schema(description = "매장 주소", example = "경상남도 창원시 의창구 123")
-      String address,
-
-      @Schema(description = "매장 전화번호", example = "02-123-4567")
-      String landline,
-
-      @Schema(description = "사업자 등록번호", example = "443-60-00875")
-      String license,
-
-      @Schema(description = "사업자 등록증 이미지명", example = "license/202504/0KA652ZFZ26DG.webp")
-      String image,
-
-      @Schema(description = "매장 영업 상태", example = "OPEN")
-      Store.Status status,
-
-      @Schema(description = "마지막 매장 영업일", example = "2025-01-01 12:00:00")
-      Instant lastOpenedAt,
-
-      @Schema(description = "마지막 매장 마감일", example = "2025-01-01 12:00:00")
-      Instant lastClosedAt
-  ) {
-
-    public static DetailExcludeSettings from(Store store) {
-      return new DetailExcludeSettings(
-          Objects.requireNonNull(store.getId()).toString(),
-          store.getBusinessLicense().getName(),
-          store.getBusinessLicense().getCeoName(),
-          store.getBusinessLicense().getAddress(),
-          store.getBusinessLicense().getLandline(),
-          store.getBusinessLicense().getLicense(),
-          store.getBusinessLicense().getLicenseImage(),
-          store.getStatus(),
-          store.getLastOpenedAt(),
-          store.getLastClosedAt()
-      );
-    }
-
-  }
-
   @Schema(name = "StoreResponse.Detail")
   public record Detail(
       @Schema(description = "매장 ID", example = "\"694865267482835533\"")

@@ -30,11 +30,8 @@ class StoreManagementController implements StoreManagementControllerSpecificatio
 
   @Override
   @GetMapping("/{storeId}")
-  public ResponseEntity<StoreResponse.Detail> getStore(
-      @PathVariable Long storeId,
-      @AuthenticationAccount Account account
-  ) {
-    StoreResponse.Detail response = storeService.read(storeId, account.getId());
+  public ResponseEntity<StoreResponse.Detail> getStore(@PathVariable Long storeId) {
+    StoreResponse.Detail response = storeService.read(storeId);
     return ResponseEntity.ok(response);
   }
 

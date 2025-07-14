@@ -4,7 +4,6 @@ Authorization: Bearer {{accessToken}}
 
 ### 2. 매장 상세 조회
 GET {{url}}/v1/stores/706810975107825958
-Authorization: Bearer {{accessToken}}
 
 ### 3. 매장 정보 수정
 PUT {{url}}/v1/stores/706810975107825958

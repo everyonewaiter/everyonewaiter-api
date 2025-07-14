@@ -1,5 +1,6 @@
 package com.everyonewaiter.infrastructure.store;
 
+import static com.everyonewaiter.domain.store.entity.QSetting.setting;
 import static com.everyonewaiter.domain.store.entity.QStore.store;
 
 import com.everyonewaiter.domain.store.entity.Store;
@@ -52,19 +53,21 @@ class StoreRepositoryImpl implements StoreRepository {
   }
 
   @Override
-  public Optional<Store> findByIdAndAccountId(Long storeId, Long accountId) {
-    return storeJpaRepository.findByIdAndAccountId(storeId, accountId);
-  }
-
-  @Override
   public Store findByIdOrThrow(Long storeId) {
-    return storeJpaRepository.findById(storeId)
+    return Optional.ofNullable(
+            queryFactory
+                .select(store)
+                .from(store)
+                .innerJoin(store.setting, setting).fetchJoin()
+                .where(store.id.eq(storeId))
+                .fetchFirst()
+        )
         .orElseThrow(() -> new BusinessException(ErrorCode.STORE_NOT_FOUND));
   }
 
   @Override
   public Store findByIdAndAccountIdOrThrow(Long storeId, Long accountId) {
-    return findByIdAndAccountId(storeId, accountId)
+    return storeJpaRepository.findByIdAndAccountId(storeId, accountId)
         .orElseThrow(() -> new BusinessException(ErrorCode.STORE_NOT_FOUND));
   }
 

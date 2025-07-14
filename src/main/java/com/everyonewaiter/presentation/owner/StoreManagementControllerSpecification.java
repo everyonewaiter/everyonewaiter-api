@@ -36,14 +36,11 @@ interface StoreManagementControllerSpecification {
           ),
           @ApiErrorResponse(
               code = ErrorCode.STORE_NOT_FOUND,
-              exampleName = "계정 ID 및 매장 ID로 매장을 찾을 수 없는 경우"
+              exampleName = "매장 ID로 매장을 찾을 수 없는 경우"
           ),
       }
   )
-  ResponseEntity<StoreResponse.Detail> getStore(
-      Long storeId,
-      @Parameter(hidden = true) Account account
-  );
+  ResponseEntity<StoreResponse.Detail> getStore(Long storeId);
 
   @Operation(summary = "매장 정보 수정", description = "매장 정보 수정 API")
   @ApiResponse(responseCode = "204", description = "매장 정보 수정 성공")
