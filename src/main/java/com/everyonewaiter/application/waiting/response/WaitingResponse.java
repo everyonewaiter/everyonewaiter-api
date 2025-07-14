@@ -35,7 +35,10 @@ public class WaitingResponse {
       int currentWaitingTeamCount,
 
       @Schema(description = "상태", example = "REGISTRATION")
-      Waiting.State state
+      Waiting.State state,
+
+      @Schema(description = "웨이팅 등록일", example = "2025-01-01 12:00:00")
+      Instant createdAt
   ) {
 
     public static MyTurn of(Waiting waiting, int currentWaitingTeamCount) {
@@ -43,7 +46,8 @@ public class WaitingResponse {
           waiting.getNumber(),
           waiting.getInitWaitingTeamCount(),
           currentWaitingTeamCount,
-          waiting.getState()
+          waiting.getState(),
+          waiting.getCreatedAt()
       );
     }
 
