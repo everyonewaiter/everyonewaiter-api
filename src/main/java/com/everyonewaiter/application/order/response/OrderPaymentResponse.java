@@ -30,6 +30,9 @@ public class OrderPaymentResponse {
       @Schema(description = "주문 결제 ID", example = "\"694865267482835533\"")
       String orderPaymentId,
 
+      @Schema(description = "POS 테이블 액티비티 ID", example = "\"694865267482835533\"")
+      String posTableActivityId,
+
       @Schema(description = "매장 ID", example = "\"694865267482835533\"")
       String storeId,
 
@@ -89,6 +92,7 @@ public class OrderPaymentResponse {
     public static Detail from(OrderPayment orderPayment) {
       return new Detail(
           Objects.requireNonNull(orderPayment.getId()).toString(),
+          Objects.requireNonNull(orderPayment.getPosTableActivity().getId()).toString(),
           Objects.requireNonNull(orderPayment.getStore().getId()).toString(),
           orderPayment.getState(),
           orderPayment.getMethod(),
