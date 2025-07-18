@@ -3,6 +3,7 @@ package com.everyonewaiter.application.pos;
 import com.everyonewaiter.application.order.request.OrderWrite;
 import com.everyonewaiter.application.pos.response.PosResponse;
 import com.everyonewaiter.domain.order.entity.OrderMenu;
+import com.everyonewaiter.domain.order.entity.OrderPayment;
 import com.everyonewaiter.domain.order.entity.Receipt;
 import com.everyonewaiter.domain.order.entity.ReceiptMenu;
 import com.everyonewaiter.domain.order.service.ReceiptFactory;
@@ -13,6 +14,7 @@ import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.global.annotation.RedissonLock;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -161,6 +163,26 @@ public class PosService {
   public PosResponse.Tables readAllActiveTables(Long storeId) {
     List<PosTable> posTables = posTableRepository.findAllActiveByStoreId(storeId);
     return PosResponse.Tables.from(posTables);
+  }
+
+  public PosResponse.Revenue getRevenue(Long storeId, Instant start, Instant end) {
+    return PosResponse.Revenue.from(
+        posTableActivityRepository.getTotalRevenue(storeId, start, end),
+        getRevenue(storeId, start, end, OrderPayment.Method.CASH, OrderPayment.State.APPROVE),
+        getRevenue(storeId, start, end, OrderPayment.Method.CARD, OrderPayment.State.APPROVE),
+        getRevenue(storeId, start, end, OrderPayment.Method.CASH, OrderPayment.State.CANCEL),
+        getRevenue(storeId, start, end, OrderPayment.Method.CARD, OrderPayment.State.CANCEL)
+    );
+  }
+
+  private long getRevenue(
+      Long storeId,
+      Instant start,
+      Instant end,
+      OrderPayment.Method method,
+      OrderPayment.State state
+  ) {
+    return posTableActivityRepository.getPaymentRevenue(storeId, start, end, method, state);
   }
 
 }

@@ -10,6 +10,7 @@ import com.everyonewaiter.global.sse.ServerAction;
 import com.everyonewaiter.global.sse.SseCategory;
 import com.everyonewaiter.global.sse.SseEvent;
 import com.everyonewaiter.global.sse.SseService;
+import com.everyonewaiter.global.support.DateFormatter;
 import com.everyonewaiter.presentation.device.request.PosWriteRequest;
 import jakarta.validation.Valid;
 import java.util.Objects;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,6 +33,20 @@ class PosController implements PosControllerSpecification {
 
   private final SseService sseService;
   private final PosService posService;
+
+  @Override
+  @GetMapping("/revenue")
+  public ResponseEntity<PosResponse.Revenue> getRevenue(
+      @RequestParam(value = "date", required = false) String date,
+      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+  ) {
+    PosResponse.Revenue response = posService.getRevenue(
+        device.getStore().getId(),
+        DateFormatter.kstDateStringToUtcStartInstant(date),
+        DateFormatter.kstDateStringToUtcEndInstant(date)
+    );
+    return ResponseEntity.ok(response);
+  }
 
   @Override
   @StoreOpen

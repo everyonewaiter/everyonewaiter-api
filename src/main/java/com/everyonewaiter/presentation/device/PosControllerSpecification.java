@@ -19,6 +19,26 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "POS")
 interface PosControllerSpecification {
 
+  @Operation(summary = "[POS] 매출 확인", description = "매출 확인 API")
+  @ApiResponse(responseCode = "200", description = "매출 확인 성공")
+  @ApiErrorResponses(
+      summary = "매출 확인 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 TABLE 또는 POS가 아닌 경우"
+          ),
+      }
+  )
+  ResponseEntity<PosResponse.Revenue> getRevenue(
+      String date,
+      @Parameter(hidden = true) Device device
+  );
+
   @Operation(
       summary = "[POS] 테이블 목록 조회",
       description = "테이블 목록 조회 API<br/><br/>"

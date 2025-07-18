@@ -5,6 +5,7 @@ import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
+import com.everyonewaiter.domain.pos.view.PosTableActivityView;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import java.time.Instant;
@@ -147,6 +148,50 @@ public class PosResponse {
           posTableActivity.getPayments().stream()
               .map(OrderPaymentResponse.Detail::from)
               .toList()
+      );
+    }
+
+  }
+
+  @Schema(name = "PosResponse.Revenue")
+  public record Revenue(
+      @Schema(description = "총 주문 금액", example = "29900")
+      long totalOrderPrice,
+
+      @Schema(description = "총 할인 금액", example = "0")
+      long totalDiscountPrice,
+
+      @Schema(description = "총 결제 금액", example = "29900")
+      long totalPaymentPrice,
+
+      @Schema(description = "현금 결제 승인 금액", example = "0")
+      long cashPaymentApprovePrice,
+
+      @Schema(description = "카드 결제 승인 금액", example = "29900")
+      long cardPaymentApprovePrice,
+
+      @Schema(description = "현금 결제 취소 금액", example = "0")
+      long cashPaymentCancelPrice,
+
+      @Schema(description = "카드 결제 취소 금액", example = "0")
+      long cardPaymentCancelPrice
+  ) {
+
+    public static Revenue from(
+        PosTableActivityView.TotalRevenue totalRevenueView,
+        long cashPaymentApprovePrice,
+        long cardPaymentApprovePrice,
+        long cashPaymentCancelPrice,
+        long cardPaymentCancelPrice
+    ) {
+      return new Revenue(
+          totalRevenueView.totalOrderPrice(),
+          totalRevenueView.totalDiscountPrice(),
+          totalRevenueView.totalPaymentPrice(),
+          cashPaymentApprovePrice,
+          cardPaymentApprovePrice,
+          cashPaymentCancelPrice,
+          cardPaymentCancelPrice
       );
     }
 
