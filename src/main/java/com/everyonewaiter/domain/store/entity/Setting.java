@@ -24,6 +24,9 @@ public class Setting extends Aggregate {
 
   public enum PrinterLocation {POS, HALL}
 
+  @Column(name = "ksnet_device_no", nullable = false)
+  private String ksnetDeviceNo = "DPTOTEST03";
+
   @Column(name = "extra_table_count", nullable = false)
   private int extraTableCount = 5;
 
@@ -46,6 +49,7 @@ public class Setting extends Aggregate {
   private List<StaffCallOption> staffCallOptions = new ArrayList<>();
 
   public void update(
+      String ksnetDeviceNo,
       int extraTableCount,
       PrinterLocation printerLocation,
       boolean showMenuPopup,
@@ -53,6 +57,7 @@ public class Setting extends Aggregate {
       List<CountryOfOrigin> countryOfOrigins,
       List<StaffCallOption> staffCallOptions
   ) {
+    this.ksnetDeviceNo = ksnetDeviceNo;
     this.extraTableCount = extraTableCount;
     this.printerLocation = printerLocation;
     this.showMenuPopup = showMenuPopup;

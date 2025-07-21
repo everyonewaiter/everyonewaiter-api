@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
@@ -25,6 +26,7 @@ interface StoreManagementControllerSpecification {
   )
   ResponseEntity<StoreResponse.Simples> getStores(@Parameter(hidden = true) Account account);
 
+  @SecurityRequirements
   @Operation(summary = "매장 상세 조회", description = "매장 상세 조회 API")
   @ApiResponse(responseCode = "200", description = "매장 상세 조회 성공")
   @ApiErrorResponses(

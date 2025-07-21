@@ -37,18 +37,13 @@ public class DeviceWriteRequest {
       @Max(value = 100, message = "테이블 번호는 100 이하로 입력해 주세요.")
       Integer tableNo,
 
-      @Schema(description = "KSNET 단말기 번호", example = "DPTOTEST01", requiredMode = Schema.RequiredMode.REQUIRED)
-      @NotNull(message = "KSNET 단말기 번호가 누락되었습니다.")
-      @Size(max = 30, message = "KSNET 단말기 번호는 30자 이하로 입력해 주세요.")
-      String ksnetDeviceNo,
-
       @Schema(description = "결제 타입 (선결제, 후결제)", example = "POSTPAID", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotNull(message = "결제 타입이 누락되었습니다.")
       Device.PaymentType paymentType
   ) {
 
     public DeviceWrite.Create toDomainDto() {
-      return new DeviceWrite.Create(name, purpose, tableNo, ksnetDeviceNo, paymentType);
+      return new DeviceWrite.Create(name, purpose, tableNo, paymentType);
     }
 
   }
@@ -70,18 +65,13 @@ public class DeviceWriteRequest {
       @Max(value = 100, message = "테이블 번호는 100 이하로 입력해 주세요.")
       Integer tableNo,
 
-      @Schema(description = "KSNET 단말기 번호", example = "DPTOTEST01", requiredMode = Schema.RequiredMode.REQUIRED)
-      @NotNull(message = "KSNET 단말기 번호가 누락되었습니다.")
-      @Size(max = 30, message = "KSNET 단말기 번호는 30자 이하로 입력해 주세요.")
-      String ksnetDeviceNo,
-
       @Schema(description = "결제 타입 (선결제, 후결제)", example = "POSTPAID", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotNull(message = "결제 타입이 누락되었습니다.")
       Device.PaymentType paymentType
   ) {
 
     public DeviceWrite.Update toDomainDto() {
-      return new DeviceWrite.Update(name, purpose, tableNo, ksnetDeviceNo, paymentType);
+      return new DeviceWrite.Update(name, purpose, tableNo, paymentType);
     }
 
   }

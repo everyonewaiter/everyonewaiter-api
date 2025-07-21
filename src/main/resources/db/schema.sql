@@ -40,6 +40,7 @@ create table store_registration
 create table store_setting
 (
     id                     bigint primary key,
+    ksnet_device_no        varchar(30)          not null,
     extra_table_count      int                  not null,
     printer_location       enum ('POS', 'HALL') not null,
     show_menu_popup        boolean              not null,
@@ -70,17 +71,16 @@ create table store
 
 create table device
 (
-    id              bigint primary key,
-    store_id        bigint                                   not null,
-    name            varchar(20)                              not null,
-    purpose         enum ('POS', 'HALL', 'TABLE', 'WAITING') not null,
-    table_no        int                                      not null,
-    ksnet_device_no varchar(30)                              not null,
-    state           enum ('ACTIVE', 'INACTIVE')              not null,
-    payment_type    enum ('PREPAID', 'POSTPAID')             not null,
-    secret_key      varchar(30)                              not null,
-    created_at      datetime(6)                              not null,
-    updated_at      datetime(6)                              not null,
+    id           bigint primary key,
+    store_id     bigint                                   not null,
+    name         varchar(20)                              not null,
+    purpose      enum ('POS', 'HALL', 'TABLE', 'WAITING') not null,
+    table_no     int                                      not null,
+    state        enum ('ACTIVE', 'INACTIVE')              not null,
+    payment_type enum ('PREPAID', 'POSTPAID')             not null,
+    secret_key   varchar(30)                              not null,
+    created_at   datetime(6)                              not null,
+    updated_at   datetime(6)                              not null,
     constraint uk_device_store_id_name unique (store_id, name)
 );
 

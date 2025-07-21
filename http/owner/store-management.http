@@ -13,6 +13,7 @@ Authorization: Bearer {{accessToken}}
 {
   "landline": "055-123-4567",
   "setting": {
+    "ksnetDeviceNo": "DPTOTEST01",
     "extraTableCount": 5,
     "printerLocation": "POS",
     "showMenuPopup": true,

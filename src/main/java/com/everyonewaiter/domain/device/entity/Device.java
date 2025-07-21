@@ -57,9 +57,6 @@ public class Device extends AggregateRoot<Device> {
   @Column(name = "table_no", nullable = false)
   private int tableNo = 0;
 
-  @Column(name = "ksnet_device_no", nullable = false)
-  private String ksnetDeviceNo = "";
-
   @Enumerated(EnumType.STRING)
   @Column(name = "state", nullable = false)
   private State state = State.ACTIVE;
@@ -71,16 +68,11 @@ public class Device extends AggregateRoot<Device> {
   @Column(name = "secret_key", nullable = false)
   private String secretKey = Tsid.nextString();
 
-  private static Device create(Store store, String name, Purpose purpose) {
-    return create(store, name, purpose, 0, "", PaymentType.POSTPAID);
-  }
-
   private static Device create(
       Store store,
       String name,
       Purpose purpose,
       int tableNo,
-      String ksnetDeviceNo,
       PaymentType paymentType
   ) {
     Device device = new Device();
@@ -88,28 +80,25 @@ public class Device extends AggregateRoot<Device> {
     device.name = name;
     device.purpose = purpose;
     device.tableNo = tableNo;
-    device.ksnetDeviceNo = ksnetDeviceNo;
     device.paymentType = paymentType;
     device.registerEvent(new SseEvent(store.getId(), SseCategory.DEVICE, ServerAction.CREATE));
     return device;
   }
 
-  public static Device pos(Store store, String name, String ksnetDeviceNo) {
-    return create(store, name, Purpose.POS, 0, ksnetDeviceNo, PaymentType.POSTPAID);
+  private static Device create(Store store, String name, Purpose purpose) {
+    return create(store, name, purpose, 0, PaymentType.POSTPAID);
+  }
+
+  public static Device pos(Store store, String name) {
+    return create(store, name, Purpose.POS, 0, PaymentType.POSTPAID);
   }
 
   public static Device hall(Store store, String name) {
     return create(store, name, Purpose.HALL);
   }
 
-  public static Device table(
-      Store store,
-      String name,
-      int tableNo,
-      String ksnetDeviceNo,
-      PaymentType paymentType
-  ) {
-    return create(store, name, Purpose.TABLE, tableNo, ksnetDeviceNo, paymentType);
+  public static Device table(Store store, String name, int tableNo, PaymentType paymentType) {
+    return create(store, name, Purpose.TABLE, tableNo, paymentType);
   }
 
   public static Device waiting(Store store, String name) {
@@ -128,17 +117,10 @@ public class Device extends AggregateRoot<Device> {
     return this.purpose == purpose;
   }
 
-  public void update(
-      String name,
-      Purpose purpose,
-      int tableNo,
-      String ksnetDeviceNo,
-      PaymentType paymentType
-  ) {
+  public void update(String name, Purpose purpose, int tableNo, PaymentType paymentType) {
     this.name = name;
     this.purpose = purpose;
     this.tableNo = tableNo;
-    this.ksnetDeviceNo = ksnetDeviceNo;
     this.paymentType = paymentType;
     registerEvent(new SseEvent(store.getId(), SseCategory.DEVICE, ServerAction.UPDATE, getId()));
   }

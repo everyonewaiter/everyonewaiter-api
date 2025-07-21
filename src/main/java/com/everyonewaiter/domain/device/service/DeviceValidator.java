@@ -27,31 +27,13 @@ public class DeviceValidator {
     }
   }
 
-  public void validatePos(String ksnetDeviceNo) {
-    validateKsnetDeviceNo(ksnetDeviceNo);
-  }
-
-  public void validateTable(
-      int tableNo,
-      String ksnetDeviceNo,
-      Device.PaymentType paymentType
-  ) {
-    validateTableNo(tableNo);
-    if (paymentType == Device.PaymentType.PREPAID) {
-      validateKsnetDeviceNo(ksnetDeviceNo);
+  public void validateUpdate(Device.Purpose purpose, int tableNo) {
+    if (purpose == Device.Purpose.TABLE) {
+      validateTable(tableNo);
     }
   }
 
-  private void validateKsnetDeviceNo(String ksnetDeviceNo) {
-    if (ksnetDeviceNo.isBlank() || ksnetDeviceNo.length() < 8) {
-      throw new IllegalArgumentException("KSNET 단말기 번호를 입력해 주세요.");
-    }
-    if (ksnetDeviceNo.length() > 30) {
-      throw new IllegalArgumentException("올바른 KSNET 단말기 번호를 입력해 주세요.");
-    }
-  }
-
-  private void validateTableNo(int tableNo) {
+  public void validateTable(int tableNo) {
     if (tableNo < 1) {
       throw new IllegalArgumentException("테이블 번호는 1 이상으로 입력해 주세요.");
     }

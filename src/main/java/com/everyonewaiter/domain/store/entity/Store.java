@@ -63,6 +63,7 @@ public class Store extends AggregateRoot<Store> {
 
   public void update(
       String landline,
+      String ksnetDeviceNo,
       int extraTableCount,
       Setting.PrinterLocation printerLocation,
       boolean showMenuPopup,
@@ -72,6 +73,7 @@ public class Store extends AggregateRoot<Store> {
   ) {
     this.businessLicense.updateLandline(landline);
     this.setting.update(
+        ksnetDeviceNo,
         extraTableCount,
         printerLocation,
         showMenuPopup,

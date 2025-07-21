@@ -33,6 +33,7 @@ public class StoreService {
     Store store = storeRepository.findByIdAndAccountIdOrThrow(storeId, accountId);
     store.update(
         request.landline(),
+        request.setting().ksnetDeviceNo(),
         request.setting().extraTableCount(),
         request.setting().printerLocation(),
         request.setting().showMenuPopup(),

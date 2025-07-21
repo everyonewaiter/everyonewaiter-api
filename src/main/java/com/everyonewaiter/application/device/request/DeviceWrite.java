@@ -8,7 +8,6 @@ public class DeviceWrite {
       String name,
       Device.Purpose purpose,
       int tableNo,
-      String ksnetDeviceNo,
       Device.PaymentType paymentType
   ) {
 
@@ -18,7 +17,6 @@ public class DeviceWrite {
       String name,
       Device.Purpose purpose,
       int tableNo,
-      String ksnetDeviceNo,
       Device.PaymentType paymentType
   ) {
 

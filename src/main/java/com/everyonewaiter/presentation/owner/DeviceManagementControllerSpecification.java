@@ -83,11 +83,10 @@ interface DeviceManagementControllerSpecification {
       summary = "기기 생성",
       description = "기기 생성 API<br/><br/>" +
           "기기의 사용 용도에 따라 추가적으로 유효성 검사를 진행합니다.<br/>" +
-          "- **POS**: KSNET 단말기 번호 8자 이상 30자 이하<br/>" +
-          "- **TABLE**: 결제 타입이 선결제인 경우 KSNET 단말기 번호 8자리 이상 30자 이하, 테이블 번호 1 이상<br/><br/>" +
+          "- **TABLE**: 테이블 번호 1 이상<br/><br/>" +
           "기기 생성 시 사용 용도에 따라 요청 본문과 상관없이 기본값을 사용합니다.<br/>" +
           "- **POS**: 테이블 번호 0, 결제 타입 POSTPAID<br/>" +
-          "- **HALL**, **WAITING**: 테이블 번호 0, 결제 타입 POSTPAID, KSNET 단말기 번호 빈 문자열"
+          "- **HALL**, **WAITING**: 테이블 번호 0, 결제 타입 POSTPAID"
   )
   @ApiResponse(
       responseCode = "201",

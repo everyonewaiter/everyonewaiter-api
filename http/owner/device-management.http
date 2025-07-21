@@ -24,7 +24,6 @@ Content-Type: application/json
   "name": "POS",
   "purpose": "POS",
   "tableNo": 0,
-  "ksnetDeviceNo": "DPTOTEST01",
   "paymentType": "POSTPAID"
 }
 
@@ -37,7 +36,6 @@ Content-Type: application/json
   "name": "홀 관리",
   "purpose": "HALL",
   "tableNo": 0,
-  "ksnetDeviceNo": "",
   "paymentType": "POSTPAID"
 }
 
@@ -50,7 +48,6 @@ Content-Type: application/json
   "name": "1번 테이블",
   "purpose": "TABLE",
   "tableNo": 1,
-  "ksnetDeviceNo": "DPTOTEST01",
   "paymentType": "PREPAID"
 }
 
@@ -63,7 +60,6 @@ Content-Type: application/json
   "name": "웨이팅 관리",
   "purpose": "WAITING",
   "tableNo": 0,
-  "ksnetDeviceNo": "",
   "paymentType": "POSTPAID"
 }
 
@@ -84,7 +80,6 @@ Authorization: Bearer {{accessToken}}
   "name": "30번 테이블",
   "purpose": "TABLE",
   "tableNo": 30,
-  "ksnetDeviceNo": "DPTOTEST01",
   "paymentType": "POSTPAID"
 }
 

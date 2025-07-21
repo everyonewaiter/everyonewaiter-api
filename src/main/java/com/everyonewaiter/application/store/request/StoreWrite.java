@@ -13,6 +13,7 @@ public class StoreWrite {
   }
 
   public record UpdateSetting(
+      String ksnetDeviceNo,
       int extraTableCount,
       Setting.PrinterLocation printerLocation,
       boolean showMenuPopup,

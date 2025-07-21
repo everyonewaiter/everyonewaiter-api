@@ -27,24 +27,11 @@ public class DeviceService {
     deviceValidator.validateUnique(storeId, request.name());
 
     Device device = switch (request.purpose()) {
-      case POS -> {
-        deviceValidator.validatePos(request.ksnetDeviceNo());
-        yield Device.pos(store, request.name(), request.ksnetDeviceNo());
-      }
+      case POS -> Device.pos(store, request.name());
       case HALL -> Device.hall(store, request.name());
       case TABLE -> {
-        deviceValidator.validateTable(
-            request.tableNo(),
-            request.ksnetDeviceNo(),
-            request.paymentType()
-        );
-        yield Device.table(
-            store,
-            request.name(),
-            request.tableNo(),
-            request.ksnetDeviceNo(),
-            request.paymentType()
-        );
+        deviceValidator.validateTable(request.tableNo());
+        yield Device.table(store, request.name(), request.tableNo(), request.paymentType());
       }
       case WAITING -> Device.waiting(store, request.name());
     };
@@ -55,27 +42,10 @@ public class DeviceService {
   @Transactional
   public void update(Long deviceId, Long storeId, DeviceWrite.Update request) {
     Device device = deviceRepository.findByIdAndStoreIdOrThrow(deviceId, storeId);
+    deviceValidator.validateUpdate(request.purpose(), request.tableNo());
     deviceValidator.validateUniqueExcludeId(deviceId, storeId, request.name());
 
-    switch (request.purpose()) {
-      case POS -> deviceValidator.validatePos(request.ksnetDeviceNo());
-      case TABLE -> deviceValidator.validateTable(
-          request.tableNo(),
-          request.ksnetDeviceNo(),
-          request.paymentType()
-      );
-      default -> {
-        // No validation needed for other purposes
-      }
-    }
-
-    device.update(
-        request.name(),
-        request.purpose(),
-        request.tableNo(),
-        request.ksnetDeviceNo(),
-        request.paymentType()
-    );
+    device.update(request.name(), request.purpose(), request.tableNo(), request.paymentType());
     deviceRepository.save(device);
   }
 

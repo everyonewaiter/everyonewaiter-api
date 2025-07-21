@@ -111,6 +111,9 @@ public class StoreResponse {
 
   @Schema(name = "StoreResponse.Settings")
   public record Settings(
+      @Schema(description = "KSNET 단말기 번호", example = "DPTOTEST01")
+      String ksnetDeviceNo,
+
       @Schema(description = "POS 여분 테이블 표시 수", example = "5")
       int extraTableCount,
 
@@ -132,6 +135,7 @@ public class StoreResponse {
 
     public static Settings from(Setting setting) {
       return new Settings(
+          setting.getKsnetDeviceNo(),
           setting.getExtraTableCount(),
           setting.getPrinterLocation(),
           setting.isShowMenuPopup(),

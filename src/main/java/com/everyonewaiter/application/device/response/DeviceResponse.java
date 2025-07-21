@@ -88,9 +88,6 @@ public class DeviceResponse {
       @Schema(description = "테이블 번호", example = "1")
       int tableNo,
 
-      @Schema(description = "KSNET 단말기 번호", example = "DPTOTEST01")
-      String ksnetDeviceNo,
-
       @Schema(description = "기기 상태", example = "ACTIVE")
       Device.State state,
 
@@ -112,7 +109,6 @@ public class DeviceResponse {
           device.getName(),
           device.getPurpose(),
           device.getTableNo(),
-          device.getKsnetDeviceNo(),
           device.getState(),
           device.getPaymentType(),
           device.getCreatedAt(),

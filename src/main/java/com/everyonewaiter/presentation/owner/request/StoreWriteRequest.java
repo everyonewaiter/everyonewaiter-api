@@ -40,6 +40,11 @@ public class StoreWriteRequest {
 
   @Schema(name = "StoreWriteRequest.UpdateSetting")
   public record UpdateSetting(
+      @Schema(description = "KSNET 단말기 번호", example = "DPTOTEST01", requiredMode = Schema.RequiredMode.REQUIRED)
+      @NotNull(message = "KSNET 단말기 번호가 누락되었습니다.")
+      @Size(min = 8, max = 30, message = "KSNET 단말기 번호는 8자 이상 30자 이하로 입력해 주세요.")
+      String ksnetDeviceNo,
+
       @Schema(description = "POS 여분 테이블 표시 수", example = "5", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotNull(message = "POS 여분 테이블 표시 수가 누락되었습니다.")
       @Min(value = 0, message = "여분 테이블 수는 0 이상 10 이하로 입력해 주세요.")
@@ -71,6 +76,7 @@ public class StoreWriteRequest {
 
     public StoreWrite.UpdateSetting toDomainDto() {
       return new StoreWrite.UpdateSetting(
+          ksnetDeviceNo,
           extraTableCount,
           printerLocation,
           showMenuPopup,
