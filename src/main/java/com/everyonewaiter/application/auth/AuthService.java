@@ -118,10 +118,8 @@ public class AuthService {
       Long currentTokenId
   ) {
     String subject = currentTokenId.toString();
-//    String accessToken = generateToken(new JwtPayload(accountId, subject), Duration.ofHours(12));
-//    String refreshToken = generateToken(new JwtPayload(rootTokenId, subject), Duration.ofDays(14));
-    String accessToken = generateToken(new JwtPayload(accountId, subject), Duration.ofMinutes(30));
-    String refreshToken = generateToken(new JwtPayload(rootTokenId, subject), Duration.ofHours(2));
+    String accessToken = generateToken(new JwtPayload(accountId, subject), Duration.ofHours(12));
+    String refreshToken = generateToken(new JwtPayload(rootTokenId, subject), Duration.ofDays(14));
     return new TokenResponse.All(accessToken, refreshToken);
   }
 
