@@ -38,4 +38,8 @@ public class Contact extends AggregateRoot<Contact> {
     return contact;
   }
 
+  public void complete() {
+    this.active = false;
+  }
+
 }

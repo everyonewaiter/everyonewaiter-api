@@ -6,6 +6,8 @@ public interface ContactRepository {
 
   boolean existsActiveByNameOrLicense(String name, String license);
 
+  Contact findByIdOrThrow(Long contactId);
+
   Contact save(Contact contact);
 
 }

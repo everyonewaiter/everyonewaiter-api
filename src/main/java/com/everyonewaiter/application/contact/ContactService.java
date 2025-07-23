@@ -22,4 +22,11 @@ public class ContactService {
     return contactRepository.save(contact).getId();
   }
 
+  @Transactional
+  public void complete(Long contactId) {
+    Contact contact = contactRepository.findByIdOrThrow(contactId);
+    contact.complete();
+    contactRepository.save(contact);
+  }
+
 }
