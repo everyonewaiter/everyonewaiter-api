@@ -25,7 +25,8 @@ public enum ErrorCode {
   METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "요청하신 경로 '%s'는 '%s' 메서드를 지원하지 않아요."),
   INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 오류가 발생했어요. 관리자에게 문의를 남겨주세요."),
 
-  // HEALTH
+  // HEALTH & CONTACT
+  ALREADY_EXISTS_CONTACT(BAD_REQUEST, "이미 문의가 완료된 매장입니다. 상담원이 최대한 빠른 시일 내 연락을 드릴거에요."),
   APK_VERSION_NOT_FOUND(NOT_FOUND, "앱 버전 정보를 찾지 못했어요."),
 
   // FILE

@@ -25,7 +25,6 @@ class ApkVersionRepositoryImpl implements ApkVersionRepository {
                 .select(apkVersion)
                 .from(apkVersion)
                 .orderBy(apkVersion.id.desc())
-                .limit(1)
                 .fetchFirst()
         )
         .orElseThrow(() -> new BusinessException(ErrorCode.APK_VERSION_NOT_FOUND));

@@ -10,6 +10,17 @@ create table apk_version
     constraint uk_apk_version_major_minor_patch unique (apk_major_version, apk_minor_version, apk_patch_version)
 );
 
+create table contact
+(
+    id           bigint primary key,
+    name         varchar(30) not null,
+    phone_number char(11)    not null,
+    license      char(12)    not null,
+    active       boolean     not null,
+    created_at   datetime(6) not null,
+    updated_at   datetime(6) not null
+);
+
 create table account
 (
     id           bigint primary key,
