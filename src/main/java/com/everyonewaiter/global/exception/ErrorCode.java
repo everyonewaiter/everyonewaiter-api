@@ -25,6 +25,9 @@ public enum ErrorCode {
   METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "요청하신 경로 '%s'는 '%s' 메서드를 지원하지 않아요."),
   INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 오류가 발생했어요. 관리자에게 문의를 남겨주세요."),
 
+  // HEALTH
+  APK_VERSION_NOT_FOUND(NOT_FOUND, "앱 버전 정보를 찾지 못했어요."),
+
   // FILE
   ALLOW_IMAGE_AND_PDF_FILE(BAD_REQUEST, "이미지 또는 PDF 파일만 업로드할 수 있어요."),
   FAILED_CONVERT_PDF_TO_IMAGE(BAD_REQUEST, "PDF 파일을 이미지로 변환하던 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요."),
