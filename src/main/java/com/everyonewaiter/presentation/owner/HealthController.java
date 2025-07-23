@@ -16,9 +16,9 @@ class HealthController implements HealthControllerSpecification {
   private final ApkVersionService apkVersionService;
 
   @Override
-  @GetMapping("/apk-version")
+  @GetMapping("/apk-versions")
   public ResponseEntity<ApkVersionResponse.Detail> getApkVersion() {
-    return ResponseEntity.ok(apkVersionService.readVersion());
+    return ResponseEntity.ok(apkVersionService.readLatestVersion());
   }
 
 }

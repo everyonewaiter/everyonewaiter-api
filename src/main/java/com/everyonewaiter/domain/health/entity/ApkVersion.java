@@ -37,18 +37,18 @@ public class ApkVersion extends AggregateRoot<ApkVersion> {
   @Column(name = "apk_download_url", nullable = false)
   private String downloadUrl;
 
-  private static ApkVersion create(
+  public static ApkVersion create(
       int majorVersion,
       int minorVersion,
       int patchVersion,
       String downloadUrl
   ) {
-    ApkVersion device = new ApkVersion();
-    device.majorVersion = majorVersion;
-    device.minorVersion = minorVersion;
-    device.patchVersion = patchVersion;
-    device.downloadUrl = downloadUrl;
-    return device;
+    ApkVersion apkVersion = new ApkVersion();
+    apkVersion.majorVersion = majorVersion;
+    apkVersion.minorVersion = minorVersion;
+    apkVersion.patchVersion = patchVersion;
+    apkVersion.downloadUrl = downloadUrl;
+    return apkVersion;
   }
 
 }
