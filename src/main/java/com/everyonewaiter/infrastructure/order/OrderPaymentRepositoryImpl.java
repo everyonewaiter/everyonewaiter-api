@@ -29,6 +29,7 @@ class OrderPaymentRepositoryImpl implements OrderPaymentRepository {
             orderPayment.createdAt.goe(start),
             orderPayment.createdAt.loe(end)
         )
+        .orderBy(orderPayment.id.desc())
         .fetch();
   }
 
