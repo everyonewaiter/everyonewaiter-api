@@ -1,10 +1,16 @@
 package com.everyonewaiter.presentation.admin;
 
 import com.everyonewaiter.application.contact.ContactService;
+import com.everyonewaiter.application.contact.response.ContactAdminResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
+import com.everyonewaiter.global.support.Paging;
+import com.everyonewaiter.presentation.admin.request.ContactAdminReadRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 class ContactAdminController implements ContactAdminControllerSpecification {
 
   private final ContactService contactService;
+
+  @Override
+  @GetMapping
+  public ResponseEntity<Paging<ContactAdminResponse.PageView>> getContacts(
+      @ModelAttribute @Valid ContactAdminReadRequest.PageView request,
+      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+  ) {
+    return ResponseEntity.ok(contactService.readAllByAdmin(request.toDomainDto()));
+  }
 
   @Override
   @PostMapping("/{contactId}/complete")

@@ -1,9 +1,12 @@
 package com.everyonewaiter.application.contact;
 
+import com.everyonewaiter.application.contact.request.ContactAdminRead;
 import com.everyonewaiter.application.contact.request.ContactWrite;
+import com.everyonewaiter.application.contact.response.ContactAdminResponse;
 import com.everyonewaiter.domain.contact.entity.Contact;
 import com.everyonewaiter.domain.contact.repository.ContactRepository;
 import com.everyonewaiter.domain.contact.service.ContactValidator;
+import com.everyonewaiter.global.support.Paging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,17 @@ public class ContactService {
     Contact contact = contactRepository.findByIdOrThrow(contactId);
     contact.complete();
     contactRepository.save(contact);
+  }
+
+  public Paging<ContactAdminResponse.PageView> readAllByAdmin(ContactAdminRead.PageView request) {
+    return contactRepository.findAllByAdmin(
+            request.name(),
+            request.phoneNumber(),
+            request.license(),
+            request.active(),
+            request.pagination()
+        )
+        .map(ContactAdminResponse.PageView::from);
   }
 
 }
