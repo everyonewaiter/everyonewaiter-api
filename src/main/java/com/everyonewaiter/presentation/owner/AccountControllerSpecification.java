@@ -30,6 +30,15 @@ interface AccountControllerSpecification {
   ResponseEntity<AccountResponse.Profile> getProfile(@Parameter(hidden = true) Account account);
 
   @SecurityRequirements
+  @Operation(summary = "프로필 조회 (휴대폰 번호)", description = "프로필 조회 (휴대폰 번호) API")
+  @ApiResponse(responseCode = "200", description = "프로필 조회 (휴대폰 번호) 성공")
+  @ApiErrorResponse(
+      code = ErrorCode.ACCOUNT_NOT_FOUND,
+      exampleName = "휴대폰 번호로 계정을 찾을 수 없는 경우"
+  )
+  ResponseEntity<AccountResponse.Profile> getProfile(String phoneNumber);
+
+  @SecurityRequirements
   @Operation(
       summary = "계정 생성",
       description = "계정 생성 API<br/><br/>" +

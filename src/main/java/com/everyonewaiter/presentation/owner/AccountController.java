@@ -15,6 +15,7 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,13 @@ class AccountController implements AccountControllerSpecification {
       @AuthenticationAccount Account account
   ) {
     AccountResponse.Profile response = AccountResponse.Profile.from(account);
+    return ResponseEntity.ok(response);
+  }
+
+  @Override
+  @GetMapping("/phone-number/{phoneNumber}/me")
+  public ResponseEntity<AccountResponse.Profile> getProfile(@PathVariable String phoneNumber) {
+    AccountResponse.Profile response = accountService.readByPhone(phoneNumber);
     return ResponseEntity.ok(response);
   }
 

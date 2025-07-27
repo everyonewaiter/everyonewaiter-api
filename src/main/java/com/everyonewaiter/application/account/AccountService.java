@@ -4,6 +4,7 @@ import com.everyonewaiter.application.account.request.AccountAdminRead;
 import com.everyonewaiter.application.account.request.AccountAdminWrite;
 import com.everyonewaiter.application.account.request.AccountWrite;
 import com.everyonewaiter.application.account.response.AccountAdminResponse;
+import com.everyonewaiter.application.account.response.AccountResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.repository.AccountRepository;
 import com.everyonewaiter.domain.account.service.AccountValidator;
@@ -81,6 +82,11 @@ public class AccountService {
   public AccountAdminResponse.Detail readByAdmin(Long accountId) {
     Account account = accountRepository.findByIdOrThrow(accountId);
     return AccountAdminResponse.Detail.from(account);
+  }
+
+  public AccountResponse.Profile readByPhone(String phoneNumber) {
+    Account account = accountRepository.findByPhoneOrThrow(phoneNumber);
+    return AccountResponse.Profile.from(account);
   }
 
   @Transactional
