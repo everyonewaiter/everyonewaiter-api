@@ -27,6 +27,11 @@ interface StoreManagementControllerSpecification {
   ResponseEntity<StoreResponse.Simples> getStores(@Parameter(hidden = true) Account account);
 
   @SecurityRequirements
+  @Operation(summary = "매장 목록 (계정 ID) 조회", description = "매장 목록 (계정 ID) 조회 API")
+  @ApiResponse(responseCode = "200", description = "매장 목록 (계정 ID) 조회 성공")
+  ResponseEntity<StoreResponse.Simples> getStores(Long accountId);
+
+  @SecurityRequirements
   @Operation(summary = "매장 상세 조회", description = "매장 상세 조회 API")
   @ApiResponse(responseCode = "200", description = "매장 상세 조회 성공")
   @ApiErrorResponses(

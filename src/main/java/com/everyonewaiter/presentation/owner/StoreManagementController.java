@@ -29,6 +29,12 @@ class StoreManagementController implements StoreManagementControllerSpecificatio
   }
 
   @Override
+  @GetMapping("/accounts/{accountId}")
+  public ResponseEntity<StoreResponse.Simples> getStores(@PathVariable Long accountId) {
+    return ResponseEntity.ok(storeService.readAllSimpleView(accountId));
+  }
+
+  @Override
   @GetMapping("/{storeId}")
   public ResponseEntity<StoreResponse.Detail> getStore(@PathVariable Long storeId) {
     StoreResponse.Detail response = storeService.read(storeId);
