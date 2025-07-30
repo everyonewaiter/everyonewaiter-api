@@ -16,6 +16,25 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "주문")
 interface OrderControllerSpecification {
 
+  @Operation(summary = "[TABLE] 활성 주문 목록 조회", description = "활성 주문 목록 조회 API")
+  @ApiResponse(responseCode = "200", description = "활성 주문 목록 조회 성공")
+  @ApiErrorResponses(
+      summary = "활성 주문 목록 조회 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 TABLE이 아닌 경우"
+          ),
+      }
+  )
+  ResponseEntity<OrderResponse.Details> getOrdersByTable(
+      @Parameter(hidden = true) Device device
+  );
+
   @Operation(summary = "[HALL] 주문 목록 조회", description = "주문 목록 조회 API")
   @ApiResponse(responseCode = "200", description = "주문 목록 조회 성공")
   @ApiErrorResponses(

@@ -2,6 +2,8 @@ package com.everyonewaiter.infrastructure.order;
 
 import static com.everyonewaiter.domain.order.entity.QOrder.order;
 import static com.everyonewaiter.domain.order.entity.QOrderMenu.orderMenu;
+import static com.everyonewaiter.domain.pos.entity.QPosTable.posTable;
+import static com.everyonewaiter.domain.pos.entity.QPosTableActivity.posTableActivity;
 import static com.everyonewaiter.domain.store.entity.QStore.store;
 
 import com.everyonewaiter.domain.order.entity.Order;
@@ -19,6 +21,23 @@ class OrderRepositoryImpl implements OrderRepository {
 
   private final JPAQueryFactory queryFactory;
   private final OrderJpaRepository orderJpaRepository;
+
+  @Override
+  public List<Order> findAllActiveByStoreIdAndTableNo(Long storeId, int tableNo) {
+    return queryFactory
+        .select(order)
+        .from(order)
+        .innerJoin(order.posTableActivity, posTableActivity).fetchJoin()
+        .innerJoin(order.posTableActivity.posTable, posTable).fetchJoin()
+        .leftJoin(order.orderMenus, orderMenu).fetchJoin()
+        .where(
+            order.store.id.eq(storeId),
+            posTable.tableNo.eq(tableNo),
+            posTable.active.isTrue(),
+            posTableActivity.active.isTrue()
+        )
+        .fetch();
+  }
 
   @Override
   public List<Order> findAllByStoreIdAndServed(Long storeId, boolean served) {

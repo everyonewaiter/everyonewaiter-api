@@ -83,6 +83,12 @@ public class OrderService {
   }
 
   @Transactional(readOnly = true)
+  public OrderResponse.Details readAllByTable(Long storeId, int tableNo) {
+    List<Order> orders = orderRepository.findAllActiveByStoreIdAndTableNo(storeId, tableNo);
+    return OrderResponse.Details.from(orders);
+  }
+
+  @Transactional(readOnly = true)
   public OrderResponse.Details readAllByHall(Long storeId, boolean served) {
     List<Order> orders = orderRepository.findAllByStoreIdAndServed(storeId, served);
     return OrderResponse.Details.from(orders);

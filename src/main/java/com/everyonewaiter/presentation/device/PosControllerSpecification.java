@@ -92,7 +92,7 @@ interface PosControllerSpecification {
       @Parameter(hidden = true) Device device
   );
 
-  @Operation(summary = "[TABLE, POS] 테이블 액티비티 상세 조회", description = "테이블 액티비티 상세 조회 API")
+  @Operation(summary = "[POS] 테이블 액티비티 상세 조회", description = "테이블 액티비티 상세 조회 API")
   @ApiResponses(
       value = {
           @ApiResponse(responseCode = "200", description = "테이블 액티비티 상세 조회 성공"),
@@ -116,7 +116,7 @@ interface PosControllerSpecification {
           ),
           @ApiErrorResponse(
               code = ErrorCode.FORBIDDEN,
-              exampleName = "기기의 사용 용도가 TABLE 또는 POS가 아닌 경우"
+              exampleName = "기기의 사용 용도가 POS가 아닌 경우"
           ),
           @ApiErrorResponse(
               code = ErrorCode.POS_TABLE_NOT_FOUND,

@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface OrderRepository {
 
+  List<Order> findAllActiveByStoreIdAndTableNo(Long storeId, int tableNo);
+
   List<Order> findAllByStoreIdAndServed(Long storeId, boolean served);
 
   Order save(Order order);

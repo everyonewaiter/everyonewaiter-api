@@ -29,6 +29,18 @@ class OrderController implements OrderControllerSpecification {
   private final StaffCallService staffCallService;
 
   @Override
+  @GetMapping("/tables")
+  public ResponseEntity<OrderResponse.Details> getOrdersByTable(
+      @AuthenticationDevice(purpose = Device.Purpose.TABLE) Device device
+  ) {
+    OrderResponse.Details response = orderService.readAllByTable(
+        device.getStore().getId(),
+        device.getTableNo()
+    );
+    return ResponseEntity.ok(response);
+  }
+
+  @Override
   @StoreOpen
   @GetMapping("/hall")
   public ResponseEntity<OrderResponse.Details> getOrdersByHall(

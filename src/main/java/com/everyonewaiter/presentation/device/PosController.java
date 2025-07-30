@@ -75,11 +75,11 @@ class PosController implements PosControllerSpecification {
   @GetMapping("/tables/{tableNo}")
   public ResponseEntity<PosResponse.TableActivityDetail> getActiveTableActivity(
       @PathVariable int tableNo,
-      @AuthenticationDevice(purpose = {Device.Purpose.TABLE, Device.Purpose.POS}) Device device
+      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
   ) {
     Optional<PosResponse.TableActivityDetail> response = posService.readActiveTable(
         device.getStore().getId(),
-        device.hasPurpose(Device.Purpose.TABLE) ? device.getTableNo() : tableNo
+        tableNo
     );
     return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
   }
