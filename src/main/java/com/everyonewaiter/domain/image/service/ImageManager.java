@@ -30,7 +30,7 @@ public class ImageManager {
 
     try {
       imageFile.transferTo(tempFile);
-      imageClient.upload(tempFile, imageFileName, file.getContentType());
+      imageClient.upload(tempFile, imageFileName, imageFile.getContentType());
       return imageFileName;
     } catch (IOException exception) {
       throw new BusinessException(ErrorCode.FAILED_UPLOAD_IMAGE);
