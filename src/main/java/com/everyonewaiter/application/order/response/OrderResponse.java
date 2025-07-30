@@ -58,7 +58,13 @@ public class OrderResponse {
       Instant servedTime,
 
       @Schema(description = "주문 메뉴 목록")
-      List<OrderMenuDetail> orderMenus
+      List<OrderMenuDetail> orderMenus,
+
+      @Schema(description = "주문 생성일", example = "2025-01-01 12:00:00")
+      Instant createdAt,
+
+      @Schema(description = "주문 수정일", example = "2025-01-01 12:00:00")
+      Instant updatedAt
   ) {
 
     public static Detail from(Order order) {
@@ -75,7 +81,9 @@ public class OrderResponse {
           order.getOrderMenus()
               .stream()
               .map(OrderMenuDetail::from)
-              .toList()
+              .toList(),
+          order.getCreatedAt(),
+          order.getUpdatedAt()
       );
     }
 
