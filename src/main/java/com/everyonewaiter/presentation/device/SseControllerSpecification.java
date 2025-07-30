@@ -21,10 +21,6 @@ interface SseControllerSpecification {
       summary = "매장 활동 알림 SSE 연결 실패",
       value = {
           @ApiErrorResponse(
-              code = ErrorCode.STORE_IS_CLOSED,
-              exampleName = "매장이 영업중이지 않은 경우"
-          ),
-          @ApiErrorResponse(
               code = ErrorCode.UNAUTHORIZED,
               exampleName = "인증 시그니처가 유효하지 않은 경우"
           ),

@@ -2,7 +2,6 @@ package com.everyonewaiter.presentation.device;
 
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.global.annotation.AuthenticationDevice;
-import com.everyonewaiter.global.annotation.StoreOpen;
 import com.everyonewaiter.global.sse.SseService;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Objects;
@@ -24,7 +23,6 @@ class SseController implements SseControllerSpecification {
   private final SseService sseService;
 
   @Override
-  @StoreOpen
   @GetMapping(value = "/stores/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
   public ResponseEntity<SseEmitter> subscribe(
       @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId,
