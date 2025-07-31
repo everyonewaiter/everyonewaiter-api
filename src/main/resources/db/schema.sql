@@ -6,8 +6,7 @@ create table apk_version
     apk_patch_version int          not null,
     apk_download_url  varchar(255) not null,
     created_at        datetime(6)  not null,
-    updated_at        datetime(6)  not null,
-    constraint uk_apk_version_major_minor_patch unique (apk_major_version, apk_minor_version, apk_patch_version)
+    updated_at        datetime(6)  not null
 );
 
 create table contact

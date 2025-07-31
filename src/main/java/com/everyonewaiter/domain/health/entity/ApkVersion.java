@@ -4,21 +4,12 @@ import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Table(
-    name = "apk_version",
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "uk_apk_version_major_minor_patch",
-            columnNames = {"apk_major_version", "apk_minor_version", "apk_patch_version"}
-        ),
-    }
-)
+@Table(name = "apk_version")
 @Entity
 @Getter
 @ToString(callSuper = true)
