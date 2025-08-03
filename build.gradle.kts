@@ -3,7 +3,7 @@ plugins {
     id("org.springframework.boot")
     id("io.spring.dependency-management")
     id("com.gorylenko.gradle-git-properties")
-    id("com.github.spotbugs")
+//    id("com.github.spotbugs")
 }
 
 val appGroup: String by project
