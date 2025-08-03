@@ -19,6 +19,10 @@ create table contact
     created_at   datetime(6) not null,
     updated_at   datetime(6) not null
 );
+create index idx_contact_name_license_phone_number on contact (name, license, phone_number);
+create index idx_contact_name_phone_number on contact (name, phone_number);
+create index idx_contact_license_phone_number on contact (license, phone_number);
+create index idx_contact_phone_number on contact (phone_number);
 
 create table account
 (
@@ -30,9 +34,13 @@ create table account
     permission   enum ('USER','OWNER','ADMIN')       not null,
     last_sign_in datetime(6)                         not null,
     created_at   datetime(6)                         not null,
-    updated_at   datetime(6)                         not null,
-    constraint uk_account_email unique (email)
+    updated_at   datetime(6)                         not null
 );
+create index idx_account_phone_number on account (phone_number);
+create index idx_account_email_permission_state on account (email, permission, state);
+create index idx_account_email_state on account (email, state);
+create index idx_account_permission_state on account (permission, state);
+create index idx_account_state on account (state);
 
 create table refresh_token
 (
@@ -58,6 +66,8 @@ create table store_registration
     created_at    datetime(6)                                 not null,
     updated_at    datetime(6)                                 not null
 );
+create index idx_store_registration_account_id_name_status on store_registration (account_id, name, status);
+create index idx_store_registration_account_id_status_name on store_registration (account_id, status, name);
 
 create table store_setting
 (
@@ -87,9 +97,9 @@ create table store
     last_closed_at datetime(6)            not null,
     created_at     datetime(6)            not null,
     updated_at     datetime(6)            not null,
-    constraint uk_store_setting_id unique (setting_id),
     constraint fk_store_setting_id foreign key (setting_id) references store_setting (id)
 );
+create index idx_store_account_id on store (account_id);
 
 create table device
 (
@@ -134,6 +144,8 @@ create table menu
     created_at    datetime(6)                                  not null,
     updated_at    datetime(6)                                  not null
 );
+create index idx_menu_store_id_position on menu (store_id, position asc);
+create index idx_menu_category_id_store_id on menu (category_id, store_id);
 
 create table menu_option_group
 (
@@ -172,6 +184,10 @@ create table waiting
     created_at              datetime(6)                                 not null,
     updated_at              datetime(6)                                 not null
 );
+create index idx_waiting_store_id_created_at on waiting (store_id, created_at desc);
+create index idx_waiting_store_id_state_created_at on waiting (store_id, state, created_at desc);
+create index idx_waiting_store_id_access_key on waiting (store_id, access_key);
+create index idx_waiting_phone_number_state on waiting (phone_number, state);
 
 create table pos_table
 (
@@ -183,6 +199,7 @@ create table pos_table
     created_at datetime(6) not null,
     updated_at datetime(6) not null
 );
+create index idx_pos_table_store_id_active_table_no on pos_table (store_id, active, table_no);
 
 create table pos_table_activity
 (
@@ -194,6 +211,8 @@ create table pos_table_activity
     created_at   datetime(6) not null,
     updated_at   datetime(6) not null
 );
+create index idx_pos_table_activity_store_id_created_at on pos_table_activity (store_id, created_at desc);
+create index idx_pos_table_activity_pos_table_id on pos_table_activity (pos_table_id);
 
 create table orders
 (
@@ -210,6 +229,8 @@ create table orders
     created_at            datetime(6)                    not null,
     updated_at            datetime(6)                    not null
 );
+create index idx_orders_store_id_created_at on orders (store_id, created_at desc);
+create index idx_orders_pos_table_activity_id on orders (pos_table_activity_id);
 
 create table orders_menu
 (
@@ -267,6 +288,8 @@ create table orders_payment
     created_at            datetime(6)                         not null,
     updated_at            datetime(6)                         not null
 );
+create index idx_orders_payment_store_id_created_at on orders_payment (store_id, created_at desc);
+create index idx_orders_payment_pos_table_activity_id on orders_payment (pos_table_activity_id);
 
 create table staff_call
 (
@@ -279,3 +302,4 @@ create table staff_call
     created_at    datetime(6)                     not null,
     updated_at    datetime(6)                     not null
 );
+create index idx_staff_call_store_id_state_created_at on staff_call (store_id, state, created_at desc);

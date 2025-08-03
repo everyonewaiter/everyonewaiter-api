@@ -8,6 +8,8 @@ import com.everyonewaiter.global.exception.ErrorCode;
 import com.sksamuel.scrimage.ImmutableImage;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.io.RandomAccessReadBuffer;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -24,7 +26,7 @@ class PDFToImageConverterImpl implements PDFToImageConverter {
 
   @Override
   public MultipartFile convertFirstPage(MultipartFile file, String prefix, ImageFormat format) {
-    try (PDDocument document = PDDocument.load(file.getInputStream())) {
+    try (PDDocument document = Loader.loadPDF(new RandomAccessReadBuffer(file.getInputStream()))) {
       PDFRenderer pdfRenderer = new PDFRenderer(document);
       BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
       byte[] content = ImmutableImage.fromAwt(bufferedImage).bytes(format.getWriter());

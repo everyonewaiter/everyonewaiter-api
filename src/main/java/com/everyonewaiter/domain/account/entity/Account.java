@@ -28,7 +28,7 @@ public class Account extends AggregateRoot<Account> {
 
   public enum Permission {USER, OWNER, ADMIN}
 
-  @Column(name = "email", nullable = false, updatable = false, unique = true)
+  @Column(name = "email", nullable = false, updatable = false)
   private String email;
 
   @Column(name = "password", nullable = false)
