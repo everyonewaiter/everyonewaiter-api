@@ -1,6 +1,6 @@
 package com.everyonewaiter.domain.menu.entity;
 
-import com.everyonewaiter.global.domain.entity.Position;
+import com.everyonewaiter.domain.shared.Position;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
@@ -26,11 +26,11 @@ public class MenuOption {
   @Embedded
   private Position position;
 
-  public static MenuOption create(String name, long price, int position) {
+  public static MenuOption create(String name, long price, int lastPosition) {
     MenuOption menuOption = new MenuOption();
     menuOption.name = name;
     menuOption.price = price;
-    menuOption.position = new Position(position);
+    menuOption.position = Position.next(lastPosition);
     return menuOption;
   }
 

@@ -1,6 +1,6 @@
 package com.everyonewaiter.application.menu.request;
 
-import com.everyonewaiter.global.domain.entity.Position;
+import com.everyonewaiter.domain.shared.PositionMove;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +15,7 @@ public class CategoryWrite {
 
   }
 
-  public record MovePosition(Position.Move where) {
+  public record MovePosition(PositionMove where) {
 
   }
 

@@ -10,7 +10,7 @@ import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
 import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
-import com.everyonewaiter.global.domain.entity.Position;
+import com.everyonewaiter.domain.shared.Position;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +53,7 @@ public class OrderFactory {
     );
     orderOptions.forEach((name, price) -> {
       Position position = menuOptionGroup.getMenuOption(name, price).getPosition();
-      OrderOption orderOption = OrderOption.create(name, price, position.getValue());
+      OrderOption orderOption = OrderOption.create(name, price, position);
       orderOptionGroup.addOrderOption(orderOption);
     });
 

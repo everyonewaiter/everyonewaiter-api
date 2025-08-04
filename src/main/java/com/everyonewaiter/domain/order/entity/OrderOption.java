@@ -1,6 +1,6 @@
 package com.everyonewaiter.domain.order.entity;
 
-import com.everyonewaiter.global.domain.entity.Position;
+import com.everyonewaiter.domain.shared.Position;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
@@ -26,11 +26,11 @@ public class OrderOption {
   @Embedded
   private Position position;
 
-  public static OrderOption create(String name, long price, int position) {
+  public static OrderOption create(String name, long price, Position menuOptionPosition) {
     OrderOption orderOption = new OrderOption();
     orderOption.name = name;
     orderOption.price = price;
-    orderOption.position = new Position(position);
+    orderOption.position = Position.copy(menuOptionPosition);
     return orderOption;
   }
 

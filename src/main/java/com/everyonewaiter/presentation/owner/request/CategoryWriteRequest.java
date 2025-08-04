@@ -1,7 +1,7 @@
 package com.everyonewaiter.presentation.owner.request;
 
 import com.everyonewaiter.application.menu.request.CategoryWrite;
-import com.everyonewaiter.global.domain.entity.Position;
+import com.everyonewaiter.domain.shared.PositionMove;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -44,7 +44,7 @@ public class CategoryWriteRequest {
   public record MovePosition(
       @Schema(description = "대상 카테고리로 이동할 위치(전,후)", example = "NEXT", requiredMode = Schema.RequiredMode.REQUIRED)
       @NotNull(message = "이동할 위치가 누락되었습니다.")
-      Position.Move where
+      PositionMove where
   ) {
 
     public CategoryWrite.MovePosition toDomainDto() {

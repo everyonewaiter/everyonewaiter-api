@@ -1,8 +1,9 @@
 package com.everyonewaiter.domain.menu.entity;
 
 import com.everyonewaiter.domain.menu.event.MenuImageDeleteEvent;
+import com.everyonewaiter.domain.shared.Position;
+import com.everyonewaiter.domain.shared.PositionMove;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
-import com.everyonewaiter.global.domain.entity.Position;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.Column;
@@ -101,7 +102,7 @@ public class Menu extends AggregateRoot<Menu> {
     menu.label = label;
     menu.image = image;
     menu.printEnabled = printEnabled;
-    menu.position = new Position(lastPosition + 1);
+    menu.position = Position.next(lastPosition);
     return menu;
   }
 
@@ -128,7 +129,7 @@ public class Menu extends AggregateRoot<Menu> {
     this.image = image;
   }
 
-  public boolean movePosition(Menu other, Position.Move where) {
+  public boolean movePosition(Menu other, PositionMove where) {
     return this.position.move(other.position, where);
   }
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings
+  xmlns="http://www.hibernate.org/xsd/orm/mapping"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.hibernate.org/xsd/orm/mapping https://hibernate.org/xsd/orm/mapping/mapping-7.0.xsd"
+>
+
+  <embeddable class="com.everyonewaiter.domain.shared.Position">
+    <attributes>
+      <basic name="value">
+        <column name="position" nullable="false"/>
+      </basic>
+    </attributes>
+  </embeddable>
+
+</entity-mappings>

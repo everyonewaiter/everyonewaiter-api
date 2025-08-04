@@ -2,7 +2,7 @@ package com.everyonewaiter.application.menu.request;
 
 import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
-import com.everyonewaiter.global.domain.entity.Position;
+import com.everyonewaiter.domain.shared.PositionMove;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -51,7 +51,7 @@ public class MenuWrite {
 
   }
 
-  public record MovePosition(Position.Move where) {
+  public record MovePosition(PositionMove where) {
 
   }
 

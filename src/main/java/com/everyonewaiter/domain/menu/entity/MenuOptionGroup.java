@@ -1,7 +1,7 @@
 package com.everyonewaiter.domain.menu.entity;
 
+import com.everyonewaiter.domain.shared.Position;
 import com.everyonewaiter.global.domain.entity.Aggregate;
-import com.everyonewaiter.global.domain.entity.Position;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.CollectionTable;
@@ -63,14 +63,14 @@ public class MenuOptionGroup extends Aggregate {
       String name,
       Type type,
       boolean printEnabled,
-      int position
+      int lastPosition
   ) {
     MenuOptionGroup menuOptionGroup = new MenuOptionGroup();
     menuOptionGroup.menu = menu;
     menuOptionGroup.name = name;
     menuOptionGroup.type = type;
     menuOptionGroup.printEnabled = printEnabled;
-    menuOptionGroup.position = new Position(position);
+    menuOptionGroup.position = Position.next(lastPosition);
     return menuOptionGroup;
   }
 

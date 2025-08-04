@@ -102,7 +102,7 @@ public class MenuService {
     Menu menu = menuRepository.findByIdAndStoreIdOrThrow(menuId, storeId);
     List<MenuOptionGroup> menuOptionGroups = new ArrayList<>();
 
-    AtomicInteger menuOptionGroupPosition = new AtomicInteger(1);
+    AtomicInteger menuOptionGroupPosition = new AtomicInteger(0);
     for (MenuWrite.OptionGroup optionGroup : request) {
       MenuOptionGroup menuOptionGroup = MenuOptionGroup.create(
           menu,
@@ -112,7 +112,7 @@ public class MenuService {
           menuOptionGroupPosition.getAndIncrement()
       );
 
-      AtomicInteger menuOptionPosition = new AtomicInteger(1);
+      AtomicInteger menuOptionPosition = new AtomicInteger(0);
       for (MenuWrite.Option option : optionGroup.menuOptions()) {
         MenuOption menuOption = MenuOption.create(
             option.name(),

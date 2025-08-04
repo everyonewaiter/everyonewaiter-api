@@ -1,8 +1,9 @@
 package com.everyonewaiter.domain.menu.entity;
 
 import com.everyonewaiter.domain.menu.event.CategoryDeleteEvent;
+import com.everyonewaiter.domain.shared.Position;
+import com.everyonewaiter.domain.shared.PositionMove;
 import com.everyonewaiter.global.domain.entity.AggregateRoot;
-import com.everyonewaiter.global.domain.entity.Position;
 import com.everyonewaiter.global.sse.ServerAction;
 import com.everyonewaiter.global.sse.SseCategory;
 import com.everyonewaiter.global.sse.SseEvent;
@@ -45,7 +46,7 @@ public class Category extends AggregateRoot<Category> {
     Category category = new Category();
     category.storeId = storeId;
     category.name = name;
-    category.position = new Position(lastPosition + 1);
+    category.position = Position.next(lastPosition);
     category.registerEvent(new SseEvent(storeId, SseCategory.CATEGORY, ServerAction.CREATE));
     return category;
   }
@@ -55,7 +56,7 @@ public class Category extends AggregateRoot<Category> {
     registerEvent(new SseEvent(storeId, SseCategory.CATEGORY, ServerAction.UPDATE, getId()));
   }
 
-  public boolean movePosition(Category other, Position.Move where) {
+  public boolean movePosition(Category other, PositionMove where) {
     boolean isMoved = this.position.move(other.position, where);
     registerEvent(new SseEvent(storeId, SseCategory.CATEGORY, ServerAction.UPDATE));
     return isMoved;
