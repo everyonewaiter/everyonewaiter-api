@@ -13,6 +13,11 @@ import org.springframework.http.ResponseEntity;
 interface HealthControllerSpecification {
 
   @SecurityRequirements
+  @Operation(summary = "서버 버전 조회", description = "서버 버전 조회 API")
+  @ApiResponse(responseCode = "200", description = "서버 버전 조회 성공")
+  ResponseEntity<String> getServerVersion();
+
+  @SecurityRequirements
   @Operation(summary = "APK 버전 조회", description = "APK 버전 조회 API")
   @ApiResponse(responseCode = "200", description = "APK 버전 조회 성공")
   @ApiErrorResponse(
