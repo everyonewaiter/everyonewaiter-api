@@ -1,9 +1,9 @@
 package com.everyonewaiter.domain.menu.entity;
 
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.menu.event.MenuImageDeleteEvent;
 import com.everyonewaiter.domain.shared.Position;
 import com.everyonewaiter.domain.shared.PositionMove;
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.Column;
@@ -33,7 +33,7 @@ import lombok.ToString;
 @Getter
 @ToString(exclude = {"category", "menuOptionGroups"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Menu extends AggregateRoot<Menu> {
+public class Menu extends AggregateRootEntity<Menu> {
 
   public enum State {DEFAULT, HIDE, SOLD_OUT}
 

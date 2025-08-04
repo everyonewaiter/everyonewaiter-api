@@ -1,8 +1,8 @@
 package com.everyonewaiter.domain.account.entity;
 
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.account.event.AccountCreateEvent;
 import com.everyonewaiter.domain.auth.event.AuthMailSendEvent;
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.Column;
@@ -22,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 @ToString(exclude = "password", callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Account extends AggregateRoot<Account> {
+public class Account extends AggregateRootEntity<Account> {
 
   public enum State {INACTIVE, ACTIVE, DELETE}
 

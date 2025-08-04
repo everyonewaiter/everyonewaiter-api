@@ -1,6 +1,6 @@
 package com.everyonewaiter.domain.auth.entity;
 
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.global.exception.AuthenticationException;
 import com.everyonewaiter.global.support.Tsid;
 import jakarta.persistence.Column;
@@ -16,7 +16,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RefreshToken extends AggregateRoot<RefreshToken> {
+public class RefreshToken extends AggregateRootEntity<RefreshToken> {
 
   @Column(name = "account_id", nullable = false, updatable = false)
   private Long accountId;

@@ -1,7 +1,7 @@
 package com.everyonewaiter.domain.order.entity;
 
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.store.entity.Store;
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.sse.ServerAction;
@@ -28,7 +28,7 @@ import lombok.ToString;
 @Getter
 @ToString(exclude = "store", callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StaffCall extends AggregateRoot<StaffCall> {
+public class StaffCall extends AggregateRootEntity<StaffCall> {
 
   public enum State {INCOMPLETE, COMPLETE}
 

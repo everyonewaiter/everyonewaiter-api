@@ -1,6 +1,6 @@
 package com.everyonewaiter.domain.store.entity;
 
-import com.everyonewaiter.global.domain.entity.Aggregate;
+import com.everyonewaiter.domain.AggregateEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -20,7 +20,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Setting extends Aggregate {
+public class Setting extends AggregateEntity {
 
   public enum PrinterLocation {POS, HALL}
 

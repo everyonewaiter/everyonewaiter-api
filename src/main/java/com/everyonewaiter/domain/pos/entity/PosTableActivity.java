@@ -1,9 +1,9 @@
 package com.everyonewaiter.domain.pos.entity;
 
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.order.entity.OrderPayment;
 import com.everyonewaiter.domain.store.entity.Store;
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.Column;
@@ -31,7 +31,7 @@ import lombok.ToString;
 @Getter
 @ToString(exclude = {"store", "posTable", "orders", "payments"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PosTableActivity extends AggregateRoot<PosTableActivity> {
+public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "store_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))

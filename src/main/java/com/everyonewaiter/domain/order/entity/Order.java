@@ -1,9 +1,9 @@
 package com.everyonewaiter.domain.order.entity;
 
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.order.event.OrderCreateEvent;
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
 import com.everyonewaiter.domain.store.entity.Store;
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.sse.ServerAction;
@@ -39,7 +39,7 @@ import lombok.ToString;
 @Getter
 @ToString(exclude = {"store", "posTableActivity", "orderMenus"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order extends AggregateRoot<Order> {
+public class Order extends AggregateRootEntity<Order> {
 
   public enum Category {INITIAL, ADDITIONAL}
 

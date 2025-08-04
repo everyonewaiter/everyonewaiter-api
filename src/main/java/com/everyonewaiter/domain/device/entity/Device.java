@@ -1,7 +1,7 @@
 package com.everyonewaiter.domain.device.entity;
 
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.store.entity.Store;
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.sse.ServerAction;
 import com.everyonewaiter.global.sse.SseCategory;
 import com.everyonewaiter.global.sse.SseEvent;
@@ -35,7 +35,7 @@ import lombok.ToString;
 @Getter
 @ToString(exclude = "store", callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Device extends AggregateRoot<Device> {
+public class Device extends AggregateRootEntity<Device> {
 
   public enum Purpose {POS, HALL, TABLE, WAITING}
 

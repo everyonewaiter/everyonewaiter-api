@@ -1,8 +1,8 @@
 package com.everyonewaiter.domain.store.entity;
 
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.store.event.StoreCloseEvent;
 import com.everyonewaiter.domain.store.event.StoreOpenEvent;
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.sse.ServerAction;
@@ -30,7 +30,7 @@ import lombok.ToString;
 @Getter
 @ToString(exclude = {"setting"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Store extends AggregateRoot<Store> {
+public class Store extends AggregateRootEntity<Store> {
 
   public enum Status {OPEN, CLOSE}
 

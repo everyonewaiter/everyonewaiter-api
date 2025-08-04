@@ -1,11 +1,11 @@
 package com.everyonewaiter.domain.store.entity;
 
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.store.event.LicenseImageDeleteEvent;
 import com.everyonewaiter.domain.store.event.RegistrationApplyEvent;
 import com.everyonewaiter.domain.store.event.RegistrationApproveEvent;
 import com.everyonewaiter.domain.store.event.RegistrationReapplyEvent;
 import com.everyonewaiter.domain.store.event.RegistrationRejectEvent;
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.Column;
@@ -24,7 +24,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Registration extends AggregateRoot<Registration> {
+public class Registration extends AggregateRootEntity<Registration> {
 
   public enum Status {APPLY, REAPPLY, APPROVE, REJECT}
 

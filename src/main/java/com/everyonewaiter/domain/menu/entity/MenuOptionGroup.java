@@ -1,7 +1,7 @@
 package com.everyonewaiter.domain.menu.entity;
 
+import com.everyonewaiter.domain.AggregateEntity;
 import com.everyonewaiter.domain.shared.Position;
-import com.everyonewaiter.global.domain.entity.Aggregate;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.CollectionTable;
@@ -31,7 +31,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @ToString(exclude = {"menu", "menuOptions"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MenuOptionGroup extends Aggregate {
+public class MenuOptionGroup extends AggregateEntity {
 
   public enum Type {MANDATORY, OPTIONAL}
 

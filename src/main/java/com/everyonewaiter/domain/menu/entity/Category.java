@@ -1,9 +1,9 @@
 package com.everyonewaiter.domain.menu.entity;
 
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.menu.event.CategoryDeleteEvent;
 import com.everyonewaiter.domain.shared.Position;
 import com.everyonewaiter.domain.shared.PositionMove;
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.sse.ServerAction;
 import com.everyonewaiter.global.sse.SseCategory;
 import com.everyonewaiter.global.sse.SseEvent;
@@ -27,7 +27,7 @@ import lombok.ToString;
 @Getter
 @ToString(exclude = "menus", callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category extends AggregateRoot<Category> {
+public class Category extends AggregateRootEntity<Category> {
 
   @Column(name = "store_id", nullable = false, updatable = false)
   private Long storeId;

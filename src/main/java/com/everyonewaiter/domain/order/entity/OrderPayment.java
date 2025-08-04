@@ -1,8 +1,8 @@
 package com.everyonewaiter.domain.order.entity;
 
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
 import com.everyonewaiter.domain.store.entity.Store;
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.sse.ServerAction;
@@ -29,7 +29,7 @@ import lombok.ToString;
 @Getter
 @ToString(exclude = {"store", "posTableActivity"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderPayment extends AggregateRoot<OrderPayment> {
+public class OrderPayment extends AggregateRootEntity<OrderPayment> {
 
   public enum Method {CASH, CARD}
 

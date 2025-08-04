@@ -1,6 +1,6 @@
 package com.everyonewaiter.domain.order.entity;
 
-import com.everyonewaiter.global.domain.entity.Aggregate;
+import com.everyonewaiter.domain.AggregateEntity;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -25,7 +25,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @ToString(exclude = {"orderMenu", "orderOptions"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderOptionGroup extends Aggregate {
+public class OrderOptionGroup extends AggregateEntity {
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "orders_menu_id", nullable = false)

@@ -1,11 +1,11 @@
 package com.everyonewaiter.domain.waiting.entity;
 
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.domain.waiting.event.WaitingCancelByCustomerEvent;
 import com.everyonewaiter.domain.waiting.event.WaitingCancelByStoreEvent;
 import com.everyonewaiter.domain.waiting.event.WaitingCustomerCallEvent;
 import com.everyonewaiter.domain.waiting.event.WaitingRegistrationEvent;
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.sse.ServerAction;
@@ -34,7 +34,7 @@ import lombok.ToString;
 @Getter
 @ToString(exclude = "store", callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Waiting extends AggregateRoot<Waiting> {
+public class Waiting extends AggregateRootEntity<Waiting> {
 
   public enum State {REGISTRATION, CANCEL, COMPLETE}
 

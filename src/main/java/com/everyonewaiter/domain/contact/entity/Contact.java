@@ -1,7 +1,7 @@
 package com.everyonewaiter.domain.contact.entity;
 
+import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.contact.event.ContactCreateEvent;
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -15,7 +15,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Contact extends AggregateRoot<Contact> {
+public class Contact extends AggregateRootEntity<Contact> {
 
   @Column(name = "name", nullable = false)
   private String name;

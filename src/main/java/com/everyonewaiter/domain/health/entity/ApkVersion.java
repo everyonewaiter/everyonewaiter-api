@@ -1,6 +1,6 @@
 package com.everyonewaiter.domain.health.entity;
 
-import com.everyonewaiter.global.domain.entity.AggregateRoot;
+import com.everyonewaiter.domain.AggregateRootEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ApkVersion extends AggregateRoot<ApkVersion> {
+public class ApkVersion extends AggregateRootEntity<ApkVersion> {
 
   @Column(name = "apk_major_version", nullable = false)
   private int majorVersion;
