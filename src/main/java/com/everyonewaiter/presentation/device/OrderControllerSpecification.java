@@ -41,10 +41,6 @@ interface OrderControllerSpecification {
       summary = "주문 목록 조회 실패",
       value = {
           @ApiErrorResponse(
-              code = ErrorCode.STORE_IS_CLOSED,
-              exampleName = "매장이 영업중이지 않은 경우"
-          ),
-          @ApiErrorResponse(
               code = ErrorCode.UNAUTHORIZED,
               exampleName = "인증 시그니처가 유효하지 않은 경우"
           ),
@@ -186,10 +182,6 @@ interface OrderControllerSpecification {
   @ApiErrorResponses(
       summary = "직원 호출 목록 조회 실패",
       value = {
-          @ApiErrorResponse(
-              code = ErrorCode.STORE_IS_CLOSED,
-              exampleName = "매장이 영업중이지 않은 경우"
-          ),
           @ApiErrorResponse(
               code = ErrorCode.UNAUTHORIZED,
               exampleName = "인증 시그니처가 유효하지 않은 경우"

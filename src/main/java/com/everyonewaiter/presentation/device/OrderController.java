@@ -41,7 +41,6 @@ class OrderController implements OrderControllerSpecification {
   }
 
   @Override
-  @StoreOpen
   @GetMapping("/hall")
   public ResponseEntity<OrderResponse.Details> getOrdersByHall(
       @RequestParam boolean served,
@@ -90,7 +89,6 @@ class OrderController implements OrderControllerSpecification {
   }
 
   @Override
-  @StoreOpen
   @GetMapping("/staff-calls")
   public ResponseEntity<OrderResponse.StaffCallDetails> getStaffCalls(
       @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
