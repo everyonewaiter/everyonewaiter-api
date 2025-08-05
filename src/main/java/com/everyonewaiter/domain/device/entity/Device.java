@@ -2,10 +2,10 @@ package com.everyonewaiter.domain.device.entity;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.store.entity.Store;
+import com.everyonewaiter.domain.support.Tsid;
 import com.everyonewaiter.global.sse.ServerAction;
 import com.everyonewaiter.global.sse.SseCategory;
 import com.everyonewaiter.global.sse.SseEvent;
-import com.everyonewaiter.global.support.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;

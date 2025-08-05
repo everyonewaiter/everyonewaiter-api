@@ -1,4 +1,4 @@
-package com.everyonewaiter.global.support;
+package com.everyonewaiter.domain.shared;
 
 public record Pagination(long page, long size, int pageSkipSize) {
 

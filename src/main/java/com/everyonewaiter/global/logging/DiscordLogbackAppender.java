@@ -7,7 +7,7 @@ import com.everyonewaiter.domain.notification.DiscordColor;
 import com.everyonewaiter.domain.notification.DiscordEmbed;
 import com.everyonewaiter.domain.notification.DiscordField;
 import com.everyonewaiter.domain.notification.service.request.DiscordMessageSend;
-import com.everyonewaiter.global.support.DateFormatter;
+import com.everyonewaiter.domain.support.DateFormatter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
   @Override
   protected void append(ILoggingEvent iLoggingEvent) {
     DiscordMessageSend request = new DiscordMessageSend(createEmbeds(iLoggingEvent));
+
     WEB_HOOK_CLIENT.post()
         .uri("/" + discordWebhookUri)
         .contentType(MediaType.APPLICATION_JSON)
@@ -47,11 +48,12 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
   }
 
   private List<DiscordEmbed> createEmbeds(ILoggingEvent iLoggingEvent) {
-    LocalDateTime now = LocalDateTime.now();
-    List<DiscordEmbed> embeds = new ArrayList<>();
     Map<String, String> mdc = iLoggingEvent.getMDCPropertyMap();
     String throwable = ThrowableProxyUtil.asString(iLoggingEvent.getThrowableProxy());
     String stackTrace = throwable.length() > 700 ? throwable.substring(0, 700) : throwable;
+
+    LocalDateTime now = LocalDateTime.now();
+    List<DiscordEmbed> embeds = new ArrayList<>();
 
     embeds.add(
         DiscordEmbed.builder()

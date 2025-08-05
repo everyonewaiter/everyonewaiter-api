@@ -3,13 +3,13 @@ package com.everyonewaiter.infrastructure.store;
 import static com.everyonewaiter.domain.account.entity.QAccount.account;
 import static com.everyonewaiter.domain.store.entity.QRegistration.registration;
 
+import com.everyonewaiter.domain.shared.Pagination;
+import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.store.entity.Registration;
 import com.everyonewaiter.domain.store.repository.RegistrationRepository;
 import com.everyonewaiter.domain.store.view.RegistrationAdminView;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
-import com.everyonewaiter.global.support.Pagination;
-import com.everyonewaiter.global.support.Paging;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

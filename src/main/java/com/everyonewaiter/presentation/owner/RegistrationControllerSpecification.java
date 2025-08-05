@@ -2,10 +2,10 @@ package com.everyonewaiter.presentation.owner;
 
 import com.everyonewaiter.application.store.response.RegistrationResponse;
 import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
 import com.everyonewaiter.global.exception.ErrorCode;
-import com.everyonewaiter.global.support.Paging;
 import com.everyonewaiter.presentation.owner.request.RegistrationReadRequest;
 import com.everyonewaiter.presentation.owner.request.RegistrationWriteRequest;
 import io.swagger.v3.oas.annotations.Operation;

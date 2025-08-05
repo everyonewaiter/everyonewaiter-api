@@ -4,10 +4,10 @@ import static com.everyonewaiter.domain.contact.entity.QContact.contact;
 
 import com.everyonewaiter.domain.contact.entity.Contact;
 import com.everyonewaiter.domain.contact.repository.ContactRepository;
+import com.everyonewaiter.domain.shared.Pagination;
+import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
-import com.everyonewaiter.global.support.Pagination;
-import com.everyonewaiter.global.support.Paging;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.Nullable;

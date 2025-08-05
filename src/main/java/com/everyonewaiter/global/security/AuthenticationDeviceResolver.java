@@ -5,7 +5,7 @@ import com.everyonewaiter.domain.device.repository.DeviceRepository;
 import com.everyonewaiter.domain.device.service.DeviceValidator;
 import com.everyonewaiter.global.annotation.AuthenticationDevice;
 import com.everyonewaiter.global.exception.AuthenticationException;
-import com.everyonewaiter.global.support.HttpRequestParser;
+import com.everyonewaiter.global.logging.HttpRequestParser;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.Objects;
@@ -85,7 +85,7 @@ public class AuthenticationDeviceResolver implements HandlerMethodArgumentResolv
     public RequestSignature(HttpServletRequest request) {
       try {
         this.method = HttpMethod.valueOf(request.getMethod());
-        this.requestURI = HttpRequestParser.getRequestURI(request);
+        this.requestURI = HttpRequestParser.parseRequestURI(request);
         this.deviceId = Long.valueOf(Objects.requireNonNull(request.getHeader(ACCESS_KEY)));
         this.signature = Objects.requireNonNull(request.getHeader(SIGNATURE));
         this.timestamp = Long.parseLong(Objects.requireNonNull(request.getHeader(TIMESTAMP)));

@@ -6,7 +6,7 @@ import com.everyonewaiter.application.contact.response.ContactAdminResponse;
 import com.everyonewaiter.domain.contact.entity.Contact;
 import com.everyonewaiter.domain.contact.repository.ContactRepository;
 import com.everyonewaiter.domain.contact.service.ContactValidator;
-import com.everyonewaiter.global.support.Paging;
+import com.everyonewaiter.domain.shared.Paging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

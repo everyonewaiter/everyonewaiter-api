@@ -10,9 +10,9 @@ import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
 import com.everyonewaiter.domain.menu.repository.CategoryRepository;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
 import com.everyonewaiter.domain.menu.service.MenuValidator;
+import com.everyonewaiter.domain.support.CacheName;
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
-import com.everyonewaiter.global.support.CacheNameHolder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,7 +32,7 @@ public class MenuService {
   private final MenuRepository menuRepository;
 
   @Transactional
-  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Long create(Long categoryId, Long storeId, MenuWrite.Create request) {
     Category category = categoryRepository.findByIdAndStoreIdOrThrow(categoryId, storeId);
     menuValidator.validateExceedMaxCount(categoryId);
@@ -55,7 +55,7 @@ public class MenuService {
   }
 
   @Transactional
-  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void update(Long menuId, Long storeId, MenuWrite.Update request) {
     Menu menu = menuRepository.findByIdAndStoreIdOrThrow(menuId, storeId);
     menu.update(
@@ -71,7 +71,7 @@ public class MenuService {
   }
 
   @Transactional
-  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void update(
       Long menuId,
       Long storeId,
@@ -93,7 +93,7 @@ public class MenuService {
   }
 
   @Transactional
-  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void replaceMenuOptionGroups(
       Long menuId,
       Long storeId,
@@ -130,7 +130,7 @@ public class MenuService {
   }
 
   @Transactional
-  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void movePosition(
       Long sourceId,
       Long targetId,
@@ -148,7 +148,7 @@ public class MenuService {
   }
 
   @Transactional
-  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void delete(Long menuId, Long storeId, Long categoryId) {
     Menu menu = menuRepository.findByIdAndStoreIdAndCategoryIdOrThrow(menuId, storeId, categoryId);
     menu.delete();
@@ -156,7 +156,7 @@ public class MenuService {
   }
 
   @Transactional
-  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void deleteAll(Long storeId, MenuWrite.Delete request) {
     List<Menu> menus = menuRepository.findAllByStoreIdAndIds(storeId, request.menuIds());
     if (menus.size() == request.menuIds().size()) {

@@ -1,7 +1,7 @@
 package com.everyonewaiter.domain.image;
 
-import com.everyonewaiter.global.support.DateFormatter;
-import com.everyonewaiter.global.support.Tsid;
+import com.everyonewaiter.domain.support.DateFormatter;
+import com.everyonewaiter.domain.support.Tsid;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;

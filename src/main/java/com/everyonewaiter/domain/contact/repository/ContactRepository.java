@@ -1,8 +1,8 @@
 package com.everyonewaiter.domain.contact.repository;
 
 import com.everyonewaiter.domain.contact.entity.Contact;
-import com.everyonewaiter.global.support.Pagination;
-import com.everyonewaiter.global.support.Paging;
+import com.everyonewaiter.domain.shared.Pagination;
+import com.everyonewaiter.domain.shared.Paging;
 import jakarta.annotation.Nullable;
 
 public interface ContactRepository {

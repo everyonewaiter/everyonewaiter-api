@@ -1,6 +1,6 @@
 package com.everyonewaiter.domain;
 
-import com.everyonewaiter.global.support.Tsid;
+import com.everyonewaiter.domain.support.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;

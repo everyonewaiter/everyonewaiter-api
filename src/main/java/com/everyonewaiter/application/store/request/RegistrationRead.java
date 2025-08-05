@@ -1,6 +1,6 @@
 package com.everyonewaiter.application.store.request;
 
-import com.everyonewaiter.global.support.Pagination;
+import com.everyonewaiter.domain.shared.Pagination;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

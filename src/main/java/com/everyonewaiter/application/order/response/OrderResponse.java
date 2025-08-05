@@ -45,6 +45,12 @@ public class OrderResponse {
       @Schema(description = "주문 상태", example = "ORDER")
       Order.State state,
 
+      @Schema(description = "테이블 이름", example = "T-1")
+      String tableName,
+
+      @Schema(description = "테이블 번호", example = "1")
+      int tableNo,
+
       @Schema(description = "주문 금액", example = "34900")
       long price,
 
@@ -74,6 +80,8 @@ public class OrderResponse {
           order.getCategory(),
           order.getType(),
           order.getState(),
+          order.getPosTableActivity().getPosTable().getName(),
+          order.getPosTableActivity().getPosTable().getTableNo(),
           order.getPrice(),
           order.getMemo(),
           order.getServing().isServed(),

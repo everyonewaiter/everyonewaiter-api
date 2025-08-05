@@ -1,10 +1,11 @@
-package com.everyonewaiter.global.support;
+package com.everyonewaiter.domain.support;
+
+import static lombok.AccessLevel.PRIVATE;
 
 import com.github.f4b6a3.tsid.TsidCreator;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = PRIVATE)
 public final class Tsid {
 
   public static long nextLong() {

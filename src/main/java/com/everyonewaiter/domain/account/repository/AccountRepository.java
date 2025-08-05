@@ -2,8 +2,8 @@ package com.everyonewaiter.domain.account.repository;
 
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.view.AccountAdminView;
-import com.everyonewaiter.global.support.Pagination;
-import com.everyonewaiter.global.support.Paging;
+import com.everyonewaiter.domain.shared.Pagination;
+import com.everyonewaiter.domain.shared.Paging;
 import jakarta.annotation.Nullable;
 import java.util.Optional;
 

@@ -1,7 +1,7 @@
 package com.everyonewaiter.application.store.request;
 
+import com.everyonewaiter.domain.shared.Pagination;
 import com.everyonewaiter.domain.store.entity.Registration;
-import com.everyonewaiter.global.support.Pagination;
 import jakarta.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -2,10 +2,10 @@ package com.everyonewaiter.global.logging;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 public class HttpResponseLoggingInterceptor implements HandlerInterceptor {
@@ -20,6 +20,7 @@ public class HttpResponseLoggingInterceptor implements HandlerInterceptor {
       @NonNull Object handler
   ) throws Exception {
     MDC.put("startTime", String.valueOf(System.currentTimeMillis()));
+
     return HandlerInterceptor.super.preHandle(request, response, handler);
   }
 
@@ -28,16 +29,19 @@ public class HttpResponseLoggingInterceptor implements HandlerInterceptor {
       @NonNull HttpServletRequest request,
       @NonNull HttpServletResponse response,
       @NonNull Object handler,
-      Exception ex
+      Exception exception
   ) throws Exception {
     long executeTime = System.currentTimeMillis() - Long.parseLong(MDC.get("startTime"));
+
     String requestId = MDC.get("requestId");
     String requestMethod = MDC.get("requestMethod");
     String requestURI = MDC.get("requestURI");
+
     LOGGER.info("[RESPONSE {}] [{} {}] [{}] [{}] [{} ms]",
         response.getStatus(), requestMethod, requestURI, requestId, handler, executeTime);
     MDC.clear();
-    HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+
+    HandlerInterceptor.super.afterCompletion(request, response, handler, exception);
   }
 
 }

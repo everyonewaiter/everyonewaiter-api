@@ -1,32 +1,35 @@
-package com.everyonewaiter.global.support;
+package com.everyonewaiter.global.logging;
+
+import static lombok.AccessLevel.PRIVATE;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = PRIVATE)
 public final class HttpRequestParser {
 
   private static final String NULL = "NULL";
   private static final String BLIND = "BLIND";
   private static final String DELIMITER = ": ";
 
-  public static String getXRequestId(HttpServletRequest request) {
+  public static String parseXRequestId(HttpServletRequest request) {
     return Objects.requireNonNullElse(request.getHeader("x-request-id"), request.getRequestId());
   }
 
-  public static String getRequestURI(HttpServletRequest request) {
+  public static String parseRequestURI(HttpServletRequest request) {
     String requestURI = request.getRequestURI();
+
     if (StringUtils.hasText(request.getQueryString())) {
       return requestURI + "?" + request.getQueryString();
     }
+
     return requestURI;
   }
 
-  public static String getParameters(HttpServletRequest request) {
+  public static String parseParameters(HttpServletRequest request) {
     StringBuilder stringBuilder = new StringBuilder();
 
     request.getParameterNames()
@@ -42,7 +45,7 @@ public final class HttpRequestParser {
     return StringUtils.hasText(parameters) ? parameters : NULL;
   }
 
-  public static String getHeaders(HttpServletRequest request) {
+  public static String parseHeaders(HttpServletRequest request) {
     StringBuilder stringBuilder = new StringBuilder();
 
     request.getHeaderNames()

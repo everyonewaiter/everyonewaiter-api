@@ -1,6 +1,6 @@
 package com.everyonewaiter.application.contact.request;
 
-import com.everyonewaiter.global.support.Pagination;
+import com.everyonewaiter.domain.shared.Pagination;
 import jakarta.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

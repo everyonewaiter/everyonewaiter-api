@@ -1,18 +1,18 @@
-package com.everyonewaiter.global.support;
+package com.everyonewaiter.domain.support;
+
+import static lombok.AccessLevel.PRIVATE;
 
 import com.everyonewaiter.global.exception.BusinessException;
 import com.everyonewaiter.global.exception.ErrorCode;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = PRIVATE)
 public final class DateFormatter {
 
   public static final DateTimeFormatter SERIALIZE =
@@ -22,16 +22,16 @@ public final class DateFormatter {
 
   public static Instant kstDateStringToUtcStartInstant(String date) {
     if (!StringUtils.hasText(date)) {
-      return LocalDate.now(ZoneId.of(TimeZone.ASIA_SEOUL.getId()))
-          .atStartOfDay(ZoneId.of(TimeZone.ASIA_SEOUL.getId()))
-          .withZoneSameInstant(ZoneId.of(TimeZone.UTC.getId()))
+      return LocalDate.now(TimeZone.ASIA_SEOUL.zoneId())
+          .atStartOfDay(TimeZone.ASIA_SEOUL.zoneId())
+          .withZoneSameInstant(TimeZone.UTC.zoneId())
           .toInstant();
     }
 
     try {
       return LocalDate.parse(date, YEAR_MONTH_DAY)
-          .atStartOfDay(ZoneId.of(TimeZone.ASIA_SEOUL.getId()))
-          .withZoneSameInstant(ZoneId.of(TimeZone.UTC.getId()))
+          .atStartOfDay(TimeZone.ASIA_SEOUL.zoneId())
+          .withZoneSameInstant(TimeZone.UTC.zoneId())
           .toInstant();
     } catch (DateTimeParseException exception) {
       throw new BusinessException(ErrorCode.INVALID_DATE_FORMAT);
@@ -40,18 +40,18 @@ public final class DateFormatter {
 
   public static Instant kstDateStringToUtcEndInstant(String date) {
     if (!StringUtils.hasText(date)) {
-      return LocalDate.now(ZoneId.of(TimeZone.ASIA_SEOUL.getId()))
+      return LocalDate.now(TimeZone.ASIA_SEOUL.zoneId())
           .atTime(LocalTime.MAX)
-          .atZone(ZoneId.of(TimeZone.ASIA_SEOUL.getId()))
-          .withZoneSameInstant(ZoneId.of(TimeZone.UTC.getId()))
+          .atZone(TimeZone.ASIA_SEOUL.zoneId())
+          .withZoneSameInstant(TimeZone.UTC.zoneId())
           .toInstant();
     }
 
     try {
       return LocalDate.parse(date, YEAR_MONTH_DAY)
           .atTime(LocalTime.MAX)
-          .atZone(ZoneId.of(TimeZone.ASIA_SEOUL.getId()))
-          .withZoneSameInstant(ZoneId.of(TimeZone.UTC.getId()))
+          .atZone(TimeZone.ASIA_SEOUL.zoneId())
+          .withZoneSameInstant(TimeZone.UTC.zoneId())
           .toInstant();
     } catch (DateTimeParseException exception) {
       throw new BusinessException(ErrorCode.INVALID_DATE_FORMAT);

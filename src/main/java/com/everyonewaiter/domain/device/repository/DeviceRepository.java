@@ -2,8 +2,8 @@ package com.everyonewaiter.domain.device.repository;
 
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.domain.device.view.DeviceView;
-import com.everyonewaiter.global.support.Pagination;
-import com.everyonewaiter.global.support.Paging;
+import com.everyonewaiter.domain.shared.Pagination;
+import com.everyonewaiter.domain.shared.Paging;
 import java.util.List;
 import java.util.Optional;
 

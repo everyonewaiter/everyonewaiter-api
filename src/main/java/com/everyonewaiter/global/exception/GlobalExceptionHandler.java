@@ -1,5 +1,6 @@
 package com.everyonewaiter.global.exception;
 
+import com.everyonewaiter.global.logging.ExceptionLogger;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;

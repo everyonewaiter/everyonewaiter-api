@@ -1,4 +1,4 @@
-package com.everyonewaiter.global.support;
+package com.everyonewaiter.domain.shared;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

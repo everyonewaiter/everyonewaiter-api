@@ -1,13 +1,12 @@
 package com.everyonewaiter.global.config;
 
-import com.everyonewaiter.global.support.DateFormatter;
-import com.everyonewaiter.global.support.TimeZone;
+import com.everyonewaiter.domain.support.DateFormatter;
+import com.everyonewaiter.domain.support.TimeZone;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import java.time.Instant;
-import java.time.ZoneId;
 import org.springframework.boot.jackson.JsonComponent;
 
 @JsonComponent
@@ -21,7 +20,7 @@ class InstantJsonSerializer extends JsonSerializer<Instant> {
   ) throws IOException {
     jsonGenerator.writeString(
         DateFormatter.SERIALIZE
-            .withZone(ZoneId.of(TimeZone.ASIA_SEOUL.getId()))
+            .withZone(TimeZone.ASIA_SEOUL.zoneId())
             .format(instant)
     );
   }

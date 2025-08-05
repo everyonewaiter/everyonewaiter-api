@@ -5,7 +5,7 @@ import com.everyonewaiter.application.menu.response.CategoryResponse;
 import com.everyonewaiter.domain.menu.entity.Category;
 import com.everyonewaiter.domain.menu.repository.CategoryRepository;
 import com.everyonewaiter.domain.menu.service.CategoryValidator;
-import com.everyonewaiter.global.support.CacheNameHolder;
+import com.everyonewaiter.domain.support.CacheName;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,7 +21,7 @@ public class CategoryService {
   private final CategoryRepository categoryRepository;
 
   @Transactional
-  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Long create(Long storeId, CategoryWrite.Create request) {
     categoryValidator.validateExceedMaxCount(storeId);
     categoryValidator.validateUnique(storeId, request.name());
@@ -33,7 +33,7 @@ public class CategoryService {
   }
 
   @Transactional
-  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void update(Long categoryId, Long storeId, CategoryWrite.Update request) {
     categoryValidator.validateUniqueExcludeId(categoryId, storeId, request.name());
 
@@ -44,7 +44,7 @@ public class CategoryService {
   }
 
   @Transactional
-  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void movePosition(
       Long sourceId,
       Long targetId,
@@ -62,7 +62,7 @@ public class CategoryService {
   }
 
   @Transactional
-  @CacheEvict(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId")
+  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void delete(Long categoryId, Long storeId) {
     Category category = categoryRepository.findByIdAndStoreIdOrThrow(categoryId, storeId);
     category.delete();
@@ -75,7 +75,7 @@ public class CategoryService {
   }
 
   @Transactional(readOnly = true)
-  @Cacheable(cacheNames = CacheNameHolder.STORE_MENU, key = "#storeId", condition = "#storeId != null")
+  @Cacheable(cacheNames = CacheName.STORE_MENU, key = "#storeId", condition = "#storeId != null")
   public CategoryResponse.All readAllWithMenus(Long storeId) {
     List<Category> categories = categoryRepository.findAll(storeId);
     return CategoryResponse.All.from(categories);
