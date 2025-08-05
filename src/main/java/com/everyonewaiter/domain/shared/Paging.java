@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
 public class Paging<T> {
@@ -28,9 +29,11 @@ public class Paging<T> {
   private final long count;
 
   @Schema(description = "다음 페이지 여부", example = "true")
+  @Accessors(fluent = true)
   private final boolean hasNext;
 
   @Schema(description = "이전 페이지 여부", example = "false")
+  @Accessors(fluent = true)
   private final boolean hasPrevious;
 
   @Schema(description = "첫번째 페이지인지 여부", example = "true")
