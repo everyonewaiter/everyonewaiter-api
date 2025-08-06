@@ -4,7 +4,8 @@ import com.everyonewaiter.application.pos.PosService;
 import com.everyonewaiter.application.pos.response.PosResponse;
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.domain.order.entity.Receipt;
-import com.everyonewaiter.domain.support.DateFormatter;
+import com.everyonewaiter.domain.support.DateConverter;
+import com.everyonewaiter.domain.support.TimeZone;
 import com.everyonewaiter.global.annotation.AuthenticationDevice;
 import com.everyonewaiter.global.annotation.StoreOpen;
 import com.everyonewaiter.global.sse.ServerAction;
@@ -42,8 +43,8 @@ class PosController implements PosControllerSpecification {
   ) {
     PosResponse.Revenue response = posService.getRevenue(
         device.getStore().getId(),
-        DateFormatter.kstDateStringToUtcStartInstant(date),
-        DateFormatter.kstDateStringToUtcEndInstant(date)
+        DateConverter.convertToUtcStartInstant(TimeZone.ASIA_SEOUL, date),
+        DateConverter.convertToUtcEndInstant(TimeZone.ASIA_SEOUL, date)
     );
     return ResponseEntity.ok(response);
   }

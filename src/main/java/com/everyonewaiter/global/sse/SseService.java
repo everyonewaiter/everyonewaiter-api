@@ -52,7 +52,7 @@ public class SseService {
     });
     sseEmitter.onError(throwable -> {
       LOGGER.debug("[SSE] Emitter error. key: {}", key, throwable);
-      sseEmitter.completeWithError(throwable);
+      sseEmitter.complete();
     });
 
     return sseEmitter;

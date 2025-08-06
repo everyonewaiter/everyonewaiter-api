@@ -19,7 +19,11 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "POS")
 interface PosControllerSpecification {
 
-  @Operation(summary = "[POS] 매출 확인", description = "매출 확인 API")
+  @Operation(
+      summary = "[POS] 매출 확인",
+      description = "매출 확인 API<br/><br/>"
+          + "날짜 포맷은 KST `yyyyMMdd` 형식이어야 합니다. 예시: `20250101`"
+  )
   @ApiResponse(responseCode = "200", description = "매출 확인 성공")
   @ApiErrorResponses(
       summary = "매출 확인 실패",

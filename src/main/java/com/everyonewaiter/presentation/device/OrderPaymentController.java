@@ -3,7 +3,8 @@ package com.everyonewaiter.presentation.device;
 import com.everyonewaiter.application.order.OrderPaymentService;
 import com.everyonewaiter.application.order.response.OrderPaymentResponse;
 import com.everyonewaiter.domain.device.entity.Device;
-import com.everyonewaiter.domain.support.DateFormatter;
+import com.everyonewaiter.domain.support.DateConverter;
+import com.everyonewaiter.domain.support.TimeZone;
 import com.everyonewaiter.global.annotation.AuthenticationDevice;
 import com.everyonewaiter.global.annotation.StoreOpen;
 import com.everyonewaiter.presentation.device.request.OrderPaymentWriteRequest;
@@ -34,8 +35,8 @@ class OrderPaymentController implements OrderPaymentControllerSpecification {
   ) {
     OrderPaymentResponse.Details response = orderPaymentService.readAllByPos(
         device.getStore().getId(),
-        DateFormatter.kstDateStringToUtcStartInstant(date),
-        DateFormatter.kstDateStringToUtcEndInstant(date)
+        DateConverter.convertToUtcStartInstant(TimeZone.ASIA_SEOUL, date),
+        DateConverter.convertToUtcEndInstant(TimeZone.ASIA_SEOUL, date)
     );
     return ResponseEntity.ok(response);
   }
