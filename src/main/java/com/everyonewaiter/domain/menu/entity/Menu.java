@@ -2,10 +2,10 @@ package com.everyonewaiter.domain.menu.entity;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.menu.event.MenuImageDeleteEvent;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Position;
 import com.everyonewaiter.domain.shared.PositionMove;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embedded;

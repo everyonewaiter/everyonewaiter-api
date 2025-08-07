@@ -5,7 +5,7 @@ import static com.everyonewaiter.domain.support.TimeZone.UTC;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import com.everyonewaiter.global.exception.BusinessException;
+import com.everyonewaiter.domain.shared.BusinessException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;

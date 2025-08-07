@@ -2,8 +2,8 @@ package com.everyonewaiter.domain.order.service;
 
 import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;

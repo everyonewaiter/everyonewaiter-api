@@ -3,10 +3,10 @@ package com.everyonewaiter.infrastructure.waiting;
 import static com.everyonewaiter.domain.store.entity.QStore.store;
 import static com.everyonewaiter.domain.waiting.entity.QWaiting.waiting;
 
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.waiting.entity.Waiting;
 import com.everyonewaiter.domain.waiting.repository.WaitingRepository;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Objects;

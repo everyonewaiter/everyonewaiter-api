@@ -1,5 +1,6 @@
 package com.everyonewaiter.global.exception;
 
+import com.everyonewaiter.domain.shared.ErrorCode;
 import java.time.Instant;
 
 public record ErrorResponse(ErrorCode code, String message, Instant timestamp) {

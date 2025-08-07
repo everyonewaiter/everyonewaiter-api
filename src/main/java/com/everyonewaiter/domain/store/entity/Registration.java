@@ -1,13 +1,13 @@
 package com.everyonewaiter.domain.store.entity;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.store.event.LicenseImageDeleteEvent;
 import com.everyonewaiter.domain.store.event.RegistrationApplyEvent;
 import com.everyonewaiter.domain.store.event.RegistrationApproveEvent;
 import com.everyonewaiter.domain.store.event.RegistrationReapplyEvent;
 import com.everyonewaiter.domain.store.event.RegistrationRejectEvent;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

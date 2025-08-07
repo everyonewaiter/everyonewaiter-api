@@ -1,8 +1,8 @@
 package com.everyonewaiter.global.config;
 
+import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import com.everyonewaiter.global.annotation.ApiErrorResponses;
-import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.exception.ErrorResponse;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -58,7 +58,7 @@ class SwaggerConfiguration {
         .addOperationCustomizer(errorResponse())
         .addOperationCustomizer(errorResponses())
         .addOpenApiCustomizer(customizer -> customizer.addSecurityItem(jwtSecurityRequirement()))
-        .packagesToScan("com.everyonewaiter.presentation.owner")
+        .packagesToScan("com.everyonewaiter.adapter.webapi.owner")
         .build();
   }
 
@@ -71,7 +71,7 @@ class SwaggerConfiguration {
         .addOpenApiCustomizer(customizer ->
             customizer.addSecurityItem(signatureSecurityRequirement())
         )
-        .packagesToScan("com.everyonewaiter.presentation.device")
+        .packagesToScan("com.everyonewaiter.adapter.webapi.device")
         .build();
   }
 
@@ -82,7 +82,7 @@ class SwaggerConfiguration {
         .addOperationCustomizer(errorResponse())
         .addOperationCustomizer(errorResponses())
         .addOpenApiCustomizer(customizer -> customizer.addSecurityItem(jwtSecurityRequirement()))
-        .packagesToScan("com.everyonewaiter.presentation.admin")
+        .packagesToScan("com.everyonewaiter.adapter.webapi.admin")
         .build();
   }
 
@@ -194,16 +194,10 @@ class SwaggerConfiguration {
         .in(SecurityScheme.In.HEADER);
   }
 
-  private static class ExampleHolder {
+  private record ExampleHolder(String summary, String exampleName, Example example) {
 
-    private final String summary;
-    private final String exampleName;
-    private final Example example;
-
-    ExampleHolder(String summary, String exampleName, ErrorCode errorCode) {
-      this.summary = summary;
-      this.exampleName = exampleName;
-      this.example = new Example().value(ErrorResponse.from(errorCode));
+    public ExampleHolder(String summary, String exampleName, ErrorCode example) {
+      this(summary, exampleName, new Example().value(ErrorResponse.from(example)));
     }
 
   }

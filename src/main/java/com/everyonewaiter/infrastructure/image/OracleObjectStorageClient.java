@@ -1,8 +1,8 @@
 package com.everyonewaiter.infrastructure.image;
 
 import com.everyonewaiter.domain.image.service.ImageClient;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import com.oracle.bmc.ConfigFileReader;
 import com.oracle.bmc.Region;
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;

@@ -1,10 +1,10 @@
 package com.everyonewaiter.domain.store.entity;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.store.event.StoreCloseEvent;
 import com.everyonewaiter.domain.store.event.StoreOpenEvent;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
 import com.everyonewaiter.global.sse.ServerAction;
 import com.everyonewaiter.global.sse.SseCategory;
 import com.everyonewaiter.global.sse.SseEvent;

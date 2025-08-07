@@ -2,7 +2,7 @@ package com.everyonewaiter.global.logging;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;

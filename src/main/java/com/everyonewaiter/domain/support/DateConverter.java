@@ -2,8 +2,8 @@ package com.everyonewaiter.domain.support;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import jakarta.annotation.Nullable;
 import java.time.Instant;
 import java.time.LocalDate;

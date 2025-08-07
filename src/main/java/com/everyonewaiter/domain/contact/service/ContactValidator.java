@@ -1,8 +1,8 @@
 package com.everyonewaiter.domain.contact.service;
 
 import com.everyonewaiter.domain.contact.repository.ContactRepository;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

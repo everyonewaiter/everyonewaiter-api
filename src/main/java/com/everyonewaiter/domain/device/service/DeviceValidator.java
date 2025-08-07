@@ -2,9 +2,9 @@ package com.everyonewaiter.domain.device.service;
 
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.domain.device.repository.DeviceRepository;
-import com.everyonewaiter.global.exception.AccessDeniedException;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.domain.shared.AccessDeniedException;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

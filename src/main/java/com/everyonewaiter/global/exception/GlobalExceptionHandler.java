@@ -1,5 +1,9 @@
 package com.everyonewaiter.global.exception;
 
+import com.everyonewaiter.domain.shared.AccessDeniedException;
+import com.everyonewaiter.domain.shared.AuthenticationException;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.global.logging.ExceptionLogger;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;

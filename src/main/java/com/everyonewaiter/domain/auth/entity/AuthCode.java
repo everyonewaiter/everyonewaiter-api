@@ -1,7 +1,7 @@
 package com.everyonewaiter.domain.auth.entity;
 
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import java.time.Duration;
 import java.util.Random;
 

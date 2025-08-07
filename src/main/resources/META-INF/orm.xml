@@ -5,6 +5,26 @@
   xsi:schemaLocation="http://www.hibernate.org/xsd/orm/mapping https://hibernate.org/xsd/orm/mapping/mapping-3.1.0.xsd"
 >
 
+  <access>FIELD</access>
+
+  <entity class="com.everyonewaiter.domain.health.ApkVersion">
+    <table name="apk_version"/>
+    <attributes>
+      <basic name="majorVersion">
+        <column name="apk_major_version" nullable="false"/>
+      </basic>
+      <basic name="minorVersion">
+        <column name="apk_minor_version" nullable="false"/>
+      </basic>
+      <basic name="patchVersion">
+        <column name="apk_patch_version" nullable="false"/>
+      </basic>
+      <basic name="downloadUrl">
+        <column name="apk_download_url" nullable="false" length="255"/>
+      </basic>
+    </attributes>
+  </entity>
+
   <embeddable class="com.everyonewaiter.domain.shared.Position">
     <attributes>
       <basic name="value">

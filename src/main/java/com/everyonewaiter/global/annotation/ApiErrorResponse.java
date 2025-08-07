@@ -1,6 +1,6 @@
 package com.everyonewaiter.global.annotation;
 
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

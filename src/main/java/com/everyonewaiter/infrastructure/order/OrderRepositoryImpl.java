@@ -8,8 +8,8 @@ import static com.everyonewaiter.domain.store.entity.QStore.store;
 
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.order.repository.OrderRepository;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

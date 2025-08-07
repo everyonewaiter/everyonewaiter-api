@@ -1,8 +1,8 @@
 package com.everyonewaiter.domain.auth.entity;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
+import com.everyonewaiter.domain.shared.AuthenticationException;
 import com.everyonewaiter.domain.support.Tsid;
-import com.everyonewaiter.global.exception.AuthenticationException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

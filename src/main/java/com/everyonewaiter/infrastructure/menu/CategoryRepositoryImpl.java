@@ -4,8 +4,8 @@ import static com.everyonewaiter.domain.menu.entity.QCategory.category;
 
 import com.everyonewaiter.domain.menu.entity.Category;
 import com.everyonewaiter.domain.menu.repository.CategoryRepository;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Objects;

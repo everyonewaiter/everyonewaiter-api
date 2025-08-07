@@ -4,8 +4,8 @@ import static com.everyonewaiter.domain.order.entity.QOrderPayment.orderPayment;
 
 import com.everyonewaiter.domain.order.entity.OrderPayment;
 import com.everyonewaiter.domain.order.repository.OrderPaymentRepository;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.Instant;
 import java.util.List;

@@ -2,11 +2,11 @@ package com.everyonewaiter.domain.store.service;
 
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.store.repository.StoreRepository;
 import com.everyonewaiter.domain.waiting.entity.Waiting;
 import com.everyonewaiter.domain.waiting.repository.WaitingRepository;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

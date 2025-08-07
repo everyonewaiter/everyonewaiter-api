@@ -3,11 +3,11 @@ package com.everyonewaiter.infrastructure.store;
 import static com.everyonewaiter.domain.store.entity.QSetting.setting;
 import static com.everyonewaiter.domain.store.entity.QStore.store;
 
+import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.domain.store.repository.StoreRepository;
 import com.everyonewaiter.domain.store.view.StoreView;
-import com.everyonewaiter.global.exception.BusinessException;
-import com.everyonewaiter.global.exception.ErrorCode;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;

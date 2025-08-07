@@ -2,7 +2,7 @@ package com.everyonewaiter.infrastructure.auth;
 
 import com.everyonewaiter.domain.auth.entity.RefreshToken;
 import com.everyonewaiter.domain.auth.repository.RefreshTokenRepository;
-import com.everyonewaiter.global.exception.AuthenticationException;
+import com.everyonewaiter.domain.shared.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
