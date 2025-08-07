@@ -45,6 +45,7 @@ dependencyManagement {
 }
 
 val jjwt: String by project
+val mockito: String by project
 val oci: String by project
 val queryDSL: String by project
 val pdfbox: String by project
@@ -52,6 +53,8 @@ val redisson: String by project
 val scrimage: String by project
 val springdoc: String by project
 val tsid: String by project
+
+val mockitoAgent = configurations.create("mockitoAgent")
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -95,6 +98,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mysql")
+    testImplementation("org.mockito:mockito-core:$mockito")
+    mockitoAgent("org.mockito:mockito-core:$mockito") { isTransitive = false }
 
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
@@ -103,4 +108,5 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    jvmArgs("-javaagent:${mockitoAgent.asPath}", "-Xshare:off")
 }
