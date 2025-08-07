@@ -7,7 +7,6 @@ import org.redisson.config.Config;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,9 +24,11 @@ class RedisConfiguration {
   @Bean
   public LettuceConnectionFactory redisConnectionFactory() {
     RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+
     configuration.setHostName(redisProperties.getHost());
     configuration.setPort(redisProperties.getPort());
     configuration.setPassword(redisProperties.getPassword());
+
     return new LettuceConnectionFactory(configuration);
   }
 
@@ -37,9 +38,9 @@ class RedisConfiguration {
   }
 
   @Bean
-  @Profile("!test")
   public RedissonClient redissonClient() {
     boolean usePassword = StringUtils.hasText(redisProperties.getPassword());
+
     Config config = new Config();
     config.useSingleServer()
         .setAddress(
@@ -49,6 +50,7 @@ class RedisConfiguration {
                 + redisProperties.getPort()
         )
         .setPassword(usePassword ? redisProperties.getPassword() : null);
+
     return Redisson.create(config);
   }
 
