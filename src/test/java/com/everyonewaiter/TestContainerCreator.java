@@ -14,7 +14,7 @@ class TestContainerCreator {
   static final String REDIS_IMAGE_NAME = "redis:7.4.1-alpine";
   static final int REDIS_PORT = 6379;
 
-  public static MySQLContainer<?> createMysqlContainer() {
+  static MySQLContainer<?> createMysqlContainer() {
     try (var container = new MySQLContainer<>(DockerImageName.parse(MYSQL_IMAGE_NAME))) {
       return container.withDatabaseName(MYSQL_DATABASE_NAME)
           .withUsername(MYSQL_USERNAME)
@@ -25,7 +25,7 @@ class TestContainerCreator {
     }
   }
 
-  public static GenericContainer<?> createRedisContainer() {
+  static GenericContainer<?> createRedisContainer() {
     try (var container = new GenericContainer<>(DockerImageName.parse(REDIS_IMAGE_NAME))) {
       return container.withExposedPorts(REDIS_PORT);
     }

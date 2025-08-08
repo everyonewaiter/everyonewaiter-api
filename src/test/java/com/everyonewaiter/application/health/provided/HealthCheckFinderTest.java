@@ -8,17 +8,16 @@ import com.everyonewaiter.application.health.dto.ApkVersionDetailResponse;
 import com.everyonewaiter.application.health.dto.ServerVersionDetailResponse;
 import com.everyonewaiter.domain.health.ApkVersionCreateRequest;
 import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.info.BuildProperties;
 
-@RequiredArgsConstructor
-class HealthCheckFinderTest extends IntegrationTest {
-
-  private final EntityManager entityManager;
-  private final BuildProperties buildProperties;
-  private final HealthCheckCreator healthCheckCreator;
-  private final HealthCheckFinder healthCheckFinder;
+@IntegrationTest
+record HealthCheckFinderTest(
+    EntityManager entityManager,
+    BuildProperties buildProperties,
+    HealthCheckCreator healthCheckCreator,
+    HealthCheckFinder healthCheckFinder
+) {
 
   @Test
   void findServerVersion() {

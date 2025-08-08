@@ -8,14 +8,10 @@ import com.everyonewaiter.IntegrationTest;
 import com.everyonewaiter.domain.health.ApkVersionCreateRequest;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
-@RequiredArgsConstructor
-class HealthCheckCreatorTest extends IntegrationTest {
-
-  private final EntityManager entityManager;
-  private final HealthCheckCreator healthCheckCreator;
+@IntegrationTest
+record HealthCheckCreatorTest(EntityManager entityManager, HealthCheckCreator healthCheckCreator) {
 
   @Test
   void createApkVersion() {
