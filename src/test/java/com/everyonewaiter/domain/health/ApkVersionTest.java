@@ -1,6 +1,6 @@
 package com.everyonewaiter.domain.health;
 
-import static com.everyonewaiter.domain.health.ApkVersionFixture.createRequest;
+import static com.everyonewaiter.domain.health.ApkVersionFixture.createApkVersionCreateRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ class ApkVersionTest {
 
   @Test
   void create() {
-    ApkVersionCreateRequest createRequest = createRequest();
+    ApkVersionCreateRequest createRequest = createApkVersionCreateRequest();
 
     ApkVersion apkVersion = ApkVersion.create(createRequest);
 

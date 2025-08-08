@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
-@Tag(name = "APK 버전 관리")
+@Tag(name = "헬스 체크")
 interface HealthCheckAdminApiSpecification {
 
   @Operation(summary = "APK 버전 생성", description = "APK 버전 생성 API")

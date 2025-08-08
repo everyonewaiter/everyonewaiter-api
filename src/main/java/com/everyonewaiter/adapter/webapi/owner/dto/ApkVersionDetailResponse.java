@@ -1,4 +1,4 @@
-package com.everyonewaiter.application.health.dto;
+package com.everyonewaiter.adapter.webapi.owner.dto;
 
 import com.everyonewaiter.domain.health.ApkVersion;
 import io.swagger.v3.oas.annotations.media.Schema;

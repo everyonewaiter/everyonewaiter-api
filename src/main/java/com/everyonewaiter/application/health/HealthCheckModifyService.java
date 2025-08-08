@@ -18,10 +18,10 @@ class HealthCheckModifyService implements HealthCheckCreator {
   private final ApkVersionRepository apkVersionRepository;
 
   @Override
-  public Long createApkVersion(ApkVersionCreateRequest createRequest) {
+  public ApkVersion createApkVersion(ApkVersionCreateRequest createRequest) {
     ApkVersion apkVersion = ApkVersion.create(createRequest);
 
-    return apkVersionRepository.save(apkVersion).getId();
+    return apkVersionRepository.save(apkVersion);
   }
 
 }

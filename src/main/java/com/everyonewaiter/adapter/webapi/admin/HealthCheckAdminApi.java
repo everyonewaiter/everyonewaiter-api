@@ -2,10 +2,12 @@ package com.everyonewaiter.adapter.webapi.admin;
 
 import com.everyonewaiter.application.health.provided.HealthCheckCreator;
 import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.health.ApkVersion;
 import com.everyonewaiter.domain.health.ApkVersionCreateRequest;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,8 +28,11 @@ class HealthCheckAdminApi implements HealthCheckAdminApiSpecification {
       @RequestBody @Valid ApkVersionCreateRequest request,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
-    Long apkVersionId = healthCheckCreator.createApkVersion(request);
-    return ResponseEntity.created(URI.create(apkVersionId.toString())).build();
+    ApkVersion apkVersion = healthCheckCreator.createApkVersion(request);
+
+    return ResponseEntity
+        .created(URI.create(Objects.requireNonNull(apkVersion.getId()).toString()))
+        .build();
   }
 
 }

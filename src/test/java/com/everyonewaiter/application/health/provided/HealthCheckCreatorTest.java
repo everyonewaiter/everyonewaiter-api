@@ -1,10 +1,11 @@
 package com.everyonewaiter.application.health.provided;
 
-import static com.everyonewaiter.domain.health.ApkVersionFixture.createRequest;
+import static com.everyonewaiter.domain.health.ApkVersionFixture.createApkVersionCreateRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.everyonewaiter.IntegrationTest;
+import com.everyonewaiter.domain.health.ApkVersion;
 import com.everyonewaiter.domain.health.ApkVersionCreateRequest;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
@@ -15,13 +16,13 @@ record HealthCheckCreatorTest(EntityManager entityManager, HealthCheckCreator he
 
   @Test
   void createApkVersion() {
-    ApkVersionCreateRequest createRequest = createRequest();
+    ApkVersionCreateRequest createRequest = createApkVersionCreateRequest();
 
-    Long apkVersionId = healthCheckCreator.createApkVersion(createRequest);
+    ApkVersion apkVersion = healthCheckCreator.createApkVersion(createRequest);
     entityManager.flush();
     entityManager.clear();
 
-    assertThat(apkVersionId).isNotNull();
+    assertThat(apkVersion.getId()).isNotNull();
   }
 
   @Test

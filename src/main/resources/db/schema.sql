@@ -12,12 +12,12 @@ create table apk_version
 create table contact
 (
     id           bigint primary key,
-    name         varchar(30) not null,
-    phone_number char(11)    not null,
-    license      char(12)    not null,
-    active       boolean     not null,
-    created_at   datetime(6) not null,
-    updated_at   datetime(6) not null
+    name         varchar(30)                                not null,
+    license      char(12)                                   not null,
+    phone_number char(11)                                   not null,
+    state        enum ('PENDING', 'PROCESSING', 'COMPLETE') not null,
+    created_at   datetime(6)                                not null,
+    updated_at   datetime(6)                                not null
 );
 create index idx_contact_name_license_phone_number on contact (name, license, phone_number);
 create index idx_contact_name_phone_number on contact (name, phone_number);

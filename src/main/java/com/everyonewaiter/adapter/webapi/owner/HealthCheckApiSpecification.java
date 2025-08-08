@@ -1,6 +1,6 @@
 package com.everyonewaiter.adapter.webapi.owner;
 
-import com.everyonewaiter.application.health.dto.ApkVersionDetailResponse;
+import com.everyonewaiter.adapter.webapi.owner.dto.ApkVersionDetailResponse;
 import com.everyonewaiter.application.health.dto.ServerVersionDetailResponse;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
-@Tag(name = "Health Check")
+@Tag(name = "헬스 체크")
 interface HealthCheckApiSpecification {
 
   @SecurityRequirements

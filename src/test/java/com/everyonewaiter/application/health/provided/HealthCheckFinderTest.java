@@ -1,12 +1,11 @@
 package com.everyonewaiter.application.health.provided;
 
-import static com.everyonewaiter.domain.health.ApkVersionFixture.createRequest;
+import static com.everyonewaiter.domain.health.ApkVersionFixture.createApkVersionCreateRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.everyonewaiter.IntegrationTest;
-import com.everyonewaiter.application.health.dto.ApkVersionDetailResponse;
 import com.everyonewaiter.application.health.dto.ServerVersionDetailResponse;
-import com.everyonewaiter.domain.health.ApkVersionCreateRequest;
+import com.everyonewaiter.domain.health.ApkVersion;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.info.BuildProperties;
@@ -30,18 +29,14 @@ record HealthCheckFinderTest(
 
   @Test
   void findLatestApkVersion() {
-    ApkVersionCreateRequest createRequest = createRequest();
-    healthCheckCreator.createApkVersion(createRequest);
+    ApkVersion apkVersion = healthCheckCreator.createApkVersion(createApkVersionCreateRequest());
 
     entityManager.flush();
     entityManager.clear();
 
-    ApkVersionDetailResponse latestApkVersion = healthCheckFinder.findLatestApkVersion();
+    ApkVersion latestApkVersion = healthCheckFinder.findLatestApkVersion();
 
-    assertThat(latestApkVersion.majorVersion()).isEqualTo(createRequest.majorVersion());
-    assertThat(latestApkVersion.minorVersion()).isEqualTo(createRequest.minorVersion());
-    assertThat(latestApkVersion.patchVersion()).isEqualTo(createRequest.patchVersion());
-    assertThat(latestApkVersion.downloadUrl()).isEqualTo(createRequest.downloadUrl());
+    assertThat(latestApkVersion).isEqualTo(apkVersion);
   }
 
 }

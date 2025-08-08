@@ -9,6 +9,7 @@
 
   <entity class="com.everyonewaiter.domain.health.ApkVersion">
     <table name="apk_version"/>
+
     <attributes>
       <basic name="majorVersion">
         <column name="apk_major_version" nullable="false"/>
@@ -24,6 +25,51 @@
       </basic>
     </attributes>
   </entity>
+
+  <entity class="com.everyonewaiter.domain.contact.Contact">
+    <table name="contact">
+      <index name="idx_contact_name_license_phone_number" column-list="name, license, phoneNumber"/>
+      <index name="idx_contact_name_phone_number" column-list="name, phoneNumber"/>
+      <index name="idx_contact_license_phone_number" column-list="license, phoneNumber"/>
+      <index name="idx_contact_phone_number" column-list="phoneNumber"/>
+    </table>
+
+    <attributes>
+      <basic name="name">
+        <column name="name" nullable="false" length="30"/>
+      </basic>
+      <basic name="state">
+        <column name="state" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <embedded name="license">
+        <attribute-override name="value">
+          <column name="license"/>
+        </attribute-override>
+      </embedded>
+      <embedded name="phoneNumber">
+        <attribute-override name="value">
+          <column name="phone_number"/>
+        </attribute-override>
+      </embedded>
+    </attributes>
+  </entity>
+
+  <embeddable class="com.everyonewaiter.domain.shared.BusinessLicense">
+    <attributes>
+      <basic name="value">
+        <column name="license" nullable="false" length="12"/>
+      </basic>
+    </attributes>
+  </embeddable>
+
+  <embeddable class="com.everyonewaiter.domain.shared.PhoneNumber">
+    <attributes>
+      <basic name="value">
+        <column name="phone_number" nullable="false" length="11"/>
+      </basic>
+    </attributes>
+  </embeddable>
 
   <embeddable class="com.everyonewaiter.domain.shared.Position">
     <attributes>

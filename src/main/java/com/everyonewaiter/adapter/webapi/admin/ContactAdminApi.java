@@ -1,8 +1,9 @@
 package com.everyonewaiter.adapter.webapi.admin;
 
-import com.everyonewaiter.adapter.webapi.admin.request.ContactAdminReadRequest;
-import com.everyonewaiter.application.contact.ContactService;
-import com.everyonewaiter.application.contact.response.ContactAdminResponse;
+import com.everyonewaiter.application.contact.dto.ContactAdminReadRequest;
+import com.everyonewaiter.application.contact.dto.ContactAdminReadResponse;
+import com.everyonewaiter.application.contact.provided.ContactFinder;
+import com.everyonewaiter.application.contact.provided.ContactProcessor;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
@@ -19,26 +20,39 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/admins/contacts")
-class ContactAdminController implements ContactAdminControllerSpecification {
+class ContactAdminApi implements ContactAdminApiSpecification {
 
-  private final ContactService contactService;
+  private final ContactFinder contactFinder;
+  private final ContactProcessor contactProcessor;
 
   @Override
   @GetMapping
-  public ResponseEntity<Paging<ContactAdminResponse.PageView>> getContacts(
-      @ModelAttribute @Valid ContactAdminReadRequest.PageView request,
+  public ResponseEntity<Paging<ContactAdminReadResponse>> getContacts(
+      @ModelAttribute @Valid ContactAdminReadRequest request,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
-    return ResponseEntity.ok(contactService.readAllByAdmin(request.toDomainDto()));
+    return ResponseEntity.ok(contactFinder.findAllByAdmin(request));
+  }
+
+  @Override
+  @PostMapping("/{contactId}/processing")
+  public ResponseEntity<Void> processing(
+      @PathVariable Long contactId,
+      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+  ) {
+    contactProcessor.processing(contactId);
+
+    return ResponseEntity.noContent().build();
   }
 
   @Override
   @PostMapping("/{contactId}/complete")
-  public ResponseEntity<Void> create(
+  public ResponseEntity<Void> complete(
       @PathVariable Long contactId,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
-    contactService.complete(contactId);
+    contactProcessor.complete(contactId);
+
     return ResponseEntity.noContent().build();
   }
 

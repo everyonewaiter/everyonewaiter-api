@@ -1,10 +1,10 @@
 package com.everyonewaiter.application.health;
 
-import com.everyonewaiter.application.health.dto.ApkVersionDetailResponse;
 import com.everyonewaiter.application.health.dto.ServerVersionDetailResponse;
 import com.everyonewaiter.application.health.provided.HealthCheckFinder;
 import com.everyonewaiter.application.health.required.ApkVersionRepository;
 import com.everyonewaiter.domain.health.ApkVersion;
+import com.everyonewaiter.global.annotation.ReadOnlyTransactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Service;
@@ -22,10 +22,9 @@ class HealthCheckQueryService implements HealthCheckFinder {
   }
 
   @Override
-  public ApkVersionDetailResponse findLatestApkVersion() {
-    ApkVersion latestApkVersion = apkVersionRepository.findLatest();
-
-    return ApkVersionDetailResponse.from(latestApkVersion);
+  @ReadOnlyTransactional
+  public ApkVersion findLatestApkVersion() {
+    return apkVersionRepository.findLatest();
   }
 
 }

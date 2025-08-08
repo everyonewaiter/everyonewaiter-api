@@ -1,8 +1,9 @@
 package com.everyonewaiter.adapter.webapi.owner;
 
-import com.everyonewaiter.application.health.dto.ApkVersionDetailResponse;
+import com.everyonewaiter.adapter.webapi.owner.dto.ApkVersionDetailResponse;
 import com.everyonewaiter.application.health.dto.ServerVersionDetailResponse;
 import com.everyonewaiter.application.health.provided.HealthCheckFinder;
+import com.everyonewaiter.domain.health.ApkVersion;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,9 @@ class HealthCheckApi implements HealthCheckApiSpecification {
   @Override
   @GetMapping("/apk-versions")
   public ResponseEntity<ApkVersionDetailResponse> getLatestApkVersion() {
-    return ResponseEntity.ok(healthCheckFinder.findLatestApkVersion());
+    ApkVersion latestApkVersion = healthCheckFinder.findLatestApkVersion();
+
+    return ResponseEntity.ok(ApkVersionDetailResponse.from(latestApkVersion));
   }
 
 }

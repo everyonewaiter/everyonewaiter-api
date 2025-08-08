@@ -1,6 +1,6 @@
 package com.everyonewaiter.application.contact;
 
-import com.everyonewaiter.domain.contact.event.ContactCreateEvent;
+import com.everyonewaiter.domain.contact.ContactCreateEvent;
 import com.everyonewaiter.domain.notification.DiscordColor;
 import com.everyonewaiter.domain.notification.DiscordEmbed;
 import com.everyonewaiter.domain.notification.DiscordField;
@@ -30,8 +30,8 @@ class ContactCreateEventHandler {
         .title("서비스 도입 문의 이벤트")
         .description(event.name() + " 사장님께서 서비스 도입을 문의하셨습니다!")
         .color(DiscordColor.GREEN.getValue())
-        .field(new DiscordField("사업자 번호", event.license()))
-        .field(new DiscordField("휴대폰 번호", event.phoneNumber()))
+        .field(new DiscordField("사업자 번호", event.license().value()))
+        .field(new DiscordField("휴대폰 번호", event.phoneNumber().value()))
         .build();
     DiscordMessageSend request = new DiscordMessageSend(embed);
 

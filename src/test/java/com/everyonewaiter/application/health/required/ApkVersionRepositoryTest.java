@@ -1,6 +1,6 @@
 package com.everyonewaiter.application.health.required;
 
-import static com.everyonewaiter.domain.health.ApkVersionFixture.createRequest;
+import static com.everyonewaiter.domain.health.ApkVersionFixture.createApkVersionCreateRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -18,16 +18,16 @@ record ApkVersionRepositoryTest(
 
   @Test
   void findLatest() {
-    ApkVersion apkVersion = ApkVersion.create(createRequest());
+    ApkVersion apkVersion = ApkVersion.create(createApkVersionCreateRequest());
     apkVersionRepository.save(apkVersion);
 
     entityManager.flush();
     entityManager.clear();
 
-    ApkVersion latestApkVersion = apkVersionRepository.findLatest();
+    ApkVersion found = apkVersionRepository.findLatest();
 
-    assertThat(latestApkVersion.getId()).isNotNull();
-    assertThat(latestApkVersion.getId()).isEqualTo(apkVersion.getId());
+    assertThat(found.getId()).isNotNull();
+    assertThat(found.getId()).isEqualTo(apkVersion.getId());
   }
 
   @Test
