@@ -28,11 +28,11 @@ class DiscordNotificationEventHandler {
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void consumeContactCreateEvent(ContactCreateEvent event) {
-    LOGGER.info("[서비스 도입 문의 이벤트] name: {}", event.name());
+    LOGGER.info("[서비스 도입 문의 이벤트] storeName: {}", event.storeName());
 
     DiscordEmbed embed = new DiscordEmbed(
         "서비스 도입 문의 이벤트",
-        event.name() + " 사장님께서 서비스 도입을 문의하셨습니다!",
+        event.storeName() + " 사장님께서 서비스 도입을 문의하셨습니다!",
         DiscordColor.GREEN
     );
     embed.addField(new DiscordField("사업자 등록 번호", event.license().value()));

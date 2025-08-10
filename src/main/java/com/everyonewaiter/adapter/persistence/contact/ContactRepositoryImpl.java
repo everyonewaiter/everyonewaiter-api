@@ -29,13 +29,13 @@ class ContactRepositoryImpl implements ContactRepository {
   private final ContactJpaRepository contactJpaRepository;
 
   @Override
-  public boolean existsUncompletedByNameOrLicense(String name, BusinessLicense license) {
+  public boolean existsUncompleted(String storeName, BusinessLicense license) {
     Integer selectOne = queryFactory
         .selectOne()
         .from(contact)
         .where(
             contact.state.ne(ContactState.COMPLETE),
-            contact.name.eq(name).or(contact.license.eq(license))
+            contact.storeName.eq(storeName).or(contact.license.eq(license))
         )
         .fetchFirst();
     return selectOne != null;
@@ -45,7 +45,7 @@ class ContactRepositoryImpl implements ContactRepository {
   public Paging<Contact> findAllByAdmin(ContactAdminReadRequest readRequest) {
     PathBuilder<Contact> contactPath = new PathBuilder<>(contact.getType(), contact.getMetadata());
 
-    String name = readRequest.getName();
+    String storeName = readRequest.getStoreName();
     PhoneNumber phoneNumber = readRequest.getPhoneNumber();
     BusinessLicense license = readRequest.getLicense();
     ContactState state = readRequest.getState();
@@ -56,7 +56,7 @@ class ContactRepositoryImpl implements ContactRepository {
         .distinct()
         .from(contact)
         .where(
-            nameStratsWith(name),
+            storeNameStratsWith(storeName),
             phoneNumberStratsWith(contactPath, phoneNumber),
             licenseStratsWith(contactPath, license),
             stateEq(state)
@@ -70,7 +70,7 @@ class ContactRepositoryImpl implements ContactRepository {
         .select(contact.countDistinct())
         .from(contact)
         .where(
-            nameStratsWith(name),
+            storeNameStratsWith(storeName),
             phoneNumberStratsWith(contactPath, phoneNumber),
             licenseStratsWith(contactPath, license),
             stateEq(state)
@@ -93,10 +93,12 @@ class ContactRepositoryImpl implements ContactRepository {
     return contactJpaRepository.save(contact);
   }
 
-  private BooleanExpression nameStratsWith(@Nullable String name) {
-    return StringUtils.hasText(name) ? contact.name.startsWith(name) : null;
+  @Nullable
+  private BooleanExpression storeNameStratsWith(@Nullable String storeName) {
+    return StringUtils.hasText(storeName) ? contact.storeName.startsWith(storeName) : null;
   }
 
+  @Nullable
   private BooleanExpression phoneNumberStratsWith(
       PathBuilder<Contact> contactPath,
       @Nullable PhoneNumber phoneNumber
@@ -110,6 +112,7 @@ class ContactRepositoryImpl implements ContactRepository {
     }
   }
 
+  @Nullable
   private BooleanExpression licenseStratsWith(
       PathBuilder<Contact> contactPath,
       @Nullable BusinessLicense license
@@ -123,6 +126,7 @@ class ContactRepositoryImpl implements ContactRepository {
     }
   }
 
+  @Nullable
   private BooleanExpression stateEq(@Nullable ContactState state) {
     return state == null ? null : contact.state.eq(state);
   }

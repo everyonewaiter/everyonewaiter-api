@@ -7,7 +7,7 @@ import com.everyonewaiter.domain.shared.Paging;
 
 public interface ContactRepository {
 
-  boolean existsUncompletedByNameOrLicense(String name, BusinessLicense license);
+  boolean existsUncompleted(String storeName, BusinessLicense license);
 
   Paging<Contact> findAllByAdmin(ContactAdminReadRequest readRequest);
 

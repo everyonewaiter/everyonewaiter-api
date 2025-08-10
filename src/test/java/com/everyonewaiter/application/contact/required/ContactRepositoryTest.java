@@ -18,16 +18,16 @@ import org.springframework.test.util.ReflectionTestUtils;
 record ContactRepositoryTest(EntityManager entityManager, ContactRepository contactRepository) {
 
   @Test
-  void existsUncompletedByNameOrLicense() {
+  void existsUncompleted() {
     Contact pendingContact = createContact();
     Contact completeContact = createCompleteContact();
 
     boolean exists1 = contactRepository
-        .existsUncompletedByNameOrLicense(completeContact.getName(), completeContact.getLicense());
+        .existsUncompleted(completeContact.getStoreName(), completeContact.getLicense());
     boolean exists2 = contactRepository
-        .existsUncompletedByNameOrLicense(pendingContact.getName(), completeContact.getLicense());
+        .existsUncompleted(pendingContact.getStoreName(), completeContact.getLicense());
     boolean exists3 = contactRepository
-        .existsUncompletedByNameOrLicense(completeContact.getName(), pendingContact.getLicense());
+        .existsUncompleted(completeContact.getStoreName(), pendingContact.getLicense());
 
     assertThat(exists1).isFalse();
     assertThat(exists2).isTrue();
@@ -49,7 +49,7 @@ record ContactRepositoryTest(EntityManager entityManager, ContactRepository cont
     Contact contact = createContact();
 
     Paging<Contact> pagedContacts = findAllByAdmin(
-        new ContactAdminReadRequest(contact.getName(), null, null, null, 1, 20)
+        new ContactAdminReadRequest(contact.getStoreName(), null, null, null, 1, 20)
     );
 
     assertThat(pagedContacts.getContent()).hasSize(1);

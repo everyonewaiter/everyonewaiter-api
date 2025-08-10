@@ -14,7 +14,7 @@ public record ContactCreateRequest(
     @Schema(description = "매장 이름", example = "홍길동식당", requiredMode = REQUIRED)
     @NotBlank(message = "매장 이름을 입력해 주세요.")
     @Size(min = 1, max = 30, message = "매장 이름은 1자 이상 30자 이하로 입력해 주세요.")
-    String name,
+    String storeName,
 
     @Schema(description = "휴대폰 번호", example = "01044591812", requiredMode = REQUIRED)
     @NotBlank(message = "휴대폰 번호를 입력해 주세요.")

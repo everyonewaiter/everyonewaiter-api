@@ -6,6 +6,7 @@ import com.everyonewaiter.domain.contact.ContactState;
 import com.everyonewaiter.domain.shared.BusinessLicense;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class ContactAdminReadRequest {
 
   @Schema(description = "조회할 상호명")
-  private String name;
+  private String storeName;
 
   @Schema(description = "조회할 전화번호")
   private String phoneNumber;
@@ -39,10 +40,12 @@ public class ContactAdminReadRequest {
   @Max(value = 100, message = "페이지 조회 크기는 100 이하이어야 합니다.")
   private long size = 20;
 
+  @Nullable
   public PhoneNumber getPhoneNumber() {
     return phoneNumber == null ? null : new PhoneNumber(phoneNumber);
   }
 
+  @Nullable
   public BusinessLicense getLicense() {
     return license == null ? null : new BusinessLicense(license);
   }

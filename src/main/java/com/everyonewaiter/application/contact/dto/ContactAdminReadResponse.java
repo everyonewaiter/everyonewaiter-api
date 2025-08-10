@@ -8,11 +8,11 @@ import java.util.Objects;
 
 @Schema(name = "ContactAdminReadResponse")
 public record ContactAdminReadResponse(
-    @Schema(description = "문의 ID", example = "\"694865267482835533\"")
+    @Schema(description = "서비스 도입 문의 ID", example = "\"694865267482835533\"")
     String contactId,
 
     @Schema(description = "상호명", example = "홍길동식당")
-    String name,
+    String storeName,
 
     @Schema(description = "휴대폰 번호", example = "01044591812")
     String phoneNumber,
@@ -20,20 +20,20 @@ public record ContactAdminReadResponse(
     @Schema(description = "사업자 번호", example = "443-60-00875")
     String license,
 
-    @Schema(description = "문의 상태", examples = "PENDING")
+    @Schema(description = "서비스 도입 문의 진행 상태", examples = "PENDING")
     ContactState state,
 
-    @Schema(description = "문의 생성일", example = "2025-01-01 12:00:00")
+    @Schema(description = "서비스 도입 문의 생성일", example = "2025-01-01 12:00:00")
     Instant createdAt,
 
-    @Schema(description = "문의 수정일", example = "2025-01-01 12:00:00")
+    @Schema(description = "서비스 도입 문의 수정일", example = "2025-01-01 12:00:00")
     Instant updatedAt
 ) {
 
   public static ContactAdminReadResponse from(Contact contact) {
     return new ContactAdminReadResponse(
         Objects.requireNonNull(contact.getId()).toString(),
-        contact.getName(),
+        contact.getStoreName(),
         contact.getPhoneNumber().value(),
         contact.getLicense().value(),
         contact.getState(),

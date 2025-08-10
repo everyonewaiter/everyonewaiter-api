@@ -18,7 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = PROTECTED)
 public class Contact extends AggregateRootEntity<Contact> {
 
-  private String name;
+  private String storeName;
 
   private BusinessLicense license;
 
@@ -29,7 +29,7 @@ public class Contact extends AggregateRootEntity<Contact> {
   public static Contact create(ContactCreateRequest createRequest) {
     Contact contact = new Contact();
 
-    contact.name = requireNonNull(createRequest.name());
+    contact.storeName = requireNonNull(createRequest.storeName());
     contact.license = new BusinessLicense(createRequest.license());
     contact.phoneNumber = new PhoneNumber(createRequest.phoneNumber());
     contact.state = ContactState.PENDING;

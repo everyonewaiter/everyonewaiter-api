@@ -47,10 +47,10 @@ class ContactModifyService implements ContactProcessor {
   }
 
   private void checkExistsUncompletedContact(ContactCreateRequest createRequest) {
-    String name = createRequest.name();
+    String storeName = createRequest.storeName();
     String license = createRequest.license();
 
-    if (contactRepository.existsUncompletedByNameOrLicense(name, new BusinessLicense(license))) {
+    if (contactRepository.existsUncompleted(storeName, new BusinessLicense(license))) {
       throw new AlreadyExistsUncompletedContactException();
     }
   }
