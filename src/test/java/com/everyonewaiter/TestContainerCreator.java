@@ -20,8 +20,7 @@ class TestContainerCreator {
           .withUsername(MYSQL_USERNAME)
           .withPassword(MYSQL_PASSWORD)
           .withUrlParam("rewriteBatchedStatements", "true")
-          .withUrlParam("characterEncoding", "UTF-8")
-          .withInitScript("db/schema.sql");
+          .withUrlParam("characterEncoding", "UTF-8");
     }
   }
 
