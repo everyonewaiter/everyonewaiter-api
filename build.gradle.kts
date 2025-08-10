@@ -82,6 +82,8 @@ dependencies {
     implementation("com.oracle.oci.sdk:oci-java-sdk-common:$oci")
     implementation("com.oracle.oci.sdk:oci-java-sdk-objectstorage:$oci")
     implementation("com.oracle.oci.sdk:oci-java-sdk-common-httpclient-jersey3:$oci")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-mysql")
 
     compileOnly("org.projectlombok:lombok")
 
