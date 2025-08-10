@@ -1,4 +1,4 @@
-package com.everyonewaiter.application.contact.dto;
+package com.everyonewaiter.adapter.webapi.admin.dto;
 
 import com.everyonewaiter.domain.contact.Contact;
 import com.everyonewaiter.domain.contact.ContactState;

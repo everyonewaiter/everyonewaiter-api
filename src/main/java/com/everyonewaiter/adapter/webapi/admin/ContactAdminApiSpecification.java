@@ -1,7 +1,7 @@
 package com.everyonewaiter.adapter.webapi.admin;
 
+import com.everyonewaiter.adapter.webapi.admin.dto.ContactAdminReadResponse;
 import com.everyonewaiter.application.contact.dto.ContactAdminReadRequest;
-import com.everyonewaiter.application.contact.dto.ContactAdminReadResponse;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Paging;

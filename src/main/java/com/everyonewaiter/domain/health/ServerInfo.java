@@ -1,10 +1,10 @@
-package com.everyonewaiter.application.health.dto;
+package com.everyonewaiter.domain.health;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.boot.info.BuildProperties;
 
-@Schema(name = "ServerVersionDetailResponse")
-public record ServerVersionDetailResponse(
+@Schema(name = "ServerInfo")
+public record ServerInfo(
     @Schema(description = "서버 버전", example = "1.0.0")
     String version,
 
@@ -15,8 +15,8 @@ public record ServerVersionDetailResponse(
     String artifact
 ) {
 
-  public static ServerVersionDetailResponse from(BuildProperties buildProperties) {
-    return new ServerVersionDetailResponse(
+  public static ServerInfo create(BuildProperties buildProperties) {
+    return new ServerInfo(
         buildProperties.getVersion(),
         buildProperties.getGroup(),
         buildProperties.getArtifact()

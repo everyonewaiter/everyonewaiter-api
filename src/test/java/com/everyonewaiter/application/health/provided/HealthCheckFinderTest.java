@@ -4,8 +4,8 @@ import static com.everyonewaiter.domain.health.ApkVersionFixture.createApkVersio
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.everyonewaiter.IntegrationTest;
-import com.everyonewaiter.application.health.dto.ServerVersionDetailResponse;
 import com.everyonewaiter.domain.health.ApkVersion;
+import com.everyonewaiter.domain.health.ServerInfo;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.info.BuildProperties;
@@ -19,8 +19,8 @@ record HealthCheckFinderTest(
 ) {
 
   @Test
-  void findServerVersion() {
-    ServerVersionDetailResponse serverVersion = healthCheckFinder.findServerVersion();
+  void findServerInfo() {
+    ServerInfo serverVersion = healthCheckFinder.findServerInfo();
 
     assertThat(serverVersion.version()).isEqualTo(buildProperties.getVersion());
     assertThat(serverVersion.group()).isEqualTo(buildProperties.getGroup());

@@ -1,10 +1,11 @@
 package com.everyonewaiter.adapter.webapi.admin;
 
+import com.everyonewaiter.adapter.webapi.admin.dto.ContactAdminReadResponse;
 import com.everyonewaiter.application.contact.dto.ContactAdminReadRequest;
-import com.everyonewaiter.application.contact.dto.ContactAdminReadResponse;
 import com.everyonewaiter.application.contact.provided.ContactFinder;
 import com.everyonewaiter.application.contact.provided.ContactProcessor;
 import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.contact.Contact;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.global.annotation.AuthenticationAccount;
 import jakarta.validation.Valid;
@@ -31,7 +32,9 @@ class ContactAdminApi implements ContactAdminApiSpecification {
       @ModelAttribute @Valid ContactAdminReadRequest request,
       @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
   ) {
-    return ResponseEntity.ok(contactFinder.findAllByAdmin(request));
+    Paging<Contact> contacts = contactFinder.findAllByAdmin(request);
+
+    return ResponseEntity.ok(contacts.map(ContactAdminReadResponse::from));
   }
 
   @Override

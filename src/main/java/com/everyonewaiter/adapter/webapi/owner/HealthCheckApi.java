@@ -1,9 +1,9 @@
 package com.everyonewaiter.adapter.webapi.owner;
 
 import com.everyonewaiter.adapter.webapi.owner.dto.ApkVersionDetailResponse;
-import com.everyonewaiter.application.health.dto.ServerVersionDetailResponse;
 import com.everyonewaiter.application.health.provided.HealthCheckFinder;
 import com.everyonewaiter.domain.health.ApkVersion;
+import com.everyonewaiter.domain.health.ServerInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +19,10 @@ class HealthCheckApi implements HealthCheckApiSpecification {
 
   @Override
   @GetMapping("/server-versions")
-  public ResponseEntity<ServerVersionDetailResponse> getServerVersion() {
-    return ResponseEntity.ok(healthCheckFinder.findServerVersion());
+  public ResponseEntity<ServerInfo> getServerVersion() {
+    ServerInfo serverInfo = healthCheckFinder.findServerInfo();
+
+    return ResponseEntity.ok(serverInfo);
   }
 
   @Override

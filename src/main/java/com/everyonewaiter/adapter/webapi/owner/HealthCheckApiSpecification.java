@@ -1,7 +1,7 @@
 package com.everyonewaiter.adapter.webapi.owner;
 
 import com.everyonewaiter.adapter.webapi.owner.dto.ApkVersionDetailResponse;
-import com.everyonewaiter.application.health.dto.ServerVersionDetailResponse;
+import com.everyonewaiter.domain.health.ServerInfo;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.global.annotation.ApiErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +16,7 @@ interface HealthCheckApiSpecification {
   @SecurityRequirements
   @Operation(summary = "서버 버전 조회", description = "서버 버전 조회 API")
   @ApiResponse(responseCode = "200", description = "서버 버전 조회 성공")
-  ResponseEntity<ServerVersionDetailResponse> getServerVersion();
+  ResponseEntity<ServerInfo> getServerVersion();
 
   @SecurityRequirements
   @Operation(summary = "APK 버전 조회", description = "APK 버전 조회 API")

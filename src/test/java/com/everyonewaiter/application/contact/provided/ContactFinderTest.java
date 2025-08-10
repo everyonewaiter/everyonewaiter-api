@@ -1,13 +1,13 @@
 package com.everyonewaiter.application.contact.provided;
 
 import static com.everyonewaiter.domain.contact.ContactFixture.createContactCreateRequest;
-import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.everyonewaiter.IntegrationTest;
 import com.everyonewaiter.application.contact.dto.ContactAdminReadRequest;
 import com.everyonewaiter.domain.contact.Contact;
+import com.everyonewaiter.domain.shared.Paging;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -26,11 +26,10 @@ record ContactFinderTest(
     entityManager.flush();
     entityManager.clear();
 
-    var response = contactFinder.findAllByAdmin(new ContactAdminReadRequest());
+    Paging<Contact> contacts = contactFinder.findAllByAdmin(new ContactAdminReadRequest());
 
-    assertThat(response.getContent()).hasSize(1);
-    assertThat(response.getContent().getFirst().contactId())
-        .isEqualTo(requireNonNull(contact.getId()).toString());
+    assertThat(contacts.getContent()).hasSize(1);
+    assertThat(contacts.getContent().getFirst().getId()).isEqualTo(contact.getId());
   }
 
   @Test
