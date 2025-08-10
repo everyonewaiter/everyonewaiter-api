@@ -16,7 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 @TypeExcludeFilters(PersistenceTestConfiguration.ExcludeRedisConfiguration.class)
-@Import({TestContainerSupport.class, PersistenceTestConfiguration.class})
+@Import({
+    TestContainerSupport.class,
+    PersistenceTestConfiguration.class,
+    ExternalSystemTestConfiguration.class
+})
 public @interface IntegrationTest {
 
 }

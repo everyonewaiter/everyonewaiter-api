@@ -47,6 +47,7 @@ dependencyManagement {
 val jjwt: String by project
 val mockito: String by project
 val oci: String by project
+val pioneer: String by project
 val queryDSL: String by project
 val pdfbox: String by project
 val redisson: String by project
@@ -97,6 +98,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.junit-pioneer:junit-pioneer:$pioneer")
     testImplementation("org.testcontainers:mysql")
     testImplementation("org.mockito:mockito-core:$mockito")
     mockitoAgent("org.mockito:mockito-core:$mockito") { isTransitive = false }

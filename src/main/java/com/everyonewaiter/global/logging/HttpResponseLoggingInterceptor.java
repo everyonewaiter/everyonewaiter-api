@@ -31,14 +31,14 @@ public class HttpResponseLoggingInterceptor implements HandlerInterceptor {
       @NonNull Object handler,
       Exception exception
   ) throws Exception {
-    long executeTime = System.currentTimeMillis() - Long.parseLong(MDC.get("startTime"));
+    long endTime = System.currentTimeMillis() - Long.parseLong(MDC.get("startTime"));
 
     String requestId = MDC.get("requestId");
     String requestMethod = MDC.get("requestMethod");
     String requestURI = MDC.get("requestURI");
 
     LOGGER.info("[RESPONSE {}] [{} {}] [{}] [{}] [{} ms]",
-        response.getStatus(), requestMethod, requestURI, requestId, handler, executeTime);
+        response.getStatus(), requestMethod, requestURI, requestId, handler, endTime);
     MDC.clear();
 
     HandlerInterceptor.super.afterCompletion(request, response, handler, exception);

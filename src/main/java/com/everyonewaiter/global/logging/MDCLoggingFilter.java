@@ -1,5 +1,10 @@
 package com.everyonewaiter.global.logging;
 
+import static com.everyonewaiter.global.logging.HttpRequestParser.parseHeaders;
+import static com.everyonewaiter.global.logging.HttpRequestParser.parseParameters;
+import static com.everyonewaiter.global.logging.HttpRequestParser.parseRequestURI;
+import static com.everyonewaiter.global.logging.HttpRequestParser.parseXRequestId;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,11 +29,11 @@ class MDCLoggingFilter extends OncePerRequestFilter {
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain
   ) throws ServletException, IOException {
-    MDC.put("requestId", HttpRequestParser.parseXRequestId(request));
+    MDC.put("requestId", parseXRequestId(request));
     MDC.put("requestMethod", request.getMethod());
-    MDC.put("requestURI", HttpRequestParser.parseRequestURI(request));
-    MDC.put("requestParameters", HttpRequestParser.parseParameters(request));
-    MDC.put("requestHeaders", HttpRequestParser.parseHeaders(request));
+    MDC.put("requestURI", parseRequestURI(request));
+    MDC.put("requestParameters", parseParameters(request));
+    MDC.put("requestHeaders", parseHeaders(request));
     MDC.put("requestCookies", objectMapper.writeValueAsString(request.getCookies()));
 
     filterChain.doFilter(request, response);

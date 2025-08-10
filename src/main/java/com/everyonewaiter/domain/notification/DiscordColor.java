@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum DiscordColor {
+
   GREEN(5763719),
   BLUE(3447003),
   DARK_BLUE(2123412),
@@ -13,4 +14,5 @@ public enum DiscordColor {
   ;
 
   private final int value;
+
 }

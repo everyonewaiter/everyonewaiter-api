@@ -1,20 +1,43 @@
 package com.everyonewaiter.domain.notification;
 
+import static java.util.Objects.requireNonNull;
+
+import com.everyonewaiter.domain.shared.PhoneNumber;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-public record AlimTalkMessage(
-    String to,
-    String content,
-    boolean useSmsFailover,
-    List<AlimTalkButton> buttons
-) {
+@Getter
+@ToString
+@EqualsAndHashCode
+public class AlimTalkMessage {
 
-  public AlimTalkMessage(String to, String content) {
-    this(to, content, List.of());
+  private final String templateCode;
+
+  private final String to;
+
+  private final String content;
+
+  private final boolean useSmsFailover;
+
+  private final List<AlimTalkButton> buttons = new ArrayList<>();
+
+  public AlimTalkMessage(PhoneNumber to, AlimTalkTemplate template, Object... variables) {
+    this.templateCode = requireNonNull(template).getTemplateCode();
+    this.to = requireNonNull(to).value();
+    this.content = requireNonNull(template).createContent(variables);
+    this.useSmsFailover = true;
   }
 
-  public AlimTalkMessage(String to, String content, List<AlimTalkButton> buttons) {
-    this(to, content, true, buttons);
+  public void addButton(AlimTalkWeblinkButtonTemplate buttonTemplate, Object... arguments) {
+    buttons.add(buttonTemplate.createButton(arguments));
+  }
+
+  public List<AlimTalkButton> getButtons() {
+    return Collections.unmodifiableList(buttons);
   }
 
 }

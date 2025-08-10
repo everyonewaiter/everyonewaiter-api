@@ -1,5 +1,6 @@
 package com.everyonewaiter.global.logging;
 
+import static com.everyonewaiter.global.logging.HttpRequestParser.parseXRequestId;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.everyonewaiter.domain.shared.ErrorCode;
@@ -15,7 +16,7 @@ public final class ExceptionLogger {
   private static final String DEFAULT_LOGGING_FORMAT = "[{}] [{} {}] [{}] [{} {}]: {}";
 
   public static void info(HttpServletRequest request, ErrorCode errorCode, Exception exception) {
-    String requestId = HttpRequestParser.parseXRequestId(request);
+    String requestId = parseXRequestId(request);
 
     LOGGER.info(DEFAULT_LOGGING_FORMAT, errorCode.name(), request.getMethod(),
         request.getRequestURI(), requestId, exception.getClass().getSimpleName(),
@@ -32,7 +33,7 @@ public final class ExceptionLogger {
       String message,
       Exception exception
   ) {
-    String requestId = HttpRequestParser.parseXRequestId(request);
+    String requestId = parseXRequestId(request);
 
     LOGGER.warn(DEFAULT_LOGGING_FORMAT, errorCode.name(), request.getMethod(),
         request.getRequestURI(), requestId, exception.getClass().getSimpleName(),
@@ -40,7 +41,7 @@ public final class ExceptionLogger {
   }
 
   public static void error(HttpServletRequest request, ErrorCode errorCode, Exception exception) {
-    String requestId = HttpRequestParser.parseXRequestId(request);
+    String requestId = parseXRequestId(request);
 
     LOGGER.error(DEFAULT_LOGGING_FORMAT, errorCode.name(), request.getMethod(),
         request.getRequestURI(), requestId, exception.getClass().getSimpleName(),

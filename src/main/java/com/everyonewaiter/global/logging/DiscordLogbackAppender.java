@@ -1,17 +1,16 @@
 package com.everyonewaiter.global.logging;
 
+import static com.everyonewaiter.domain.support.DateFormatter.SERIALIZE;
+
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import com.everyonewaiter.domain.notification.DiscordColor;
 import com.everyonewaiter.domain.notification.DiscordEmbed;
+import com.everyonewaiter.domain.notification.DiscordEmbeds;
 import com.everyonewaiter.domain.notification.DiscordField;
-import com.everyonewaiter.domain.notification.service.request.DiscordMessageSend;
-import com.everyonewaiter.domain.support.DateFormatter;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -35,47 +34,41 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
 
   @Override
   protected void append(ILoggingEvent iLoggingEvent) {
-    DiscordMessageSend request = new DiscordMessageSend(createEmbeds(iLoggingEvent));
+    DiscordEmbeds embeds = createEmbeds(iLoggingEvent);
 
     WEB_HOOK_CLIENT.post()
         .uri("/" + discordWebhookUri)
         .contentType(MediaType.APPLICATION_JSON)
-        .body(request)
+        .body(embeds)
         .retrieve()
         .onStatus(HttpStatusCode::is4xxClientError, this::handleError)
         .onStatus(HttpStatusCode::is5xxServerError, this::handleError)
         .toBodilessEntity();
   }
 
-  private List<DiscordEmbed> createEmbeds(ILoggingEvent iLoggingEvent) {
+  private DiscordEmbeds createEmbeds(ILoggingEvent iLoggingEvent) {
     Map<String, String> mdc = iLoggingEvent.getMDCPropertyMap();
     String throwable = ThrowableProxyUtil.asString(iLoggingEvent.getThrowableProxy());
-    String stackTrace = throwable.length() > 700 ? throwable.substring(0, 700) : throwable;
+    String stackTrace = throwable.length() > 600 ? throwable.substring(0, 600) : throwable;
 
-    LocalDateTime now = LocalDateTime.now();
-    List<DiscordEmbed> embeds = new ArrayList<>();
-
-    embeds.add(
-        DiscordEmbed.builder()
-            .title("Error Information")
-            .description(iLoggingEvent.getFormattedMessage())
-            .color(DiscordColor.RED.getValue())
-            .field(new DiscordField("Timestamp", DateFormatter.SERIALIZE.format(now)))
-            .field(new DiscordField("Request URI", mdc.get("requestURI")))
-            .field(new DiscordField("Request Parameters", mdc.get("requestParameters")))
-            .field(new DiscordField("Request Headers", mdc.get("requestHeaders")))
-            .field(new DiscordField("Request Cookies", mdc.get("requestCookies")))
-            .build()
+    DiscordEmbed errorInfoEmbed = new DiscordEmbed(
+        "Error Information",
+        iLoggingEvent.getFormattedMessage(),
+        DiscordColor.RED
     );
-    embeds.add(
-        DiscordEmbed.builder()
-            .title("Stack Trace")
-            .description("```java\n" + stackTrace + "\n```")
-            .color(DiscordColor.RED.getValue())
-            .build()
+    errorInfoEmbed.addField(new DiscordField("Timestamp", SERIALIZE.format(LocalDateTime.now())));
+    errorInfoEmbed.addField(new DiscordField("Request URI", mdc.get("requestURI")));
+    errorInfoEmbed.addField(new DiscordField("Request Parameters", mdc.get("requestParameters")));
+    errorInfoEmbed.addField(new DiscordField("Request Headers", mdc.get("requestHeaders")));
+    errorInfoEmbed.addField(new DiscordField("Request Cookies", mdc.get("requestCookies")));
+
+    DiscordEmbed stackTraceEmbed = new DiscordEmbed(
+        "Stack Trace",
+        "```java\n" + stackTrace + "\n```",
+        DiscordColor.RED
     );
 
-    return embeds;
+    return new DiscordEmbeds(errorInfoEmbed, stackTraceEmbed);
   }
 
   private void handleError(

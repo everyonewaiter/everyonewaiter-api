@@ -15,4 +15,8 @@ public class ClientUrlRegistry {
     return Collections.unmodifiableList(urls);
   }
 
+  public String getBaseUrl() {
+    return urls.getFirst();
+  }
+
 }

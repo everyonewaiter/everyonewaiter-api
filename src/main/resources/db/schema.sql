@@ -27,7 +27,7 @@ create index idx_contact_phone_number on contact (phone_number);
 create table account
 (
     id           bigint primary key,
-    email        varchar(50)                         not null,
+    email        varchar(150)                        not null,
     password     char(60)                            not null,
     phone_number char(11)                            not null,
     state        enum ('INACTIVE','ACTIVE','DELETE') not null,

@@ -55,6 +55,14 @@
     </attributes>
   </entity>
 
+  <embeddable class="com.everyonewaiter.domain.shared.Email">
+    <attributes>
+      <basic name="address">
+        <column name="email" nullable="false" length="150"/>
+      </basic>
+    </attributes>
+  </embeddable>
+
   <embeddable class="com.everyonewaiter.domain.shared.BusinessLicense">
     <attributes>
       <basic name="value">
