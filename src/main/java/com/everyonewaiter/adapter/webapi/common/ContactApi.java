@@ -1,4 +1,4 @@
-package com.everyonewaiter.adapter.webapi.owner;
+package com.everyonewaiter.adapter.webapi.common;
 
 import static java.util.Objects.requireNonNull;
 

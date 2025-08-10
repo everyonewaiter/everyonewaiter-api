@@ -1,5 +1,6 @@
-package com.everyonewaiter.global.sse;
+package com.everyonewaiter.adapter.integration.sse;
 
+import com.everyonewaiter.application.sse.required.SseEventRepository;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,13 +12,15 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-class SseEventRepositoryImpl implements SseEventRepository {
+class SseEventRedisRepository implements SseEventRepository {
 
   private final RedisTemplate<String, String> redisTemplate;
 
   @Override
-  public void save(String key, String event) {
+  public String save(String key, String event) {
     redisTemplate.opsForValue().set(key, event, Duration.ofMinutes(10));
+
+    return event;
   }
 
   @Override

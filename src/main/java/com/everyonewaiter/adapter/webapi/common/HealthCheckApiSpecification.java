@@ -1,4 +1,4 @@
-package com.everyonewaiter.adapter.webapi.owner;
+package com.everyonewaiter.adapter.webapi.common;
 
 import com.everyonewaiter.adapter.webapi.owner.dto.ApkVersionDetailResponse;
 import com.everyonewaiter.domain.health.ServerInfo;

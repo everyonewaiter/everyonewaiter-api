@@ -1,11 +1,11 @@
-package com.everyonewaiter.global.sse;
+package com.everyonewaiter.application.sse.required;
 
 import java.util.Map;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 public interface SseEmitterRepository {
 
-  void save(String key, SseEmitter sseEmitter);
+  SseEmitter save(String key, SseEmitter sseEmitter);
 
   Map<String, SseEmitter> findAllByScanKey(String scanKey);
 

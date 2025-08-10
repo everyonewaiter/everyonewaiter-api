@@ -1,4 +1,4 @@
-package com.everyonewaiter.adapter.webapi.owner;
+package com.everyonewaiter.adapter.webapi.common;
 
 import com.everyonewaiter.domain.contact.ContactCreateRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;

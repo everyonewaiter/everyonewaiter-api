@@ -1,10 +1,10 @@
-package com.everyonewaiter.global.sse;
+package com.everyonewaiter.application.sse.required;
 
 import java.util.Map;
 
 public interface SseEventRepository {
 
-  void save(String key, String event);
+  String save(String key, String event);
 
   Map<String, String> findAllByScanKey(String scanKey);
 

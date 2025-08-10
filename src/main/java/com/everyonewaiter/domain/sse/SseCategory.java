@@ -1,4 +1,4 @@
-package com.everyonewaiter.global.sse;
+package com.everyonewaiter.domain.sse;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum SseCategory {
+
   DEVICE,
   STORE,
   CATEGORY,
@@ -15,4 +16,5 @@ public enum SseCategory {
   STAFF_CALL,
   RECEIPT,
   POS,
+
 }

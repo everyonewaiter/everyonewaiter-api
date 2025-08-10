@@ -52,6 +52,19 @@ class SwaggerConfiguration {
   }
 
   @Bean
+  public GroupedOpenApi commonApi() {
+    return GroupedOpenApi.builder()
+        .group("0. Common")
+        .addOperationCustomizer(errorResponse())
+        .addOperationCustomizer(errorResponses())
+        .addOpenApiCustomizer(
+            customizer -> customizer.addSecurityItem(signatureSecurityRequirement())
+        )
+        .packagesToScan("com.everyonewaiter.adapter.webapi.common")
+        .build();
+  }
+
+  @Bean
   public GroupedOpenApi ownerApi() {
     return GroupedOpenApi.builder()
         .group("1. Owner")
@@ -93,10 +106,12 @@ class SwaggerConfiguration {
 
       if (annotation != null) {
         ErrorCode errorCode = annotation.code();
+
         Example example = new Example().value(ErrorResponse.from(errorCode));
         MediaType mediaType = new MediaType().addExamples(annotation.exampleName(), example);
         Content content = new Content().addMediaType("application/json;charset=UTF-8", mediaType);
         ApiResponse response = new ApiResponse().description(annotation.summary()).content(content);
+
         operation.getResponses().addApiResponse(errorCode.getStatus().toString(), response);
       }
 
@@ -115,6 +130,7 @@ class SwaggerConfiguration {
         for (ApiErrorResponse response : annotation.value()) {
           ErrorCode errorCode = response.code();
           String statusCode = String.valueOf(errorCode.getStatus().value());
+
           errorGroups.computeIfAbsent(statusCode, k -> new ArrayList<>())
               .add(new ExampleHolder(response.summary(), response.exampleName(), errorCode));
         }
@@ -127,11 +143,13 @@ class SwaggerConfiguration {
             if (StringUtils.hasText(exampleHolder.summary)) {
               summary = exampleHolder.summary;
             }
+
             mediaType.addExamples(exampleHolder.exampleName, exampleHolder.example);
           }
 
           Content content = new Content().addMediaType("application/json;charset=UTF-8", mediaType);
           ApiResponse response = new ApiResponse().description(summary).content(content);
+
           operation.getResponses().addApiResponse(statusCode, response);
         });
       }

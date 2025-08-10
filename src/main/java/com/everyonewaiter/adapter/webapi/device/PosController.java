@@ -3,16 +3,16 @@ package com.everyonewaiter.adapter.webapi.device;
 import com.everyonewaiter.adapter.webapi.device.request.PosWriteRequest;
 import com.everyonewaiter.application.pos.PosService;
 import com.everyonewaiter.application.pos.response.PosResponse;
+import com.everyonewaiter.application.sse.provided.SseSender;
 import com.everyonewaiter.domain.device.entity.Device;
 import com.everyonewaiter.domain.order.entity.Receipt;
+import com.everyonewaiter.domain.sse.ServerAction;
+import com.everyonewaiter.domain.sse.SseCategory;
+import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.support.DateConverter;
 import com.everyonewaiter.domain.support.TimeZone;
 import com.everyonewaiter.global.annotation.AuthenticationDevice;
 import com.everyonewaiter.global.annotation.StoreOpen;
-import com.everyonewaiter.global.sse.ServerAction;
-import com.everyonewaiter.global.sse.SseCategory;
-import com.everyonewaiter.global.sse.SseEvent;
-import com.everyonewaiter.global.sse.SseService;
 import jakarta.validation.Valid;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/pos")
 class PosController implements PosControllerSpecification {
 
-  private final SseService sseService;
+  private final SseSender sseSender;
   private final PosService posService;
 
   @Override
@@ -146,7 +146,7 @@ class PosController implements PosControllerSpecification {
     Receipt receipt = posService.createDiffOrderReceipt(storeId, tableNo, request.toDomainDto());
     posService.updateOrders(device.getStore().getId(), tableNo, request.toDomainDto());
     if (!receipt.receiptMenus().isEmpty()) {
-      sseService.sendEvent(storeId.toString(),
+      sseSender.send(storeId.toString(),
           new SseEvent(storeId, SseCategory.RECEIPT, ServerAction.UPDATE, receipt)
       );
     }
