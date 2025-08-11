@@ -1,7 +1,11 @@
 package com.everyonewaiter.application.auth;
 
 import com.everyonewaiter.application.auth.request.AuthWrite;
+import com.everyonewaiter.application.auth.required.JwtDecoder;
+import com.everyonewaiter.application.auth.required.JwtEncoder;
 import com.everyonewaiter.application.auth.response.TokenResponse;
+import com.everyonewaiter.application.support.DistributedLock;
+import com.everyonewaiter.domain.auth.JwtPayload;
 import com.everyonewaiter.domain.auth.entity.AuthAttempt;
 import com.everyonewaiter.domain.auth.entity.AuthCode;
 import com.everyonewaiter.domain.auth.entity.AuthPurpose;
@@ -15,9 +19,6 @@ import com.everyonewaiter.domain.auth.service.AuthValidator;
 import com.everyonewaiter.domain.shared.AuthenticationException;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
-import com.everyonewaiter.global.annotation.RedissonLock;
-import com.everyonewaiter.global.security.JwtPayload;
-import com.everyonewaiter.global.security.JwtProvider;
 import java.time.Duration;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,8 @@ public class AuthService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthService.class);
 
-  private final JwtProvider jwtProvider;
+  private final JwtEncoder jwtEncoder;
+  private final JwtDecoder jwtDecoder;
   private final ApplicationEventPublisher applicationEventPublisher;
   private final AuthValidator authValidator;
   private final AuthRepository authRepository;
@@ -75,14 +77,14 @@ public class AuthService {
   }
 
   public String verifyAuthMail(String token) {
-    JwtPayload payload = jwtProvider.decode(token)
+    JwtPayload payload = jwtDecoder.decode(token)
         .orElseThrow(() -> new BusinessException(ErrorCode.EXPIRED_VERIFICATION_EMAIL));
     authValidator.validateAuthMailTokenPayload(payload);
     return payload.subject();
   }
 
   public String generateToken(JwtPayload payload, Duration expiration) {
-    return jwtProvider.generate(payload, expiration);
+    return jwtEncoder.encode(payload, expiration);
   }
 
   @Transactional
@@ -92,9 +94,9 @@ public class AuthService {
   }
 
   @Transactional
-  @RedissonLock(key = "#refreshToken")
+  @DistributedLock(key = "#refreshToken")
   public Optional<TokenResponse.All> renewToken(String refreshToken) {
-    JwtPayload payload = jwtProvider.decode(refreshToken).orElseThrow(AuthenticationException::new);
+    JwtPayload payload = jwtDecoder.decode(refreshToken).orElseThrow(AuthenticationException::new);
     RefreshToken refTokenEntity = refreshTokenRepository.findByIdOrThrow(payload.id());
 
     try {

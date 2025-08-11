@@ -16,7 +16,7 @@ class ApkVersionTest {
     assertThat(apkVersion.getMajorVersion()).isEqualTo(createRequest.majorVersion());
     assertThat(apkVersion.getMinorVersion()).isEqualTo(createRequest.minorVersion());
     assertThat(apkVersion.getPatchVersion()).isEqualTo(createRequest.patchVersion());
-    assertThat(apkVersion.getDownloadUrl()).isEqualTo(createRequest.downloadUrl());
+    assertThat(apkVersion.getDownloadUri()).isEqualTo(createRequest.downloadUri());
   }
 
 }

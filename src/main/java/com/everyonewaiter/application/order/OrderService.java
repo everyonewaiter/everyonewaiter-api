@@ -2,6 +2,7 @@ package com.everyonewaiter.application.order;
 
 import com.everyonewaiter.application.order.request.OrderWrite;
 import com.everyonewaiter.application.order.response.OrderResponse;
+import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
 import com.everyonewaiter.domain.order.entity.Order;
@@ -10,7 +11,6 @@ import com.everyonewaiter.domain.order.entity.OrderOptionGroup;
 import com.everyonewaiter.domain.order.repository.OrderRepository;
 import com.everyonewaiter.domain.order.service.OrderFactory;
 import com.everyonewaiter.domain.order.service.OrderValidator;
-import com.everyonewaiter.global.annotation.RedissonLock;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +29,7 @@ public class OrderService {
   private final OrderRepository orderRepository;
 
   @Transactional
-  @RedissonLock(key = "#storeId + '-' + #tableNo")
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
   public Long createOrder(Long storeId, int tableNo, OrderWrite.Create request) {
     Set<Long> menuIds = request.orderMenus()
         .stream().map(OrderWrite.OrderMenu::menuId)

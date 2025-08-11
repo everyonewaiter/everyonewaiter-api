@@ -2,11 +2,11 @@ package com.everyonewaiter.application.order;
 
 import com.everyonewaiter.application.order.request.OrderPaymentWrite;
 import com.everyonewaiter.application.order.response.OrderPaymentResponse;
+import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.order.entity.OrderPayment;
 import com.everyonewaiter.domain.order.repository.OrderPaymentRepository;
 import com.everyonewaiter.domain.pos.entity.PosTableActivity;
 import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
-import com.everyonewaiter.global.annotation.RedissonLock;
 import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class OrderPaymentService {
   private final OrderPaymentRepository orderPaymentRepository;
 
   @Transactional
-  @RedissonLock(key = "#storeId + '-' + #tableNo")
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
   public Long approve(Long storeId, int tableNo, OrderPaymentWrite.Approve request) {
     PosTableActivity posTableActivity =
         posTableActivityRepository.findByStoreIdAndTableNoOrThrow(storeId, tableNo);

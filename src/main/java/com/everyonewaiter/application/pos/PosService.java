@@ -2,6 +2,7 @@ package com.everyonewaiter.application.pos;
 
 import com.everyonewaiter.application.order.request.OrderWrite;
 import com.everyonewaiter.application.pos.response.PosResponse;
+import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.order.entity.OrderMenu;
 import com.everyonewaiter.domain.order.entity.OrderPayment;
 import com.everyonewaiter.domain.order.entity.Receipt;
@@ -13,7 +14,6 @@ import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
-import com.everyonewaiter.global.annotation.RedissonLock;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class PosService {
   private final PosTableActivityRepository posTableActivityRepository;
 
   @Transactional
-  @RedissonLock(key = "#storeId + '-' + #tableNo")
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
   public void completeActivity(Long storeId, int tableNo) {
     PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
     posTable.completeActiveActivity();
@@ -41,7 +41,7 @@ public class PosService {
   }
 
   @Transactional
-  @RedissonLock(key = {"#storeId + '-' + #sourceTableNo", "#storeId + '-' + #targetTableNo"})
+  @DistributedLock(key = {"#storeId + '-' + #sourceTableNo", "#storeId + '-' + #targetTableNo"})
   public void moveTable(Long storeId, int sourceTableNo, int targetTableNo) {
     List<PosTable> posTables = posTableRepository.findAllActiveByStoreId(storeId);
     PosTable sourcePosTable = getPosTable(posTables, sourceTableNo);
@@ -62,7 +62,7 @@ public class PosService {
   }
 
   @Transactional
-  @RedissonLock(key = "#storeId + '-' + #tableNo")
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
   public void discount(Long storeId, int tableNo, long discountPrice) {
     PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
     posTable.discount(discountPrice);
@@ -70,7 +70,7 @@ public class PosService {
   }
 
   @Transactional
-  @RedissonLock(key = "#storeId + '-' + #tableNo")
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
   public void cancelOrder(Long storeId, int tableNo, Long orderId) {
     PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
     posTable.cancelOrder(orderId);
@@ -109,7 +109,7 @@ public class PosService {
   }
 
   @Transactional
-  @RedissonLock(key = "#storeId + '-' + #tableNo")
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
   public void updateOrders(Long storeId, int tableNo, OrderWrite.UpdateOrders request) {
     PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
 
@@ -126,7 +126,7 @@ public class PosService {
   }
 
   @Transactional
-  @RedissonLock(key = "#storeId + '-' + #tableNo")
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
   public void updateMemo(Long storeId, int tableNo, Long orderId, String memo) {
     PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
     posTable.updateMemo(orderId, memo);

@@ -2,7 +2,10 @@
 <included>
   <springProperty name="DISCORD_WEBHOOK_URI" source="discord.logging-uri"/>
 
-  <appender name="DISCORD" class="com.everyonewaiter.global.logging.DiscordLogbackAppender">
+  <appender
+    name="DISCORD"
+    class="com.everyonewaiter.adapter.integration.notification.DiscordLogbackAppender"
+  >
     <discordWebhookUri>${DISCORD_WEBHOOK_URI}</discordWebhookUri>
   </appender>
 

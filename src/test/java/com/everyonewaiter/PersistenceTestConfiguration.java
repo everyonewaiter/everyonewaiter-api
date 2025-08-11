@@ -63,7 +63,7 @@ class PersistenceTestConfiguration {
       return metadataReader
           .getClassMetadata()
           .getClassName()
-          .equals("com.everyonewaiter.global.config.RedisConfiguration");
+          .equals("com.everyonewaiter.adapter.persistence.RedisConfiguration");
     }
 
   }

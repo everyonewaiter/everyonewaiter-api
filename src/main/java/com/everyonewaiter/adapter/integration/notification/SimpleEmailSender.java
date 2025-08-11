@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 class SimpleEmailSender implements EmailSender {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SimpleEmailSender.class);
+
   private static final String FROM_FORMAT = "모두의 웨이터 <%s>";
 
   private final JavaMailSender javaMailSender;

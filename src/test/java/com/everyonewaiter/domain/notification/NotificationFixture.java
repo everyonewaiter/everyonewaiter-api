@@ -10,7 +10,7 @@ import java.util.List;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
-public class NotificationFixture {
+public final class NotificationFixture {
 
   public static AlimTalkMessage createAlimTalkMessage() {
     return new AlimTalkMessage(new PhoneNumber("01044591812"), AUTHENTICATION_CODE, 123456);

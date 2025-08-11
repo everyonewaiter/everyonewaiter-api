@@ -24,9 +24,9 @@ public record ApkVersionCreateRequest(
     @Max(value = 100, message = "패치 버전은 100 이하이어야 합니다.")
     int patchVersion,
 
-    @Schema(description = "APK 다운로드 링크", example = "https://cdn.everyonewaiter.com", requiredMode = REQUIRED)
+    @Schema(description = "APK 다운로드 링크", example = "https://cdn.everyonewaiter.com/release.apk", requiredMode = REQUIRED)
     @NotNull(message = "APK 다운로드 링크가 누락되었거나 올바르지 않습니다.")
-    String downloadUrl
+    String downloadUri
 ) {
 
 }

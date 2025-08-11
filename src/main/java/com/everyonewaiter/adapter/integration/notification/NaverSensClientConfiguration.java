@@ -1,6 +1,6 @@
 package com.everyonewaiter.adapter.integration.notification;
 
-import com.everyonewaiter.global.security.SignatureEncoder;
+import com.everyonewaiter.application.auth.required.SignatureEncoder;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.Data;

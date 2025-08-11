@@ -5,7 +5,7 @@ import static lombok.AccessLevel.PRIVATE;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
-public class WordCounter {
+public final class WordCounter {
 
   public static int count(String word, String content) {
     int count = 0;

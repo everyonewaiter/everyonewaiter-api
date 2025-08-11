@@ -20,8 +20,8 @@
       <basic name="patchVersion">
         <column name="apk_patch_version" nullable="false"/>
       </basic>
-      <basic name="downloadUrl">
-        <column name="apk_download_url" nullable="false" length="255"/>
+      <basic name="downloadUri">
+        <column name="apk_download_uri" nullable="false" length="255"/>
       </basic>
     </attributes>
   </entity>

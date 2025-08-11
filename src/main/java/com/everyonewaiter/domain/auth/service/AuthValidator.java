@@ -1,13 +1,12 @@
 package com.everyonewaiter.domain.auth.service;
 
+import com.everyonewaiter.domain.auth.JwtFixedId;
+import com.everyonewaiter.domain.auth.JwtPayload;
 import com.everyonewaiter.domain.auth.entity.AuthAttempt;
 import com.everyonewaiter.domain.auth.entity.AuthSuccess;
 import com.everyonewaiter.domain.auth.repository.AuthRepository;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
-import com.everyonewaiter.global.security.JwtFixedId;
-import com.everyonewaiter.global.security.JwtPayload;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +35,7 @@ public class AuthValidator {
   }
 
   public void validateAuthMailTokenPayload(JwtPayload payload) {
-    if (!Objects.equals(payload.id(), JwtFixedId.VERIFICATION_EMAIL.getId())) {
+    if (!JwtFixedId.VERIFICATION_EMAIL.equalsId(payload.id())) {
       throw new BusinessException(ErrorCode.EXPIRED_VERIFICATION_EMAIL);
     }
   }

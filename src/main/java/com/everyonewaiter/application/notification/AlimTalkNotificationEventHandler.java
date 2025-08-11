@@ -17,7 +17,6 @@ import com.everyonewaiter.domain.waiting.event.WaitingCancelByCustomerEvent;
 import com.everyonewaiter.domain.waiting.event.WaitingCancelByStoreEvent;
 import com.everyonewaiter.domain.waiting.event.WaitingCustomerCallEvent;
 import com.everyonewaiter.domain.waiting.event.WaitingRegistrationEvent;
-import com.everyonewaiter.global.config.ClientUrlRegistry;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,6 @@ class AlimTalkNotificationEventHandler {
   private static final Logger LOGGER =
       LoggerFactory.getLogger(AlimTalkNotificationEventHandler.class);
 
-  private final ClientUrlRegistry clientUrl;
   private final NotificationSender notificationSender;
 
   @Async("eventTaskExecutor")
@@ -65,9 +63,9 @@ class AlimTalkNotificationEventHandler {
         event.storeLandline(),
         event.storeName()
     );
-    message.addButton(WAITING_CANCEL, clientUrl.getBaseUrl(), event.storeId(), event.accessKey());
-    message.addButton(CHECK_MY_TURN, clientUrl.getBaseUrl(), event.storeId(), event.accessKey());
-    message.addButton(MENU_PREVIEW, clientUrl.getBaseUrl(), event.storeId());
+    message.addButton(WAITING_CANCEL, event.storeId(), event.accessKey());
+    message.addButton(CHECK_MY_TURN, event.storeId(), event.accessKey());
+    message.addButton(MENU_PREVIEW, event.storeId());
 
     notificationSender.sendAlimTalkOneToOne(message);
   }
@@ -83,7 +81,7 @@ class AlimTalkNotificationEventHandler {
         event.storeName(),
         event.number()
     );
-    message.addButton(WAITING_CANCEL, clientUrl.getBaseUrl(), event.storeId(), event.accessKey());
+    message.addButton(WAITING_CANCEL, event.storeId(), event.accessKey());
 
     notificationSender.sendAlimTalkOneToOne(message);
   }

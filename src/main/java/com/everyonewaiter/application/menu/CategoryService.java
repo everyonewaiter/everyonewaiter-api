@@ -2,10 +2,10 @@ package com.everyonewaiter.application.menu;
 
 import com.everyonewaiter.application.menu.request.CategoryWrite;
 import com.everyonewaiter.application.menu.response.CategoryResponse;
+import com.everyonewaiter.application.support.CacheName;
 import com.everyonewaiter.domain.menu.entity.Category;
 import com.everyonewaiter.domain.menu.repository.CategoryRepository;
 import com.everyonewaiter.domain.menu.service.CategoryValidator;
-import com.everyonewaiter.domain.support.CacheName;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;

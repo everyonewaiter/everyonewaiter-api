@@ -21,7 +21,7 @@ public class ApkVersion extends AggregateRootEntity<ApkVersion> {
 
   private int patchVersion;
 
-  private String downloadUrl;
+  private String downloadUri;
 
   public static ApkVersion create(ApkVersionCreateRequest createRequest) {
     ApkVersion apkVersion = new ApkVersion();
@@ -29,7 +29,7 @@ public class ApkVersion extends AggregateRootEntity<ApkVersion> {
     apkVersion.majorVersion = createRequest.majorVersion();
     apkVersion.minorVersion = createRequest.minorVersion();
     apkVersion.patchVersion = createRequest.patchVersion();
-    apkVersion.downloadUrl = requireNonNull(createRequest.downloadUrl());
+    apkVersion.downloadUri = requireNonNull(createRequest.downloadUri());
 
     return apkVersion;
   }

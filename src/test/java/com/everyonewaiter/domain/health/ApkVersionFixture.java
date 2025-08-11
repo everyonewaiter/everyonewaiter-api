@@ -5,10 +5,10 @@ import static lombok.AccessLevel.PRIVATE;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
-public class ApkVersionFixture {
+public final class ApkVersionFixture {
 
   public static ApkVersionCreateRequest createApkVersionCreateRequest() {
-    return new ApkVersionCreateRequest(1, 0, 0, "https://cdn.everyonewaiter.com");
+    return new ApkVersionCreateRequest(1, 0, 0, "https://cdn.everyonewaiter.com/release.apk");
   }
 
 }

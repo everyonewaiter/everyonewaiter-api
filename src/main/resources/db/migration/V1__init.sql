@@ -4,7 +4,7 @@ create table apk_version
     apk_major_version int          not null,
     apk_minor_version int          not null,
     apk_patch_version int          not null,
-    apk_download_url  varchar(255) not null,
+    apk_download_uri  varchar(255) not null,
     created_at        datetime(6)  not null,
     updated_at        datetime(6)  not null
 );

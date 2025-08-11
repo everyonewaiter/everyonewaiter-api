@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 class SseService implements SseConnector, SseSender {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SseService.class);
+
   private static final String CONNECT_EVENT = "CONNECTED!";
 
   private final ObjectMapper objectMapper;

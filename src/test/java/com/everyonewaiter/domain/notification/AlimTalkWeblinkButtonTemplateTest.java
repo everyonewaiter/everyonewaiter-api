@@ -8,18 +8,18 @@ import org.junit.jupiter.api.Test;
 class AlimTalkWeblinkButtonTemplateTest {
 
   @Test
-  void getLink() {
-    var template = AlimTalkWeblinkButtonTemplate.MENU_PREVIEW; // 필요 변수 2개
+  void getUri() {
+    var template = AlimTalkWeblinkButtonTemplate.MENU_PREVIEW; // 필요 변수 1개
 
-    assertThatCode(() -> template.createButton("value1", "value2"))
+    assertThatCode(() -> template.createButton("value1"))
         .doesNotThrowAnyException();
   }
 
   @Test
-  void getLinkFail() {
-    var template = AlimTalkWeblinkButtonTemplate.MENU_PREVIEW; // 필요 변수 2개
+  void getUriFail() {
+    var template = AlimTalkWeblinkButtonTemplate.MENU_PREVIEW; // 필요 변수 1개
 
-    assertThatThrownBy(() -> template.createButton("value1"))
+    assertThatThrownBy(() -> template.createButton("value1", "value2"))
         .isInstanceOf(IllegalArgumentException.class);
   }
 

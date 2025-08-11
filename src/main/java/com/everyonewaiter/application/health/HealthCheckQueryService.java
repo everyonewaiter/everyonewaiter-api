@@ -2,9 +2,9 @@ package com.everyonewaiter.application.health;
 
 import com.everyonewaiter.application.health.provided.HealthCheckFinder;
 import com.everyonewaiter.application.health.required.ApkVersionRepository;
+import com.everyonewaiter.application.support.ReadOnlyTransactional;
 import com.everyonewaiter.domain.health.ApkVersion;
 import com.everyonewaiter.domain.health.ServerInfo;
-import com.everyonewaiter.global.annotation.ReadOnlyTransactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Service;

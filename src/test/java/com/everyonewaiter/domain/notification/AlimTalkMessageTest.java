@@ -12,7 +12,7 @@ class AlimTalkMessageTest {
   void addButton() {
     AlimTalkMessage alimTalkMessage = createAlimTalkMessage();
 
-    alimTalkMessage.addButton(MENU_PREVIEW, "https://everyonewaiter.com", 1L);
+    alimTalkMessage.addButton(MENU_PREVIEW, 1L);
 
     assertThat(alimTalkMessage.getButtons()).hasSize(1);
   }
