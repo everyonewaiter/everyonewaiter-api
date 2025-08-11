@@ -38,6 +38,7 @@ class ContactRepositoryImpl implements ContactRepository {
             contact.storeName.eq(storeName).or(contact.license.eq(license))
         )
         .fetchFirst();
+
     return selectOne != null;
   }
 

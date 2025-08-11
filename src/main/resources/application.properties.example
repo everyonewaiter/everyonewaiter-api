@@ -59,9 +59,9 @@ naver.sens.secret-key=<SECRET_KEY>
 naver.sens.service-id=<SERVICE_ID>
 naver.sens.channel-id=<CHANNEL_ID>
 
-# EVENT NOTIFICATION
-discord.event.uri=<DISCORD_WEBHOOK_URI>
-discord.logging-uri=DISCORD_WEBHOOK_URI
+# DISCORD
+discord.channel.event=<DISCORD_WEBHOOK_URI>
+discord.channel.error=DISCORD_WEBHOOK_URI
 
 # ORACLE OBJECT STORAGE
 oracle.object.storage.namespace=<NAMESPACE>

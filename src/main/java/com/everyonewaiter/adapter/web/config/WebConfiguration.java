@@ -16,7 +16,7 @@ class WebConfiguration implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(new HttpResponseLoggingInterceptor());
+    registry.addInterceptor(new HttpLoggingInterceptor());
   }
 
   @Override

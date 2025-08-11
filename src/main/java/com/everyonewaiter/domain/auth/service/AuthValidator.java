@@ -35,7 +35,7 @@ public class AuthValidator {
   }
 
   public void validateAuthMailTokenPayload(JwtPayload payload) {
-    if (!JwtFixedId.VERIFICATION_EMAIL.equalsId(payload.id())) {
+    if (!JwtFixedId.VERIFICATION_EMAIL_ID.equals(payload.id())) {
       throw new BusinessException(ErrorCode.EXPIRED_VERIFICATION_EMAIL);
     }
   }

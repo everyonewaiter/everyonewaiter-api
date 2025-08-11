@@ -8,10 +8,10 @@ import org.slf4j.MDC;
 import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-class HttpResponseLoggingInterceptor implements HandlerInterceptor {
+class HttpLoggingInterceptor implements HandlerInterceptor {
 
   private static final Logger LOGGER =
-      LoggerFactory.getLogger(HttpResponseLoggingInterceptor.class);
+      LoggerFactory.getLogger(HttpLoggingInterceptor.class);
 
   @Override
   public boolean preHandle(

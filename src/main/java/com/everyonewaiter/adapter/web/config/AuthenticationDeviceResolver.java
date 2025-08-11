@@ -38,6 +38,7 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
   public boolean supportsParameter(@NonNull MethodParameter parameter) {
     boolean hasAnnotation = parameter.hasParameterAnnotation(AuthenticationDevice.class);
     boolean isCorrectParameterType = Device.class.isAssignableFrom(parameter.getParameterType());
+
     return hasAnnotation && isCorrectParameterType;
   }
 
@@ -58,12 +59,16 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
               requestSignature.plainText(device),
               device.getSecretKey()
           );
+
           return device;
         })
         .map(device -> {
-          AuthenticationDevice annotation =
-              requireNonNull(parameter.getParameterAnnotation(AuthenticationDevice.class));
+          AuthenticationDevice annotation = requireNonNull(
+              parameter.getParameterAnnotation(AuthenticationDevice.class)
+          );
+
           deviceValidator.validateDevicePurpose(device, annotation.purpose());
+
           return device;
         })
         .orElseThrow(AuthenticationException::new);
@@ -98,6 +103,7 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
       long currentTime = System.currentTimeMillis();
       long maxTime = currentTime + Duration.ofSeconds(10).toMillis();
       long minTime = maxTime - Duration.ofMinutes(5).toMillis();
+
       if (timestamp < minTime || timestamp > maxTime) {
         throw new AuthenticationException();
       }

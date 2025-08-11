@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <included>
-  <springProperty name="DISCORD_WEBHOOK_URI" source="discord.logging-uri"/>
+  <springProperty name="DISCORD_WEBHOOK_URI" source="discord.channel.error"/>
 
   <appender
     name="DISCORD"

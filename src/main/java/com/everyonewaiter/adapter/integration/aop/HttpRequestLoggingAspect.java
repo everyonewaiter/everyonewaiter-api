@@ -1,4 +1,4 @@
-package com.everyonewaiter.adapter.web.config;
+package com.everyonewaiter.adapter.integration.aop;
 
 import java.util.Arrays;
 import java.util.Objects;

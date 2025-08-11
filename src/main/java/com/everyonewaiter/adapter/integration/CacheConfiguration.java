@@ -39,7 +39,7 @@ class CacheConfiguration {
             RedisSerializationContext.SerializationPair
                 .fromSerializer(new GenericJackson2JsonRedisSerializer())
         )
-        .entryTtl(Duration.ofHours(1));
+        .entryTtl(Duration.ofHours(3));
   }
 
 }

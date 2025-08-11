@@ -4,9 +4,11 @@ import com.everyonewaiter.application.sse.required.SseEmitterRepository;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import org.springframework.context.annotation.Fallback;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+@Fallback
 @Repository
 class SimpleSseEmitterRepository implements SseEmitterRepository {
 

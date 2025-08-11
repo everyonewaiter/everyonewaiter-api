@@ -1,19 +1,12 @@
 package com.everyonewaiter.domain.auth;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import static lombok.AccessLevel.PRIVATE;
 
-@Getter
-@RequiredArgsConstructor
-public enum JwtFixedId {
+import lombok.NoArgsConstructor;
 
-  VERIFICATION_EMAIL(1000L),
-  ;
+@NoArgsConstructor(access = PRIVATE)
+public final class JwtFixedId {
 
-  private final Long id;
-
-  public boolean equalsId(Long id) {
-    return this.id.equals(id);
-  }
+  public static final Long VERIFICATION_EMAIL_ID = 1000L;
 
 }

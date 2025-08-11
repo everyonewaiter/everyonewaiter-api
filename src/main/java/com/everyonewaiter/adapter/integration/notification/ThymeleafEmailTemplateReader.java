@@ -4,12 +4,10 @@ import com.everyonewaiter.domain.notification.EmailTemplateReader;
 import java.util.Locale;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Fallback;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.ISpringTemplateEngine;
 
-@Fallback
 @Component
 @RequiredArgsConstructor
 class ThymeleafEmailTemplateReader implements EmailTemplateReader {

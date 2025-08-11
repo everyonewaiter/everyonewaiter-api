@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Order(3)
+@Order(2)
 @Aspect
 @Component
 @RequiredArgsConstructor

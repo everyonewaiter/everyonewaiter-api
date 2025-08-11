@@ -5,11 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
-@ConfigurationProperties(prefix = "discord")
+@ConfigurationProperties(prefix = "discord.channel")
 @RequiredArgsConstructor
-class DiscordWebhookClientProperties {
+class DiscordChannel {
 
-  private final String eventUri;
-  private final String loggingUri;
+  private final String event;
+  private final String error;
 
 }

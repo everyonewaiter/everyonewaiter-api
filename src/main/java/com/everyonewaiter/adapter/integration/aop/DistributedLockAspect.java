@@ -85,7 +85,7 @@ class DistributedLockAspect {
     }
   }
 
-  public String parseLockKey(String lockKey, String[] parameterNames, Object[] args) {
+  private String parseLockKey(String lockKey, String[] parameterNames, Object[] args) {
     StandardEvaluationContext context = new StandardEvaluationContext();
 
     for (int i = 0; i < parameterNames.length; i++) {
