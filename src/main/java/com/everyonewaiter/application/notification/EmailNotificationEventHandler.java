@@ -9,8 +9,8 @@ import static com.everyonewaiter.domain.support.ClientUri.STORE_REGISTRATION;
 import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.application.auth.provided.JwtProvider;
 import com.everyonewaiter.application.notification.provided.NotificationSender;
-import com.everyonewaiter.domain.account.entity.Account;
-import com.everyonewaiter.domain.account.event.AccountCreateEvent;
+import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountCreateEvent;
 import com.everyonewaiter.domain.auth.AuthMailSendEvent;
 import com.everyonewaiter.domain.auth.JwtFixedId;
 import com.everyonewaiter.domain.auth.JwtPayload;
@@ -40,7 +40,7 @@ class EmailNotificationEventHandler {
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void consumeAccountCreateEvent(AccountCreateEvent event) {
-    sendAuthMail(new Email(event.email()));
+    sendAuthMail(event.email());
   }
 
   @Async("eventTaskExecutor")

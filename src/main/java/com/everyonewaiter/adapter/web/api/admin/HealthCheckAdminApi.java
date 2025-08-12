@@ -1,7 +1,8 @@
 package com.everyonewaiter.adapter.web.api.admin;
 
 import com.everyonewaiter.application.health.provided.HealthCheckCreator;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.health.ApkVersion;
 import com.everyonewaiter.domain.health.ApkVersionCreateRequest;
@@ -26,7 +27,7 @@ class HealthCheckAdminApi implements HealthCheckAdminApiSpecification {
   @PostMapping
   public ResponseEntity<Void> createApkVersion(
       @RequestBody @Valid ApkVersionCreateRequest request,
-      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+      @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
   ) {
     ApkVersion apkVersion = healthCheckCreator.createApkVersion(request);
 

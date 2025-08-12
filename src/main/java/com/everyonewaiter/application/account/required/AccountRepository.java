@@ -1,12 +1,11 @@
 package com.everyonewaiter.application.account.required;
 
-import com.everyonewaiter.domain.account.entity.Account;
-import com.everyonewaiter.domain.account.view.AccountAdminView;
+import com.everyonewaiter.application.account.dto.AccountAdminPageView;
+import com.everyonewaiter.application.account.dto.AccountAdminReadRequest;
+import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.shared.Email;
-import com.everyonewaiter.domain.shared.Pagination;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.shared.PhoneNumber;
-import jakarta.annotation.Nullable;
 import java.util.Optional;
 
 public interface AccountRepository {
@@ -17,13 +16,7 @@ public interface AccountRepository {
 
   boolean exists(PhoneNumber phoneNumber);
 
-  Paging<AccountAdminView.Page> findAllByAdmin(
-      @Nullable String email,
-      @Nullable Account.State state,
-      @Nullable Account.Permission permission,
-      @Nullable Boolean hasStore,
-      Pagination pagination
-  );
+  Paging<AccountAdminPageView> findAllByAdmin(AccountAdminReadRequest readRequest);
 
   Optional<Account> findById(Long accountId);
 

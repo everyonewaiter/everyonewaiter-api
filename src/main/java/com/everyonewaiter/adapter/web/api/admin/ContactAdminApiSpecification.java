@@ -4,7 +4,7 @@ import com.everyonewaiter.adapter.web.api.admin.dto.ContactAdminReadResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.application.contact.dto.ContactAdminReadRequest;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Paging;
 import io.swagger.v3.oas.annotations.Operation;

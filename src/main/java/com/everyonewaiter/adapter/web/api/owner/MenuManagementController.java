@@ -5,7 +5,8 @@ import com.everyonewaiter.application.menu.MenuService;
 import com.everyonewaiter.application.menu.request.MenuWrite;
 import com.everyonewaiter.application.menu.response.MenuResponse;
 import com.everyonewaiter.application.sse.provided.SseSender;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.sse.ServerAction;
 import com.everyonewaiter.domain.sse.SseCategory;
@@ -41,7 +42,7 @@ class MenuManagementController implements MenuManagementControllerSpecification 
   public ResponseEntity<MenuResponse.Simples> getMenus(
       @PathVariable Long storeId,
       @PathVariable Long categoryId,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     return ResponseEntity.ok(menuService.readAllSimples(storeId, categoryId));
   }
@@ -53,7 +54,7 @@ class MenuManagementController implements MenuManagementControllerSpecification 
       @PathVariable Long storeId,
       @PathVariable Long categoryId,
       @PathVariable Long menuId,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     return ResponseEntity.ok(menuService.readDetail(menuId, storeId, categoryId));
   }
@@ -69,7 +70,7 @@ class MenuManagementController implements MenuManagementControllerSpecification 
       @PathVariable Long categoryId,
       @RequestPart MultipartFile file,
       @RequestPart @Valid MenuWriteRequest.Create request,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     MenuWrite.Create menuCreateRequest = request.toDomainDto(file);
     Long menuId = menuService.create(categoryId, storeId, menuCreateRequest);
@@ -87,7 +88,7 @@ class MenuManagementController implements MenuManagementControllerSpecification 
       @PathVariable Long storeId,
       @PathVariable Long menuId,
       @RequestBody @Valid MenuWriteRequest.Update request,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     MenuWrite.Update menuUpdateRequest = request.toDomainDto();
     menuService.update(menuId, storeId, menuUpdateRequest);
@@ -109,7 +110,7 @@ class MenuManagementController implements MenuManagementControllerSpecification 
       @PathVariable Long menuId,
       @RequestPart MultipartFile file,
       @RequestPart @Valid MenuWriteRequest.Update request,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     MenuWrite.Update menuUpdateRequest = request.toDomainDto();
     menuService.update(menuId, storeId, menuUpdateRequest, file);
@@ -128,7 +129,7 @@ class MenuManagementController implements MenuManagementControllerSpecification 
       @PathVariable Long sourceId,
       @PathVariable Long targetId,
       @RequestBody @Valid MenuWriteRequest.MovePosition request,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     menuService.movePosition(sourceId, targetId, storeId, request.toDomainDto());
     sseSender.send(storeId.toString(),
@@ -144,7 +145,7 @@ class MenuManagementController implements MenuManagementControllerSpecification 
       @PathVariable Long storeId,
       @PathVariable Long categoryId,
       @PathVariable Long menuId,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     menuService.delete(menuId, storeId, categoryId);
     sseSender.send(storeId.toString(),
@@ -159,7 +160,7 @@ class MenuManagementController implements MenuManagementControllerSpecification 
   public ResponseEntity<Void> deleteAll(
       @PathVariable Long storeId,
       @RequestBody @Valid MenuWriteRequest.Delete request,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     menuService.deleteAll(storeId, request.toDomainDto());
     sseSender.send(storeId.toString(),

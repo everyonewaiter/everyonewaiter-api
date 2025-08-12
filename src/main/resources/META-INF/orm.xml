@@ -63,7 +63,7 @@
     </attributes>
   </entity>
 
-  <entity class="com.everyonewaiter.domain.account.entity.Account">
+  <entity class="com.everyonewaiter.domain.account.Account">
     <table name="account">
       <index name="idx_account_phone_number" column-list="phoneNumber"/>
       <index name="idx_account_email_permission_state" column-list="email, permission, state"/>

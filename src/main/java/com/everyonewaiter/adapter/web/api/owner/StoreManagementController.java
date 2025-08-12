@@ -3,7 +3,7 @@ package com.everyonewaiter.adapter.web.api.owner;
 import com.everyonewaiter.adapter.web.api.owner.request.StoreWriteRequest;
 import com.everyonewaiter.application.store.StoreService;
 import com.everyonewaiter.application.store.response.StoreResponse;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

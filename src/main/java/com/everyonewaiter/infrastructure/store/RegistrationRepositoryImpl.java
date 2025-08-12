@@ -1,9 +1,9 @@
 package com.everyonewaiter.infrastructure.store;
 
-import static com.everyonewaiter.domain.account.entity.QAccount.account;
+import static com.everyonewaiter.domain.account.QAccount.account;
 import static com.everyonewaiter.domain.store.entity.QRegistration.registration;
 
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Pagination;

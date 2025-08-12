@@ -1,12 +1,15 @@
 package com.everyonewaiter.adapter.persistence.account;
 
-import static com.everyonewaiter.domain.account.entity.QAccount.account;
+import static com.everyonewaiter.domain.account.QAccount.account;
 import static com.everyonewaiter.domain.store.entity.QStore.store;
 
+import com.everyonewaiter.application.account.dto.AccountAdminPageView;
+import com.everyonewaiter.application.account.dto.AccountAdminReadRequest;
 import com.everyonewaiter.application.account.required.AccountRepository;
+import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountNotFoundException;
-import com.everyonewaiter.domain.account.entity.Account;
-import com.everyonewaiter.domain.account.view.AccountAdminView;
+import com.everyonewaiter.domain.account.AccountPermission;
+import com.everyonewaiter.domain.account.AccountState;
 import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.Pagination;
 import com.everyonewaiter.domain.shared.Paging;
@@ -37,7 +40,7 @@ class AccountRepositoryImpl implements AccountRepository {
 
   @Override
   public boolean existsInactive(Email email) {
-    return accountJpaRepository.existsByEmailAndState(email, Account.State.INACTIVE);
+    return accountJpaRepository.existsByEmailAndState(email, AccountState.INACTIVE);
   }
 
   @Override
@@ -46,19 +49,19 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public Paging<AccountAdminView.Page> findAllByAdmin(
-      @Nullable String email,
-      @Nullable Account.State state,
-      @Nullable Account.Permission permission,
-      @Nullable Boolean hasStore,
-      Pagination pagination
-  ) {
+  public Paging<AccountAdminPageView> findAllByAdmin(AccountAdminReadRequest readRequest) {
     PathBuilder<Account> accountPath = new PathBuilder<>(account.getType(), account.getMetadata());
 
-    List<AccountAdminView.Page> views = queryFactory
+    String email = readRequest.getEmail();
+    AccountState state = readRequest.getState();
+    AccountPermission permission = readRequest.getPermission();
+    Boolean hasStore = readRequest.getHasStore();
+    Pagination pagination = new Pagination(readRequest.getPage(), readRequest.getSize());
+
+    List<AccountAdminPageView> views = queryFactory
         .select(
             Projections.constructor(
-                AccountAdminView.Page.class,
+                AccountAdminPageView.class,
                 account.id,
                 account.email,
                 account.state,
@@ -141,12 +144,12 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Nullable
-  private BooleanExpression stateEq(@Nullable Account.State state) {
+  private BooleanExpression stateEq(@Nullable AccountState state) {
     return state != null ? account.state.eq(state) : null;
   }
 
   @Nullable
-  private BooleanExpression permissionEq(@Nullable Account.Permission permission) {
+  private BooleanExpression permissionEq(@Nullable AccountPermission permission) {
     return permission != null ? account.permission.eq(permission) : null;
   }
 

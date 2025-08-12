@@ -1,7 +1,7 @@
 package com.everyonewaiter.application.notification;
 
 import com.everyonewaiter.application.notification.provided.NotificationSender;
-import com.everyonewaiter.domain.account.event.AccountCreateEvent;
+import com.everyonewaiter.domain.account.AccountCreateEvent;
 import com.everyonewaiter.domain.contact.ContactCreateEvent;
 import com.everyonewaiter.domain.notification.DiscordColor;
 import com.everyonewaiter.domain.notification.DiscordEmbed;
@@ -44,12 +44,12 @@ class DiscordNotificationEventHandler {
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void consumeAccountCreateEvent(AccountCreateEvent event) {
-    LOGGER.info("[계정 생성 이벤트] email: {}", event.email());
+    LOGGER.info("[계정 생성 이벤트] email: {}", event.email().address());
 
     DiscordEmbed embed = new DiscordEmbed(
         DiscordColor.GREEN,
         "계정 생성 이벤트",
-        event.email() + "님이 계정을 생성하였습니다!"
+        event.email().address() + "님이 계정을 생성하였습니다!"
     );
 
     notificationSender.sendDiscord(new DiscordEmbeds(embed));

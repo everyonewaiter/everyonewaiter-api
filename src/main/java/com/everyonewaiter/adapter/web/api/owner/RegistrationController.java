@@ -4,7 +4,7 @@ import com.everyonewaiter.adapter.web.api.owner.request.RegistrationReadRequest;
 import com.everyonewaiter.adapter.web.api.owner.request.RegistrationWriteRequest;
 import com.everyonewaiter.application.store.RegistrationService;
 import com.everyonewaiter.application.store.response.RegistrationResponse;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.shared.Paging;
 import jakarta.validation.Valid;

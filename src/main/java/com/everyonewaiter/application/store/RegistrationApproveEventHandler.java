@@ -1,7 +1,8 @@
 package com.everyonewaiter.application.store;
 
 import com.everyonewaiter.application.account.required.AccountRepository;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.store.entity.BusinessLicense;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.domain.store.event.RegistrationApproveEvent;
@@ -30,7 +31,7 @@ class RegistrationApproveEventHandler {
     LOGGER.info("[계정 사장님 권한 부여 이벤트] accountId: {}, storeName: {}", accountId, storeName);
 
     Account account = accountRepository.findByIdOrThrow(accountId);
-    account.authorize(Account.Permission.OWNER);
+    account.authorize(AccountPermission.OWNER);
     accountRepository.save(account);
   }
 

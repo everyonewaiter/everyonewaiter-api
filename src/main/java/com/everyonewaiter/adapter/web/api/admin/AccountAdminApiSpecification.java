@@ -1,11 +1,12 @@
 package com.everyonewaiter.adapter.web.api.admin;
 
-import com.everyonewaiter.adapter.web.api.admin.request.AccountAdminReadRequest;
-import com.everyonewaiter.adapter.web.api.admin.request.AccountAdminWriteRequest;
+import com.everyonewaiter.adapter.web.api.admin.dto.AccountDetailResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.application.account.response.AccountAdminResponse;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.application.account.dto.AccountAdminReadRequest;
+import com.everyonewaiter.application.account.dto.AccountAdminReadResponse;
+import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountAdminUpdateRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Paging;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +18,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "계정 관리")
-interface AccountAdminControllerSpecification {
+interface AccountAdminApiSpecification {
 
   @Operation(summary = "계정 목록 조회", description = "계정 목록 조회 API")
   @ApiResponse(responseCode = "200", description = "계정 목록 조회 성공")
@@ -34,8 +35,8 @@ interface AccountAdminControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Paging<AccountAdminResponse.PageView>> getAccounts(
-      @ParameterObject AccountAdminReadRequest.PageView request,
+  ResponseEntity<Paging<AccountAdminReadResponse>> getAccounts(
+      @ParameterObject AccountAdminReadRequest readRequest,
       @Parameter(hidden = true) Account account
   );
 
@@ -58,7 +59,7 @@ interface AccountAdminControllerSpecification {
           ),
       }
   )
-  ResponseEntity<AccountAdminResponse.Detail> getAccount(
+  ResponseEntity<AccountDetailResponse> getAccount(
       Long accountId,
       @Parameter(hidden = true) Account account
   );
@@ -84,7 +85,7 @@ interface AccountAdminControllerSpecification {
   )
   ResponseEntity<Void> update(
       Long accountId,
-      @RequestBody AccountAdminWriteRequest.Update request,
+      @RequestBody AccountAdminUpdateRequest updateRequest,
       @Parameter(hidden = true) Account account
   );
 

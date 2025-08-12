@@ -4,7 +4,8 @@ import com.everyonewaiter.adapter.web.api.admin.request.RegistrationAdminReadReq
 import com.everyonewaiter.adapter.web.api.admin.request.RegistrationAdminWriteRequest;
 import com.everyonewaiter.application.store.RegistrationService;
 import com.everyonewaiter.application.store.response.RegistrationAdminResponse;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.shared.Paging;
 import jakarta.validation.Valid;
@@ -29,7 +30,7 @@ class RegistrationAdminController implements RegistrationAdminControllerSpecific
   @GetMapping
   public ResponseEntity<Paging<RegistrationAdminResponse.PageView>> getRegistrations(
       @ModelAttribute @Valid RegistrationAdminReadRequest.PageView request,
-      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+      @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
   ) {
     return ResponseEntity.ok(registrationService.readAllByAdmin(request.toDomainDto()));
   }
@@ -38,7 +39,7 @@ class RegistrationAdminController implements RegistrationAdminControllerSpecific
   @GetMapping("/{registrationId}")
   public ResponseEntity<RegistrationAdminResponse.DetailView> getRegistration(
       @PathVariable Long registrationId,
-      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+      @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
   ) {
     return ResponseEntity.ok(registrationService.readByAdmin(registrationId));
   }
@@ -47,7 +48,7 @@ class RegistrationAdminController implements RegistrationAdminControllerSpecific
   @PostMapping("/{registrationId}/approve")
   public ResponseEntity<Void> approve(
       @PathVariable Long registrationId,
-      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+      @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
   ) {
     registrationService.approve(registrationId);
     return ResponseEntity.noContent().build();
@@ -58,7 +59,7 @@ class RegistrationAdminController implements RegistrationAdminControllerSpecific
   public ResponseEntity<Void> reject(
       @PathVariable Long registrationId,
       @RequestBody @Valid RegistrationAdminWriteRequest.Reject request,
-      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+      @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
   ) {
     registrationService.reject(registrationId, request.toDomainDto());
     return ResponseEntity.noContent().build();

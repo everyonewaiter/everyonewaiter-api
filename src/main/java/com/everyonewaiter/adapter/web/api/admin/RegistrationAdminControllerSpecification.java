@@ -5,7 +5,7 @@ import com.everyonewaiter.adapter.web.api.admin.request.RegistrationAdminWriteRe
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.application.store.response.RegistrationAdminResponse;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Paging;
 import io.swagger.v3.oas.annotations.Operation;

@@ -2,7 +2,7 @@ package com.everyonewaiter.adapter.web.api.admin;
 
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.health.ApkVersionCreateRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;

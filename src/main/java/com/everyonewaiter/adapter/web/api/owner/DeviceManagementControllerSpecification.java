@@ -8,7 +8,7 @@ import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
 import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.application.device.response.DeviceResponse;
 import com.everyonewaiter.application.store.response.StoreResponse;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Paging;
 import io.swagger.v3.oas.annotations.Operation;

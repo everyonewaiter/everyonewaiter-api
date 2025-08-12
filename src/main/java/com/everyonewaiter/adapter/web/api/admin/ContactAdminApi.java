@@ -4,7 +4,8 @@ import com.everyonewaiter.adapter.web.api.admin.dto.ContactAdminReadResponse;
 import com.everyonewaiter.application.contact.dto.ContactAdminReadRequest;
 import com.everyonewaiter.application.contact.provided.ContactFinder;
 import com.everyonewaiter.application.contact.provided.ContactProcessor;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.contact.Contact;
 import com.everyonewaiter.domain.shared.Paging;
@@ -30,7 +31,7 @@ class ContactAdminApi implements ContactAdminApiSpecification {
   @GetMapping
   public ResponseEntity<Paging<ContactAdminReadResponse>> getContacts(
       @ModelAttribute @Valid ContactAdminReadRequest request,
-      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+      @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
   ) {
     Paging<Contact> contacts = contactFinder.findAllByAdmin(request);
 
@@ -41,7 +42,7 @@ class ContactAdminApi implements ContactAdminApiSpecification {
   @PostMapping("/{contactId}/processing")
   public ResponseEntity<Void> processing(
       @PathVariable Long contactId,
-      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+      @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
   ) {
     contactProcessor.processing(contactId);
 
@@ -52,7 +53,7 @@ class ContactAdminApi implements ContactAdminApiSpecification {
   @PostMapping("/{contactId}/complete")
   public ResponseEntity<Void> complete(
       @PathVariable Long contactId,
-      @AuthenticationAccount(permission = Account.Permission.ADMIN) Account account
+      @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
   ) {
     contactProcessor.complete(contactId);
 

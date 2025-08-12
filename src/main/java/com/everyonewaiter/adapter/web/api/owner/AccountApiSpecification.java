@@ -1,15 +1,16 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
-import com.everyonewaiter.adapter.web.api.owner.request.AccountWriteRequest;
+import com.everyonewaiter.adapter.web.api.owner.dto.AccountProfileResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.application.account.response.AccountResponse;
 import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
 import com.everyonewaiter.application.auth.dto.SendAuthMailRequest;
 import com.everyonewaiter.application.auth.dto.SignInTokenRenewRequest;
 import com.everyonewaiter.application.auth.dto.TokenResponse;
 import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountCreateRequest;
+import com.everyonewaiter.domain.account.AccountSignInRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,7 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "계정")
-interface AccountControllerSpecification {
+interface AccountApiSpecification {
 
   @Operation(summary = "프로필 조회", description = "프로필 조회 API")
   @ApiResponse(responseCode = "200", description = "프로필 조회 성공")
@@ -30,7 +31,7 @@ interface AccountControllerSpecification {
       code = ErrorCode.UNAUTHORIZED,
       exampleName = "액세스 토큰이 유효하지 않은 경우"
   )
-  ResponseEntity<AccountResponse.Profile> getProfile(@Parameter(hidden = true) Account account);
+  ResponseEntity<AccountProfileResponse> getProfile(@Parameter(hidden = true) Account account);
 
   @SecurityRequirements
   @Operation(summary = "프로필 조회 (휴대폰 번호)", description = "프로필 조회 (휴대폰 번호) API")
@@ -39,7 +40,7 @@ interface AccountControllerSpecification {
       code = ErrorCode.ACCOUNT_NOT_FOUND,
       exampleName = "휴대폰 번호로 계정을 찾을 수 없는 경우"
   )
-  ResponseEntity<AccountResponse.Profile> getProfile(String phoneNumber);
+  ResponseEntity<AccountProfileResponse> getProfile(String phoneNumber);
 
   @SecurityRequirements
   @Operation(
@@ -71,7 +72,7 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Void> signUp(@RequestBody AccountWriteRequest.Create request);
+  ResponseEntity<Void> signUp(@RequestBody AccountCreateRequest createRequest);
 
   @SecurityRequirements
   @Operation(summary = "로그인", description = "로그인 API")
@@ -93,7 +94,7 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<TokenResponse> signIn(@RequestBody AccountWriteRequest.SignIn request);
+  ResponseEntity<TokenResponse> signIn(@RequestBody AccountSignInRequest signInRequest);
 
   @SecurityRequirements
   @Operation(

@@ -1,6 +1,6 @@
 package com.everyonewaiter.domain.auth;
 
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.AccountPermission;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AuthenticationAccount {
 
-  Account.Permission permission() default Account.Permission.USER;
+  AccountPermission permission() default AccountPermission.USER;
 
 }

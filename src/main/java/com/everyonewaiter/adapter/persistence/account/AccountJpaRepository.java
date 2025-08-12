@@ -1,6 +1,7 @@
 package com.everyonewaiter.adapter.persistence.account;
 
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountState;
 import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import java.util.Optional;
@@ -10,7 +11,7 @@ interface AccountJpaRepository extends JpaRepository<Account, Long> {
 
   boolean existsByEmail(Email email);
 
-  boolean existsByEmailAndState(Email email, Account.State state);
+  boolean existsByEmailAndState(Email email, AccountState state);
 
   boolean existsByPhoneNumber(PhoneNumber phoneNumber);
 

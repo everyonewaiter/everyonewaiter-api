@@ -1,20 +1,22 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
-import com.everyonewaiter.adapter.web.api.owner.request.AccountWriteRequest;
-import com.everyonewaiter.application.account.AccountService;
-import com.everyonewaiter.application.account.response.AccountResponse;
+import static java.util.Objects.requireNonNull;
+
+import com.everyonewaiter.adapter.web.api.owner.dto.AccountProfileResponse;
+import com.everyonewaiter.application.account.provided.AccountFinder;
+import com.everyonewaiter.application.account.provided.AccountRegister;
+import com.everyonewaiter.application.account.provided.AccountSignInHandler;
 import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
 import com.everyonewaiter.application.auth.dto.SendAuthMailRequest;
 import com.everyonewaiter.application.auth.dto.SignInTokenRenewRequest;
 import com.everyonewaiter.application.auth.dto.TokenResponse;
 import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.application.auth.provided.Authenticator;
-import com.everyonewaiter.application.auth.provided.SignInTokenProvider;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountCreateRequest;
+import com.everyonewaiter.domain.account.AccountSignInRequest;
 import com.everyonewaiter.domain.auth.AuthPurpose;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
-import com.everyonewaiter.domain.shared.AccessDeniedException;
-import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -31,43 +33,44 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/accounts")
-class AccountController implements AccountControllerSpecification {
+class AccountApi implements AccountApiSpecification {
 
   private final Authenticator authenticator;
-  private final SignInTokenProvider tokenProvider;
-  private final AccountService accountService;
+  private final AccountFinder accountFinder;
+  private final AccountRegister accountRegister;
+  private final AccountSignInHandler accountSignInHandler;
 
   @Override
   @GetMapping("/me")
-  public ResponseEntity<AccountResponse.Profile> getProfile(
+  public ResponseEntity<AccountProfileResponse> getProfile(
       @AuthenticationAccount Account account
   ) {
-    AccountResponse.Profile response = AccountResponse.Profile.from(account);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.ok(AccountProfileResponse.from(account));
   }
 
   @Override
   @GetMapping("/phone-number/{phoneNumber}/me")
-  public ResponseEntity<AccountResponse.Profile> getProfile(@PathVariable String phoneNumber) {
-    AccountResponse.Profile response = accountService.readByPhone(phoneNumber);
-    return ResponseEntity.ok(response);
+  public ResponseEntity<AccountProfileResponse> getProfile(@PathVariable String phoneNumber) {
+    Account account = accountFinder.find(new PhoneNumber(phoneNumber));
+
+    return ResponseEntity.ok(AccountProfileResponse.from(account));
   }
 
   @Override
   @PostMapping
-  public ResponseEntity<Void> signUp(@RequestBody @Valid AccountWriteRequest.Create request) {
-    authenticator.checkAuthSuccess(AuthPurpose.SIGN_UP, new PhoneNumber(request.phoneNumber()));
-    Long accountId = accountService.create(request.toDomainDto());
-    return ResponseEntity.created(URI.create(accountId.toString())).build();
+  public ResponseEntity<Void> signUp(@RequestBody @Valid AccountCreateRequest createRequest) {
+    Account account = accountRegister.create(createRequest);
+
+    return ResponseEntity.created(URI.create(requireNonNull(account.getId()).toString())).build();
   }
 
   @Override
   @PostMapping("/sign-in")
   public ResponseEntity<TokenResponse> signIn(
-      @RequestBody @Valid AccountWriteRequest.SignIn request
+      @RequestBody @Valid AccountSignInRequest signInRequest
   ) {
-    Long accountId = accountService.signIn(request.toDomainDto());
-    TokenResponse response = tokenProvider.createToken(accountId);
+    TokenResponse response = accountSignInHandler.signIn(signInRequest);
+
     return ResponseEntity.ok(response);
   }
 
@@ -101,8 +104,8 @@ class AccountController implements AccountControllerSpecification {
   @Override
   @PostMapping("/verify-auth-mail")
   public ResponseEntity<Void> verifyEmail(@RequestParam String token) {
-    Email email = authenticator.verifyAuthMail(token);
-    accountService.activate(email.address());
+    accountRegister.activate(token);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -111,9 +114,7 @@ class AccountController implements AccountControllerSpecification {
   public ResponseEntity<TokenResponse> renewToken(
       @RequestBody @Valid SignInTokenRenewRequest signInTokenRenewRequest
   ) {
-    return tokenProvider.renewToken(signInTokenRenewRequest)
-        .map(ResponseEntity::ok)
-        .orElseThrow(AccessDeniedException::new);
+    return ResponseEntity.ok(accountSignInHandler.renew(signInTokenRenewRequest));
   }
 
 }

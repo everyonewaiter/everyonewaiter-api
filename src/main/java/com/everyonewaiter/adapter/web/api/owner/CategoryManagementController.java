@@ -3,7 +3,8 @@ package com.everyonewaiter.adapter.web.api.owner;
 import com.everyonewaiter.adapter.web.api.owner.request.CategoryWriteRequest;
 import com.everyonewaiter.application.menu.CategoryService;
 import com.everyonewaiter.application.menu.response.CategoryResponse;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.store.StoreOwner;
 import jakarta.validation.Valid;
@@ -31,7 +32,7 @@ class CategoryManagementController implements CategoryManagementControllerSpecif
   @GetMapping("/stores/{storeId}/categories")
   public ResponseEntity<CategoryResponse.Simples> getCategories(
       @PathVariable Long storeId,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     return ResponseEntity.ok(categoryService.readAllSimples(storeId));
   }
@@ -42,7 +43,7 @@ class CategoryManagementController implements CategoryManagementControllerSpecif
   public ResponseEntity<Void> create(
       @PathVariable Long storeId,
       @RequestBody @Valid CategoryWriteRequest.Create request,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     Long categoryId = categoryService.create(storeId, request.toDomainDto());
     return ResponseEntity.created(URI.create(categoryId.toString())).build();
@@ -55,7 +56,7 @@ class CategoryManagementController implements CategoryManagementControllerSpecif
       @PathVariable Long storeId,
       @PathVariable Long categoryId,
       @RequestBody @Valid CategoryWriteRequest.Update request,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     categoryService.update(categoryId, storeId, request.toDomainDto());
     return ResponseEntity.noContent().build();
@@ -69,7 +70,7 @@ class CategoryManagementController implements CategoryManagementControllerSpecif
       @PathVariable Long sourceId,
       @PathVariable Long targetId,
       @RequestBody @Valid CategoryWriteRequest.MovePosition request,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     categoryService.movePosition(sourceId, targetId, storeId, request.toDomainDto());
     return ResponseEntity.noContent().build();
@@ -81,7 +82,7 @@ class CategoryManagementController implements CategoryManagementControllerSpecif
   public ResponseEntity<Void> delete(
       @PathVariable Long storeId,
       @PathVariable Long categoryId,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     categoryService.delete(categoryId, storeId);
     return ResponseEntity.noContent().build();

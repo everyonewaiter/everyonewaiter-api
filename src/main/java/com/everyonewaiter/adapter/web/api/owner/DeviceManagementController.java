@@ -2,7 +2,7 @@ package com.everyonewaiter.adapter.web.api.owner;
 
 import com.everyonewaiter.adapter.web.api.owner.request.DeviceReadRequest;
 import com.everyonewaiter.adapter.web.api.owner.request.DeviceWriteRequest;
-import com.everyonewaiter.application.account.AccountService;
+import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
 import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.application.auth.provided.Authenticator;
@@ -10,7 +10,8 @@ import com.everyonewaiter.application.device.DeviceService;
 import com.everyonewaiter.application.device.response.DeviceResponse;
 import com.everyonewaiter.application.store.StoreService;
 import com.everyonewaiter.application.store.response.StoreResponse;
-import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthPurpose;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.shared.Paging;
@@ -36,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 class DeviceManagementController implements DeviceManagementControllerSpecification {
 
   private final Authenticator authenticator;
-  private final AccountService accountService;
+  private final AccountFinder accountFinder;
   private final StoreService storeService;
   private final DeviceService deviceService;
 
@@ -46,7 +47,7 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
   public ResponseEntity<Paging<DeviceResponse.PageView>> getDevices(
       @PathVariable Long storeId,
       @ModelAttribute @Valid DeviceReadRequest.PageView request,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     return ResponseEntity.ok(deviceService.readAll(storeId, request.toDomainDto()));
   }
@@ -57,7 +58,7 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
   public ResponseEntity<DeviceResponse.Detail> getDevice(
       @PathVariable Long storeId,
       @PathVariable Long deviceId,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     return ResponseEntity.ok(deviceService.read(deviceId, storeId));
   }
@@ -71,8 +72,8 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
     authenticator.checkAuthSuccess(
         AuthPurpose.CREATE_DEVICE, new PhoneNumber(request.phoneNumber())
     );
-    Long accountId = accountService.getAccountIdByPhone(request.phoneNumber());
-    storeService.checkStoreOwner(storeId, accountId);
+    Account account = accountFinder.find(new PhoneNumber(request.phoneNumber()));
+    storeService.checkStoreOwner(storeId, account.getId());
     DeviceResponse.Create response = deviceService.create(storeId, request.toDomainDto());
     return ResponseEntity.created(URI.create(response.deviceId())).body(response);
   }
@@ -94,8 +95,8 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
     PhoneNumber phoneNumber = authenticator.verifyAuthCode(
         AuthPurpose.CREATE_DEVICE, verifyAuthCodeRequest
     );
-    Long accountId = accountService.getAccountIdByPhone(phoneNumber.value());
-    return ResponseEntity.ok(storeService.readAllSimpleView(accountId));
+    Account account = accountFinder.find(phoneNumber);
+    return ResponseEntity.ok(storeService.readAllSimpleView(account.getId()));
   }
 
   @Override
@@ -105,7 +106,7 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
       @PathVariable Long storeId,
       @PathVariable Long deviceId,
       @RequestBody @Valid DeviceWriteRequest.Update request,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     deviceService.update(deviceId, storeId, request.toDomainDto());
     return ResponseEntity.noContent().build();
@@ -117,7 +118,7 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
   public ResponseEntity<Void> delete(
       @PathVariable Long storeId,
       @PathVariable Long deviceId,
-      @AuthenticationAccount(permission = Account.Permission.OWNER) Account account
+      @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
     deviceService.delete(deviceId, storeId);
     return ResponseEntity.noContent().build();
