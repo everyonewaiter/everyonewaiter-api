@@ -15,11 +15,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-class JwtProvider implements JwtEncoder, JwtDecoder {
+class JwtProviderImpl implements JwtEncoder, JwtDecoder {
 
   private final SecretKey secretKey;
 
-  public JwtProvider(@Value("${jwt.secret-key}") String secretKey) {
+  public JwtProviderImpl(@Value("${jwt.secret-key}") String secretKey) {
     this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
   }
 

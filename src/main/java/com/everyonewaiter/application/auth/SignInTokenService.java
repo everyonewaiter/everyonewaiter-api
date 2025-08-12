@@ -1,10 +1,10 @@
 package com.everyonewaiter.application.auth;
 
 
+import com.everyonewaiter.application.auth.dto.SignInTokenRenewRequest;
 import com.everyonewaiter.application.auth.dto.TokenResponse;
+import com.everyonewaiter.application.auth.provided.JwtProvider;
 import com.everyonewaiter.application.auth.provided.SignInTokenProvider;
-import com.everyonewaiter.application.auth.required.JwtDecoder;
-import com.everyonewaiter.application.auth.required.JwtEncoder;
 import com.everyonewaiter.application.auth.required.RefreshTokenRepository;
 import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.auth.JwtPayload;
@@ -18,19 +18,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 @Service
+@Transactional
 @RequiredArgsConstructor
 class SignInTokenService implements SignInTokenProvider {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SignInTokenService.class);
 
-  private final JwtEncoder jwtEncoder;
-  private final JwtDecoder jwtDecoder;
+  private final JwtProvider jwtProvider;
   private final RefreshTokenRepository refreshTokenRepository;
 
   @Override
-  @Transactional
   public TokenResponse createToken(Long accountId) {
     RefreshToken refreshToken = RefreshToken.create(accountId);
 
@@ -40,10 +41,11 @@ class SignInTokenService implements SignInTokenProvider {
   }
 
   @Override
-  @Transactional
   @DistributedLock(key = "#refreshToken")
-  public Optional<TokenResponse> renewToken(String refToken) {
-    JwtPayload payload = jwtDecoder.decode(refToken).orElseThrow(AuthenticationException::new);
+  public Optional<TokenResponse> renewToken(SignInTokenRenewRequest signInTokenRenewRequest) {
+    JwtPayload payload = jwtProvider.decode(signInTokenRenewRequest.refreshToken())
+        .orElseThrow(AuthenticationException::new);
+
     RefreshToken refreshToken = refreshTokenRepository.findByIdOrThrow(payload.id());
 
     try {
@@ -65,8 +67,8 @@ class SignInTokenService implements SignInTokenProvider {
     JwtPayload acc = new JwtPayload(refreshToken.getAccountId(), refreshToken.getCurrentTokenId());
     JwtPayload ref = new JwtPayload(refreshToken.getId(), refreshToken.getCurrentTokenId());
 
-    String accessToken = jwtEncoder.encode(acc, Duration.ofHours(12));
-    String refToken = jwtEncoder.encode(ref, Duration.ofDays(14));
+    String accessToken = jwtProvider.encode(acc, Duration.ofHours(12));
+    String refToken = jwtProvider.encode(ref, Duration.ofDays(14));
 
     return new TokenResponse(accessToken, refToken);
   }

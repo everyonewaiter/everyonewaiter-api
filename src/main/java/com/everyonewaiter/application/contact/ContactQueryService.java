@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @Service
 @RequiredArgsConstructor
-public class ContactQueryService implements ContactFinder {
+class ContactQueryService implements ContactFinder {
 
   private final ContactRepository contactRepository;
 

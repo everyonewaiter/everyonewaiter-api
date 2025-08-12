@@ -3,14 +3,16 @@ package com.everyonewaiter.application.account;
 import com.everyonewaiter.application.account.request.AccountAdminRead;
 import com.everyonewaiter.application.account.request.AccountAdminWrite;
 import com.everyonewaiter.application.account.request.AccountWrite;
+import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.application.account.response.AccountAdminResponse;
 import com.everyonewaiter.application.account.response.AccountResponse;
 import com.everyonewaiter.domain.account.entity.Account;
-import com.everyonewaiter.domain.account.repository.AccountRepository;
 import com.everyonewaiter.domain.account.service.AccountValidator;
 import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Paging;
+import com.everyonewaiter.domain.shared.PhoneNumber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,28 +37,16 @@ public class AccountService {
     return accountRepository.save(account).getId();
   }
 
-  public void checkAvailablePhone(String phoneNumber) {
-    accountValidator.validatePhoneNumberUnique(phoneNumber);
-  }
-
-  public void checkExistsPhone(String phoneNumber) {
-    accountValidator.validateExistsPhoneNumber(phoneNumber);
-  }
-
-  public void checkPossibleSendAuthMail(String email) {
-    accountValidator.validateAccountIsInactive(email);
-  }
-
   @Transactional
   public void activate(String email) {
-    Account account = accountRepository.findByEmailOrThrow(email);
+    Account account = accountRepository.findByEmailOrThrow(new Email(email));
     account.activate();
     accountRepository.save(account);
   }
 
   @Transactional
   public Long signIn(AccountWrite.SignIn request) {
-    return accountRepository.findByEmail(request.email())
+    return accountRepository.findByEmail(new Email(request.email()))
         .map(account -> {
           account.signIn(passwordEncoder, request.password());
           return accountRepository.save(account).getId();
@@ -65,7 +55,7 @@ public class AccountService {
   }
 
   public Long getAccountIdByPhone(String phoneNumber) {
-    return accountRepository.findByPhoneOrThrow(phoneNumber).getId();
+    return accountRepository.findByPhoneOrThrow(new PhoneNumber(phoneNumber)).getId();
   }
 
   public Paging<AccountAdminResponse.PageView> readAllByAdmin(AccountAdminRead.PageView request) {
@@ -85,7 +75,7 @@ public class AccountService {
   }
 
   public AccountResponse.Profile readByPhone(String phoneNumber) {
-    Account account = accountRepository.findByPhoneOrThrow(phoneNumber);
+    Account account = accountRepository.findByPhoneOrThrow(new PhoneNumber(phoneNumber));
     return AccountResponse.Profile.from(account);
   }
 

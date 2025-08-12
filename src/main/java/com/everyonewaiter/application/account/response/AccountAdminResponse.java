@@ -41,8 +41,8 @@ public class AccountAdminResponse {
     public static Detail from(Account account) {
       return new Detail(
           Objects.requireNonNull(account.getId()).toString(),
-          account.getEmail(),
-          account.getPhoneNumber(),
+          account.getEmail().address(),
+          account.getPhoneNumber().value(),
           account.getState(),
           account.getPermission(),
           account.getLastSignIn(),

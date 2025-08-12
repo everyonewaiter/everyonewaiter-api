@@ -2,12 +2,12 @@ package com.everyonewaiter.adapter.web.config;
 
 import static java.util.Objects.requireNonNull;
 
-import com.everyonewaiter.application.auth.required.JwtDecoder;
+import com.everyonewaiter.application.account.required.AccountRepository;
+import com.everyonewaiter.application.auth.provided.JwtProvider;
 import com.everyonewaiter.domain.account.entity.Account;
-import com.everyonewaiter.domain.account.repository.AccountRepository;
-import com.everyonewaiter.domain.account.service.AccountValidator;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.auth.JwtPayload;
+import com.everyonewaiter.domain.shared.AccessDeniedException;
 import com.everyonewaiter.domain.shared.AuthenticationException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,7 @@ class AuthenticationAccountResolver implements HandlerMethodArgumentResolver {
 
   private static final String BEARER_PREFIX = "Bearer ";
 
-  private final JwtDecoder jwtProvider;
-  private final AccountValidator accountValidator;
+  private final JwtProvider jwtProvider;
   private final AccountRepository accountRepository;
 
   @Override
@@ -54,7 +53,9 @@ class AuthenticationAccountResolver implements HandlerMethodArgumentResolver {
               parameter.getParameterAnnotation(AuthenticationAccount.class)
           );
 
-          accountValidator.validateAccountPermission(account, annotation.permission());
+          if (!account.isActive() || !account.hasPermission(annotation.permission())) {
+            throw new AccessDeniedException();
+          }
 
           return account;
         })

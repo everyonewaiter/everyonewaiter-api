@@ -10,7 +10,6 @@ import com.everyonewaiter.domain.contact.ContactState;
 import com.everyonewaiter.domain.shared.BusinessLicense;
 import com.everyonewaiter.domain.shared.Pagination;
 import com.everyonewaiter.domain.shared.Paging;
-import com.everyonewaiter.domain.shared.PhoneNumber;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -47,8 +46,8 @@ class ContactRepositoryImpl implements ContactRepository {
     PathBuilder<Contact> contactPath = new PathBuilder<>(contact.getType(), contact.getMetadata());
 
     String storeName = readRequest.getStoreName();
-    PhoneNumber phoneNumber = readRequest.getPhoneNumber();
-    BusinessLicense license = readRequest.getLicense();
+    String phoneNumber = readRequest.getPhoneNumber();
+    String license = readRequest.getLicense();
     ContactState state = readRequest.getState();
     Pagination pagination = new Pagination(readRequest.getPage(), readRequest.getSize());
 
@@ -102,29 +101,21 @@ class ContactRepositoryImpl implements ContactRepository {
   @Nullable
   private BooleanExpression phoneNumberStratsWith(
       PathBuilder<Contact> contactPath,
-      @Nullable PhoneNumber phoneNumber
+      @Nullable String phoneNumber
   ) {
-    if (phoneNumber == null) {
-      return null;
-    } else {
-      return contactPath.get("phoneNumber")
-          .getString("value")
-          .startsWith(phoneNumber.value());
-    }
+    return StringUtils.hasText(phoneNumber)
+        ? contactPath.get("phoneNumber").getString("value").startsWith(phoneNumber)
+        : null;
   }
 
   @Nullable
   private BooleanExpression licenseStratsWith(
       PathBuilder<Contact> contactPath,
-      @Nullable BusinessLicense license
+      @Nullable String license
   ) {
-    if (license == null) {
-      return null;
-    } else {
-      return contactPath.get("license")
-          .getString("value")
-          .startsWith(license.value());
-    }
+    return StringUtils.hasText(license)
+        ? contactPath.get("license").getString("value").startsWith(license)
+        : null;
   }
 
   @Nullable

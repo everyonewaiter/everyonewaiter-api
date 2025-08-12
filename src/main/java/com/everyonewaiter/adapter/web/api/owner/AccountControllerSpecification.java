@@ -1,12 +1,12 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
 import com.everyonewaiter.adapter.web.api.owner.request.AccountWriteRequest;
-import com.everyonewaiter.adapter.web.api.owner.request.AuthWriteRequest;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.application.account.response.AccountResponse;
 import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
 import com.everyonewaiter.application.auth.dto.SendAuthMailRequest;
+import com.everyonewaiter.application.auth.dto.SignInTokenRenewRequest;
 import com.everyonewaiter.application.auth.dto.TokenResponse;
 import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.account.entity.Account;
@@ -206,6 +206,8 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<TokenResponse> renewToken(@RequestBody AuthWriteRequest.RenewToken request);
+  ResponseEntity<TokenResponse> renewToken(
+      @RequestBody SignInTokenRenewRequest signInTokenRenewRequest
+  );
 
 }

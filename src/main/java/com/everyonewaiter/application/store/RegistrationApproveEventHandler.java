@@ -1,7 +1,7 @@
 package com.everyonewaiter.application.store;
 
+import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.domain.account.entity.Account;
-import com.everyonewaiter.domain.account.repository.AccountRepository;
 import com.everyonewaiter.domain.store.entity.BusinessLicense;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.domain.store.event.RegistrationApproveEvent;

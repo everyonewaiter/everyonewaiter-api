@@ -14,7 +14,10 @@ public interface Authenticator {
 
   void sendAuthCode(AuthPurpose authPurpose, @Valid SendAuthCodeRequest sendAuthCodeRequest);
 
-  void verifyAuthCode(AuthPurpose authPurpose, @Valid VerifyAuthCodeRequest verifyAuthCodeRequest);
+  PhoneNumber verifyAuthCode(
+      AuthPurpose authPurpose,
+      @Valid VerifyAuthCodeRequest verifyAuthCodeRequest
+  );
 
   void sendAuthMail(@Valid SendAuthMailRequest sendAuthMailRequest);
 

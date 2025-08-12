@@ -1,17 +1,19 @@
-package com.everyonewaiter.infrastructure.account;
+package com.everyonewaiter.adapter.persistence.account;
 
 import static com.everyonewaiter.domain.account.entity.QAccount.account;
 import static com.everyonewaiter.domain.store.entity.QStore.store;
 
+import com.everyonewaiter.application.account.required.AccountRepository;
+import com.everyonewaiter.domain.account.AccountNotFoundException;
 import com.everyonewaiter.domain.account.entity.Account;
-import com.everyonewaiter.domain.account.repository.AccountRepository;
 import com.everyonewaiter.domain.account.view.AccountAdminView;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
+import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.Pagination;
 import com.everyonewaiter.domain.shared.Paging;
+import com.everyonewaiter.domain.shared.PhoneNumber;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.Nullable;
 import java.util.List;
@@ -29,12 +31,17 @@ class AccountRepositoryImpl implements AccountRepository {
   private final AccountJpaRepository accountJpaRepository;
 
   @Override
-  public boolean existsByEmail(String email) {
+  public boolean exists(Email email) {
     return accountJpaRepository.existsByEmail(email);
   }
 
   @Override
-  public boolean existsByPhone(String phoneNumber) {
+  public boolean existsInactive(Email email) {
+    return accountJpaRepository.existsByEmailAndState(email, Account.State.INACTIVE);
+  }
+
+  @Override
+  public boolean exists(PhoneNumber phoneNumber) {
     return accountJpaRepository.existsByPhoneNumber(phoneNumber);
   }
 
@@ -46,6 +53,8 @@ class AccountRepositoryImpl implements AccountRepository {
       @Nullable Boolean hasStore,
       Pagination pagination
   ) {
+    PathBuilder<Account> accountPath = new PathBuilder<>(account.getType(), account.getMetadata());
+
     List<AccountAdminView.Page> views = queryFactory
         .select(
             Projections.constructor(
@@ -63,7 +72,7 @@ class AccountRepositoryImpl implements AccountRepository {
         .from(account)
         .leftJoin(store).on(account.id.eq(store.accountId))
         .where(
-            emailStratsWith(email),
+            emailStratsWith(accountPath, email),
             stateEq(state),
             permissionEq(permission),
             hasStoreEq(hasStore)
@@ -78,7 +87,7 @@ class AccountRepositoryImpl implements AccountRepository {
         .from(account)
         .leftJoin(store).on(account.id.eq(store.accountId))
         .where(
-            emailStratsWith(email),
+            emailStratsWith(accountPath, email),
             stateEq(state),
             permissionEq(permission),
             hasStoreEq(hasStore)
@@ -97,24 +106,23 @@ class AccountRepositoryImpl implements AccountRepository {
 
   @Override
   public Account findByIdOrThrow(Long accountId) {
-    return findById(accountId)
-        .orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
+    return findById(accountId).orElseThrow(AccountNotFoundException::new);
   }
 
   @Override
-  public Optional<Account> findByEmail(String email) {
+  public Optional<Account> findByEmail(Email email) {
     return accountJpaRepository.findByEmail(email);
   }
 
   @Override
-  public Account findByEmailOrThrow(String email) {
-    return findByEmail(email).orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
+  public Account findByEmailOrThrow(Email email) {
+    return findByEmail(email).orElseThrow(AccountNotFoundException::new);
   }
 
   @Override
-  public Account findByPhoneOrThrow(String phoneNumber) {
+  public Account findByPhoneOrThrow(PhoneNumber phoneNumber) {
     return accountJpaRepository.findByPhoneNumber(phoneNumber)
-        .orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
+        .orElseThrow(AccountNotFoundException::new);
   }
 
   @Override
@@ -122,18 +130,27 @@ class AccountRepositoryImpl implements AccountRepository {
     return accountJpaRepository.save(account);
   }
 
-  private BooleanExpression emailStratsWith(@Nullable String email) {
-    return StringUtils.hasText(email) ? account.email.startsWith(email) : null;
+  @Nullable
+  private BooleanExpression emailStratsWith(
+      PathBuilder<Account> accountPath,
+      @Nullable String email
+  ) {
+    return StringUtils.hasText(email)
+        ? accountPath.get("email").getString("address").startsWith(email)
+        : null;
   }
 
+  @Nullable
   private BooleanExpression stateEq(@Nullable Account.State state) {
     return state != null ? account.state.eq(state) : null;
   }
 
+  @Nullable
   private BooleanExpression permissionEq(@Nullable Account.Permission permission) {
     return permission != null ? account.permission.eq(permission) : null;
   }
 
+  @Nullable
   private BooleanExpression hasStoreEq(@Nullable Boolean hasStore) {
     if (hasStore == null) {
       return null;

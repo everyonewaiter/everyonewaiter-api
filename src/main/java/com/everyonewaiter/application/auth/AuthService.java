@@ -1,11 +1,12 @@
 package com.everyonewaiter.application.auth;
 
+import com.everyonewaiter.application.account.provided.AccountValidator;
 import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
 import com.everyonewaiter.application.auth.dto.SendAuthMailRequest;
 import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.application.auth.provided.Authenticator;
+import com.everyonewaiter.application.auth.provided.JwtProvider;
 import com.everyonewaiter.application.auth.required.AuthRepository;
-import com.everyonewaiter.application.auth.required.JwtDecoder;
 import com.everyonewaiter.domain.auth.AlreadyVerifiedPhoneException;
 import com.everyonewaiter.domain.auth.AuthAttempt;
 import com.everyonewaiter.domain.auth.AuthCode;
@@ -28,9 +29,10 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @Service
 @RequiredArgsConstructor
-public class AuthService implements Authenticator {
+class AuthService implements Authenticator {
 
-  private final JwtDecoder jwtDecoder;
+  private final JwtProvider jwtProvider;
+  private final AccountValidator accountValidator;
   private final AuthRepository authRepository;
   private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -46,7 +48,7 @@ public class AuthService implements Authenticator {
   @Override
   public void sendAuthCode(AuthPurpose authPurpose, SendAuthCodeRequest sendAuthCodeRequest) {
     PhoneNumber phoneNumber = new PhoneNumber(sendAuthCodeRequest.phoneNumber());
-    // 휴대폰 검증 - AccountValidator
+    checkPossibleSendAuthCode(authPurpose, phoneNumber);
 
     AuthAttempt authAttempt = new AuthAttempt(authPurpose, phoneNumber);
     if (authAttempt.isExceed(authRepository.find(authAttempt))) {
@@ -62,8 +64,19 @@ public class AuthService implements Authenticator {
     applicationEventPublisher.publishEvent(sendEvent);
   }
 
+  private void checkPossibleSendAuthCode(AuthPurpose authPurpose, PhoneNumber phoneNumber) {
+    if (authPurpose == AuthPurpose.SIGN_UP) {
+      accountValidator.checkDuplicatePhone(phoneNumber);
+    } else {
+      accountValidator.checkPossibleSendAuthCode(phoneNumber);
+    }
+  }
+
   @Override
-  public void verifyAuthCode(AuthPurpose authPurpose, VerifyAuthCodeRequest verifyAuthCodeRequest) {
+  public PhoneNumber verifyAuthCode(
+      AuthPurpose authPurpose,
+      VerifyAuthCodeRequest verifyAuthCodeRequest
+  ) {
     PhoneNumber phoneNumber = new PhoneNumber(verifyAuthCodeRequest.phoneNumber());
 
     AuthSuccess authSuccess = new AuthSuccess(authPurpose, phoneNumber);
@@ -76,19 +89,22 @@ public class AuthService implements Authenticator {
 
     authRepository.save(authSuccess);
     authRepository.delete(authCode);
+
+    return phoneNumber;
   }
 
   @Override
   public void sendAuthMail(SendAuthMailRequest sendAuthMailRequest) {
     Email email = new Email(sendAuthMailRequest.email());
-    // 이메일 검증 - AccountValidator
+
+    accountValidator.checkPossibleSendAuthMail(email);
 
     applicationEventPublisher.publishEvent(new AuthMailSendEvent(email));
   }
 
   @Override
   public Email verifyAuthMail(String authMailToken) {
-    JwtPayload payload = jwtDecoder.decode(authMailToken)
+    JwtPayload payload = jwtProvider.decode(authMailToken)
         .orElseThrow(ExpiredVerificationEmailException::new);
 
     if (!JwtFixedId.VERIFICATION_EMAIL_ID.equals(payload.id())) {

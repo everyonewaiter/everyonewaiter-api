@@ -1,10 +1,10 @@
 package com.everyonewaiter.domain.account.service;
 
-import com.everyonewaiter.domain.account.entity.Account;
-import com.everyonewaiter.domain.account.repository.AccountRepository;
-import com.everyonewaiter.domain.shared.AccessDeniedException;
+import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.ErrorCode;
+import com.everyonewaiter.domain.shared.PhoneNumber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,38 +20,15 @@ public class AccountValidator {
   }
 
   public void validateEmailUnique(String email) {
-    if (accountRepository.existsByEmail(email)) {
+    if (accountRepository.exists(new Email(email))) {
       throw new BusinessException(ErrorCode.ALREADY_USE_EMAIL);
     }
   }
 
   public void validatePhoneNumberUnique(String phoneNumber) {
-    if (accountRepository.existsByPhone(phoneNumber)) {
+    if (accountRepository.exists(new PhoneNumber(phoneNumber))) {
       throw new BusinessException(ErrorCode.ALREADY_USE_PHONE_NUMBER);
     }
-  }
-
-  public void validateExistsPhoneNumber(String phoneNumber) {
-    if (!accountRepository.existsByPhone(phoneNumber)) {
-      throw new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND);
-    }
-  }
-
-  public void validateAccountIsInactive(String email) {
-    Account account = getAccount(email);
-    if (!account.isInactive()) {
-      throw new BusinessException(ErrorCode.ALREADY_VERIFIED_EMAIL);
-    }
-  }
-
-  public void validateAccountPermission(Account account, Account.Permission permission) {
-    if (!account.isActive() || !account.hasPermission(permission)) {
-      throw new AccessDeniedException();
-    }
-  }
-
-  private Account getAccount(String email) {
-    return accountRepository.findByEmailOrThrow(email);
   }
 
 }

@@ -45,16 +45,8 @@
         <column name="state" nullable="false"/>
         <enumerated>STRING</enumerated>
       </basic>
-      <embedded name="license">
-        <attribute-override name="value">
-          <column name="license"/>
-        </attribute-override>
-      </embedded>
-      <embedded name="phoneNumber">
-        <attribute-override name="value">
-          <column name="phone_number"/>
-        </attribute-override>
-      </embedded>
+      <embedded name="license"/>
+      <embedded name="phoneNumber"/>
     </attributes>
   </entity>
 
@@ -68,6 +60,35 @@
       <basic name="currentTokenId">
         <column name="current_token_id" nullable="false"/>
       </basic>
+    </attributes>
+  </entity>
+
+  <entity class="com.everyonewaiter.domain.account.entity.Account">
+    <table name="account">
+      <index name="idx_account_phone_number" column-list="phoneNumber"/>
+      <index name="idx_account_email_permission_state" column-list="email, permission, state"/>
+      <index name="idx_account_email_state" column-list="email, state"/>
+      <index name="idx_account_permission_state" column-list="permission, state"/>
+      <index name="idx_account_state" column-list="state"/>
+    </table>
+
+    <attributes>
+      <basic name="password">
+        <column name="password" nullable="false" length="60"/>
+      </basic>
+      <basic name="state">
+        <column name="state" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="permission">
+        <column name="permission" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="lastSignIn">
+        <column name="last_sign_in" nullable="false"/>
+      </basic>
+      <embedded name="email"/>
+      <embedded name="phoneNumber"/>
     </attributes>
   </entity>
 

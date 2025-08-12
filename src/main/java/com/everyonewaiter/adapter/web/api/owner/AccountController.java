@@ -1,12 +1,11 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
 import com.everyonewaiter.adapter.web.api.owner.request.AccountWriteRequest;
-import com.everyonewaiter.adapter.web.api.owner.request.AuthWriteRequest;
 import com.everyonewaiter.application.account.AccountService;
 import com.everyonewaiter.application.account.response.AccountResponse;
-import com.everyonewaiter.application.auth.AuthService;
 import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
 import com.everyonewaiter.application.auth.dto.SendAuthMailRequest;
+import com.everyonewaiter.application.auth.dto.SignInTokenRenewRequest;
 import com.everyonewaiter.application.auth.dto.TokenResponse;
 import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.application.auth.provided.Authenticator;
@@ -36,7 +35,6 @@ class AccountController implements AccountControllerSpecification {
 
   private final Authenticator authenticator;
   private final SignInTokenProvider tokenProvider;
-  private final AuthService authService;
   private final AccountService accountService;
 
   @Override
@@ -78,7 +76,6 @@ class AccountController implements AccountControllerSpecification {
   public ResponseEntity<Void> sendAuthCode(
       @RequestBody @Valid SendAuthCodeRequest sendAuthCodeRequest
   ) {
-    accountService.checkAvailablePhone(sendAuthCodeRequest.phoneNumber());
     authenticator.sendAuthCode(AuthPurpose.SIGN_UP, sendAuthCodeRequest);
     return ResponseEntity.noContent().build();
   }
@@ -97,7 +94,6 @@ class AccountController implements AccountControllerSpecification {
   public ResponseEntity<Void> sendAuthMail(
       @RequestBody @Valid SendAuthMailRequest sendAuthMailRequest
   ) {
-    accountService.checkPossibleSendAuthMail(sendAuthMailRequest.email());
     authenticator.sendAuthMail(sendAuthMailRequest);
     return ResponseEntity.noContent().build();
   }
@@ -105,7 +101,7 @@ class AccountController implements AccountControllerSpecification {
   @Override
   @PostMapping("/verify-auth-mail")
   public ResponseEntity<Void> verifyEmail(@RequestParam String token) {
-    Email email = authService.verifyAuthMail(token);
+    Email email = authenticator.verifyAuthMail(token);
     accountService.activate(email.address());
     return ResponseEntity.noContent().build();
   }
@@ -113,9 +109,9 @@ class AccountController implements AccountControllerSpecification {
   @Override
   @PostMapping("/renew-token")
   public ResponseEntity<TokenResponse> renewToken(
-      @RequestBody @Valid AuthWriteRequest.RenewToken request
+      @RequestBody @Valid SignInTokenRenewRequest signInTokenRenewRequest
   ) {
-    return tokenProvider.renewToken(request.refreshToken())
+    return tokenProvider.renewToken(signInTokenRenewRequest)
         .map(ResponseEntity::ok)
         .orElseThrow(AccessDeniedException::new);
   }

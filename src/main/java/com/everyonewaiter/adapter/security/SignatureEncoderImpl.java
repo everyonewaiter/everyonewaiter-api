@@ -10,7 +10,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.stereotype.Component;
 
 @Component
-class SecureSignatureEncoder implements SignatureEncoder {
+class SignatureEncoderImpl implements SignatureEncoder {
 
   private static final String HMAC_SHA256 = "HmacSHA256";
 

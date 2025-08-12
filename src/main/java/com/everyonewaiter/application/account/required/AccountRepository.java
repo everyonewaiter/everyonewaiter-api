@@ -1,17 +1,21 @@
-package com.everyonewaiter.domain.account.repository;
+package com.everyonewaiter.application.account.required;
 
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.account.view.AccountAdminView;
+import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.Pagination;
 import com.everyonewaiter.domain.shared.Paging;
+import com.everyonewaiter.domain.shared.PhoneNumber;
 import jakarta.annotation.Nullable;
 import java.util.Optional;
 
 public interface AccountRepository {
 
-  boolean existsByEmail(String email);
+  boolean exists(Email email);
 
-  boolean existsByPhone(String phoneNumber);
+  boolean existsInactive(Email email);
+
+  boolean exists(PhoneNumber phoneNumber);
 
   Paging<AccountAdminView.Page> findAllByAdmin(
       @Nullable String email,
@@ -25,11 +29,11 @@ public interface AccountRepository {
 
   Account findByIdOrThrow(Long accountId);
 
-  Optional<Account> findByEmail(String email);
+  Optional<Account> findByEmail(Email email);
 
-  Account findByEmailOrThrow(String email);
+  Account findByEmailOrThrow(Email email);
 
-  Account findByPhoneOrThrow(String phoneNumber);
+  Account findByPhoneOrThrow(PhoneNumber phoneNumber);
 
   Account save(Account account);
 

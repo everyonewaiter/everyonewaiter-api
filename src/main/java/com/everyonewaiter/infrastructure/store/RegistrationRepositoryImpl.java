@@ -3,6 +3,7 @@ package com.everyonewaiter.infrastructure.store;
 import static com.everyonewaiter.domain.account.entity.QAccount.account;
 import static com.everyonewaiter.domain.store.entity.QRegistration.registration;
 
+import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Pagination;
@@ -12,6 +13,7 @@ import com.everyonewaiter.domain.store.repository.RegistrationRepository;
 import com.everyonewaiter.domain.store.view.RegistrationAdminView;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.Nullable;
 import java.util.List;
@@ -57,6 +59,8 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
       @Nullable Registration.Status status,
       Pagination pagination
   ) {
+    PathBuilder<Account> accountPath = new PathBuilder<>(account.getType(), account.getMetadata());
+
     List<RegistrationAdminView.Page> views = queryFactory
         .select(
             Projections.constructor(
@@ -73,7 +77,7 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
         .from(registration)
         .innerJoin(account).on(registration.accountId.eq(account.id))
         .where(
-            emailStratsWith(email),
+            emailStratsWith(accountPath, email),
             nameStartsWith(name),
             statusEq(status)
         )
@@ -87,7 +91,7 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
         .from(registration)
         .innerJoin(account).on(registration.accountId.eq(account.id))
         .where(
-            emailStratsWith(email),
+            emailStratsWith(accountPath, email),
             nameStartsWith(name),
             statusEq(status)
         )
@@ -148,14 +152,22 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
     return registrationJpaRepository.save(registration);
   }
 
-  private BooleanExpression emailStratsWith(@Nullable String email) {
-    return StringUtils.hasText(email) ? account.email.startsWith(email) : null;
+  @Nullable
+  private BooleanExpression emailStratsWith(
+      PathBuilder<Account> accountPath,
+      @Nullable String email
+  ) {
+    return StringUtils.hasText(email)
+        ? accountPath.get("email").getString("address").startsWith(email)
+        : null;
   }
 
+  @Nullable
   private BooleanExpression nameStartsWith(@Nullable String name) {
     return StringUtils.hasText(name) ? registration.businessLicense.name.startsWith(name) : null;
   }
 
+  @Nullable
   private BooleanExpression statusEq(@Nullable Registration.Status status) {
     return status != null ? registration.status.eq(status) : null;
   }

@@ -3,7 +3,6 @@ package com.everyonewaiter.adapter.web.api.owner;
 import com.everyonewaiter.adapter.web.api.owner.request.DeviceReadRequest;
 import com.everyonewaiter.adapter.web.api.owner.request.DeviceWriteRequest;
 import com.everyonewaiter.application.account.AccountService;
-import com.everyonewaiter.application.auth.AuthService;
 import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
 import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.application.auth.provided.Authenticator;
@@ -37,7 +36,6 @@ import org.springframework.web.bind.annotation.RestController;
 class DeviceManagementController implements DeviceManagementControllerSpecification {
 
   private final Authenticator authenticator;
-  private final AuthService authService;
   private final AccountService accountService;
   private final StoreService storeService;
   private final DeviceService deviceService;
@@ -84,7 +82,6 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
   public ResponseEntity<Void> sendAuthCode(
       @RequestBody @Valid SendAuthCodeRequest sendAuthCodeRequest
   ) {
-    accountService.checkExistsPhone(sendAuthCodeRequest.phoneNumber());
     authenticator.sendAuthCode(AuthPurpose.CREATE_DEVICE, sendAuthCodeRequest);
     return ResponseEntity.noContent().build();
   }
@@ -94,8 +91,10 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
   public ResponseEntity<StoreResponse.Simples> verifyAuthCode(
       @RequestBody @Valid VerifyAuthCodeRequest verifyAuthCodeRequest
   ) {
-    authenticator.verifyAuthCode(AuthPurpose.CREATE_DEVICE, verifyAuthCodeRequest);
-    Long accountId = accountService.getAccountIdByPhone(verifyAuthCodeRequest.phoneNumber());
+    PhoneNumber phoneNumber = authenticator.verifyAuthCode(
+        AuthPurpose.CREATE_DEVICE, verifyAuthCodeRequest
+    );
+    Long accountId = accountService.getAccountIdByPhone(phoneNumber.value());
     return ResponseEntity.ok(storeService.readAllSimpleView(accountId));
   }
 

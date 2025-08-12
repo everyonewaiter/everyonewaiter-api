@@ -24,7 +24,7 @@ public class AccountResponse {
     public static Profile from(Account account) {
       return new Profile(
           Objects.requireNonNull(account.getId()).toString(),
-          account.getEmail(),
+          account.getEmail().address(),
           account.getPermission()
       );
     }

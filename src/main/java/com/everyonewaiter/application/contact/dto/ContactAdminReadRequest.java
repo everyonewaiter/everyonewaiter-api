@@ -3,10 +3,7 @@ package com.everyonewaiter.application.contact.dto;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.everyonewaiter.domain.contact.ContactState;
-import com.everyonewaiter.domain.shared.BusinessLicense;
-import com.everyonewaiter.domain.shared.PhoneNumber;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -39,15 +36,5 @@ public class ContactAdminReadRequest {
   @Min(value = 1, message = "페이지 조회 크기는 1 이상이어야 합니다.")
   @Max(value = 100, message = "페이지 조회 크기는 100 이하이어야 합니다.")
   private long size = 20;
-
-  @Nullable
-  public PhoneNumber getPhoneNumber() {
-    return phoneNumber == null ? null : new PhoneNumber(phoneNumber);
-  }
-
-  @Nullable
-  public BusinessLicense getLicense() {
-    return license == null ? null : new BusinessLicense(license);
-  }
 
 }

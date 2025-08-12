@@ -1,59 +1,48 @@
 package com.everyonewaiter.domain.account.entity;
 
+import static lombok.AccessLevel.PROTECTED;
+
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.account.event.AccountCreateEvent;
 import com.everyonewaiter.domain.auth.AuthMailSendEvent;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.ErrorCode;
-import jakarta.persistence.Column;
+import com.everyonewaiter.domain.shared.PhoneNumber;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
 import java.time.Instant;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Table(name = "account")
 @Entity
 @Getter
 @ToString(exclude = "password", callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class Account extends AggregateRootEntity<Account> {
 
   public enum State {INACTIVE, ACTIVE, DELETE}
 
   public enum Permission {USER, OWNER, ADMIN}
 
-  @Column(name = "email", nullable = false, updatable = false)
-  private String email;
+  private Email email;
 
-  @Column(name = "password", nullable = false)
   private String password;
 
-  @Column(name = "phone_number", nullable = false, updatable = false)
-  private String phoneNumber;
+  private PhoneNumber phoneNumber;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "state", nullable = false)
   private State state = State.INACTIVE;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "permission", nullable = false)
   private Permission permission = Permission.USER;
 
-  @Column(name = "last_sign_in", nullable = false)
   private Instant lastSignIn = Instant.ofEpochMilli(0);
 
   public static Account create(String email, String password, String phoneNumber) {
     Account account = new Account();
-    account.email = email;
+    account.email = new Email(email);
     account.password = password;
-    account.phoneNumber = phoneNumber;
+    account.phoneNumber = new PhoneNumber(phoneNumber);
     account.registerEvent(new AccountCreateEvent(email));
     account.registerEvent(new AuthMailSendEvent(new Email(email)));
     return account;
