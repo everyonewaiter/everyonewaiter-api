@@ -1,128 +1,101 @@
 package com.everyonewaiter.application.auth;
 
-import com.everyonewaiter.application.auth.request.AuthWrite;
+import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
+import com.everyonewaiter.application.auth.dto.SendAuthMailRequest;
+import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
+import com.everyonewaiter.application.auth.provided.Authenticator;
+import com.everyonewaiter.application.auth.required.AuthRepository;
 import com.everyonewaiter.application.auth.required.JwtDecoder;
-import com.everyonewaiter.application.auth.required.JwtEncoder;
-import com.everyonewaiter.application.auth.response.TokenResponse;
-import com.everyonewaiter.application.support.DistributedLock;
+import com.everyonewaiter.domain.auth.AlreadyVerifiedPhoneException;
+import com.everyonewaiter.domain.auth.AuthAttempt;
+import com.everyonewaiter.domain.auth.AuthCode;
+import com.everyonewaiter.domain.auth.AuthCodeSendEvent;
+import com.everyonewaiter.domain.auth.AuthMailSendEvent;
+import com.everyonewaiter.domain.auth.AuthPurpose;
+import com.everyonewaiter.domain.auth.AuthSuccess;
+import com.everyonewaiter.domain.auth.ExceedMaximumVerificationException;
+import com.everyonewaiter.domain.auth.ExpiredVerificationEmailException;
+import com.everyonewaiter.domain.auth.ExpiredVerificationPhoneException;
+import com.everyonewaiter.domain.auth.JwtFixedId;
 import com.everyonewaiter.domain.auth.JwtPayload;
-import com.everyonewaiter.domain.auth.entity.AuthAttempt;
-import com.everyonewaiter.domain.auth.entity.AuthCode;
-import com.everyonewaiter.domain.auth.entity.AuthPurpose;
-import com.everyonewaiter.domain.auth.entity.AuthSuccess;
-import com.everyonewaiter.domain.auth.entity.RefreshToken;
-import com.everyonewaiter.domain.auth.event.AuthCodeSendEvent;
-import com.everyonewaiter.domain.auth.event.AuthMailSendEvent;
-import com.everyonewaiter.domain.auth.repository.AuthRepository;
-import com.everyonewaiter.domain.auth.repository.RefreshTokenRepository;
-import com.everyonewaiter.domain.auth.service.AuthValidator;
-import com.everyonewaiter.domain.shared.AuthenticationException;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
-import java.time.Duration;
-import java.util.Optional;
+import com.everyonewaiter.domain.shared.Email;
+import com.everyonewaiter.domain.shared.PhoneNumber;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService implements Authenticator {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(AuthService.class);
-
-  private final JwtEncoder jwtEncoder;
   private final JwtDecoder jwtDecoder;
-  private final ApplicationEventPublisher applicationEventPublisher;
-  private final AuthValidator authValidator;
   private final AuthRepository authRepository;
-  private final RefreshTokenRepository refreshTokenRepository;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
-  public void checkExistsAuthSuccess(String phoneNumber, AuthPurpose purpose) {
-    AuthSuccess authSuccess = new AuthSuccess(phoneNumber, purpose);
-    authValidator.checkExistsAuthSuccess(authSuccess);
+  @Override
+  public void checkAuthSuccess(AuthPurpose authPurpose, PhoneNumber phoneNumber) {
+    AuthSuccess authSuccess = new AuthSuccess(authPurpose, phoneNumber);
+
+    if (!authRepository.exists(authSuccess)) {
+      throw new ExpiredVerificationPhoneException();
+    }
   }
 
-  public void sendAuthCode(AuthWrite.SendAuthCode request) {
-    AuthAttempt authAttempt = new AuthAttempt(request.phoneNumber(), request.purpose());
-    authValidator.validateAuthAttempt(authAttempt);
+  @Override
+  public void sendAuthCode(AuthPurpose authPurpose, SendAuthCodeRequest sendAuthCodeRequest) {
+    PhoneNumber phoneNumber = new PhoneNumber(sendAuthCodeRequest.phoneNumber());
+    // 휴대폰 검증 - AccountValidator
 
-    AuthCode authCode = new AuthCode(request.phoneNumber());
+    AuthAttempt authAttempt = new AuthAttempt(authPurpose, phoneNumber);
+    if (authAttempt.isExceed(authRepository.find(authAttempt))) {
+      throw new ExceedMaximumVerificationException();
+    }
+
+    AuthCode authCode = new AuthCode(phoneNumber);
     authRepository.save(authCode);
     authRepository.increment(authAttempt);
-    authRepository.delete(new AuthSuccess(request.phoneNumber(), request.purpose()));
+    authRepository.delete(new AuthSuccess(authPurpose, phoneNumber));
 
-    AuthCodeSendEvent event = new AuthCodeSendEvent(request.phoneNumber(), authCode.code());
-    applicationEventPublisher.publishEvent(event);
+    AuthCodeSendEvent sendEvent = new AuthCodeSendEvent(authCode.phoneNumber(), authCode.code());
+    applicationEventPublisher.publishEvent(sendEvent);
   }
 
-  public void verifyAuthCode(AuthWrite.VerifyAuthCode request) {
-    AuthSuccess authSuccess = new AuthSuccess(request.phoneNumber(), request.purpose());
-    authValidator.checkNotExistsAuthSuccess(authSuccess);
+  @Override
+  public void verifyAuthCode(AuthPurpose authPurpose, VerifyAuthCodeRequest verifyAuthCodeRequest) {
+    PhoneNumber phoneNumber = new PhoneNumber(verifyAuthCodeRequest.phoneNumber());
 
-    AuthCode authCode = new AuthCode(request.phoneNumber(), request.code());
-    int code = authRepository.find(authCode);
-    authCode.verify(code);
+    AuthSuccess authSuccess = new AuthSuccess(authPurpose, phoneNumber);
+    if (authRepository.exists(authSuccess)) {
+      throw new AlreadyVerifiedPhoneException();
+    }
+
+    AuthCode authCode = new AuthCode(phoneNumber, verifyAuthCodeRequest.code());
+    authCode.verify(authRepository.find(authCode));
 
     authRepository.save(authSuccess);
     authRepository.delete(authCode);
   }
 
-  @Transactional
-  public void sendAuthMail(String email) {
+  @Override
+  public void sendAuthMail(SendAuthMailRequest sendAuthMailRequest) {
+    Email email = new Email(sendAuthMailRequest.email());
+    // 이메일 검증 - AccountValidator
+
     applicationEventPublisher.publishEvent(new AuthMailSendEvent(email));
   }
 
-  public String verifyAuthMail(String token) {
-    JwtPayload payload = jwtDecoder.decode(token)
-        .orElseThrow(() -> new BusinessException(ErrorCode.EXPIRED_VERIFICATION_EMAIL));
-    authValidator.validateAuthMailTokenPayload(payload);
-    return payload.subject();
-  }
+  @Override
+  public Email verifyAuthMail(String authMailToken) {
+    JwtPayload payload = jwtDecoder.decode(authMailToken)
+        .orElseThrow(ExpiredVerificationEmailException::new);
 
-  public String generateToken(JwtPayload payload, Duration expiration) {
-    return jwtEncoder.encode(payload, expiration);
-  }
-
-  @Transactional
-  public TokenResponse.All generateTokenBySignIn(Long accountId) {
-    RefreshToken refTokenEntity = refreshTokenRepository.save(RefreshToken.create(accountId));
-    return generateAllToken(accountId, refTokenEntity.getId(), refTokenEntity.getCurrentTokenId());
-  }
-
-  @Transactional
-  @DistributedLock(key = "#refreshToken")
-  public Optional<TokenResponse.All> renewToken(String refreshToken) {
-    JwtPayload payload = jwtDecoder.decode(refreshToken).orElseThrow(AuthenticationException::new);
-    RefreshToken refTokenEntity = refreshTokenRepository.findByIdOrThrow(payload.id());
-
-    try {
-      refTokenEntity.renew(payload.subject());
-      refreshTokenRepository.save(refTokenEntity);
-      return Optional.of(generateAllToken(
-          refTokenEntity.getAccountId(),
-          refTokenEntity.getId(),
-          refTokenEntity.getCurrentTokenId()
-      ));
-    } catch (BusinessException exception) {
-      LOGGER.warn("토큰 탈취가 의심되어 로그아웃을 진행합니다. accountId: {}", refTokenEntity.getAccountId());
-      refreshTokenRepository.delete(refTokenEntity);
-      return Optional.empty();
+    if (!JwtFixedId.VERIFICATION_EMAIL_ID.equals(payload.id())) {
+      throw new ExpiredVerificationEmailException();
     }
-  }
 
-  private TokenResponse.All generateAllToken(
-      Long accountId,
-      Long rootTokenId,
-      Long currentTokenId
-  ) {
-    String subject = currentTokenId.toString();
-    String accessToken = generateToken(new JwtPayload(accountId, subject), Duration.ofHours(12));
-    String refreshToken = generateToken(new JwtPayload(rootTokenId, subject), Duration.ofDays(14));
-    return new TokenResponse.All(accessToken, refreshToken);
+    return new Email(payload.subject());
   }
 
 }

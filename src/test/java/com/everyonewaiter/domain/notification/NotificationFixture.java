@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public final class NotificationFixture {
 
   public static AlimTalkMessage createAlimTalkMessage() {
-    return new AlimTalkMessage(new PhoneNumber("01044591812"), AUTHENTICATION_CODE, 123456);
+    return new AlimTalkMessage(AUTHENTICATION_CODE, new PhoneNumber("01044591812"), 123456);
   }
 
   public static SimpleEmail createSimpleEmail() {
@@ -22,9 +22,9 @@ public final class NotificationFixture {
 
   public static TemplateEmail createTemplateEmail() {
     TemplateEmail templateEmail = new TemplateEmail(
+        EMAIL_AUTHENTICATION,
         new Email("admin@everyonewaiter.com"),
-        "제목",
-        EMAIL_AUTHENTICATION
+        "제목"
     );
 
     templateEmail.addTemplateVariable("authenticationUrl", "https://auth.everyonewaiter.com");
@@ -52,7 +52,7 @@ public final class NotificationFixture {
   }
 
   public static DiscordEmbed createDiscordEmbed() {
-    return new DiscordEmbed("제목", "설명", DiscordColor.GREEN);
+    return new DiscordEmbed(DiscordColor.GREEN, "제목", "설명");
   }
 
 }

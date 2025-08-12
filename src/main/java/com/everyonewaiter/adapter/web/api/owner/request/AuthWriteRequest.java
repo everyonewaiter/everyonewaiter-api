@@ -1,7 +1,7 @@
 package com.everyonewaiter.adapter.web.api.owner.request;
 
 import com.everyonewaiter.application.auth.request.AuthWrite;
-import com.everyonewaiter.domain.auth.entity.AuthPurpose;
+import com.everyonewaiter.domain.auth.AuthPurpose;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

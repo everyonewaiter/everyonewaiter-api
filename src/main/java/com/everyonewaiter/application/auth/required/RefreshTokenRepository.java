@@ -1,6 +1,6 @@
-package com.everyonewaiter.domain.auth.repository;
+package com.everyonewaiter.application.auth.required;
 
-import com.everyonewaiter.domain.auth.entity.RefreshToken;
+import com.everyonewaiter.domain.auth.RefreshToken;
 
 public interface RefreshTokenRepository {
 

@@ -5,11 +5,18 @@ import com.everyonewaiter.adapter.web.api.owner.request.AuthWriteRequest;
 import com.everyonewaiter.application.account.AccountService;
 import com.everyonewaiter.application.account.response.AccountResponse;
 import com.everyonewaiter.application.auth.AuthService;
-import com.everyonewaiter.application.auth.response.TokenResponse;
+import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
+import com.everyonewaiter.application.auth.dto.SendAuthMailRequest;
+import com.everyonewaiter.application.auth.dto.TokenResponse;
+import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
+import com.everyonewaiter.application.auth.provided.Authenticator;
+import com.everyonewaiter.application.auth.provided.SignInTokenProvider;
 import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.auth.AuthPurpose;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
-import com.everyonewaiter.domain.auth.entity.AuthPurpose;
 import com.everyonewaiter.domain.shared.AccessDeniedException;
+import com.everyonewaiter.domain.shared.Email;
+import com.everyonewaiter.domain.shared.PhoneNumber;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/accounts")
 class AccountController implements AccountControllerSpecification {
 
+  private final Authenticator authenticator;
+  private final SignInTokenProvider tokenProvider;
   private final AuthService authService;
   private final AccountService accountService;
 
@@ -49,64 +58,64 @@ class AccountController implements AccountControllerSpecification {
   @Override
   @PostMapping
   public ResponseEntity<Void> signUp(@RequestBody @Valid AccountWriteRequest.Create request) {
-    authService.checkExistsAuthSuccess(request.phoneNumber(), AuthPurpose.SIGN_UP);
+    authenticator.checkAuthSuccess(AuthPurpose.SIGN_UP, new PhoneNumber(request.phoneNumber()));
     Long accountId = accountService.create(request.toDomainDto());
     return ResponseEntity.created(URI.create(accountId.toString())).build();
   }
 
   @Override
   @PostMapping("/sign-in")
-  public ResponseEntity<TokenResponse.All> signIn(
+  public ResponseEntity<TokenResponse> signIn(
       @RequestBody @Valid AccountWriteRequest.SignIn request
   ) {
     Long accountId = accountService.signIn(request.toDomainDto());
-    TokenResponse.All response = authService.generateTokenBySignIn(accountId);
+    TokenResponse response = tokenProvider.createToken(accountId);
     return ResponseEntity.ok(response);
   }
 
   @Override
   @PostMapping("/send-auth-code")
   public ResponseEntity<Void> sendAuthCode(
-      @RequestBody @Valid AuthWriteRequest.SendAuthCode request
+      @RequestBody @Valid SendAuthCodeRequest sendAuthCodeRequest
   ) {
-    accountService.checkAvailablePhone(request.phoneNumber());
-    authService.sendAuthCode(request.toDomainDto(AuthPurpose.SIGN_UP));
+    accountService.checkAvailablePhone(sendAuthCodeRequest.phoneNumber());
+    authenticator.sendAuthCode(AuthPurpose.SIGN_UP, sendAuthCodeRequest);
     return ResponseEntity.noContent().build();
   }
 
   @Override
   @PostMapping("/verify-auth-code")
   public ResponseEntity<Void> verifyAuthCode(
-      @RequestBody @Valid AuthWriteRequest.VerifyAuthCode request
+      @RequestBody @Valid VerifyAuthCodeRequest verifyAuthCodeRequest
   ) {
-    authService.verifyAuthCode(request.toDomainDto(AuthPurpose.SIGN_UP));
+    authenticator.verifyAuthCode(AuthPurpose.SIGN_UP, verifyAuthCodeRequest);
     return ResponseEntity.noContent().build();
   }
 
   @Override
   @PostMapping("/send-auth-mail")
   public ResponseEntity<Void> sendAuthMail(
-      @RequestBody @Valid AuthWriteRequest.SendAuthMail request
+      @RequestBody @Valid SendAuthMailRequest sendAuthMailRequest
   ) {
-    accountService.checkPossibleSendAuthMail(request.email());
-    authService.sendAuthMail(request.email());
+    accountService.checkPossibleSendAuthMail(sendAuthMailRequest.email());
+    authenticator.sendAuthMail(sendAuthMailRequest);
     return ResponseEntity.noContent().build();
   }
 
   @Override
   @PostMapping("/verify-auth-mail")
   public ResponseEntity<Void> verifyEmail(@RequestParam String token) {
-    String email = authService.verifyAuthMail(token);
-    accountService.activate(email);
+    Email email = authService.verifyAuthMail(token);
+    accountService.activate(email.address());
     return ResponseEntity.noContent().build();
   }
 
   @Override
   @PostMapping("/renew-token")
-  public ResponseEntity<TokenResponse.All> renewToken(
+  public ResponseEntity<TokenResponse> renewToken(
       @RequestBody @Valid AuthWriteRequest.RenewToken request
   ) {
-    return authService.renewToken(request.refreshToken())
+    return tokenProvider.renewToken(request.refreshToken())
         .map(ResponseEntity::ok)
         .orElseThrow(AccessDeniedException::new);
   }

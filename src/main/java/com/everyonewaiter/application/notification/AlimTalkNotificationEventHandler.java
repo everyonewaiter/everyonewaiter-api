@@ -10,7 +10,7 @@ import static com.everyonewaiter.domain.notification.AlimTalkWeblinkButtonTempla
 import static com.everyonewaiter.domain.notification.AlimTalkWeblinkButtonTemplate.WAITING_CANCEL;
 
 import com.everyonewaiter.application.notification.provided.NotificationSender;
-import com.everyonewaiter.domain.auth.event.AuthCodeSendEvent;
+import com.everyonewaiter.domain.auth.AuthCodeSendEvent;
 import com.everyonewaiter.domain.notification.AlimTalkMessage;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import com.everyonewaiter.domain.waiting.event.WaitingCancelByCustomerEvent;
@@ -40,8 +40,8 @@ class AlimTalkNotificationEventHandler {
     LOGGER.info("[휴대폰 인증 번호 전송 이벤트] phone: {}", event.phoneNumber());
 
     AlimTalkMessage message = new AlimTalkMessage(
-        new PhoneNumber(event.phoneNumber()),
         AUTHENTICATION_CODE,
+        event.phoneNumber(),
         event.code()
     );
 
@@ -54,8 +54,8 @@ class AlimTalkNotificationEventHandler {
     LOGGER.info("[웨이팅 등록 이벤트] storeId: {}, storeName: {}", event.storeId(), event.storeName());
 
     AlimTalkMessage message = new AlimTalkMessage(
-        new PhoneNumber(event.phoneNumber()),
         WAITING_REGISTRATION,
+        new PhoneNumber(event.phoneNumber()),
         event.storeName(),
         event.adult(),
         event.infant(),
@@ -76,8 +76,8 @@ class AlimTalkNotificationEventHandler {
     LOGGER.info("[웨이팅 손님 호출 이벤트] storeId: {}, storeName: {}", event.storeId(), event.storeName());
 
     AlimTalkMessage message = new AlimTalkMessage(
-        new PhoneNumber(event.phoneNumber()),
         WAITING_CUSTOMER_CALL,
+        new PhoneNumber(event.phoneNumber()),
         event.storeName(),
         event.number()
     );
@@ -92,8 +92,8 @@ class AlimTalkNotificationEventHandler {
     LOGGER.info("[웨이팅 취소 (손님) 이벤트] storeId: {}, storeName: {}", event.storeId(), event.storeName());
 
     AlimTalkMessage message = new AlimTalkMessage(
-        new PhoneNumber(event.phoneNumber()),
         WAITING_CUSTOMER_CANCEL,
+        new PhoneNumber(event.phoneNumber()),
         event.storeName(),
         event.number()
     );
@@ -107,8 +107,8 @@ class AlimTalkNotificationEventHandler {
     LOGGER.info("[웨이팅 취소 (매장) 이벤트] storeId: {}, storeName: {}", event.storeId(), event.storeName());
 
     AlimTalkMessage message = new AlimTalkMessage(
-        new PhoneNumber(event.phoneNumber()),
         WAITING_STORE_CANCEL,
+        new PhoneNumber(event.phoneNumber()),
         event.storeName(),
         event.number()
     );

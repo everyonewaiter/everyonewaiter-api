@@ -1,18 +1,21 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
-import com.everyonewaiter.adapter.web.api.owner.request.AuthWriteRequest;
 import com.everyonewaiter.adapter.web.api.owner.request.DeviceReadRequest;
 import com.everyonewaiter.adapter.web.api.owner.request.DeviceWriteRequest;
 import com.everyonewaiter.application.account.AccountService;
 import com.everyonewaiter.application.auth.AuthService;
+import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
+import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
+import com.everyonewaiter.application.auth.provided.Authenticator;
 import com.everyonewaiter.application.device.DeviceService;
 import com.everyonewaiter.application.device.response.DeviceResponse;
 import com.everyonewaiter.application.store.StoreService;
 import com.everyonewaiter.application.store.response.StoreResponse;
 import com.everyonewaiter.domain.account.entity.Account;
+import com.everyonewaiter.domain.auth.AuthPurpose;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
-import com.everyonewaiter.domain.auth.entity.AuthPurpose;
 import com.everyonewaiter.domain.shared.Paging;
+import com.everyonewaiter.domain.shared.PhoneNumber;
 import com.everyonewaiter.domain.store.StoreOwner;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1")
 class DeviceManagementController implements DeviceManagementControllerSpecification {
 
+  private final Authenticator authenticator;
   private final AuthService authService;
   private final AccountService accountService;
   private final StoreService storeService;
@@ -66,7 +70,9 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
       @PathVariable Long storeId,
       @RequestBody @Valid DeviceWriteRequest.Create request
   ) {
-    authService.checkExistsAuthSuccess(request.phoneNumber(), AuthPurpose.CREATE_DEVICE);
+    authenticator.checkAuthSuccess(
+        AuthPurpose.CREATE_DEVICE, new PhoneNumber(request.phoneNumber())
+    );
     Long accountId = accountService.getAccountIdByPhone(request.phoneNumber());
     storeService.checkStoreOwner(storeId, accountId);
     DeviceResponse.Create response = deviceService.create(storeId, request.toDomainDto());
@@ -76,20 +82,20 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
   @Override
   @PostMapping("/devices/send-auth-code")
   public ResponseEntity<Void> sendAuthCode(
-      @RequestBody @Valid AuthWriteRequest.SendAuthCode request
+      @RequestBody @Valid SendAuthCodeRequest sendAuthCodeRequest
   ) {
-    accountService.checkExistsPhone(request.phoneNumber());
-    authService.sendAuthCode(request.toDomainDto(AuthPurpose.CREATE_DEVICE));
+    accountService.checkExistsPhone(sendAuthCodeRequest.phoneNumber());
+    authenticator.sendAuthCode(AuthPurpose.CREATE_DEVICE, sendAuthCodeRequest);
     return ResponseEntity.noContent().build();
   }
 
   @Override
   @PostMapping("/devices/verify-auth-code")
   public ResponseEntity<StoreResponse.Simples> verifyAuthCode(
-      @RequestBody @Valid AuthWriteRequest.VerifyAuthCode request
+      @RequestBody @Valid VerifyAuthCodeRequest verifyAuthCodeRequest
   ) {
-    authService.verifyAuthCode(request.toDomainDto(AuthPurpose.CREATE_DEVICE));
-    Long accountId = accountService.getAccountIdByPhone(request.phoneNumber());
+    authenticator.verifyAuthCode(AuthPurpose.CREATE_DEVICE, verifyAuthCodeRequest);
+    Long accountId = accountService.getAccountIdByPhone(verifyAuthCodeRequest.phoneNumber());
     return ResponseEntity.ok(storeService.readAllSimpleView(accountId));
   }
 

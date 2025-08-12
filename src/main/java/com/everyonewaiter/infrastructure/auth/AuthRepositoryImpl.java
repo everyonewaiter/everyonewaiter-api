@@ -1,7 +1,7 @@
 package com.everyonewaiter.infrastructure.auth;
 
-import com.everyonewaiter.domain.auth.entity.Auth;
-import com.everyonewaiter.domain.auth.repository.AuthRepository;
+import com.everyonewaiter.application.auth.required.AuthRepository;
+import com.everyonewaiter.domain.auth.Auth;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,32 +15,32 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @Override
   public boolean exists(Auth auth) {
-    return Objects.requireNonNullElse(redisTemplate.hasKey(auth.getKey()), false);
+    return Objects.requireNonNullElse(redisTemplate.hasKey(auth.key()), false);
   }
 
   @Override
   public int find(Auth auth) {
-    String value = Objects.requireNonNullElse(redisTemplate.opsForValue().get(auth.getKey()), "0");
+    String value = Objects.requireNonNullElse(redisTemplate.opsForValue().get(auth.key()), "0");
     return Integer.parseInt(value);
   }
 
   @Override
   public void save(Auth auth) {
     redisTemplate.opsForValue()
-        .set(auth.getKey(), String.valueOf(auth.getValue()), auth.expiration());
+        .set(auth.key(), String.valueOf(auth.value()), auth.expiration());
   }
 
   @Override
   public void increment(Auth auth) {
-    Long incrementedValue = redisTemplate.opsForValue().increment(auth.getKey());
+    Long incrementedValue = redisTemplate.opsForValue().increment(auth.key());
     if (incrementedValue != null && incrementedValue == 1L) {
-      redisTemplate.expire(auth.getKey(), auth.expiration());
+      redisTemplate.expire(auth.key(), auth.expiration());
     }
   }
 
   @Override
   public void delete(Auth auth) {
-    redisTemplate.delete(auth.getKey());
+    redisTemplate.delete(auth.key());
   }
 
 }

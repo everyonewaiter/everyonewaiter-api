@@ -25,7 +25,7 @@ public class AlimTalkMessage {
 
   private final List<AlimTalkButton> buttons = new ArrayList<>();
 
-  public AlimTalkMessage(PhoneNumber to, AlimTalkTemplate template, Object... variables) {
+  public AlimTalkMessage(AlimTalkTemplate template, PhoneNumber to, Object... variables) {
     this.templateCode = requireNonNull(template).getTemplateCode();
     this.to = requireNonNull(to).value();
     this.content = requireNonNull(template).createContent(variables);

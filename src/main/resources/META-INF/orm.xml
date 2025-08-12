@@ -58,6 +58,19 @@
     </attributes>
   </entity>
 
+  <entity class="com.everyonewaiter.domain.auth.RefreshToken">
+    <table name="refresh_token"/>
+
+    <attributes>
+      <basic name="accountId">
+        <column name="account_id" nullable="false" updatable="false"/>
+      </basic>
+      <basic name="currentTokenId">
+        <column name="current_token_id" nullable="false"/>
+      </basic>
+    </attributes>
+  </entity>
+
   <embeddable class="com.everyonewaiter.domain.shared.Email">
     <attributes>
       <basic name="address">

@@ -53,9 +53,9 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
     String stackTrace = throwable.length() > 600 ? throwable.substring(0, 600) : throwable;
 
     DiscordEmbed errorInfoEmbed = new DiscordEmbed(
+        DiscordColor.RED,
         "Error Information",
-        iLoggingEvent.getFormattedMessage(),
-        DiscordColor.RED
+        iLoggingEvent.getFormattedMessage()
     );
     errorInfoEmbed.addField(new DiscordField("Timestamp", SERIALIZE.format(LocalDateTime.now())));
     errorInfoEmbed.addField(new DiscordField("Request URI", mdc.get("requestURI")));
@@ -64,9 +64,9 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
     errorInfoEmbed.addField(new DiscordField("Request Cookies", mdc.get("requestCookies")));
 
     DiscordEmbed stackTraceEmbed = new DiscordEmbed(
+        DiscordColor.RED,
         "Stack Trace",
-        "```java\n" + stackTrace + "\n```",
-        DiscordColor.RED
+        "```java\n" + stackTrace + "\n```"
     );
 
     return new DiscordEmbeds(errorInfoEmbed, stackTraceEmbed);

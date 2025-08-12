@@ -1,10 +1,11 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
-import com.everyonewaiter.adapter.web.api.owner.request.AuthWriteRequest;
 import com.everyonewaiter.adapter.web.api.owner.request.DeviceReadRequest;
 import com.everyonewaiter.adapter.web.api.owner.request.DeviceWriteRequest;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
+import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
+import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.application.device.response.DeviceResponse;
 import com.everyonewaiter.application.store.response.StoreResponse;
 import com.everyonewaiter.domain.account.entity.Account;
@@ -140,7 +141,7 @@ interface DeviceManagementControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Void> sendAuthCode(@RequestBody AuthWriteRequest.SendAuthCode request);
+  ResponseEntity<Void> sendAuthCode(@RequestBody SendAuthCodeRequest sendAuthCodeRequest);
 
   @SecurityRequirements
   @Operation(
@@ -171,7 +172,7 @@ interface DeviceManagementControllerSpecification {
       }
   )
   ResponseEntity<StoreResponse.Simples> verifyAuthCode(
-      @RequestBody AuthWriteRequest.VerifyAuthCode request
+      @RequestBody VerifyAuthCodeRequest verifyAuthCodeRequest
   );
 
   @Operation(summary = "기기 정보 수정", description = "기기 정보 수정 API")

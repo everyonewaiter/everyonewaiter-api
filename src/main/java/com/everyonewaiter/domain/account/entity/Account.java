@@ -2,8 +2,9 @@ package com.everyonewaiter.domain.account.entity;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.account.event.AccountCreateEvent;
-import com.everyonewaiter.domain.auth.event.AuthMailSendEvent;
+import com.everyonewaiter.domain.auth.AuthMailSendEvent;
 import com.everyonewaiter.domain.shared.BusinessException;
+import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -54,7 +55,7 @@ public class Account extends AggregateRootEntity<Account> {
     account.password = password;
     account.phoneNumber = phoneNumber;
     account.registerEvent(new AccountCreateEvent(email));
-    account.registerEvent(new AuthMailSendEvent(email));
+    account.registerEvent(new AuthMailSendEvent(new Email(email)));
     return account;
   }
 

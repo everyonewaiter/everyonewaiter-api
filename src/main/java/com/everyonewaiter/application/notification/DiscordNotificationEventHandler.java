@@ -31,9 +31,9 @@ class DiscordNotificationEventHandler {
     LOGGER.info("[서비스 도입 문의 이벤트] storeName: {}", event.storeName());
 
     DiscordEmbed embed = new DiscordEmbed(
+        DiscordColor.GREEN,
         "서비스 도입 문의 이벤트",
-        event.storeName() + " 사장님께서 서비스 도입을 문의하셨습니다!",
-        DiscordColor.GREEN
+        event.storeName() + " 사장님께서 서비스 도입을 문의하셨습니다!"
     );
     embed.addField(new DiscordField("사업자 등록 번호", event.license().value()));
     embed.addField(new DiscordField("휴대폰 번호", event.phoneNumber().value()));
@@ -47,9 +47,9 @@ class DiscordNotificationEventHandler {
     LOGGER.info("[계정 생성 이벤트] email: {}", event.email());
 
     DiscordEmbed embed = new DiscordEmbed(
+        DiscordColor.GREEN,
         "계정 생성 이벤트",
-        event.email() + "님이 계정을 생성하였습니다!",
-        DiscordColor.GREEN
+        event.email() + "님이 계정을 생성하였습니다!"
     );
 
     notificationSender.sendDiscord(new DiscordEmbeds(embed));
@@ -61,9 +61,9 @@ class DiscordNotificationEventHandler {
     LOGGER.info("[매장 등록 신청 이벤트] storeName: {}", event.storeName());
 
     DiscordEmbed embed = new DiscordEmbed(
+        DiscordColor.BLUE,
         "매장 등록 신청 이벤트",
-        event.storeName() + " 사장님께서 매장 등록을 신청하셨습니다!",
-        DiscordColor.BLUE
+        event.storeName() + " 사장님께서 매장 등록을 신청하셨습니다!"
     );
 
     notificationSender.sendDiscord(new DiscordEmbeds(embed));
@@ -75,9 +75,9 @@ class DiscordNotificationEventHandler {
     LOGGER.info("[매장 등록 재신청 알림 이벤트] storeName: {}", event.storeName());
 
     DiscordEmbed embed = new DiscordEmbed(
+        DiscordColor.DARK_BLUE,
         "매장 등록 재신청 이벤트",
-        event.storeName() + " 사장님께서 매장 등록을 재신청하셨습니다!",
-        DiscordColor.DARK_BLUE
+        event.storeName() + " 사장님께서 매장 등록을 재신청하셨습니다!"
     );
     embed.addField(new DiscordField("기존 거절 사유", event.rejectReason()));
 

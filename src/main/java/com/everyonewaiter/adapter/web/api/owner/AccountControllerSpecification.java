@@ -5,7 +5,10 @@ import com.everyonewaiter.adapter.web.api.owner.request.AuthWriteRequest;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.application.account.response.AccountResponse;
-import com.everyonewaiter.application.auth.response.TokenResponse;
+import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
+import com.everyonewaiter.application.auth.dto.SendAuthMailRequest;
+import com.everyonewaiter.application.auth.dto.TokenResponse;
+import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.account.entity.Account;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -90,7 +93,7 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<TokenResponse.All> signIn(@RequestBody AccountWriteRequest.SignIn request);
+  ResponseEntity<TokenResponse> signIn(@RequestBody AccountWriteRequest.SignIn request);
 
   @SecurityRequirements
   @Operation(
@@ -114,7 +117,7 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Void> sendAuthCode(@RequestBody AuthWriteRequest.SendAuthCode request);
+  ResponseEntity<Void> sendAuthCode(@RequestBody SendAuthCodeRequest sendAuthCodeRequest);
 
   @SecurityRequirements
   @Operation(
@@ -140,7 +143,7 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Void> verifyAuthCode(@RequestBody AuthWriteRequest.VerifyAuthCode request);
+  ResponseEntity<Void> verifyAuthCode(@RequestBody VerifyAuthCodeRequest verifyAuthCodeRequest);
 
   @SecurityRequirements
   @Operation(
@@ -163,7 +166,7 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Void> sendAuthMail(@RequestBody AuthWriteRequest.SendAuthMail request);
+  ResponseEntity<Void> sendAuthMail(@RequestBody SendAuthMailRequest sendAuthMailRequest);
 
   @SecurityRequirements
   @Operation(summary = "이메일 인증", description = "이메일 인증 API")
@@ -203,6 +206,6 @@ interface AccountControllerSpecification {
           ),
       }
   )
-  ResponseEntity<TokenResponse.All> renewToken(@RequestBody AuthWriteRequest.RenewToken request);
+  ResponseEntity<TokenResponse> renewToken(@RequestBody AuthWriteRequest.RenewToken request);
 
 }

@@ -27,11 +27,11 @@ public class TemplateEmail {
 
   private final Map<String, Object> templateVariables = new HashMap<>();
 
-  public TemplateEmail(Email to, String subject, EmailTemplate template) {
-    this(NO_REPLY_EMAIL, to, subject, template);
+  public TemplateEmail(EmailTemplate template, Email to, String subject) {
+    this(template, NO_REPLY_EMAIL, to, subject);
   }
 
-  public TemplateEmail(Email from, Email to, String subject, EmailTemplate template) {
+  public TemplateEmail(EmailTemplate template, Email from, Email to, String subject) {
     this.from = requireNonNull(from);
     this.to = requireNonNull(to);
     this.subject = requireNonNull(subject);

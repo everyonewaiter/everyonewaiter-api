@@ -22,7 +22,7 @@ public class DiscordEmbed {
 
   private final List<DiscordField> fields = new ArrayList<>();
 
-  public DiscordEmbed(String title, String description, DiscordColor color) {
+  public DiscordEmbed(DiscordColor color, String title, String description) {
     this.title = requireNonNull(title);
     this.description = requireNonNull(description);
     this.color = requireNonNull(color).getValue();

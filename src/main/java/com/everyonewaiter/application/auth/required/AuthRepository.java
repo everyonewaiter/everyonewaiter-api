@@ -1,6 +1,6 @@
-package com.everyonewaiter.domain.auth.repository;
+package com.everyonewaiter.application.auth.required;
 
-import com.everyonewaiter.domain.auth.entity.Auth;
+import com.everyonewaiter.domain.auth.Auth;
 
 public interface AuthRepository {
 

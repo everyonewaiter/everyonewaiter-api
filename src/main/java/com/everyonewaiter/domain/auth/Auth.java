@@ -1,12 +1,12 @@
-package com.everyonewaiter.domain.auth.entity;
+package com.everyonewaiter.domain.auth;
 
 import java.time.Duration;
 
 public interface Auth {
 
-  String getKey();
+  String key();
 
-  int getValue();
+  int value();
 
   Duration expiration();
 
