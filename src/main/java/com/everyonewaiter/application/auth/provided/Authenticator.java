@@ -1,9 +1,9 @@
 package com.everyonewaiter.application.auth.provided;
 
-import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
-import com.everyonewaiter.application.auth.dto.SendAuthMailRequest;
-import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.auth.AuthPurpose;
+import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
+import com.everyonewaiter.domain.auth.SendAuthMailRequest;
+import com.everyonewaiter.domain.auth.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import jakarta.validation.Valid;

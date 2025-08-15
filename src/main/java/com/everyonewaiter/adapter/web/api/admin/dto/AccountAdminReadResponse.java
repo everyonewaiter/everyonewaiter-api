@@ -1,5 +1,6 @@
-package com.everyonewaiter.application.account.dto;
+package com.everyonewaiter.adapter.web.api.admin.dto;
 
+import com.everyonewaiter.domain.account.AccountAdminView;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.account.AccountState;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,10 +30,10 @@ public record AccountAdminReadResponse(
     Instant updatedAt
 ) {
 
-  public static AccountAdminReadResponse from(AccountAdminPageView adminPageView) {
+  public static AccountAdminReadResponse from(AccountAdminView adminPageView) {
     return new AccountAdminReadResponse(
         adminPageView.id().toString(),
-        adminPageView.email(),
+        adminPageView.email().address(),
         adminPageView.state(),
         adminPageView.permission(),
         adminPageView.hasStore() ? 'Y' : 'N',

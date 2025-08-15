@@ -2,9 +2,9 @@ package com.everyonewaiter.adapter.persistence.contact;
 
 import static com.everyonewaiter.domain.contact.QContact.contact;
 
-import com.everyonewaiter.application.contact.dto.ContactAdminReadRequest;
 import com.everyonewaiter.application.contact.required.ContactRepository;
 import com.everyonewaiter.domain.contact.Contact;
+import com.everyonewaiter.domain.contact.ContactAdminReadRequest;
 import com.everyonewaiter.domain.contact.ContactNotFoundException;
 import com.everyonewaiter.domain.contact.ContactState;
 import com.everyonewaiter.domain.shared.BusinessLicense;

@@ -1,6 +1,5 @@
 package com.everyonewaiter.adapter.web.api.device;
 
-import static java.util.Objects.requireNonNull;
 import static org.springframework.http.HttpHeaders.CACHE_CONTROL;
 import static org.springframework.http.HttpHeaders.CONNECTION;
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
@@ -35,7 +34,7 @@ class SseApi implements SseApiSpecification {
     response.setHeader(CACHE_CONTROL, "no-cache");
     response.setHeader("X-Accel-Buffering", "no");
 
-    Long storeId = requireNonNull(device.getStore().getId());
+    Long storeId = device.getStore().getNonNullId();
     SseEmitter sseEmitter = sseConnector.connect(storeId.toString(), lastEventId);
 
     return ResponseEntity.ok(sseEmitter);

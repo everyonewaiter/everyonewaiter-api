@@ -1,9 +1,7 @@
-package com.everyonewaiter.application.account.dto;
+package com.everyonewaiter.domain.contact;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
-import com.everyonewaiter.domain.account.AccountPermission;
-import com.everyonewaiter.domain.account.AccountState;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Max;
@@ -15,23 +13,23 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountAdminReadRequest {
+public class ContactAdminReadRequest {
 
   @Nullable
-  @Schema(description = "조회할 이메일")
-  private String email;
+  @Schema(description = "조회할 상호명")
+  private String storeName;
+
+  @Nullable
+  @Schema(description = "조회할 전화번호")
+  private String phoneNumber;
+
+  @Nullable
+  @Schema(description = "조회할 사업자번호")
+  private String license;
 
   @Nullable
   @Schema(description = "조회할 상태")
-  private AccountState state;
-
-  @Nullable
-  @Schema(description = "조회할 권한")
-  private AccountPermission permission;
-
-  @Nullable
-  @Schema(description = "조회할 매장 소유 여부")
-  private Boolean hasStore;
+  private ContactState state;
 
   @Schema(description = "조회 페이지 번호", defaultValue = "1", requiredMode = REQUIRED)
   @Min(value = 1, message = "페이지 번호는 1 이상이어야 합니다.")

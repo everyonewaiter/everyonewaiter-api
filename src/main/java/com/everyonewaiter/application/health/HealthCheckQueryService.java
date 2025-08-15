@@ -10,6 +10,7 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Service;
 
 @Service
+@ReadOnlyTransactional
 @RequiredArgsConstructor
 class HealthCheckQueryService implements HealthCheckFinder {
 
@@ -22,7 +23,6 @@ class HealthCheckQueryService implements HealthCheckFinder {
   }
 
   @Override
-  @ReadOnlyTransactional
   public ApkVersion findLatestApkVersion() {
     return apkVersionRepository.findLatest();
   }

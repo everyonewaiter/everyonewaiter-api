@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 
 public interface AccountRegister {
 
-  Account create(@Valid AccountCreateRequest createRequest);
+  Account register(@Valid AccountCreateRequest createRequest);
 
   Account activate(String authMailToken);
 

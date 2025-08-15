@@ -2,11 +2,12 @@ package com.everyonewaiter.adapter.persistence.account;
 
 import static com.everyonewaiter.domain.account.QAccount.account;
 import static com.everyonewaiter.domain.store.entity.QStore.store;
+import static java.util.Objects.requireNonNull;
 
-import com.everyonewaiter.application.account.dto.AccountAdminPageView;
-import com.everyonewaiter.application.account.dto.AccountAdminReadRequest;
 import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountAdminReadRequest;
+import com.everyonewaiter.domain.account.AccountAdminView;
 import com.everyonewaiter.domain.account.AccountNotFoundException;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.account.AccountState;
@@ -20,7 +21,6 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.Nullable;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -39,8 +39,8 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public boolean existsInactive(Email email) {
-    return accountJpaRepository.existsByEmailAndState(email, AccountState.INACTIVE);
+  public boolean existsState(Email email, AccountState state) {
+    return accountJpaRepository.existsByEmailAndState(email, state);
   }
 
   @Override
@@ -49,7 +49,12 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public Paging<AccountAdminPageView> findAllByAdmin(AccountAdminReadRequest readRequest) {
+  public boolean existsState(PhoneNumber phoneNumber, AccountState state) {
+    return accountJpaRepository.existsByPhoneNumberAndState(phoneNumber, state);
+  }
+
+  @Override
+  public Paging<AccountAdminView> findAllByAdmin(AccountAdminReadRequest readRequest) {
     PathBuilder<Account> accountPath = new PathBuilder<>(account.getType(), account.getMetadata());
 
     String email = readRequest.getEmail();
@@ -58,10 +63,10 @@ class AccountRepositoryImpl implements AccountRepository {
     Boolean hasStore = readRequest.getHasStore();
     Pagination pagination = new Pagination(readRequest.getPage(), readRequest.getSize());
 
-    List<AccountAdminPageView> views = queryFactory
+    List<AccountAdminView> views = queryFactory
         .select(
             Projections.constructor(
-                AccountAdminPageView.class,
+                AccountAdminView.class,
                 account.id,
                 account.email,
                 account.state,
@@ -99,7 +104,7 @@ class AccountRepositoryImpl implements AccountRepository {
         .limit(pagination.countLimit())
         .fetchOne();
 
-    return new Paging<>(views, Objects.requireNonNull(count), pagination);
+    return new Paging<>(views, requireNonNull(count), pagination);
   }
 
   @Override

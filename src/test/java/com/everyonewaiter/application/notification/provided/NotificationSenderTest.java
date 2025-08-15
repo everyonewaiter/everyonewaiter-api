@@ -10,15 +10,16 @@ import com.everyonewaiter.domain.notification.AlimTalkMessage;
 import com.everyonewaiter.domain.notification.DiscordEmbeds;
 import com.everyonewaiter.domain.notification.EmailTemplateReader;
 import com.everyonewaiter.domain.notification.TemplateEmail;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.StdIo;
 import org.junitpioneer.jupiter.StdOut;
 
-@IntegrationTest
-record NotificationSenderTest(
-    NotificationSender notificationSender,
-    EmailTemplateReader emailTemplateReader
-) {
+@RequiredArgsConstructor
+class NotificationSenderTest extends IntegrationTest {
+
+  private final NotificationSender notificationSender;
+  private final EmailTemplateReader emailTemplateReader;
 
   @Test
   @StdIo

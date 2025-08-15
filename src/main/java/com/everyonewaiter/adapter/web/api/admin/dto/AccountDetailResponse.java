@@ -1,7 +1,5 @@
 package com.everyonewaiter.adapter.web.api.admin.dto;
 
-import static java.util.Objects.requireNonNull;
-
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.account.AccountState;
@@ -37,7 +35,7 @@ public record AccountDetailResponse(
 
   public static AccountDetailResponse from(Account account) {
     return new AccountDetailResponse(
-        requireNonNull(account.getId()).toString(),
+        account.getNonNullId().toString(),
         account.getEmail().address(),
         account.getPhoneNumber().value(),
         account.getState(),

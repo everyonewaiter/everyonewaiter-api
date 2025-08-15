@@ -1,7 +1,5 @@
 package com.everyonewaiter.adapter.web.api.owner.dto;
 
-import static java.util.Objects.requireNonNull;
-
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,7 +18,7 @@ public record AccountProfileResponse(
 
   public static AccountProfileResponse from(Account account) {
     return new AccountProfileResponse(
-        requireNonNull(account.getId()).toString(),
+        account.getNonNullId().toString(),
         account.getEmail().address(),
         account.getPermission()
     );

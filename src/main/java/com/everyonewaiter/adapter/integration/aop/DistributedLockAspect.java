@@ -30,7 +30,7 @@ class DistributedLockAspect {
 
   private static final String LOCK_KEY_PREFIX = "lock:";
 
-  private final AopTransaction aopTransaction;
+  private final AopTransactionManager aopTransactionManager;
   private final RedissonClient redissonClient;
   private final SpelExpressionParser spelExpressionParser = new SpelExpressionParser();
 
@@ -66,7 +66,7 @@ class DistributedLockAspect {
       }
 
       if (lockConditions.stream().allMatch(Boolean::booleanValue)) {
-        return aopTransaction.proceed(joinPoint);
+        return aopTransactionManager.proceed(joinPoint);
       } else {
         return false;
       }

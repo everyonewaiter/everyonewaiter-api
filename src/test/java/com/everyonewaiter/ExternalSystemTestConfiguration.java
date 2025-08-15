@@ -1,10 +1,12 @@
 package com.everyonewaiter;
 
+import static com.everyonewaiter.domain.account.AccountFixture.createPasswordEncoder;
 import static com.everyonewaiter.domain.notification.NotificationFixture.createEmailTemplateReader;
 
 import com.everyonewaiter.application.notification.required.AlimTalkSender;
 import com.everyonewaiter.application.notification.required.DiscordWebhookSender;
 import com.everyonewaiter.application.notification.required.EmailSender;
+import com.everyonewaiter.domain.account.PasswordEncoder;
 import com.everyonewaiter.domain.notification.EmailTemplateReader;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,12 @@ import org.springframework.context.annotation.Primary;
 
 @TestConfiguration
 class ExternalSystemTestConfiguration {
+
+  @Bean
+  @Primary
+  PasswordEncoder passwordEncoder() {
+    return createPasswordEncoder();
+  }
 
   @Bean
   @Primary

@@ -1,12 +1,9 @@
 package com.everyonewaiter.application.auth;
 
 import com.everyonewaiter.application.account.provided.AccountValidator;
-import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
-import com.everyonewaiter.application.auth.dto.SendAuthMailRequest;
-import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.application.auth.provided.Authenticator;
-import com.everyonewaiter.application.auth.provided.JwtProvider;
 import com.everyonewaiter.application.auth.required.AuthRepository;
+import com.everyonewaiter.application.auth.required.JwtProvider;
 import com.everyonewaiter.domain.auth.AlreadyVerifiedPhoneException;
 import com.everyonewaiter.domain.auth.AuthAttempt;
 import com.everyonewaiter.domain.auth.AuthCode;
@@ -19,6 +16,9 @@ import com.everyonewaiter.domain.auth.ExpiredVerificationEmailException;
 import com.everyonewaiter.domain.auth.ExpiredVerificationPhoneException;
 import com.everyonewaiter.domain.auth.JwtFixedId;
 import com.everyonewaiter.domain.auth.JwtPayload;
+import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
+import com.everyonewaiter.domain.auth.SendAuthMailRequest;
+import com.everyonewaiter.domain.auth.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import lombok.RequiredArgsConstructor;

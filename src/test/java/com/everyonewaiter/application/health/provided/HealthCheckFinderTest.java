@@ -6,17 +6,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.everyonewaiter.IntegrationTest;
 import com.everyonewaiter.domain.health.ApkVersion;
 import com.everyonewaiter.domain.health.ServerInfo;
-import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.info.BuildProperties;
 
-@IntegrationTest
-record HealthCheckFinderTest(
-    EntityManager entityManager,
-    BuildProperties buildProperties,
-    HealthCheckCreator healthCheckCreator,
-    HealthCheckFinder healthCheckFinder
-) {
+@RequiredArgsConstructor
+class HealthCheckFinderTest extends IntegrationTest {
+
+  private final BuildProperties buildProperties;
+  private final HealthCheckCreator healthCheckCreator;
+  private final HealthCheckFinder healthCheckFinder;
 
   @Test
   void findServerInfo() {
@@ -30,9 +29,6 @@ record HealthCheckFinderTest(
   @Test
   void findLatestApkVersion() {
     ApkVersion apkVersion = healthCheckCreator.createApkVersion(createApkVersionCreateRequest());
-
-    entityManager.flush();
-    entityManager.clear();
 
     ApkVersion latestApkVersion = healthCheckFinder.findLatestApkVersion();
 

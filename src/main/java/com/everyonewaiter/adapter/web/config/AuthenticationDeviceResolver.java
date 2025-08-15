@@ -52,7 +52,7 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
     HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
     RequestSignature requestSignature = new RequestSignature(request);
 
-    return deviceRepository.findById(requestSignature.getDeviceId())
+    return deviceRepository.findById(requestSignature.deviceId)
         .map(device -> {
           validateSignature(
               requestSignature.signature,
@@ -81,7 +81,7 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
   }
 
   @Data
-  private static class RequestSignature {
+  private static final class RequestSignature {
 
     private final HttpMethod method;
     private final String requestUri;
@@ -111,8 +111,8 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
 
     public String plainText(Device device) {
       return """
-          %s %s
-          %s %s %s
+          %s %s%n\
+          %s %s %s%n\
           %s\
           """
           .trim()

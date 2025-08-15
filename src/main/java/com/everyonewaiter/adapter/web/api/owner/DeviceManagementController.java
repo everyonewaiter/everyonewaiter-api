@@ -3,8 +3,6 @@ package com.everyonewaiter.adapter.web.api.owner;
 import com.everyonewaiter.adapter.web.api.owner.request.DeviceReadRequest;
 import com.everyonewaiter.adapter.web.api.owner.request.DeviceWriteRequest;
 import com.everyonewaiter.application.account.provided.AccountFinder;
-import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
-import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.application.auth.provided.Authenticator;
 import com.everyonewaiter.application.device.DeviceService;
 import com.everyonewaiter.application.device.response.DeviceResponse;
@@ -14,6 +12,8 @@ import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthPurpose;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
+import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
+import com.everyonewaiter.domain.auth.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import com.everyonewaiter.domain.store.StoreOwner;
@@ -72,7 +72,7 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
     authenticator.checkAuthSuccess(
         AuthPurpose.CREATE_DEVICE, new PhoneNumber(request.phoneNumber())
     );
-    Account account = accountFinder.find(new PhoneNumber(request.phoneNumber()));
+    Account account = accountFinder.findOrThrow(new PhoneNumber(request.phoneNumber()));
     storeService.checkStoreOwner(storeId, account.getId());
     DeviceResponse.Create response = deviceService.create(storeId, request.toDomainDto());
     return ResponseEntity.created(URI.create(response.deviceId())).body(response);
@@ -95,7 +95,7 @@ class DeviceManagementController implements DeviceManagementControllerSpecificat
     PhoneNumber phoneNumber = authenticator.verifyAuthCode(
         AuthPurpose.CREATE_DEVICE, verifyAuthCodeRequest
     );
-    Account account = accountFinder.find(phoneNumber);
+    Account account = accountFinder.findOrThrow(phoneNumber);
     return ResponseEntity.ok(storeService.readAllSimpleView(account.getId()));
   }
 

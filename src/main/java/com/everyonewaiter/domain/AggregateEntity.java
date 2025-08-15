@@ -1,5 +1,7 @@
 package com.everyonewaiter.domain;
 
+import static java.util.Objects.requireNonNull;
+
 import com.everyonewaiter.domain.support.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
@@ -29,6 +31,10 @@ public abstract class AggregateEntity implements Persistable<Long> {
   @PostLoad
   void markNotNew() {
     this.isNew = false;
+  }
+
+  public Long getNonNullId() {
+    return requireNonNull(getId());
   }
 
   @Override

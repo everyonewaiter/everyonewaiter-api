@@ -1,7 +1,5 @@
 package com.everyonewaiter.adapter.web.api.common;
 
-import static java.util.Objects.requireNonNull;
-
 import com.everyonewaiter.application.contact.provided.ContactProcessor;
 import com.everyonewaiter.domain.contact.Contact;
 import com.everyonewaiter.domain.contact.ContactCreateRequest;
@@ -26,9 +24,7 @@ class ContactApi implements ContactApiSpecification {
   public ResponseEntity<Void> create(@RequestBody @Valid ContactCreateRequest request) {
     Contact contact = contactProcessor.create(request);
 
-    return ResponseEntity
-        .created(URI.create(requireNonNull(contact.getId()).toString()))
-        .build();
+    return ResponseEntity.created(URI.create(contact.getNonNullId().toString())).build();
   }
 
 }

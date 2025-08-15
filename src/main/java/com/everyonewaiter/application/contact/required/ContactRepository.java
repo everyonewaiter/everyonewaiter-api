@@ -1,7 +1,7 @@
 package com.everyonewaiter.application.contact.required;
 
-import com.everyonewaiter.application.contact.dto.ContactAdminReadRequest;
 import com.everyonewaiter.domain.contact.Contact;
+import com.everyonewaiter.domain.contact.ContactAdminReadRequest;
 import com.everyonewaiter.domain.shared.BusinessLicense;
 import com.everyonewaiter.domain.shared.Paging;
 

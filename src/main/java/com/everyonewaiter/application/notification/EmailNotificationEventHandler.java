@@ -7,7 +7,7 @@ import static com.everyonewaiter.domain.support.ClientUri.AUTH_EMAIL;
 import static com.everyonewaiter.domain.support.ClientUri.STORE_REGISTRATION;
 
 import com.everyonewaiter.application.account.required.AccountRepository;
-import com.everyonewaiter.application.auth.provided.JwtProvider;
+import com.everyonewaiter.application.auth.required.JwtProvider;
 import com.everyonewaiter.application.notification.provided.NotificationSender;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountCreateEvent;

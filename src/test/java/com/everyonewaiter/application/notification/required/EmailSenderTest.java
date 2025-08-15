@@ -5,12 +5,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.everyonewaiter.IntegrationTest;
 import com.everyonewaiter.domain.notification.SimpleEmail;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.StdIo;
 import org.junitpioneer.jupiter.StdOut;
 
-@IntegrationTest
-record EmailSenderTest(EmailSender emailSender) {
+@RequiredArgsConstructor
+class EmailSenderTest extends IntegrationTest {
+
+  private final EmailSender emailSender;
 
   @Test
   @StdIo

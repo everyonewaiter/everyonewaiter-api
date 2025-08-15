@@ -7,20 +7,20 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import com.everyonewaiter.IntegrationTest;
 import com.everyonewaiter.domain.health.ApkVersion;
 import com.everyonewaiter.domain.health.ApkVersionCreateRequest;
-import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
-@IntegrationTest
-record HealthCheckCreatorTest(EntityManager entityManager, HealthCheckCreator healthCheckCreator) {
+@RequiredArgsConstructor
+class HealthCheckCreatorTest extends IntegrationTest {
+
+  private final HealthCheckCreator healthCheckCreator;
 
   @Test
   void createApkVersion() {
     ApkVersionCreateRequest createRequest = createApkVersionCreateRequest();
 
     ApkVersion apkVersion = healthCheckCreator.createApkVersion(createRequest);
-    entityManager.flush();
-    entityManager.clear();
 
     assertThat(apkVersion.getId()).isNotNull();
   }

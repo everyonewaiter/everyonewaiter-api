@@ -3,14 +3,14 @@ package com.everyonewaiter.adapter.web.api.owner;
 import com.everyonewaiter.adapter.web.api.owner.dto.AccountProfileResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
-import com.everyonewaiter.application.auth.dto.SendAuthMailRequest;
-import com.everyonewaiter.application.auth.dto.SignInTokenRenewRequest;
-import com.everyonewaiter.application.auth.dto.TokenResponse;
-import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountCreateRequest;
 import com.everyonewaiter.domain.account.AccountSignInRequest;
+import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
+import com.everyonewaiter.domain.auth.SendAuthMailRequest;
+import com.everyonewaiter.domain.auth.SignInToken;
+import com.everyonewaiter.domain.auth.SignInTokenRenewRequest;
+import com.everyonewaiter.domain.auth.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -94,7 +94,7 @@ interface AccountApiSpecification {
           ),
       }
   )
-  ResponseEntity<TokenResponse> signIn(@RequestBody AccountSignInRequest signInRequest);
+  ResponseEntity<SignInToken> signIn(@RequestBody AccountSignInRequest signInRequest);
 
   @SecurityRequirements
   @Operation(
@@ -207,7 +207,7 @@ interface AccountApiSpecification {
           ),
       }
   )
-  ResponseEntity<TokenResponse> renewToken(
+  ResponseEntity<SignInToken> renewToken(
       @RequestBody SignInTokenRenewRequest signInTokenRenewRequest
   );
 

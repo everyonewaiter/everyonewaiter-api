@@ -1,4 +1,4 @@
-package com.everyonewaiter.application.auth.dto;
+package com.everyonewaiter.domain.auth;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 

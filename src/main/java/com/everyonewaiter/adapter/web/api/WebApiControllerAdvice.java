@@ -19,6 +19,7 @@ import com.everyonewaiter.domain.shared.AuthenticationException;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import feign.FeignException;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
@@ -60,10 +62,13 @@ class WebApiControllerAdvice {
     return createResponseEntity(request, ErrorResponse.from(errorCode));
   }
 
-  @ExceptionHandler
-  public ResponseEntity<Object> handleMissingServletRequestParameter(
+  @ExceptionHandler({
+      MissingServletRequestParameterException.class,
+      MissingServletRequestPartException.class
+  })
+  public ResponseEntity<Object> handleMissingServletRequest(
       HttpServletRequest request,
-      MissingServletRequestParameterException exception
+      ServletException exception
   ) {
     ErrorCode errorCode = MISSING_PARAMETERS;
 

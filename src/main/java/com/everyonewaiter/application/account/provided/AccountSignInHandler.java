@@ -1,14 +1,14 @@
 package com.everyonewaiter.application.account.provided;
 
-import com.everyonewaiter.application.auth.dto.SignInTokenRenewRequest;
-import com.everyonewaiter.application.auth.dto.TokenResponse;
 import com.everyonewaiter.domain.account.AccountSignInRequest;
+import com.everyonewaiter.domain.auth.SignInToken;
+import com.everyonewaiter.domain.auth.SignInTokenRenewRequest;
 import jakarta.validation.Valid;
 
 public interface AccountSignInHandler {
 
-  TokenResponse signIn(@Valid AccountSignInRequest signInRequest);
+  SignInToken signIn(@Valid AccountSignInRequest signInRequest);
 
-  TokenResponse renew(@Valid SignInTokenRenewRequest signInTokenRenewRequest);
+  SignInToken renew(@Valid SignInTokenRenewRequest signInTokenRenewRequest);
 
 }

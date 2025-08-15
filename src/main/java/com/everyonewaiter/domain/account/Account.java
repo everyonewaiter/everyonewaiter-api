@@ -74,6 +74,8 @@ public class Account extends AggregateRootEntity<Account> {
   }
 
   public void authorize(AccountPermission permission) {
+    state(permission != AccountPermission.ADMIN, "관리자 권한은 부여할 수 없습니다.");
+
     if (!isActive()) {
       throw new DisabledAccountException();
     }

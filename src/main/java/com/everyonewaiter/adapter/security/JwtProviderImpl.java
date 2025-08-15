@@ -1,7 +1,6 @@
 package com.everyonewaiter.adapter.security;
 
-import com.everyonewaiter.application.auth.required.JwtDecoder;
-import com.everyonewaiter.application.auth.required.JwtEncoder;
+import com.everyonewaiter.application.auth.required.JwtProvider;
 import com.everyonewaiter.domain.auth.JwtPayload;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,7 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-class JwtProviderImpl implements JwtEncoder, JwtDecoder {
+class JwtProviderImpl implements JwtProvider {
 
   private final SecretKey secretKey;
 

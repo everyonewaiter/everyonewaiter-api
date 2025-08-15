@@ -15,6 +15,8 @@ interface AccountJpaRepository extends JpaRepository<Account, Long> {
 
   boolean existsByPhoneNumber(PhoneNumber phoneNumber);
 
+  boolean existsByPhoneNumberAndState(PhoneNumber phoneNumber, AccountState state);
+
   Optional<Account> findByEmail(Email email);
 
   Optional<Account> findByPhoneNumber(PhoneNumber phoneNumber);

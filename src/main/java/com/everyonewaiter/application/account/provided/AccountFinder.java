@@ -1,18 +1,21 @@
 package com.everyonewaiter.application.account.provided;
 
-import com.everyonewaiter.application.account.dto.AccountAdminReadRequest;
-import com.everyonewaiter.application.account.dto.AccountAdminReadResponse;
 import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.account.AccountAdminReadRequest;
+import com.everyonewaiter.domain.account.AccountAdminView;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import jakarta.validation.Valid;
+import java.util.Optional;
 
 public interface AccountFinder {
 
-  Account find(Long accountId);
+  Optional<Account> find(Long accountId);
 
-  Account find(PhoneNumber phoneNumber);
+  Account findOrThrow(Long accountId);
 
-  Paging<AccountAdminReadResponse> findAllByAdmin(@Valid AccountAdminReadRequest readRequest);
+  Account findOrThrow(PhoneNumber phoneNumber);
+
+  Paging<AccountAdminView> findAllByAdmin(@Valid AccountAdminReadRequest readRequest);
 
 }

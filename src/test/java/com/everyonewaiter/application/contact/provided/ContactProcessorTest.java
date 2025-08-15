@@ -9,12 +9,14 @@ import com.everyonewaiter.domain.contact.AlreadyExistsUncompletedContactExceptio
 import com.everyonewaiter.domain.contact.Contact;
 import com.everyonewaiter.domain.contact.ContactCreateRequest;
 import com.everyonewaiter.domain.contact.ContactState;
-import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
-@IntegrationTest
-record ContactProcessorTest(EntityManager entityManager, ContactProcessor contactProcessor) {
+@RequiredArgsConstructor
+class ContactProcessorTest extends IntegrationTest {
+
+  private final ContactProcessor contactProcessor;
 
   @Test
   void create() {
@@ -36,7 +38,6 @@ record ContactProcessorTest(EntityManager entityManager, ContactProcessor contac
     Contact contact = createContact();
 
     contact = contactProcessor.processing(contact.getId());
-    entityManager.flush();
 
     assertThat(contact.getState()).isEqualTo(ContactState.PROCESSING);
   }
@@ -46,18 +47,12 @@ record ContactProcessorTest(EntityManager entityManager, ContactProcessor contac
     Contact contact = createContact();
 
     contact = contactProcessor.complete(contact.getId());
-    entityManager.flush();
 
     assertThat(contact.getState()).isEqualTo(ContactState.COMPLETE);
   }
 
   private Contact createContact() {
-    Contact contact = contactProcessor.create(createContactCreateRequest());
-
-    entityManager.flush();
-    entityManager.clear();
-
-    return contact;
+    return contactProcessor.create(createContactCreateRequest());
   }
 
   @Test

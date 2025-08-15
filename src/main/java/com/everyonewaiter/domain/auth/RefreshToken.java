@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.auth;
 
+import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
@@ -23,8 +24,8 @@ public class RefreshToken extends AggregateRootEntity<RefreshToken> {
   public static RefreshToken create(Long accountId) {
     RefreshToken refreshToken = new RefreshToken();
 
-    refreshToken.accountId = accountId;
-    refreshToken.currentTokenId = refreshToken.getId();
+    refreshToken.accountId = requireNonNull(accountId);
+    refreshToken.currentTokenId = refreshToken.getNonNullId();
 
     return refreshToken;
   }

@@ -1,5 +1,7 @@
 package com.everyonewaiter.domain;
 
+import static java.util.Objects.requireNonNull;
+
 import com.everyonewaiter.domain.support.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -45,6 +47,10 @@ public abstract class AggregateRootEntity<T extends AbstractAggregateRoot<T>>
   @PostLoad
   void markNotNew() {
     this.isNew = false;
+  }
+
+  public Long getNonNullId() {
+    return requireNonNull(getId());
   }
 
   @Override

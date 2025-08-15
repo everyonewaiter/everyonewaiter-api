@@ -24,6 +24,15 @@ create index idx_contact_name_phone_number on contact (store_name, phone_number)
 create index idx_contact_license_phone_number on contact (license, phone_number);
 create index idx_contact_phone_number on contact (phone_number);
 
+create table refresh_token
+(
+    id               bigint primary key,
+    account_id       bigint      not null,
+    current_token_id bigint      not null,
+    created_at       datetime(6) not null,
+    updated_at       datetime(6) not null
+);
+
 create table account
 (
     id           bigint primary key,
@@ -41,15 +50,6 @@ create index idx_account_email_permission_state on account (email, permission, s
 create index idx_account_email_state on account (email, state);
 create index idx_account_permission_state on account (permission, state);
 create index idx_account_state on account (state);
-
-create table refresh_token
-(
-    id               bigint primary key,
-    account_id       bigint      not null,
-    current_token_id bigint      not null,
-    created_at       datetime(6) not null,
-    updated_at       datetime(6) not null
-);
 
 create table store_registration
 (

@@ -8,7 +8,6 @@ import com.everyonewaiter.domain.health.ApkVersion;
 import com.everyonewaiter.domain.health.ApkVersionCreateRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,9 +30,7 @@ class HealthCheckAdminApi implements HealthCheckAdminApiSpecification {
   ) {
     ApkVersion apkVersion = healthCheckCreator.createApkVersion(request);
 
-    return ResponseEntity
-        .created(URI.create(Objects.requireNonNull(apkVersion.getId()).toString()))
-        .build();
+    return ResponseEntity.created(URI.create(apkVersion.getNonNullId().toString())).build();
   }
 
 }

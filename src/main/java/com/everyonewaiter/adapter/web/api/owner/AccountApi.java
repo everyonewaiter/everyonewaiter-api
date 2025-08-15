@@ -1,22 +1,20 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
-import static java.util.Objects.requireNonNull;
-
 import com.everyonewaiter.adapter.web.api.owner.dto.AccountProfileResponse;
 import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.account.provided.AccountRegister;
 import com.everyonewaiter.application.account.provided.AccountSignInHandler;
-import com.everyonewaiter.application.auth.dto.SendAuthCodeRequest;
-import com.everyonewaiter.application.auth.dto.SendAuthMailRequest;
-import com.everyonewaiter.application.auth.dto.SignInTokenRenewRequest;
-import com.everyonewaiter.application.auth.dto.TokenResponse;
-import com.everyonewaiter.application.auth.dto.VerifyAuthCodeRequest;
 import com.everyonewaiter.application.auth.provided.Authenticator;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountCreateRequest;
 import com.everyonewaiter.domain.account.AccountSignInRequest;
 import com.everyonewaiter.domain.auth.AuthPurpose;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
+import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
+import com.everyonewaiter.domain.auth.SendAuthMailRequest;
+import com.everyonewaiter.domain.auth.SignInToken;
+import com.everyonewaiter.domain.auth.SignInTokenRenewRequest;
+import com.everyonewaiter.domain.auth.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -51,7 +49,7 @@ class AccountApi implements AccountApiSpecification {
   @Override
   @GetMapping("/phone-number/{phoneNumber}/me")
   public ResponseEntity<AccountProfileResponse> getProfile(@PathVariable String phoneNumber) {
-    Account account = accountFinder.find(new PhoneNumber(phoneNumber));
+    Account account = accountFinder.findOrThrow(new PhoneNumber(phoneNumber));
 
     return ResponseEntity.ok(AccountProfileResponse.from(account));
   }
@@ -59,19 +57,19 @@ class AccountApi implements AccountApiSpecification {
   @Override
   @PostMapping
   public ResponseEntity<Void> signUp(@RequestBody @Valid AccountCreateRequest createRequest) {
-    Account account = accountRegister.create(createRequest);
+    Account account = accountRegister.register(createRequest);
 
-    return ResponseEntity.created(URI.create(requireNonNull(account.getId()).toString())).build();
+    return ResponseEntity.created(URI.create(account.getNonNullId().toString())).build();
   }
 
   @Override
   @PostMapping("/sign-in")
-  public ResponseEntity<TokenResponse> signIn(
+  public ResponseEntity<SignInToken> signIn(
       @RequestBody @Valid AccountSignInRequest signInRequest
   ) {
-    TokenResponse response = accountSignInHandler.signIn(signInRequest);
+    SignInToken signInToken = accountSignInHandler.signIn(signInRequest);
 
-    return ResponseEntity.ok(response);
+    return ResponseEntity.ok(signInToken);
   }
 
   @Override
@@ -80,6 +78,7 @@ class AccountApi implements AccountApiSpecification {
       @RequestBody @Valid SendAuthCodeRequest sendAuthCodeRequest
   ) {
     authenticator.sendAuthCode(AuthPurpose.SIGN_UP, sendAuthCodeRequest);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -89,6 +88,7 @@ class AccountApi implements AccountApiSpecification {
       @RequestBody @Valid VerifyAuthCodeRequest verifyAuthCodeRequest
   ) {
     authenticator.verifyAuthCode(AuthPurpose.SIGN_UP, verifyAuthCodeRequest);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -98,6 +98,7 @@ class AccountApi implements AccountApiSpecification {
       @RequestBody @Valid SendAuthMailRequest sendAuthMailRequest
   ) {
     authenticator.sendAuthMail(sendAuthMailRequest);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -111,7 +112,7 @@ class AccountApi implements AccountApiSpecification {
 
   @Override
   @PostMapping("/renew-token")
-  public ResponseEntity<TokenResponse> renewToken(
+  public ResponseEntity<SignInToken> renewToken(
       @RequestBody @Valid SignInTokenRenewRequest signInTokenRenewRequest
   ) {
     return ResponseEntity.ok(accountSignInHandler.renew(signInTokenRenewRequest));

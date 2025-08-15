@@ -4,6 +4,7 @@ import com.everyonewaiter.application.account.provided.AccountValidator;
 import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.application.support.ReadOnlyTransactional;
 import com.everyonewaiter.domain.account.AccountNotFoundException;
+import com.everyonewaiter.domain.account.AccountState;
 import com.everyonewaiter.domain.account.AlreadyUseEmailException;
 import com.everyonewaiter.domain.account.AlreadyUsePhoneException;
 import com.everyonewaiter.domain.account.AlreadyVerifiedEmailException;
@@ -13,13 +14,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@ReadOnlyTransactional
 @RequiredArgsConstructor
 class AccountValidateService implements AccountValidator {
 
   private final AccountRepository accountRepository;
 
   @Override
-  @ReadOnlyTransactional
   public void checkDuplicateEmail(Email email) {
     if (accountRepository.exists(email)) {
       throw new AlreadyUseEmailException();
@@ -27,7 +28,6 @@ class AccountValidateService implements AccountValidator {
   }
 
   @Override
-  @ReadOnlyTransactional
   public void checkDuplicatePhone(PhoneNumber phoneNumber) {
     if (accountRepository.exists(phoneNumber)) {
       throw new AlreadyUsePhoneException();
@@ -35,17 +35,15 @@ class AccountValidateService implements AccountValidator {
   }
 
   @Override
-  @ReadOnlyTransactional
   public void checkPossibleSendAuthMail(Email email) {
-    if (!accountRepository.existsInactive(email)) {
+    if (!accountRepository.existsState(email, AccountState.INACTIVE)) {
       throw new AlreadyVerifiedEmailException();
     }
   }
 
   @Override
-  @ReadOnlyTransactional
   public void checkPossibleSendAuthCode(PhoneNumber phoneNumber) {
-    if (!accountRepository.exists(phoneNumber)) {
+    if (!accountRepository.existsState(phoneNumber, AccountState.ACTIVE)) {
       throw new AccountNotFoundException();
     }
   }

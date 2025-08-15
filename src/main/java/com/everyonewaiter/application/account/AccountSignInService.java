@@ -2,13 +2,13 @@ package com.everyonewaiter.application.account;
 
 import com.everyonewaiter.application.account.provided.AccountSignInHandler;
 import com.everyonewaiter.application.account.required.AccountRepository;
-import com.everyonewaiter.application.auth.dto.SignInTokenRenewRequest;
-import com.everyonewaiter.application.auth.dto.TokenResponse;
 import com.everyonewaiter.application.auth.provided.SignInTokenProvider;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountSignInRequest;
 import com.everyonewaiter.domain.account.FailedSignInException;
 import com.everyonewaiter.domain.account.PasswordEncoder;
+import com.everyonewaiter.domain.auth.SignInToken;
+import com.everyonewaiter.domain.auth.SignInTokenRenewRequest;
 import com.everyonewaiter.domain.shared.AccessDeniedException;
 import com.everyonewaiter.domain.shared.Email;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ class AccountSignInService implements AccountSignInHandler {
   private final SignInTokenProvider signInTokenProvider;
 
   @Override
-  public TokenResponse signIn(AccountSignInRequest signInRequest) {
+  public SignInToken signIn(AccountSignInRequest signInRequest) {
     Email email = new Email(signInRequest.email());
 
     Account account = accountRepository.findByEmail(email).orElseThrow(FailedSignInException::new);
@@ -40,7 +40,7 @@ class AccountSignInService implements AccountSignInHandler {
   }
 
   @Override
-  public TokenResponse renew(SignInTokenRenewRequest signInTokenRenewRequest) {
+  public SignInToken renew(SignInTokenRenewRequest signInTokenRenewRequest) {
     return signInTokenProvider.renewToken(signInTokenRenewRequest)
         .orElseThrow(AccessDeniedException::new);
   }

@@ -4,7 +4,6 @@ import com.everyonewaiter.domain.contact.Contact;
 import com.everyonewaiter.domain.contact.ContactState;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
-import java.util.Objects;
 
 @Schema(name = "ContactAdminReadResponse")
 public record ContactAdminReadResponse(
@@ -32,7 +31,7 @@ public record ContactAdminReadResponse(
 
   public static ContactAdminReadResponse from(Contact contact) {
     return new ContactAdminReadResponse(
-        Objects.requireNonNull(contact.getId()).toString(),
+        contact.getNonNullId().toString(),
         contact.getStoreName(),
         contact.getPhoneNumber().value(),
         contact.getLicense().value(),

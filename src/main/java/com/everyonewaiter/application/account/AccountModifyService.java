@@ -29,7 +29,7 @@ class AccountModifyService implements AccountRegister, AccountUpdater {
   private final PasswordEncoder passwordEncoder;
 
   @Override
-  public Account create(AccountCreateRequest createRequest) {
+  public Account register(AccountCreateRequest createRequest) {
     validateAccountCreate(createRequest);
 
     Account account = Account.create(createRequest, passwordEncoder);

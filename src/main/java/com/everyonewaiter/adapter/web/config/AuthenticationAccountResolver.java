@@ -3,7 +3,7 @@ package com.everyonewaiter.adapter.web.config;
 import static java.util.Objects.requireNonNull;
 
 import com.everyonewaiter.application.account.required.AccountRepository;
-import com.everyonewaiter.application.auth.provided.JwtProvider;
+import com.everyonewaiter.application.auth.required.JwtProvider;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.auth.JwtPayload;

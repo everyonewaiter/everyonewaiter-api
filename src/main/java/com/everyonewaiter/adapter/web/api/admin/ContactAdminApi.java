@@ -1,13 +1,13 @@
 package com.everyonewaiter.adapter.web.api.admin;
 
 import com.everyonewaiter.adapter.web.api.admin.dto.ContactAdminReadResponse;
-import com.everyonewaiter.application.contact.dto.ContactAdminReadRequest;
 import com.everyonewaiter.application.contact.provided.ContactFinder;
 import com.everyonewaiter.application.contact.provided.ContactProcessor;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.contact.Contact;
+import com.everyonewaiter.domain.contact.ContactAdminReadRequest;
 import com.everyonewaiter.domain.shared.Paging;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
