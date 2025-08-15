@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 @Getter
 @RequiredArgsConstructor
 public enum ImageFormat {
+
   PNG("png", MediaType.IMAGE_PNG_VALUE, PngWriter.NoCompression),
   JPG("jpg", MediaType.IMAGE_JPEG_VALUE, JpegWriter.Default),
   WEBP("webp", "image/webp", WebpWriter.DEFAULT),

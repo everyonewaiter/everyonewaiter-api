@@ -1,8 +1,8 @@
-package com.everyonewaiter.infrastructure.image;
+package com.everyonewaiter.adapter.integration.image;
 
-import com.everyonewaiter.domain.image.service.ImageClient;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
+import com.everyonewaiter.application.image.required.ImageClient;
+import com.everyonewaiter.domain.image.FailedDeleteImageException;
+import com.everyonewaiter.domain.image.FailedUploadImageException;
 import com.oracle.bmc.ConfigFileReader;
 import com.oracle.bmc.Region;
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
@@ -15,11 +15,15 @@ import com.oracle.bmc.objectstorage.transfer.UploadManager;
 import java.io.File;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 class OracleObjectStorageClient implements ImageClient {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(OracleObjectStorageClient.class);
 
   private final OracleObjectStorageProperties properties;
 
@@ -46,8 +50,10 @@ class OracleObjectStorageClient implements ImageClient {
           );
 
       uploadManager.upload(request);
-    } catch (Exception exception) {
-      throw new BusinessException(ErrorCode.FAILED_UPLOAD_IMAGE);
+    } catch (IOException exception) {
+      LOGGER.error("[이미지 업로드 실패] {}", imageName, exception);
+
+      throw new FailedUploadImageException();
     }
   }
 
@@ -59,14 +65,18 @@ class OracleObjectStorageClient implements ImageClient {
           .bucketName(properties.getBucketName())
           .objectName(imageName)
           .build();
+
       client.deleteObject(request);
-    } catch (Exception e) {
-      throw new BusinessException(ErrorCode.FAILED_DELETE_IMAGE);
+    } catch (IOException exception) {
+      LOGGER.error("[이미지 삭제 실패] {}", imageName, exception);
+
+      throw new FailedDeleteImageException();
     }
   }
 
   private ObjectStorageClient initializeClient() throws IOException {
     ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
+
     return ObjectStorageClient.builder()
         .region(Region.AP_SEOUL_1)
         .clientConfigurator(builder ->

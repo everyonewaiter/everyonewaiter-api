@@ -23,7 +23,7 @@ public class ImageMultipartFile implements MultipartFile {
     this.name = "image";
     this.originalFilename = generateFileName(prefix, imageFormat);
     this.contentType = imageFormat.getContentType();
-    this.content = content;
+    this.content = content.clone();
   }
 
   @Override
@@ -53,7 +53,7 @@ public class ImageMultipartFile implements MultipartFile {
 
   @Override
   public byte @NonNull [] getBytes() {
-    return this.content;
+    return this.content.clone();
   }
 
   @Override
@@ -71,6 +71,7 @@ public class ImageMultipartFile implements MultipartFile {
   private String generateFileName(String prefix, ImageFormat imageFormat) {
     String formattedPrefix = StringUtils.hasText(prefix) ? prefix + "/" : "";
     String formattedDate = LocalDateTime.now().format(DateFormatter.YEAR_MONTH) + "/";
+
     return formattedPrefix + formattedDate + Tsid.nextString() + "." + imageFormat.getExtension();
   }
 

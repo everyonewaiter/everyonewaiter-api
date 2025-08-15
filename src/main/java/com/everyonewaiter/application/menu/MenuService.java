@@ -1,9 +1,9 @@
 package com.everyonewaiter.application.menu;
 
+import com.everyonewaiter.application.image.provided.ImageManager;
 import com.everyonewaiter.application.menu.request.MenuWrite;
 import com.everyonewaiter.application.menu.response.MenuResponse;
 import com.everyonewaiter.application.support.CacheName;
-import com.everyonewaiter.domain.image.service.ImageManager;
 import com.everyonewaiter.domain.menu.entity.Category;
 import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.menu.entity.MenuOption;
@@ -46,7 +46,7 @@ public class MenuService {
         request.spicy(),
         request.state(),
         request.label(),
-        imageManager.upload(request.file(), "menu"),
+        imageManager.upload("menu", request.file()),
         request.printEnabled(),
         lastPosition
     );
@@ -88,7 +88,7 @@ public class MenuService {
         request.label(),
         request.printEnabled()
     );
-    menu.updateMenuImage(imageManager.upload(file, "menu"));
+    menu.updateMenuImage(imageManager.upload("menu", file));
     menuRepository.save(menu);
   }
 

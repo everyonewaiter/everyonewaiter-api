@@ -1,4 +1,4 @@
-package com.everyonewaiter.infrastructure.image;
+package com.everyonewaiter.adapter.integration.image;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

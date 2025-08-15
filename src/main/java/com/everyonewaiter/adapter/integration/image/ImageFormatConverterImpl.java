@@ -1,10 +1,9 @@
-package com.everyonewaiter.infrastructure.image;
+package com.everyonewaiter.adapter.integration.image;
 
+import com.everyonewaiter.application.image.required.ImageFormatConverter;
+import com.everyonewaiter.domain.image.FailedConvertImageFormatException;
 import com.everyonewaiter.domain.image.ImageFormat;
 import com.everyonewaiter.domain.image.ImageMultipartFile;
-import com.everyonewaiter.domain.image.service.ImageFormatConverter;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
 import com.sksamuel.scrimage.ImmutableImage;
 import java.io.IOException;
 import org.springframework.stereotype.Component;
@@ -17,12 +16,14 @@ class ImageFormatConverterImpl implements ImageFormatConverter {
   public MultipartFile convertToWebp(MultipartFile file, String prefix) {
     try {
       ImageFormat webp = ImageFormat.WEBP;
+
       byte[] content = ImmutableImage.loader()
           .fromStream(file.getInputStream())
           .bytes(webp.getWriter());
+
       return new ImageMultipartFile(prefix, webp, content);
     } catch (IOException exception) {
-      throw new BusinessException(ErrorCode.FAILED_CONVERT_IMAGE_FORMAT);
+      throw new FailedConvertImageFormatException();
     }
   }
 

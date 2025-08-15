@@ -1,12 +1,12 @@
 package com.everyonewaiter.application.store;
 
+import com.everyonewaiter.application.image.provided.ImageManager;
 import com.everyonewaiter.application.store.request.RegistrationAdminRead;
 import com.everyonewaiter.application.store.request.RegistrationAdminWrite;
 import com.everyonewaiter.application.store.request.RegistrationRead;
 import com.everyonewaiter.application.store.request.RegistrationWrite;
 import com.everyonewaiter.application.store.response.RegistrationAdminResponse;
 import com.everyonewaiter.application.store.response.RegistrationResponse;
-import com.everyonewaiter.domain.image.service.ImageManager;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Paging;
@@ -32,7 +32,7 @@ public class RegistrationService {
         request.address(),
         request.landline(),
         request.license(),
-        imageManager.upload(request.file(), "license")
+        imageManager.upload("license", request.file())
     );
     Registration registration = Registration.create(accountId, businessLicense);
     return registrationRepository.save(registration).getId();
@@ -67,7 +67,7 @@ public class RegistrationService {
         request.landline(),
         request.license()
     );
-    registration.updateLicenseImage(imageManager.upload(request.file(), "license"));
+    registration.updateLicenseImage(imageManager.upload("license", request.file()));
     registrationRepository.save(registration);
   }
 

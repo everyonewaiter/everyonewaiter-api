@@ -1,6 +1,6 @@
 package com.everyonewaiter.application.store;
 
-import com.everyonewaiter.domain.image.service.ImageManager;
+import com.everyonewaiter.application.image.provided.ImageManager;
 import com.everyonewaiter.domain.store.event.LicenseImageDeleteEvent;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

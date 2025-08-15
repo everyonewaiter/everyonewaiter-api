@@ -1,11 +1,17 @@
-package com.everyonewaiter.domain.image.service;
+package com.everyonewaiter.application.image;
 
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
+import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElse;
+
+import com.everyonewaiter.application.image.provided.ImageManager;
+import com.everyonewaiter.application.image.required.ImageClient;
+import com.everyonewaiter.application.image.required.ImageFormatConverter;
+import com.everyonewaiter.application.image.required.PDFToImageConverter;
+import com.everyonewaiter.domain.image.FailedUploadImageException;
+import com.everyonewaiter.domain.image.UnsupportedFileTypeException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,46 +21,49 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Component
 @RequiredArgsConstructor
-public class ImageManager {
+class ImageService implements ImageManager {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ImageManager.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ImageService.class);
 
-  private final PDFToImageConverter pdfToImageConverter;
-  private final ImageFormatConverter imageFormatConverter;
   private final ImageClient imageClient;
+  private final ImageFormatConverter imageFormatConverter;
+  private final PDFToImageConverter pdfToImageConverter;
 
-  public String upload(MultipartFile file, String prefix) {
+  @Override
+  public String upload(String prefix, MultipartFile file) {
     MultipartFile imageFile = convertFileToImage(file, prefix);
-    String imageFileName = Objects.requireNonNull(imageFile.getOriginalFilename());
+    String imageFileName = requireNonNull(imageFile.getOriginalFilename());
     File tempFile = new File(imageFileName.replace("/", "."));
 
     try {
       imageFile.transferTo(tempFile);
+
       imageClient.upload(tempFile, imageFileName, imageFile.getContentType());
+
       return imageFileName;
     } catch (IOException exception) {
-      throw new BusinessException(ErrorCode.FAILED_UPLOAD_IMAGE);
+      LOGGER.error("이미지 업로드 중 임시 파일 생성에 실패하였습니다. {}", imageFileName, exception);
+
+      throw new FailedUploadImageException();
     } finally {
       deleteTempFile(tempFile);
     }
   }
 
   private MultipartFile convertFileToImage(MultipartFile file, String prefix) {
-    String contentType = Objects.requireNonNullElse(file.getContentType(), "empty");
+    String contentType = requireNonNullElse(file.getContentType(), "empty");
+
     return switch (contentType) {
       case MediaType.IMAGE_PNG_VALUE,
            MediaType.IMAGE_JPEG_VALUE -> imageFormatConverter.convertToWebp(file, prefix);
       case MediaType.APPLICATION_PDF_VALUE -> pdfToImageConverter.convertFirstPage(file, prefix);
-      default -> throw new BusinessException(ErrorCode.ALLOW_IMAGE_AND_PDF_FILE);
+      default -> throw new UnsupportedFileTypeException();
     };
   }
 
+  @Override
   public void delete(String imageName) {
-    try {
-      imageClient.delete(imageName);
-    } catch (BusinessException exception) {
-      LOGGER.error("[이미지 삭제 실패] {}", imageName, exception);
-    }
+    imageClient.delete(imageName);
   }
 
   private void deleteTempFile(File tempFile) {

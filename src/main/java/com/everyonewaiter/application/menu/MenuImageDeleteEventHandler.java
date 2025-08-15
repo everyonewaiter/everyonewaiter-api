@@ -1,6 +1,6 @@
 package com.everyonewaiter.application.menu;
 
-import com.everyonewaiter.domain.image.service.ImageManager;
+import com.everyonewaiter.application.image.provided.ImageManager;
 import com.everyonewaiter.domain.menu.event.MenuImageDeleteEvent;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

@@ -1,10 +1,9 @@
-package com.everyonewaiter.infrastructure.image;
+package com.everyonewaiter.adapter.integration.image;
 
+import com.everyonewaiter.application.image.required.PDFToImageConverter;
+import com.everyonewaiter.domain.image.FailedConvertPdfToImageException;
 import com.everyonewaiter.domain.image.ImageFormat;
 import com.everyonewaiter.domain.image.ImageMultipartFile;
-import com.everyonewaiter.domain.image.service.PDFToImageConverter;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
 import com.sksamuel.scrimage.ImmutableImage;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -28,11 +27,13 @@ class PDFToImageConverterImpl implements PDFToImageConverter {
   public MultipartFile convertFirstPage(MultipartFile file, String prefix, ImageFormat format) {
     try (PDDocument document = Loader.loadPDF(new RandomAccessReadBuffer(file.getInputStream()))) {
       PDFRenderer pdfRenderer = new PDFRenderer(document);
+
       BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
       byte[] content = ImmutableImage.fromAwt(bufferedImage).bytes(format.getWriter());
+
       return new ImageMultipartFile(prefix, format, content);
     } catch (IOException exception) {
-      throw new BusinessException(ErrorCode.FAILED_CONVERT_PDF_TO_IMAGE);
+      throw new FailedConvertPdfToImageException();
     }
   }
 

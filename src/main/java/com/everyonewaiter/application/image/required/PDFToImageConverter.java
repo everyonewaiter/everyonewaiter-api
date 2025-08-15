@@ -1,4 +1,4 @@
-package com.everyonewaiter.domain.image.service;
+package com.everyonewaiter.application.image.required;
 
 import com.everyonewaiter.domain.image.ImageFormat;
 import org.springframework.web.multipart.MultipartFile;
