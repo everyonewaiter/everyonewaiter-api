@@ -2,17 +2,17 @@ package com.everyonewaiter.adapter.web.api;
 
 import static com.everyonewaiter.adapter.web.HttpRequestParser.parseXRequestId;
 import static lombok.AccessLevel.PRIVATE;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import com.everyonewaiter.domain.shared.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @NoArgsConstructor(access = PRIVATE)
 final class WebApiExceptionLogger {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(WebApiExceptionLogger.class);
+  private static final Logger LOGGER = getLogger(WebApiExceptionLogger.class);
 
   private static final String DEFAULT_LOGGING_FORMAT = "[{}] [{} {}] [{}] [{} {}]: {}";
 

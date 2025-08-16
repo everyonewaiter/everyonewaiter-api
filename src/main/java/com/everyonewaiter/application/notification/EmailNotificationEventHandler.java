@@ -5,6 +5,7 @@ import static com.everyonewaiter.domain.notification.EmailTemplate.STORE_REGISTR
 import static com.everyonewaiter.domain.notification.EmailTemplate.STORE_REGISTRATION_REJECT;
 import static com.everyonewaiter.domain.support.ClientUri.AUTH_EMAIL;
 import static com.everyonewaiter.domain.support.ClientUri.STORE_REGISTRATION;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.auth.required.JwtProvider;
@@ -16,12 +17,11 @@ import com.everyonewaiter.domain.auth.JwtFixedId;
 import com.everyonewaiter.domain.auth.JwtPayload;
 import com.everyonewaiter.domain.notification.TemplateEmail;
 import com.everyonewaiter.domain.shared.Email;
-import com.everyonewaiter.domain.store.event.RegistrationApproveEvent;
-import com.everyonewaiter.domain.store.event.RegistrationRejectEvent;
+import com.everyonewaiter.domain.store.RegistrationApproveEvent;
+import com.everyonewaiter.domain.store.RegistrationRejectEvent;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 class EmailNotificationEventHandler {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(EmailNotificationEventHandler.class);
+  private static final Logger LOGGER = getLogger(EmailNotificationEventHandler.class);
 
   private final JwtProvider jwtProvider;
   private final AccountFinder accountFinder;
@@ -39,13 +39,13 @@ class EmailNotificationEventHandler {
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
-  public void consumeAccountCreateEvent(AccountCreateEvent event) {
+  public void handle(AccountCreateEvent event) {
     sendAuthMail(event.email());
   }
 
   @Async("eventTaskExecutor")
   @EventListener
-  public void consumeAuthMailSendEvent(AuthMailSendEvent event) {
+  public void handle(AuthMailSendEvent event) {
     sendAuthMail(event.email());
   }
 
@@ -68,9 +68,9 @@ class EmailNotificationEventHandler {
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
-  public void consumeRegistrationApproveEvent(RegistrationApproveEvent event) {
+  public void handle(RegistrationApproveEvent event) {
     Long accountId = event.accountId();
-    String storeName = event.businessLicense().getName();
+    String storeName = event.businessDetail().getName();
     LOGGER.info("[매장 등록 신청 승인 알림 이벤트] accountId: {}, storeName: {}", accountId, storeName);
 
     Account account = accountFinder.findOrThrow(accountId);
@@ -88,7 +88,7 @@ class EmailNotificationEventHandler {
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
-  public void consumeRegistrationRejectEvent(RegistrationRejectEvent event) {
+  public void handle(RegistrationRejectEvent event) {
     LOGGER.info("[매장 등록 신청 반려 이벤트] storeName: {}", event.storeName());
 
     Account account = accountFinder.findOrThrow(event.accountId());

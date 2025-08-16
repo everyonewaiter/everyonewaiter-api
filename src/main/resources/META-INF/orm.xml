@@ -130,6 +130,34 @@
     </attributes>
   </entity>
 
+  <entity class="com.everyonewaiter.domain.store.Registration">
+    <table name="store_registration">
+      <index
+        name="idx_store_registration_account_id_name_status"
+        column-list="account_id, name, status"
+      />
+      <index
+        name="idx_store_registration_account_id_status_name"
+        column-list="account_id, status, name"
+      />
+    </table>
+
+    <attributes>
+      <basic name="status">
+        <column name="status" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="rejectReason">
+        <column name="reject_reason" nullable="false" length="30"/>
+      </basic>
+      <many-to-one name="account" fetch="LAZY" optional="false">
+        <join-column name="account_id" nullable="false"/>
+        <foreign-key constraint-mode="NO_CONSTRAINT"/>
+      </many-to-one>
+      <embedded name="detail"/>
+    </attributes>
+  </entity>
+
   <embeddable class="com.everyonewaiter.domain.shared.Email">
     <attributes>
       <basic name="address">
@@ -159,6 +187,27 @@
       <basic name="value">
         <column name="position" nullable="false"/>
       </basic>
+    </attributes>
+  </embeddable>
+
+  <embeddable class="com.everyonewaiter.domain.store.BusinessDetail">
+    <attributes>
+      <basic name="name">
+        <column name="name" nullable="false" length="30"/>
+      </basic>
+      <basic name="ceoName">
+        <column name="ceo_name" nullable="false" length="20"/>
+      </basic>
+      <basic name="address">
+        <column name="address" nullable="false" length="50"/>
+      </basic>
+      <basic name="landline">
+        <column name="landline" nullable="false" length="13"/>
+      </basic>
+      <basic name="licenseImage">
+        <column name="license_image" nullable="false" length="33"/>
+      </basic>
+      <embedded name="license"/>
     </attributes>
   </embeddable>
 

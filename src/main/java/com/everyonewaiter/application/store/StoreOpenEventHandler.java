@@ -2,36 +2,36 @@ package com.everyonewaiter.application.store;
 
 import static com.everyonewaiter.domain.device.DevicePurpose.TABLE;
 import static com.everyonewaiter.domain.device.DeviceState.ACTIVE;
+import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.transaction.event.TransactionPhase.BEFORE_COMMIT;
 
 import com.everyonewaiter.application.device.provided.DeviceFinder;
+import com.everyonewaiter.application.store.required.StoreRepository;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.domain.store.entity.Store;
 import com.everyonewaiter.domain.store.event.StoreOpenEvent;
-import com.everyonewaiter.domain.store.repository.StoreRepository;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
 @RequiredArgsConstructor
 class StoreOpenEventHandler {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(StoreOpenEventHandler.class);
+  private static final Logger LOGGER = getLogger(StoreOpenEventHandler.class);
 
   private final StoreRepository storeRepository;
   private final DeviceFinder deviceFinder;
   private final PosTableRepository posTableRepository;
 
-  @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-  public void consume(StoreOpenEvent event) {
+  @TransactionalEventListener(phase = BEFORE_COMMIT)
+  public void handle(StoreOpenEvent event) {
     Long storeId = event.storeId();
     Store store = storeRepository.findByIdOrThrow(storeId);
     LOGGER.info("[매장 영업 시작 이벤트] storeId: {}", storeId);

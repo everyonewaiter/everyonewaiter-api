@@ -96,7 +96,7 @@ public class StoreResponse {
           store.getBusinessLicense().getCeoName(),
           store.getBusinessLicense().getAddress(),
           store.getBusinessLicense().getLandline(),
-          store.getBusinessLicense().getLicense(),
+          store.getBusinessLicense().getLicense().value(),
           store.getBusinessLicense().getLicenseImage(),
           store.getStatus(),
           store.getLastOpenedAt(),

@@ -9,7 +9,7 @@ import com.everyonewaiter.IntegrationTest;
 import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountAdminPageRequest;
-import com.everyonewaiter.domain.account.AccountAdminView;
+import com.everyonewaiter.domain.account.AccountAdminPageView;
 import com.everyonewaiter.domain.account.AccountNotFoundException;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.shared.PhoneNumber;
@@ -68,7 +68,8 @@ class AccountFinderTest extends IntegrationTest {
   void findAllByAdmin() {
     Account account = createAccount();
 
-    Paging<AccountAdminView> views = accountFinder.findAllByAdmin(new AccountAdminPageRequest());
+    Paging<AccountAdminPageView> views = accountFinder.findAllByAdmin(
+        new AccountAdminPageRequest());
 
     assertThat(views.getContent()).hasSize(1);
     assertThat(views.getContent().getFirst().id()).isEqualTo(account.getId());

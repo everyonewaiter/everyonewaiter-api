@@ -1,6 +1,7 @@
 package com.everyonewaiter.adapter.integration.aop;
 
 import static java.util.Objects.requireNonNull;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import com.everyonewaiter.application.support.DistributedLock;
 import java.lang.reflect.Method;
@@ -16,7 +17,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class DistributedLockAspect {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(DistributedLockAspect.class);
+  private static final Logger LOGGER = getLogger(DistributedLockAspect.class);
 
   private static final String LOCK_KEY_PREFIX = "lock:";
 

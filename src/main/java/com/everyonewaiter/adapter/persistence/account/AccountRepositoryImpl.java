@@ -7,7 +7,7 @@ import static java.util.Objects.requireNonNull;
 import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountAdminPageRequest;
-import com.everyonewaiter.domain.account.AccountAdminView;
+import com.everyonewaiter.domain.account.AccountAdminPageView;
 import com.everyonewaiter.domain.account.AccountNotFoundException;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.account.AccountState;
@@ -54,7 +54,7 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public Paging<AccountAdminView> findAllByAdmin(AccountAdminPageRequest pageRequest) {
+  public Paging<AccountAdminPageView> findAllByAdmin(AccountAdminPageRequest pageRequest) {
     PathBuilder<Account> accountPath = new PathBuilder<>(account.getType(), account.getMetadata());
 
     String email = pageRequest.getEmail();
@@ -63,10 +63,10 @@ class AccountRepositoryImpl implements AccountRepository {
     Boolean hasStore = pageRequest.getHasStore();
     Pagination pagination = new Pagination(pageRequest.getPage(), pageRequest.getSize());
 
-    List<AccountAdminView> views = queryFactory
+    List<AccountAdminPageView> views = queryFactory
         .select(
             Projections.constructor(
-                AccountAdminView.class,
+                AccountAdminPageView.class,
                 account.id,
                 account.email,
                 account.state,

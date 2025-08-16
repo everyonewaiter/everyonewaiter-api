@@ -1,5 +1,7 @@
 package com.everyonewaiter.application.notification;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import com.everyonewaiter.application.notification.provided.NotificationSender;
 import com.everyonewaiter.domain.account.AccountCreateEvent;
 import com.everyonewaiter.domain.contact.ContactCreateEvent;
@@ -7,11 +9,10 @@ import com.everyonewaiter.domain.notification.DiscordColor;
 import com.everyonewaiter.domain.notification.DiscordEmbed;
 import com.everyonewaiter.domain.notification.DiscordEmbeds;
 import com.everyonewaiter.domain.notification.DiscordField;
-import com.everyonewaiter.domain.store.event.RegistrationApplyEvent;
-import com.everyonewaiter.domain.store.event.RegistrationReapplyEvent;
+import com.everyonewaiter.domain.store.RegistrationApplyEvent;
+import com.everyonewaiter.domain.store.RegistrationReapplyEvent;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -20,14 +21,13 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 class DiscordNotificationEventHandler {
 
-  private static final Logger LOGGER =
-      LoggerFactory.getLogger(DiscordNotificationEventHandler.class);
+  private static final Logger LOGGER = getLogger(DiscordNotificationEventHandler.class);
 
   private final NotificationSender notificationSender;
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
-  public void consumeContactCreateEvent(ContactCreateEvent event) {
+  public void handle(ContactCreateEvent event) {
     LOGGER.info("[서비스 도입 문의 이벤트] storeName: {}", event.storeName());
 
     DiscordEmbed embed = new DiscordEmbed(
@@ -43,7 +43,7 @@ class DiscordNotificationEventHandler {
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
-  public void consumeAccountCreateEvent(AccountCreateEvent event) {
+  public void handle(AccountCreateEvent event) {
     LOGGER.info("[계정 생성 이벤트] email: {}", event.email().address());
 
     DiscordEmbed embed = new DiscordEmbed(
@@ -57,7 +57,7 @@ class DiscordNotificationEventHandler {
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
-  public void consumeRegistrationApplyEvent(RegistrationApplyEvent event) {
+  public void handle(RegistrationApplyEvent event) {
     LOGGER.info("[매장 등록 신청 이벤트] storeName: {}", event.storeName());
 
     DiscordEmbed embed = new DiscordEmbed(
@@ -71,7 +71,7 @@ class DiscordNotificationEventHandler {
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
-  public void consumeRegistrationReapplyEvent(RegistrationReapplyEvent event) {
+  public void handle(RegistrationReapplyEvent event) {
     LOGGER.info("[매장 등록 재신청 알림 이벤트] storeName: {}", event.storeName());
 
     DiscordEmbed embed = new DiscordEmbed(

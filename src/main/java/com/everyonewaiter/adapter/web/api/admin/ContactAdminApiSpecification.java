@@ -1,6 +1,6 @@
 package com.everyonewaiter.adapter.web.api.admin;
 
-import com.everyonewaiter.adapter.web.api.dto.ContactAdminReadResponse;
+import com.everyonewaiter.adapter.web.api.dto.ContactAdminPageResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.domain.account.Account;
@@ -32,7 +32,7 @@ interface ContactAdminApiSpecification {
           ),
       }
   )
-  ResponseEntity<Paging<ContactAdminReadResponse>> getContacts(
+  ResponseEntity<Paging<ContactAdminPageResponse>> getContacts(
       @ParameterObject ContactAdminPageRequest request,
       @Parameter(hidden = true) Account account
   );

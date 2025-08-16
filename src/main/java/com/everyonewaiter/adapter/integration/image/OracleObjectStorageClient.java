@@ -1,5 +1,7 @@
 package com.everyonewaiter.adapter.integration.image;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import com.everyonewaiter.application.image.required.ImageClient;
 import com.everyonewaiter.domain.image.FailedDeleteImageException;
 import com.everyonewaiter.domain.image.FailedUploadImageException;
@@ -16,14 +18,13 @@ import java.io.File;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 class OracleObjectStorageClient implements ImageClient {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(OracleObjectStorageClient.class);
+  private static final Logger LOGGER = getLogger(OracleObjectStorageClient.class);
 
   private final OracleObjectStorageProperties properties;
 

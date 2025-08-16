@@ -2,6 +2,7 @@ package com.everyonewaiter.application.image;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Objects.requireNonNullElse;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import com.everyonewaiter.application.image.provided.ImageManager;
 import com.everyonewaiter.application.image.required.ImageClient;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 class ImageService implements ImageManager {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ImageService.class);
+  private static final Logger LOGGER = getLogger(ImageService.class);
 
   private final ImageClient imageClient;
   private final ImageFormatConverter imageFormatConverter;

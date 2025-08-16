@@ -1,9 +1,9 @@
 package com.everyonewaiter.domain.order.service;
 
+import com.everyonewaiter.application.store.required.StoreRepository;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.store.entity.Store;
-import com.everyonewaiter.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

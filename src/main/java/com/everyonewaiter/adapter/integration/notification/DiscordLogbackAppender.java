@@ -1,6 +1,7 @@
 package com.everyonewaiter.adapter.integration.notification;
 
 import static com.everyonewaiter.domain.support.DateFormatter.SERIALIZE;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxyUtil;
@@ -15,7 +16,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -26,7 +26,7 @@ import org.springframework.web.client.RestClient;
 @RequiredArgsConstructor
 public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(DiscordLogbackAppender.class);
+  private static final Logger LOGGER = getLogger(DiscordLogbackAppender.class);
 
   private static final String DISCORD_WEBHOOK_BASE_URL = "https://discord.com/api/webhooks";
   private static final RestClient WEB_HOOK_CLIENT = RestClient.create(DISCORD_WEBHOOK_BASE_URL);

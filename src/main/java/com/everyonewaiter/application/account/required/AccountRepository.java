@@ -2,7 +2,7 @@ package com.everyonewaiter.application.account.required;
 
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountAdminPageRequest;
-import com.everyonewaiter.domain.account.AccountAdminView;
+import com.everyonewaiter.domain.account.AccountAdminPageView;
 import com.everyonewaiter.domain.account.AccountState;
 import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.Paging;
@@ -19,7 +19,7 @@ public interface AccountRepository {
 
   boolean existsState(PhoneNumber phoneNumber, AccountState state);
 
-  Paging<AccountAdminView> findAllByAdmin(AccountAdminPageRequest pageRequest);
+  Paging<AccountAdminPageView> findAllByAdmin(AccountAdminPageRequest pageRequest);
 
   Optional<Account> findById(Long accountId);
 

@@ -1,11 +1,11 @@
 package com.everyonewaiter.application.store;
 
 import com.everyonewaiter.application.store.request.StoreWrite;
+import com.everyonewaiter.application.store.required.StoreRepository;
 import com.everyonewaiter.application.store.response.StoreResponse;
 import com.everyonewaiter.domain.store.entity.CountryOfOrigin;
 import com.everyonewaiter.domain.store.entity.StaffCallOption;
 import com.everyonewaiter.domain.store.entity.Store;
-import com.everyonewaiter.domain.store.repository.StoreRepository;
 import com.everyonewaiter.domain.store.service.StoreValidator;
 import com.everyonewaiter.domain.store.view.StoreView;
 import java.util.List;

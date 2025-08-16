@@ -8,6 +8,7 @@ import static com.everyonewaiter.domain.notification.AlimTalkTemplate.WAITING_ST
 import static com.everyonewaiter.domain.notification.AlimTalkWeblinkButtonTemplate.CHECK_MY_TURN;
 import static com.everyonewaiter.domain.notification.AlimTalkWeblinkButtonTemplate.MENU_PREVIEW;
 import static com.everyonewaiter.domain.notification.AlimTalkWeblinkButtonTemplate.WAITING_CANCEL;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import com.everyonewaiter.application.notification.provided.NotificationSender;
 import com.everyonewaiter.domain.auth.AuthCodeSendEvent;
@@ -19,7 +20,6 @@ import com.everyonewaiter.domain.waiting.event.WaitingCustomerCallEvent;
 import com.everyonewaiter.domain.waiting.event.WaitingRegistrationEvent;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -29,14 +29,13 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 class AlimTalkNotificationEventHandler {
 
-  private static final Logger LOGGER =
-      LoggerFactory.getLogger(AlimTalkNotificationEventHandler.class);
+  private static final Logger LOGGER = getLogger(AlimTalkNotificationEventHandler.class);
 
   private final NotificationSender notificationSender;
 
   @Async("eventTaskExecutor")
   @EventListener
-  public void consumeAuthCodeSendEvent(AuthCodeSendEvent event) {
+  public void handle(AuthCodeSendEvent event) {
     LOGGER.info("[휴대폰 인증 번호 전송 이벤트] phone: {}", event.phoneNumber());
 
     AlimTalkMessage message = new AlimTalkMessage(
@@ -50,7 +49,7 @@ class AlimTalkNotificationEventHandler {
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
-  public void consumeWaitingRegistrationEvent(WaitingRegistrationEvent event) {
+  public void handle(WaitingRegistrationEvent event) {
     LOGGER.info("[웨이팅 등록 이벤트] storeId: {}, storeName: {}", event.storeId(), event.storeName());
 
     AlimTalkMessage message = new AlimTalkMessage(
@@ -72,7 +71,7 @@ class AlimTalkNotificationEventHandler {
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
-  public void consumeWaitingCustomerCallEvent(WaitingCustomerCallEvent event) {
+  public void handle(WaitingCustomerCallEvent event) {
     LOGGER.info("[웨이팅 손님 호출 이벤트] storeId: {}, storeName: {}", event.storeId(), event.storeName());
 
     AlimTalkMessage message = new AlimTalkMessage(
@@ -88,7 +87,7 @@ class AlimTalkNotificationEventHandler {
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
-  public void consumeWaitingCancelByCustomerEvent(WaitingCancelByCustomerEvent event) {
+  public void handle(WaitingCancelByCustomerEvent event) {
     LOGGER.info("[웨이팅 취소 (손님) 이벤트] storeId: {}, storeName: {}", event.storeId(), event.storeName());
 
     AlimTalkMessage message = new AlimTalkMessage(
@@ -103,7 +102,7 @@ class AlimTalkNotificationEventHandler {
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
-  public void consumeWaitingCancelByStoreEvent(WaitingCancelByStoreEvent event) {
+  public void handle(WaitingCancelByStoreEvent event) {
     LOGGER.info("[웨이팅 취소 (매장) 이벤트] storeId: {}, storeName: {}", event.storeId(), event.storeName());
 
     AlimTalkMessage message = new AlimTalkMessage(

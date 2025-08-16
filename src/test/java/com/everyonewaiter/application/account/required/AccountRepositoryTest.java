@@ -12,7 +12,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import com.everyonewaiter.IntegrationTest;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountAdminPageRequest;
-import com.everyonewaiter.domain.account.AccountAdminView;
+import com.everyonewaiter.domain.account.AccountAdminPageView;
 import com.everyonewaiter.domain.account.AccountNotFoundException;
 import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.Paging;
@@ -67,7 +67,7 @@ class AccountRepositoryTest extends IntegrationTest {
   void findAllByAdmin() {
     Account account = createAccount();
 
-    Paging<AccountAdminView> pagedViews = findAllByAdmin(new AccountAdminPageRequest());
+    Paging<AccountAdminPageView> pagedViews = findAllByAdmin(new AccountAdminPageRequest());
 
     assertThat(pagedViews.getContent()).hasSize(1);
     assertThat(pagedViews.getContent().getFirst().id()).isEqualTo(account.getId());
@@ -77,14 +77,14 @@ class AccountRepositoryTest extends IntegrationTest {
   void findAllByAdminWhereEmail() {
     Account account = createAccount();
 
-    Paging<AccountAdminView> pagedViews = findAllByAdmin(
+    Paging<AccountAdminPageView> pagedViews = findAllByAdmin(
         new AccountAdminPageRequest(account.getEmail().address(), null, null, null, 1, 20)
     );
 
     assertThat(pagedViews.getContent()).hasSize(1);
     assertThat(pagedViews.getContent().getFirst().id()).isEqualTo(account.getId());
 
-    Paging<AccountAdminView> emptyViews = findAllByAdmin(
+    Paging<AccountAdminPageView> emptyViews = findAllByAdmin(
         new AccountAdminPageRequest("user@everyonewaiter.com", null, null, null, 1, 20)
     );
 
@@ -95,14 +95,14 @@ class AccountRepositoryTest extends IntegrationTest {
   void findAllByAdminWhereState() {
     Account account = createAccount();
 
-    Paging<AccountAdminView> pagedViews = findAllByAdmin(
+    Paging<AccountAdminPageView> pagedViews = findAllByAdmin(
         new AccountAdminPageRequest(null, account.getState(), null, null, 1, 20)
     );
 
     assertThat(pagedViews.getContent()).hasSize(1);
     assertThat(pagedViews.getContent().getFirst().id()).isEqualTo(account.getId());
 
-    Paging<AccountAdminView> emptyViews = findAllByAdmin(
+    Paging<AccountAdminPageView> emptyViews = findAllByAdmin(
         new AccountAdminPageRequest(null, ACTIVE, null, null, 1, 20)
     );
 
@@ -113,14 +113,14 @@ class AccountRepositoryTest extends IntegrationTest {
   void findAllByAdminWherePermission() {
     Account account = createAccount();
 
-    Paging<AccountAdminView> pagedViews = findAllByAdmin(
+    Paging<AccountAdminPageView> pagedViews = findAllByAdmin(
         new AccountAdminPageRequest(null, null, account.getPermission(), null, 1, 20)
     );
 
     assertThat(pagedViews.getContent()).hasSize(1);
     assertThat(pagedViews.getContent().getFirst().id()).isEqualTo(account.getId());
 
-    Paging<AccountAdminView> emptyViews = findAllByAdmin(
+    Paging<AccountAdminPageView> emptyViews = findAllByAdmin(
         new AccountAdminPageRequest(null, null, OWNER, null, 1, 20)
     );
 
@@ -131,14 +131,14 @@ class AccountRepositoryTest extends IntegrationTest {
   void findAllByAdminWhereHasStore() {
     Account account = createAccount();
 
-    Paging<AccountAdminView> pagedViews = findAllByAdmin(
+    Paging<AccountAdminPageView> pagedViews = findAllByAdmin(
         new AccountAdminPageRequest(null, null, null, false, 1, 20)
     );
 
     assertThat(pagedViews.getContent()).hasSize(1);
     assertThat(pagedViews.getContent().getFirst().id()).isEqualTo(account.getId());
 
-    Paging<AccountAdminView> emptyViews = findAllByAdmin(
+    Paging<AccountAdminPageView> emptyViews = findAllByAdmin(
         new AccountAdminPageRequest(null, null, null, true, 1, 20)
     );
 
@@ -200,7 +200,7 @@ class AccountRepositoryTest extends IntegrationTest {
     return accountRepository.save(account);
   }
 
-  private Paging<AccountAdminView> findAllByAdmin(AccountAdminPageRequest readRequest) {
+  private Paging<AccountAdminPageView> findAllByAdmin(AccountAdminPageRequest readRequest) {
     return accountRepository.findAllByAdmin(readRequest);
   }
 

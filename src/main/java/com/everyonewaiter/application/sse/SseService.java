@@ -2,6 +2,7 @@ package com.everyonewaiter.application.sse;
 
 import static com.everyonewaiter.domain.sse.SseKeyType.EMITTER;
 import static com.everyonewaiter.domain.sse.SseKeyType.EVENT;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import com.everyonewaiter.application.sse.provided.SseConnector;
 import com.everyonewaiter.application.sse.provided.SseSender;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequiredArgsConstructor
 class SseService implements SseConnector, SseSender {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SseService.class);
+  private static final Logger LOGGER = getLogger(SseService.class);
 
   private static final String CONNECT_EVENT = "CONNECTED!";
 

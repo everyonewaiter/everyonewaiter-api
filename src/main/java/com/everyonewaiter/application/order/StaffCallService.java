@@ -1,11 +1,11 @@
 package com.everyonewaiter.application.order;
 
 import com.everyonewaiter.application.order.response.OrderResponse;
+import com.everyonewaiter.application.store.required.StoreRepository;
 import com.everyonewaiter.domain.order.entity.StaffCall;
 import com.everyonewaiter.domain.order.repository.StaffCallRepository;
 import com.everyonewaiter.domain.order.service.StaffCallValidator;
 import com.everyonewaiter.domain.store.entity.Store;
-import com.everyonewaiter.domain.store.repository.StoreRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

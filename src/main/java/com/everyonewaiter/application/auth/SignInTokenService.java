@@ -1,6 +1,8 @@
 package com.everyonewaiter.application.auth;
 
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import com.everyonewaiter.application.auth.provided.SignInTokenProvider;
 import com.everyonewaiter.application.auth.required.JwtProvider;
 import com.everyonewaiter.application.auth.required.RefreshTokenRepository;
@@ -14,7 +16,6 @@ import java.time.Duration;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -25,7 +26,7 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 class SignInTokenService implements SignInTokenProvider {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SignInTokenService.class);
+  private static final Logger LOGGER = getLogger(SignInTokenService.class);
 
   private final JwtProvider jwtProvider;
   private final RefreshTokenRepository refreshTokenRepository;

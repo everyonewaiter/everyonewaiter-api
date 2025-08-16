@@ -44,7 +44,7 @@ public class Account extends AggregateRootEntity<Account> {
     account.permission = AccountPermission.USER;
     account.lastSignIn = Instant.ofEpochMilli(0);
 
-    account.registerEvent(new AccountCreateEvent(account.email));
+    account.registerEvent(new AccountCreateEvent(account));
 
     return account;
   }

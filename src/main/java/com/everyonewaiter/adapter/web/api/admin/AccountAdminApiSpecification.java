@@ -1,6 +1,6 @@
 package com.everyonewaiter.adapter.web.api.admin;
 
-import com.everyonewaiter.adapter.web.api.dto.AccountAdminReadResponse;
+import com.everyonewaiter.adapter.web.api.dto.AccountAdminPageResponse;
 import com.everyonewaiter.adapter.web.api.dto.AccountDetailResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
@@ -35,7 +35,7 @@ interface AccountAdminApiSpecification {
           ),
       }
   )
-  ResponseEntity<Paging<AccountAdminReadResponse>> getAccounts(
+  ResponseEntity<Paging<AccountAdminPageResponse>> getAccounts(
       @ParameterObject AccountAdminPageRequest readRequest,
       @Parameter(hidden = true) Account account
   );

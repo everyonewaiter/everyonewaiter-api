@@ -1,6 +1,7 @@
 package com.everyonewaiter.adapter.integration.notification;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import com.everyonewaiter.application.notification.required.EmailSender;
 import com.everyonewaiter.domain.notification.SimpleEmail;
@@ -8,7 +9,6 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Fallback;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class SimpleEmailSender implements EmailSender {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SimpleEmailSender.class);
+  private static final Logger LOGGER = getLogger(SimpleEmailSender.class);
 
   private static final String FROM_FORMAT = "모두의 웨이터 <%s>";
 

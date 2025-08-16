@@ -60,7 +60,7 @@ class AuthService implements Authenticator {
     authRepository.increment(authAttempt);
     authRepository.delete(new AuthSuccess(authPurpose, phoneNumber));
 
-    AuthCodeSendEvent sendEvent = new AuthCodeSendEvent(authCode.phoneNumber(), authCode.code());
+    AuthCodeSendEvent sendEvent = new AuthCodeSendEvent(authCode);
     applicationEventPublisher.publishEvent(sendEvent);
   }
 

@@ -1,5 +1,7 @@
 package com.everyonewaiter.application.menu;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import com.everyonewaiter.application.image.provided.ImageManager;
 import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.menu.event.CategoryDeleteEvent;
@@ -10,7 +12,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -21,7 +22,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 class CategoryDeleteEventHandler {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(CategoryDeleteEventHandler.class);
+  private static final Logger LOGGER = getLogger(CategoryDeleteEventHandler.class);
 
   private final ImageManager imageManager;
   private final MenuRepository menuRepository;

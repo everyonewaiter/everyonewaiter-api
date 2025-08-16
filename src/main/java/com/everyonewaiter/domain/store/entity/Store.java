@@ -6,6 +6,7 @@ import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.sse.ServerAction;
 import com.everyonewaiter.domain.sse.SseCategory;
 import com.everyonewaiter.domain.sse.SseEvent;
+import com.everyonewaiter.domain.store.BusinessDetail;
 import com.everyonewaiter.domain.store.event.StoreCloseEvent;
 import com.everyonewaiter.domain.store.event.StoreOpenEvent;
 import jakarta.persistence.CascadeType;
@@ -38,7 +39,7 @@ public class Store extends AggregateRootEntity<Store> {
   private Long accountId;
 
   @Embedded
-  private BusinessLicense businessLicense;
+  private BusinessDetail businessLicense;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status", nullable = false)
@@ -54,7 +55,7 @@ public class Store extends AggregateRootEntity<Store> {
   @JoinColumn(name = "setting_id", nullable = false)
   private Setting setting = new Setting();
 
-  public static Store create(Long accountId, BusinessLicense businessLicense) {
+  public static Store create(Long accountId, BusinessDetail businessLicense) {
     Store store = new Store();
     store.accountId = accountId;
     store.businessLicense = businessLicense;

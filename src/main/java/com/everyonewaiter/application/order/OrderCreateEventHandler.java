@@ -1,5 +1,7 @@
 package com.everyonewaiter.application.order;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.order.entity.Receipt;
 import com.everyonewaiter.domain.order.event.OrderCreateEvent;
@@ -10,7 +12,6 @@ import com.everyonewaiter.domain.sse.SseCategory;
 import com.everyonewaiter.domain.sse.SseEvent;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 class OrderCreateEventHandler {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(OrderCreateEventHandler.class);
+  private static final Logger LOGGER = getLogger(OrderCreateEventHandler.class);
 
   private final OrderRepository orderRepository;
   private final ReceiptFactory receiptFactory;

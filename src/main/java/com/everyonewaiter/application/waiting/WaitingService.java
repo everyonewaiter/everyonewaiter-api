@@ -1,9 +1,9 @@
 package com.everyonewaiter.application.waiting;
 
+import com.everyonewaiter.application.store.required.StoreRepository;
 import com.everyonewaiter.application.waiting.request.WaitingWrite;
 import com.everyonewaiter.application.waiting.response.WaitingResponse;
 import com.everyonewaiter.domain.store.entity.Store;
-import com.everyonewaiter.domain.store.repository.StoreRepository;
 import com.everyonewaiter.domain.waiting.entity.Waiting;
 import com.everyonewaiter.domain.waiting.repository.WaitingRepository;
 import com.everyonewaiter.domain.waiting.service.WaitingValidator;
