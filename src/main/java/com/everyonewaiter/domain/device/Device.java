@@ -16,7 +16,7 @@ import static org.springframework.util.Assert.isTrue;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.sse.SseEvent;
-import com.everyonewaiter.domain.store.entity.Store;
+import com.everyonewaiter.domain.store.Store;
 import com.everyonewaiter.domain.support.Tsid;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -82,7 +82,7 @@ public class Device extends AggregateRootEntity<Device> {
     device.paymentType = requireNonNull(paymentType);
     device.secretKey = Tsid.nextString();
 
-    device.registerEvent(new SseEvent(store.getId(), DEVICE, CREATE));
+    device.registerEvent(new SseEvent(store.getNonNullId(), DEVICE, CREATE));
 
     return device;
   }
@@ -136,11 +136,11 @@ public class Device extends AggregateRootEntity<Device> {
     this.tableNo = tableNo;
     this.paymentType = requireNonNull(paymentType);
 
-    registerEvent(new SseEvent(store.getId(), DEVICE, UPDATE, getId()));
+    registerEvent(new SseEvent(store.getNonNullId(), DEVICE, UPDATE, getNonNullId()));
   }
 
   public void delete() {
-    registerEvent(new SseEvent(store.getId(), DEVICE, DELETE, getId()));
+    registerEvent(new SseEvent(store.getNonNullId(), DEVICE, DELETE, getNonNullId()));
   }
 
 }

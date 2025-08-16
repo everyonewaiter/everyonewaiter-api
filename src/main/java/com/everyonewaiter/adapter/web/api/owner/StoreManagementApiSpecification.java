@@ -1,11 +1,12 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
-import com.everyonewaiter.adapter.web.api.owner.request.StoreWriteRequest;
+import com.everyonewaiter.adapter.web.api.dto.StoreDetailResponse;
+import com.everyonewaiter.adapter.web.api.dto.StoreSimpleResponses;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.application.store.response.StoreResponse;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.shared.ErrorCode;
+import com.everyonewaiter.domain.store.StoreUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -15,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "매장")
-interface StoreManagementControllerSpecification {
+interface StoreManagementApiSpecification {
 
   @Operation(summary = "매장 목록 조회", description = "매장 목록 조회 API")
   @ApiResponse(responseCode = "200", description = "매장 목록 조회 성공")
@@ -24,12 +25,12 @@ interface StoreManagementControllerSpecification {
       code = ErrorCode.UNAUTHORIZED,
       exampleName = "액세스 토큰이 유효하지 않은 경우"
   )
-  ResponseEntity<StoreResponse.Simples> getStores(@Parameter(hidden = true) Account account);
+  ResponseEntity<StoreSimpleResponses> getStores(@Parameter(hidden = true) Account account);
 
   @SecurityRequirements
   @Operation(summary = "매장 목록 (계정 ID) 조회", description = "매장 목록 (계정 ID) 조회 API")
   @ApiResponse(responseCode = "200", description = "매장 목록 (계정 ID) 조회 성공")
-  ResponseEntity<StoreResponse.Simples> getStores(Long accountId);
+  ResponseEntity<StoreSimpleResponses> getStores(Long accountId);
 
   @SecurityRequirements
   @Operation(summary = "매장 상세 조회", description = "매장 상세 조회 API")
@@ -47,7 +48,7 @@ interface StoreManagementControllerSpecification {
           ),
       }
   )
-  ResponseEntity<StoreResponse.Detail> getStore(Long storeId);
+  ResponseEntity<StoreDetailResponse> getStore(Long storeId);
 
   @Operation(summary = "매장 정보 수정", description = "매장 정보 수정 API")
   @ApiResponse(responseCode = "204", description = "매장 정보 수정 성공")
@@ -66,7 +67,7 @@ interface StoreManagementControllerSpecification {
   )
   ResponseEntity<Void> update(
       Long storeId,
-      @RequestBody StoreWriteRequest.Update request,
+      @RequestBody StoreUpdateRequest updateRequest,
       @Parameter(hidden = true) Account account
   );
 

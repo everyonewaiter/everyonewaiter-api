@@ -75,7 +75,7 @@ public class Registration extends AggregateRootEntity<Registration> {
     this.status = RegistrationStatus.APPROVE;
     this.rejectReason = "";
 
-    registerEvent(new RegistrationApproveEvent(account.getId(), detail));
+    registerEvent(new RegistrationApproveEvent(account, detail));
   }
 
   public void reject(RegistrationRejectRequest rejectRequest) {

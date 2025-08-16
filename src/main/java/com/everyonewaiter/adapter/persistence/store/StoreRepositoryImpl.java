@@ -1,14 +1,14 @@
 package com.everyonewaiter.adapter.persistence.store;
 
-import static com.everyonewaiter.domain.store.entity.QSetting.setting;
-import static com.everyonewaiter.domain.store.entity.QStore.store;
+import static com.everyonewaiter.domain.account.QAccount.account;
+import static com.everyonewaiter.domain.store.QSetting.setting;
+import static com.everyonewaiter.domain.store.QStore.store;
 
 import com.everyonewaiter.application.store.required.StoreRepository;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
-import com.everyonewaiter.domain.store.entity.Store;
-import com.everyonewaiter.domain.store.view.StoreView;
-import com.querydsl.core.types.Projections;
+import com.everyonewaiter.domain.shared.PhoneNumber;
+import com.everyonewaiter.domain.store.Store;
+import com.everyonewaiter.domain.store.StoreNotFoundException;
+import com.everyonewaiter.domain.store.StoreStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Optional;
@@ -23,32 +23,36 @@ class StoreRepositoryImpl implements StoreRepository {
   private final StoreJpaRepository storeJpaRepository;
 
   @Override
-  public boolean existsById(Long storeId) {
-    Integer existsStore = queryFactory
-        .selectOne()
-        .from(store)
-        .where(store.id.eq(storeId))
-        .fetchFirst();
-    return existsStore != null;
+  public boolean exists(Long storeId) {
+    return storeJpaRepository.existsById(storeId);
   }
 
   @Override
-  public boolean existsByIdAndAccountId(Long storeId, Long accountId) {
+  public boolean exists(Long storeId, Long accountId) {
     return storeJpaRepository.existsByIdAndAccountId(storeId, accountId);
   }
 
   @Override
-  public List<StoreView.Simple> findAllSimpleViewByAccountId(Long accountId) {
+  public boolean existsStatus(Long storeId, StoreStatus status) {
+    return storeJpaRepository.existsByIdAndStatus(storeId, status);
+  }
+
+  @Override
+  public List<Store> findAll(Long accountId) {
     return queryFactory
-        .select(
-            Projections.constructor(
-                StoreView.Simple.class,
-                store.id,
-                store.businessLicense.name
-            )
-        )
+        .select(store)
         .from(store)
-        .where(store.accountId.eq(accountId))
+        .where(store.account.id.eq(accountId))
+        .fetch();
+  }
+
+  @Override
+  public List<Store> findAll(PhoneNumber phoneNumber) {
+    return queryFactory
+        .select(store)
+        .from(store)
+        .innerJoin(store.account, account).fetchJoin()
+        .where(store.account.phoneNumber.eq(phoneNumber))
         .fetch();
   }
 
@@ -62,13 +66,29 @@ class StoreRepositoryImpl implements StoreRepository {
                 .where(store.id.eq(storeId))
                 .fetchFirst()
         )
-        .orElseThrow(() -> new BusinessException(ErrorCode.STORE_NOT_FOUND));
+        .orElseThrow(StoreNotFoundException::new);
   }
 
   @Override
   public Store findByIdAndAccountIdOrThrow(Long storeId, Long accountId) {
     return storeJpaRepository.findByIdAndAccountId(storeId, accountId)
-        .orElseThrow(() -> new BusinessException(ErrorCode.STORE_NOT_FOUND));
+        .orElseThrow(StoreNotFoundException::new);
+  }
+
+  @Override
+  public Store findByIdAndPhoneOrThrow(Long storeId, PhoneNumber phoneNumber) {
+    return Optional.ofNullable(
+            queryFactory
+                .select(store)
+                .from(store)
+                .innerJoin(store.account, account).fetchJoin()
+                .where(
+                    store.id.eq(storeId),
+                    store.account.phoneNumber.eq(phoneNumber)
+                )
+                .fetchFirst()
+        )
+        .orElseThrow(StoreNotFoundException::new);
   }
 
   @Override

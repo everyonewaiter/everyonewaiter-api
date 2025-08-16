@@ -1,6 +1,6 @@
 package com.everyonewaiter.infrastructure.waiting;
 
-import static com.everyonewaiter.domain.store.entity.QStore.store;
+import static com.everyonewaiter.domain.store.QStore.store;
 import static com.everyonewaiter.domain.waiting.entity.QWaiting.waiting;
 
 import com.everyonewaiter.domain.shared.BusinessException;

@@ -21,10 +21,12 @@ class AccountAuthorizeEventHandler {
 
   @TransactionalEventListener(phase = BEFORE_COMMIT)
   public void handle(RegistrationApproveEvent event) {
-    LOGGER.info("[사장님 권한 부여 이벤트] accountId: {}, storeName: {}",
-        event.accountId(), event.businessDetail().getName());
+    Long accountId = event.account().getNonNullId();
+    String storeName = event.businessDetail().getName();
 
-    accountUpdater.authorize(event.accountId(), AccountPermission.OWNER);
+    LOGGER.info("[사장님 권한 부여 이벤트] accountId: {}, storeName: {}", accountId, storeName);
+
+    accountUpdater.authorize(accountId, AccountPermission.OWNER);
   }
 
 }

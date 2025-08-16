@@ -1,7 +1,7 @@
 package com.everyonewaiter.adapter.integration.aop;
 
+import com.everyonewaiter.application.store.provided.StoreValidator;
 import com.everyonewaiter.domain.account.Account;
-import com.everyonewaiter.domain.store.service.StoreValidator;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -34,7 +34,7 @@ class StoreOwnerValidationAspect {
 
     for (Object arg : args) {
       if (arg instanceof Account account) {
-        storeValidator.validateOwner(storeId, account.getId());
+        storeValidator.checkExists(storeId, account.getId());
         break;
       }
     }

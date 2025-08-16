@@ -1,10 +1,14 @@
-package com.everyonewaiter.domain.store.service;
+package com.everyonewaiter.application.store;
 
+import com.everyonewaiter.application.store.provided.StoreValidator;
 import com.everyonewaiter.application.store.required.StoreRepository;
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
+import com.everyonewaiter.domain.store.ClosedStoreException;
+import com.everyonewaiter.domain.store.StoreNotFoundException;
+import com.everyonewaiter.domain.store.StoreStatus;
 import com.everyonewaiter.domain.waiting.entity.Waiting;
 import com.everyonewaiter.domain.waiting.repository.WaitingRepository;
 import java.util.List;
@@ -13,31 +17,35 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class StoreValidator {
+class StoreValidateService implements StoreValidator {
 
   private final StoreRepository storeRepository;
   private final PosTableRepository posTableRepository;
   private final WaitingRepository waitingRepository;
 
-  public void validateExists(Long storeId) {
-    if (!storeRepository.existsById(storeId)) {
-      throw new BusinessException(ErrorCode.STORE_NOT_FOUND);
+  @Override
+  public void checkExists(Long storeId) {
+    if (!storeRepository.exists(storeId)) {
+      throw new StoreNotFoundException();
     }
   }
 
-  public void validateOwner(Long storeId, Long accountId) {
-    if (!storeRepository.existsByIdAndAccountId(storeId, accountId)) {
-      throw new BusinessException(ErrorCode.STORE_NOT_FOUND);
+  @Override
+  public void checkExists(Long storeId, Long accountId) {
+    if (!storeRepository.exists(storeId, accountId)) {
+      throw new StoreNotFoundException();
     }
   }
 
-  public void validateOpen(Long storeId) {
-    if (storeRepository.findByIdOrThrow(storeId).isClosed()) {
-      throw new BusinessException(ErrorCode.STORE_IS_CLOSED);
+  @Override
+  public void checkIsOpened(Long storeId) {
+    if (storeRepository.existsStatus(storeId, StoreStatus.CLOSE)) {
+      throw new ClosedStoreException();
     }
   }
 
-  public void validateClose(Long storeId) {
+  @Override
+  public void checkPossibleClose(Long storeId) {
     List<PosTable> posTables = posTableRepository.findAllActiveByStoreId(storeId);
 
     if (posTables.stream().anyMatch(PosTable::hasActiveActivity)) {

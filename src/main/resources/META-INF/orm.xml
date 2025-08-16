@@ -151,9 +151,74 @@
         <column name="reject_reason" nullable="false" length="30"/>
       </basic>
       <many-to-one name="account" fetch="LAZY" optional="false">
-        <join-column name="account_id" nullable="false"/>
+        <join-column name="account_id" nullable="false" updatable="false"/>
         <foreign-key constraint-mode="NO_CONSTRAINT"/>
       </many-to-one>
+      <embedded name="detail"/>
+    </attributes>
+  </entity>
+
+  <entity class="com.everyonewaiter.domain.store.Setting">
+    <table name="store_setting"/>
+
+    <attributes>
+      <basic name="ksnetDeviceNo">
+        <column name="ksnet_device_no" nullable="false" length="30"/>
+      </basic>
+      <basic name="extraTableCount">
+        <column name="extra_table_count" nullable="false"/>
+      </basic>
+      <basic name="printerLocation">
+        <column name="printer_location" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="showMenuPopup">
+        <column name="show_menu_popup" nullable="false"/>
+      </basic>
+      <basic name="showOrderTotalPrice">
+        <column name="show_order_total_price" nullable="false"/>
+      </basic>
+      <basic name="countryOfOrigins">
+        <column name="country_of_origins" nullable="false" length="500"/>
+        <convert
+          converter="com.everyonewaiter.adapter.persistence.store.CountryOfOriginToListConverter"
+        />
+      </basic>
+      <basic name="staffCallOptions">
+        <column name="staff_call_options" nullable="false" length="255"/>
+        <convert
+          converter="com.everyonewaiter.adapter.persistence.store.StaffCallOptionToListConverter"
+        />
+      </basic>
+    </attributes>
+  </entity>
+
+  <entity class="com.everyonewaiter.domain.store.Store">
+    <table name="store">
+      <index name="idx_store_account_id" column-list="account_id"/>
+    </table>
+
+    <attributes>
+      <basic name="status">
+        <column name="status" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="lastOpenedAt">
+        <column name="last_opened_at" nullable="false"/>
+      </basic>
+      <basic name="lastClosedAt">
+        <column name="last_closed_at" nullable="false"/>
+      </basic>
+      <many-to-one name="account" fetch="LAZY" optional="false">
+        <join-column name="account_id" nullable="false" updatable="false"/>
+        <foreign-key constraint-mode="NO_CONSTRAINT"/>
+      </many-to-one>
+      <one-to-one name="setting" fetch="LAZY" optional="false">
+        <join-column name="setting_id" nullable="false" updatable="false"/>
+        <cascade>
+          <cascade-all/>
+        </cascade>
+      </one-to-one>
       <embedded name="detail"/>
     </attributes>
   </entity>

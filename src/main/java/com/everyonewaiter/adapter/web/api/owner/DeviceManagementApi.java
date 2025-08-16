@@ -3,14 +3,13 @@ package com.everyonewaiter.adapter.web.api.owner;
 import com.everyonewaiter.adapter.web.api.dto.DeviceCreateResponse;
 import com.everyonewaiter.adapter.web.api.dto.DeviceDetailResponse;
 import com.everyonewaiter.adapter.web.api.dto.DevicePageResponse;
-import com.everyonewaiter.application.account.provided.AccountFinder;
+import com.everyonewaiter.adapter.web.api.dto.StoreSimpleResponses;
 import com.everyonewaiter.application.auth.provided.Authenticator;
 import com.everyonewaiter.application.device.provided.DeviceCreator;
 import com.everyonewaiter.application.device.provided.DeviceDeleter;
 import com.everyonewaiter.application.device.provided.DeviceFinder;
 import com.everyonewaiter.application.device.provided.DeviceUpdater;
-import com.everyonewaiter.application.store.StoreService;
-import com.everyonewaiter.application.store.response.StoreResponse;
+import com.everyonewaiter.application.store.provided.StoreFinder;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthPurpose;
@@ -23,9 +22,11 @@ import com.everyonewaiter.domain.device.DevicePageRequest;
 import com.everyonewaiter.domain.device.DeviceUpdateRequest;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.shared.PhoneNumber;
+import com.everyonewaiter.domain.store.Store;
 import com.everyonewaiter.domain.store.StoreOwner;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,8 +45,7 @@ import org.springframework.web.bind.annotation.RestController;
 class DeviceManagementApi implements DeviceManagementApiSpecification {
 
   private final Authenticator authenticator;
-  private final AccountFinder accountFinder;
-  private final StoreService storeService;
+  private final StoreFinder storeFinder;
   private final DeviceFinder deviceFinder;
   private final DeviceCreator deviceCreator;
   private final DeviceUpdater deviceUpdater;
@@ -83,9 +83,8 @@ class DeviceManagementApi implements DeviceManagementApiSpecification {
       @PathVariable Long storeId,
       @RequestBody @Valid DeviceCreateRequest createRequest
   ) {
-    Account account = accountFinder.findOrThrow(new PhoneNumber(createRequest.phoneNumber()));
-    storeService.checkStoreOwner(storeId, account.getId());
     Device device = deviceCreator.create(storeId, createRequest);
+
     return ResponseEntity.created(URI.create(device.getNonNullId().toString()))
         .body(DeviceCreateResponse.from(device));
   }
@@ -102,14 +101,15 @@ class DeviceManagementApi implements DeviceManagementApiSpecification {
 
   @Override
   @PostMapping("/devices/verify-auth-code")
-  public ResponseEntity<StoreResponse.Simples> verifyAuthCode(
+  public ResponseEntity<StoreSimpleResponses> verifyAuthCode(
       @RequestBody @Valid VerifyAuthCodeRequest verifyAuthCodeRequest
   ) {
     PhoneNumber phoneNumber = authenticator.verifyAuthCode(
         AuthPurpose.CREATE_DEVICE, verifyAuthCodeRequest
     );
-    Account account = accountFinder.findOrThrow(phoneNumber);
-    return ResponseEntity.ok(storeService.readAllSimpleView(account.getId()));
+    List<Store> stores = storeFinder.findAll(phoneNumber);
+
+    return ResponseEntity.ok(StoreSimpleResponses.from(stores));
   }
 
   @Override

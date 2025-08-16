@@ -40,8 +40,8 @@ public class BusinessDetail {
     return businessDetail;
   }
 
-  public void updateLandline(String landline) {
-    this.landline = landline;
+  public void update(StoreUpdateRequest updateRequest) {
+    this.landline = requireNonNull(updateRequest.landline());
   }
 
   public void update(RegistrationApplyRequest applyRequest, String licenseImage) {

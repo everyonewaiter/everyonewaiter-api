@@ -8,7 +8,7 @@ import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.shared.Paging;
-import com.everyonewaiter.domain.store.RegistrationAdminDetailView;
+import com.everyonewaiter.domain.store.Registration;
 import com.everyonewaiter.domain.store.RegistrationAdminPageRequest;
 import com.everyonewaiter.domain.store.RegistrationRejectRequest;
 import jakarta.validation.Valid;
@@ -48,7 +48,7 @@ class RegistrationAdminApi implements RegistrationAdminApiSpecification {
       @PathVariable Long registrationId,
       @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
   ) {
-    RegistrationAdminDetailView view = registrationFinder.findByAdminOrThrow(registrationId);
+    Registration view = registrationFinder.findByAdminOrThrow(registrationId);
 
     return ResponseEntity.ok(RegistrationAdminDetailResponse.from(view));
   }

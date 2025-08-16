@@ -1,5 +1,6 @@
-package com.everyonewaiter.domain.store.entity;
+package com.everyonewaiter.adapter.persistence.store;
 
+import com.everyonewaiter.domain.store.CountryOfOrigin;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import java.util.ArrayList;

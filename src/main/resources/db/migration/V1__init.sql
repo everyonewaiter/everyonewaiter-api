@@ -51,6 +51,22 @@ create index idx_account_email_state on account (email, state);
 create index idx_account_permission_state on account (permission, state);
 create index idx_account_state on account (state);
 
+create table device
+(
+    id           bigint primary key,
+    store_id     bigint                                   not null,
+    name         varchar(20)                              not null,
+    purpose      enum ('POS', 'HALL', 'TABLE', 'WAITING') not null,
+    table_no     int                                      not null,
+    state        enum ('ACTIVE', 'INACTIVE')              not null,
+    payment_type enum ('PREPAID', 'POSTPAID')             not null,
+    secret_key   varchar(30)                              not null,
+    created_at   datetime(6)                              not null,
+    updated_at   datetime(6)                              not null,
+    constraint uk_device_store_id_name unique (store_id, name)
+);
+create index idx_device_store_id_purpose_state on device (store_id, purpose, state);
+
 create table store_registration
 (
     id            bigint primary key,
@@ -100,22 +116,6 @@ create table store
     constraint fk_store_setting_id foreign key (setting_id) references store_setting (id)
 );
 create index idx_store_account_id on store (account_id);
-
-create table device
-(
-    id           bigint primary key,
-    store_id     bigint                                   not null,
-    name         varchar(20)                              not null,
-    purpose      enum ('POS', 'HALL', 'TABLE', 'WAITING') not null,
-    table_no     int                                      not null,
-    state        enum ('ACTIVE', 'INACTIVE')              not null,
-    payment_type enum ('PREPAID', 'POSTPAID')             not null,
-    secret_key   varchar(30)                              not null,
-    created_at   datetime(6)                              not null,
-    updated_at   datetime(6)                              not null,
-    constraint uk_device_store_id_name unique (store_id, name)
-);
-create index idx_device_store_id_purpose_state on device (store_id, purpose, state);
 
 create table category
 (

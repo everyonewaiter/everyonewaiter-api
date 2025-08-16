@@ -9,7 +9,7 @@ import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.sse.ServerAction;
 import com.everyonewaiter.domain.sse.SseCategory;
 import com.everyonewaiter.domain.sse.SseEvent;
-import com.everyonewaiter.domain.store.entity.Store;
+import com.everyonewaiter.domain.store.Store;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;

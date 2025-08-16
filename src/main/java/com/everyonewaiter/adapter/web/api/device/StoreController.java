@@ -1,6 +1,6 @@
 package com.everyonewaiter.adapter.web.api.device;
 
-import com.everyonewaiter.application.store.StoreService;
+import com.everyonewaiter.application.store.provided.StoreManager;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
@@ -15,14 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/stores")
 class StoreController implements StoreControllerSpecification {
 
-  private final StoreService storeService;
+  private final StoreManager storeManager;
 
   @Override
   @PostMapping("/open")
   public ResponseEntity<Void> open(
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    storeService.open(device.getStore().getId());
+    storeManager.open(device.getStore().getNonNullId());
+
     return ResponseEntity.noContent().build();
   }
 
@@ -31,7 +32,8 @@ class StoreController implements StoreControllerSpecification {
   public ResponseEntity<Void> close(
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    storeService.close(device.getStore().getId());
+    storeManager.close(device.getStore().getNonNullId());
+
     return ResponseEntity.noContent().build();
   }
 

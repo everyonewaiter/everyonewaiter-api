@@ -44,7 +44,7 @@ public record DeviceDetailResponse(
     return new DeviceDetailResponse(
         device.getNonNullId().toString(),
         device.getStore().getNonNullId().toString(),
-        device.getStore().getBusinessLicense().getName(),
+        device.getStore().getDetail().getName(),
         device.getName(),
         device.getPurpose(),
         device.getTableNo(),

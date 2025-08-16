@@ -5,9 +5,7 @@ import com.everyonewaiter.application.store.required.RegistrationRepository;
 import com.everyonewaiter.application.support.ReadOnlyTransactional;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.store.Registration;
-import com.everyonewaiter.domain.store.RegistrationAdminDetailView;
 import com.everyonewaiter.domain.store.RegistrationAdminPageRequest;
-import com.everyonewaiter.domain.store.RegistrationAdminPageView;
 import com.everyonewaiter.domain.store.RegistrationPageRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,14 +35,12 @@ class RegistrationQueryService implements RegistrationFinder {
   }
 
   @Override
-  public RegistrationAdminDetailView findByAdminOrThrow(Long registrationId) {
+  public Registration findByAdminOrThrow(Long registrationId) {
     return registrationRepository.findByAdminOrThrow(registrationId);
   }
 
   @Override
-  public Paging<RegistrationAdminPageView> findAllByAdmin(
-      RegistrationAdminPageRequest pageRequest
-  ) {
+  public Paging<Registration> findAllByAdmin(RegistrationAdminPageRequest pageRequest) {
     return registrationRepository.findAllByAdmin(pageRequest);
   }
 

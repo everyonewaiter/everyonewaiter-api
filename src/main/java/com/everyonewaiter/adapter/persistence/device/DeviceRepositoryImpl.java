@@ -1,7 +1,7 @@
 package com.everyonewaiter.adapter.persistence.device;
 
 import static com.everyonewaiter.domain.device.QDevice.device;
-import static com.everyonewaiter.domain.store.entity.QStore.store;
+import static com.everyonewaiter.domain.store.QStore.store;
 import static java.util.Objects.requireNonNull;
 
 import com.everyonewaiter.application.device.required.DeviceRepository;

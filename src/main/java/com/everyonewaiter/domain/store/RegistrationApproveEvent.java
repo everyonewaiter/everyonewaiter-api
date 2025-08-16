@@ -1,5 +1,7 @@
 package com.everyonewaiter.domain.store;
 
-public record RegistrationApproveEvent(Long accountId, BusinessDetail businessDetail) {
+import com.everyonewaiter.domain.account.Account;
+
+public record RegistrationApproveEvent(Account account, BusinessDetail businessDetail) {
 
 }

@@ -10,8 +10,8 @@ import com.everyonewaiter.application.store.required.StoreRepository;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
-import com.everyonewaiter.domain.store.entity.Store;
-import com.everyonewaiter.domain.store.event.StoreOpenEvent;
+import com.everyonewaiter.domain.store.Store;
+import com.everyonewaiter.domain.store.StoreOpenEvent;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +45,7 @@ class StoreOpenEventHandler {
       );
     }
 
-    for (int i = 1; i <= store.getExtraTableCount(); i++) {
+    for (int i = 1; i <= store.getSetting().getExtraTableCount(); i++) {
       PosTable table = PosTable.create(store, "추가", String.valueOf(i), 10000 + i);
       tables.put(table.getTableNo(), table);
     }

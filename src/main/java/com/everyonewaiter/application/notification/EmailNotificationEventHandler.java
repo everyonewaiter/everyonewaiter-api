@@ -69,7 +69,7 @@ class EmailNotificationEventHandler {
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void handle(RegistrationApproveEvent event) {
-    Long accountId = event.accountId();
+    Long accountId = event.account().getNonNullId();
     String storeName = event.businessDetail().getName();
     LOGGER.info("[매장 등록 신청 승인 알림 이벤트] accountId: {}, storeName: {}", accountId, storeName);
 

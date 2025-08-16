@@ -2,9 +2,7 @@ package com.everyonewaiter.application.store.required;
 
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.store.Registration;
-import com.everyonewaiter.domain.store.RegistrationAdminDetailView;
 import com.everyonewaiter.domain.store.RegistrationAdminPageRequest;
-import com.everyonewaiter.domain.store.RegistrationAdminPageView;
 import com.everyonewaiter.domain.store.RegistrationPageRequest;
 
 public interface RegistrationRepository {
@@ -15,9 +13,9 @@ public interface RegistrationRepository {
 
   Paging<Registration> findAllByAccountId(Long accountId, RegistrationPageRequest pageRequest);
 
-  RegistrationAdminDetailView findByAdminOrThrow(Long registrationId);
+  Registration findByAdminOrThrow(Long registrationId);
 
-  Paging<RegistrationAdminPageView> findAllByAdmin(RegistrationAdminPageRequest pageRequest);
+  Paging<Registration> findAllByAdmin(RegistrationAdminPageRequest pageRequest);
 
   Registration save(Registration registration);
 

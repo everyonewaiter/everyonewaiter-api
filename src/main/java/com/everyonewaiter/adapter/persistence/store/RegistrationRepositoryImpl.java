@@ -9,13 +9,10 @@ import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.shared.Pagination;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.store.Registration;
-import com.everyonewaiter.domain.store.RegistrationAdminDetailView;
 import com.everyonewaiter.domain.store.RegistrationAdminPageRequest;
-import com.everyonewaiter.domain.store.RegistrationAdminPageView;
 import com.everyonewaiter.domain.store.RegistrationNotFoundException;
 import com.everyonewaiter.domain.store.RegistrationPageRequest;
 import com.everyonewaiter.domain.store.RegistrationStatus;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -73,63 +70,38 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
   }
 
   @Override
-  public RegistrationAdminDetailView findByAdminOrThrow(Long registrationId) {
+  public Registration findByAdminOrThrow(Long registrationId) {
     return Optional.ofNullable(
             queryFactory
-                .select(
-                    Projections.constructor(
-                        RegistrationAdminDetailView.class,
-                        registration.id,
-                        registration.account.id,
-                        account.email,
-                        registration.detail.name,
-                        registration.detail.ceoName,
-                        registration.detail.address,
-                        registration.detail.landline,
-                        registration.detail.license,
-                        registration.detail.licenseImage,
-                        registration.status,
-                        registration.createdAt,
-                        registration.updatedAt
-                    )
-                )
+                .select(registration)
                 .from(registration)
+                .innerJoin(registration.account, account).fetchJoin()
                 .where(registration.id.eq(registrationId))
-                .innerJoin(account).on(registration.account.id.eq(account.id))
                 .fetchOne()
         )
         .orElseThrow(RegistrationNotFoundException::new);
   }
 
   @Override
-  public Paging<RegistrationAdminPageView> findAllByAdmin(
+  public Paging<Registration> findAllByAdmin(
       RegistrationAdminPageRequest pageRequest
   ) {
     PathBuilder<Account> accountPath = new PathBuilder<>(account.getType(), account.getMetadata());
+    PathBuilder<Registration> registrationPath =
+        new PathBuilder<>(registration.getType(), registration.getMetadata());
 
     String email = pageRequest.getEmail();
     String name = pageRequest.getName();
     RegistrationStatus status = pageRequest.getStatus();
     Pagination pagination = new Pagination(pageRequest.getPage(), pageRequest.getSize());
 
-    List<RegistrationAdminPageView> views = queryFactory
-        .select(
-            Projections.constructor(
-                RegistrationAdminPageView.class,
-                registration.id,
-                registration.account.id,
-                account.email,
-                registration.detail.name,
-                registration.status,
-                registration.createdAt,
-                registration.updatedAt
-            )
-        )
+    List<Registration> registrations = queryFactory
+        .select(registration)
         .from(registration)
-        .innerJoin(account).on(registration.account.id.eq(account.id))
+        .innerJoin(registration.account, account).fetchJoin()
         .where(
             emailStratsWith(accountPath, email),
-            nameStartsWith(name),
+            nameStartsWith(registrationPath, name),
             statusEq(status)
         )
         .orderBy(registration.id.desc())
@@ -140,17 +112,17 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
     Long count = queryFactory
         .select(registration.count())
         .from(registration)
-        .innerJoin(account).on(registration.account.id.eq(account.id))
+        .innerJoin(registration.account, account).fetchJoin()
         .where(
             emailStratsWith(accountPath, email),
-            nameStartsWith(name),
+            nameStartsWith(registrationPath, name),
             statusEq(status)
         )
         .orderBy(registration.id.desc())
         .limit(pagination.countLimit())
         .fetchOne();
 
-    return new Paging<>(views, requireNonNull(count), pagination);
+    return new Paging<>(registrations, requireNonNull(count), pagination);
   }
 
   @Override
@@ -169,8 +141,13 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
   }
 
   @Nullable
-  private BooleanExpression nameStartsWith(@Nullable String name) {
-    return StringUtils.hasText(name) ? registration.detail.name.startsWith(name) : null;
+  private BooleanExpression nameStartsWith(
+      PathBuilder<Registration> registrationPath,
+      @Nullable String name
+  ) {
+    return StringUtils.hasText(name)
+        ? registrationPath.get("detail").getString("name").startsWith(name)
+        : null;
   }
 
   @Nullable

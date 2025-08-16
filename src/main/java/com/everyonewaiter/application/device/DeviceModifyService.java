@@ -5,14 +5,14 @@ import com.everyonewaiter.application.device.provided.DeviceCreator;
 import com.everyonewaiter.application.device.provided.DeviceDeleter;
 import com.everyonewaiter.application.device.provided.DeviceUpdater;
 import com.everyonewaiter.application.device.required.DeviceRepository;
-import com.everyonewaiter.application.store.required.StoreRepository;
+import com.everyonewaiter.application.store.provided.StoreFinder;
 import com.everyonewaiter.domain.auth.AuthPurpose;
 import com.everyonewaiter.domain.device.AlreadyUseDeviceNameException;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DeviceCreateRequest;
 import com.everyonewaiter.domain.device.DeviceUpdateRequest;
 import com.everyonewaiter.domain.shared.PhoneNumber;
-import com.everyonewaiter.domain.store.entity.Store;
+import com.everyonewaiter.domain.store.Store;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,15 +25,14 @@ import org.springframework.validation.annotation.Validated;
 class DeviceModifyService implements DeviceCreator, DeviceUpdater, DeviceDeleter {
 
   private final Authenticator authenticator;
-  private final StoreRepository storeRepository;
+  private final StoreFinder storeFinder;
   private final DeviceRepository deviceRepository;
 
   @Override
   public Device create(Long storeId, DeviceCreateRequest createRequest) {
     validateDeviceCreate(storeId, createRequest);
 
-    // TODO: 매장 ID 및 계정 휴대폰 번호로 매장 찾기
-    Store store = storeRepository.findByIdOrThrow(storeId);
+    Store store = storeFinder.findOrThrow(storeId, new PhoneNumber(createRequest.phoneNumber()));
 
     Device device = switch (createRequest.purpose()) {
       case POS -> Device.createPos(store, createRequest);

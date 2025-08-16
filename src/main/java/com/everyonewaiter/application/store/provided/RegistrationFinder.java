@@ -2,9 +2,7 @@ package com.everyonewaiter.application.store.provided;
 
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.store.Registration;
-import com.everyonewaiter.domain.store.RegistrationAdminDetailView;
 import com.everyonewaiter.domain.store.RegistrationAdminPageRequest;
-import com.everyonewaiter.domain.store.RegistrationAdminPageView;
 import com.everyonewaiter.domain.store.RegistrationPageRequest;
 import jakarta.validation.Valid;
 
@@ -16,8 +14,8 @@ public interface RegistrationFinder {
 
   Paging<Registration> findAll(Long accountId, @Valid RegistrationPageRequest pageRequest);
 
-  RegistrationAdminDetailView findByAdminOrThrow(Long registrationId);
+  Registration findByAdminOrThrow(Long registrationId);
 
-  Paging<RegistrationAdminPageView> findAllByAdmin(@Valid RegistrationAdminPageRequest pageRequest);
+  Paging<Registration> findAllByAdmin(@Valid RegistrationAdminPageRequest pageRequest);
 
 }

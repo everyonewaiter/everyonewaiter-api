@@ -3,9 +3,9 @@ package com.everyonewaiter.adapter.web.api.owner;
 import com.everyonewaiter.adapter.web.api.dto.DeviceCreateResponse;
 import com.everyonewaiter.adapter.web.api.dto.DeviceDetailResponse;
 import com.everyonewaiter.adapter.web.api.dto.DevicePageResponse;
+import com.everyonewaiter.adapter.web.api.dto.StoreSimpleResponses;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.application.store.response.StoreResponse;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
 import com.everyonewaiter.domain.auth.VerifyAuthCodeRequest;
@@ -174,7 +174,7 @@ interface DeviceManagementApiSpecification {
           ),
       }
   )
-  ResponseEntity<StoreResponse.Simples> verifyAuthCode(
+  ResponseEntity<StoreSimpleResponses> verifyAuthCode(
       @RequestBody VerifyAuthCodeRequest verifyAuthCodeRequest
   );
 

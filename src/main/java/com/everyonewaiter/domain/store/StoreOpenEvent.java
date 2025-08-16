@@ -1,4 +1,4 @@
-package com.everyonewaiter.domain.store.event;
+package com.everyonewaiter.domain.store;
 
 public record StoreOpenEvent(Long storeId) {
 

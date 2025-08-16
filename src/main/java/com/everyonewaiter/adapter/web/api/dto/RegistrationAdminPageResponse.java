@@ -1,6 +1,6 @@
 package com.everyonewaiter.adapter.web.api.dto;
 
-import com.everyonewaiter.domain.store.RegistrationAdminPageView;
+import com.everyonewaiter.domain.store.Registration;
 import com.everyonewaiter.domain.store.RegistrationStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
@@ -29,15 +29,15 @@ public record RegistrationAdminPageResponse(
     Instant updatedAt
 ) {
 
-  public static RegistrationAdminPageResponse from(RegistrationAdminPageView view) {
+  public static RegistrationAdminPageResponse from(Registration registration) {
     return new RegistrationAdminPageResponse(
-        view.id().toString(),
-        view.accountId().toString(),
-        view.email().address(),
-        view.name(),
-        view.status(),
-        view.createdAt(),
-        view.updatedAt()
+        registration.getNonNullId().toString(),
+        registration.getAccount().getNonNullId().toString(),
+        registration.getAccount().getEmail().address(),
+        registration.getDetail().getName(),
+        registration.getStatus(),
+        registration.getCreatedAt(),
+        registration.getUpdatedAt()
     );
   }
 

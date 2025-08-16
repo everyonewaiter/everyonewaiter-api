@@ -1,7 +1,7 @@
 package com.everyonewaiter.adapter.persistence.account;
 
 import static com.everyonewaiter.domain.account.QAccount.account;
-import static com.everyonewaiter.domain.store.entity.QStore.store;
+import static com.everyonewaiter.domain.store.QStore.store;
 import static java.util.Objects.requireNonNull;
 
 import com.everyonewaiter.application.account.required.AccountRepository;
@@ -78,7 +78,7 @@ class AccountRepositoryImpl implements AccountRepository {
         )
         .distinct()
         .from(account)
-        .leftJoin(store).on(account.id.eq(store.accountId))
+        .leftJoin(store).on(account.id.eq(store.account.id))
         .where(
             emailStratsWith(accountPath, email),
             stateEq(state),
@@ -93,7 +93,7 @@ class AccountRepositoryImpl implements AccountRepository {
     Long count = queryFactory
         .select(account.countDistinct())
         .from(account)
-        .leftJoin(store).on(account.id.eq(store.accountId))
+        .leftJoin(store).on(account.id.eq(store.account.id))
         .where(
             emailStratsWith(accountPath, email),
             stateEq(state),

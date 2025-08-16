@@ -1,7 +1,7 @@
 package com.everyonewaiter.infrastructure.order;
 
 import static com.everyonewaiter.domain.order.entity.QStaffCall.staffCall;
-import static com.everyonewaiter.domain.store.entity.QStore.store;
+import static com.everyonewaiter.domain.store.QStore.store;
 
 import com.everyonewaiter.domain.order.entity.StaffCall;
 import com.everyonewaiter.domain.order.repository.StaffCallRepository;

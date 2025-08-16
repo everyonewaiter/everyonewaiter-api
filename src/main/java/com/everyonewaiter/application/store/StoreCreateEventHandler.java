@@ -5,7 +5,7 @@ import static org.springframework.transaction.event.TransactionPhase.BEFORE_COMM
 
 import com.everyonewaiter.application.store.required.StoreRepository;
 import com.everyonewaiter.domain.store.RegistrationApproveEvent;
-import com.everyonewaiter.domain.store.entity.Store;
+import com.everyonewaiter.domain.store.Store;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -22,9 +22,9 @@ class StoreCreateEventHandler {
   @TransactionalEventListener(phase = BEFORE_COMMIT)
   public void handle(RegistrationApproveEvent event) {
     LOGGER.info("[매장 생성 이벤트] accountId: {}, storeName: {}",
-        event.accountId(), event.businessDetail().getName());
+        event.account().getNonNullId(), event.businessDetail().getName());
 
-    Store store = Store.create(event.accountId(), event.businessDetail());
+    Store store = Store.create(event.account(), event.businessDetail());
 
     storeRepository.save(store);
   }

@@ -2,7 +2,7 @@ package com.everyonewaiter.adapter.web.api.device;
 
 import com.everyonewaiter.application.menu.CategoryService;
 import com.everyonewaiter.application.menu.response.CategoryResponse;
-import com.everyonewaiter.application.store.StoreService;
+import com.everyonewaiter.application.store.provided.StoreValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1")
 class MenuController implements MenuControllerSpecification {
 
-  private final StoreService storeService;
+  private final StoreValidator storeValidator;
   private final CategoryService categoryService;
 
   @Override
   @GetMapping("/stores/{storeId}/menus")
   public ResponseEntity<CategoryResponse.All> getStoreMenus(@PathVariable Long storeId) {
-    storeService.checkExistsStore(storeId);
+    storeValidator.checkExists(storeId);
+
     return ResponseEntity.ok(categoryService.readAllWithMenus(storeId));
   }
 

@@ -6,7 +6,7 @@ import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.sse.ServerAction;
 import com.everyonewaiter.domain.sse.SseCategory;
 import com.everyonewaiter.domain.sse.SseEvent;
-import com.everyonewaiter.domain.store.entity.Store;
+import com.everyonewaiter.domain.store.Store;
 import com.everyonewaiter.domain.support.Tsid;
 import com.everyonewaiter.domain.waiting.event.WaitingCancelByCustomerEvent;
 import com.everyonewaiter.domain.waiting.event.WaitingCancelByStoreEvent;
@@ -85,8 +85,8 @@ public class Waiting extends AggregateRootEntity<Waiting> {
     waiting.registerEvent(
         new WaitingRegistrationEvent(
             store.getId(),
-            store.getBusinessLicense().getName(),
-            store.getBusinessLicense().getLandline(),
+            store.getDetail().getName(),
+            store.getDetail().getLandline(),
             waiting.phoneNumber,
             waiting.adult,
             waiting.infant,
@@ -108,7 +108,7 @@ public class Waiting extends AggregateRootEntity<Waiting> {
       registerEvent(
           new WaitingCustomerCallEvent(
               store.getId(),
-              store.getBusinessLicense().getName(),
+              store.getDetail().getName(),
               phoneNumber,
               number,
               accessKey
@@ -142,7 +142,7 @@ public class Waiting extends AggregateRootEntity<Waiting> {
     registerEvent(
         new WaitingCancelByCustomerEvent(
             store.getId(),
-            store.getBusinessLicense().getName(),
+            store.getDetail().getName(),
             phoneNumber,
             number
         )
@@ -154,7 +154,7 @@ public class Waiting extends AggregateRootEntity<Waiting> {
     registerEvent(
         new WaitingCancelByStoreEvent(
             store.getId(),
-            store.getBusinessLicense().getName(),
+            store.getDetail().getName(),
             phoneNumber,
             number
         )

@@ -1,7 +1,7 @@
 package com.everyonewaiter.adapter.integration.aop;
 
+import com.everyonewaiter.application.store.provided.StoreValidator;
 import com.everyonewaiter.domain.device.Device;
-import com.everyonewaiter.domain.store.service.StoreValidator;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -34,7 +34,7 @@ class StoreOpenValidationAspect {
 
     for (Object arg : args) {
       if (arg instanceof Device device) {
-        storeValidator.validateOpen(device.getStore().getId());
+        storeValidator.checkIsOpened(device.getStore().getId());
         break;
       }
     }
