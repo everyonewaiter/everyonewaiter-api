@@ -4,7 +4,7 @@ import static com.everyonewaiter.domain.contact.QContact.contact;
 
 import com.everyonewaiter.application.contact.required.ContactRepository;
 import com.everyonewaiter.domain.contact.Contact;
-import com.everyonewaiter.domain.contact.ContactAdminReadRequest;
+import com.everyonewaiter.domain.contact.ContactAdminPageRequest;
 import com.everyonewaiter.domain.contact.ContactNotFoundException;
 import com.everyonewaiter.domain.contact.ContactState;
 import com.everyonewaiter.domain.shared.BusinessLicense;
@@ -42,14 +42,14 @@ class ContactRepositoryImpl implements ContactRepository {
   }
 
   @Override
-  public Paging<Contact> findAllByAdmin(ContactAdminReadRequest readRequest) {
+  public Paging<Contact> findAllByAdmin(ContactAdminPageRequest pageRequest) {
     PathBuilder<Contact> contactPath = new PathBuilder<>(contact.getType(), contact.getMetadata());
 
-    String storeName = readRequest.getStoreName();
-    String phoneNumber = readRequest.getPhoneNumber();
-    String license = readRequest.getLicense();
-    ContactState state = readRequest.getState();
-    Pagination pagination = new Pagination(readRequest.getPage(), readRequest.getSize());
+    String storeName = pageRequest.getStoreName();
+    String phoneNumber = pageRequest.getPhoneNumber();
+    String license = pageRequest.getLicense();
+    ContactState state = pageRequest.getState();
+    Pagination pagination = new Pagination(pageRequest.getPage(), pageRequest.getSize());
 
     List<Contact> contacts = queryFactory
         .select(contact)

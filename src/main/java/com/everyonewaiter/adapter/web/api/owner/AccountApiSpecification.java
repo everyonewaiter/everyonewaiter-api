@@ -1,6 +1,6 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
-import com.everyonewaiter.adapter.web.api.owner.dto.AccountProfileResponse;
+import com.everyonewaiter.adapter.web.api.dto.AccountProfileResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.domain.account.Account;

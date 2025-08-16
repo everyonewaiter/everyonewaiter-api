@@ -1,7 +1,10 @@
 package com.everyonewaiter.application.store;
 
-import com.everyonewaiter.domain.device.entity.Device;
-import com.everyonewaiter.domain.device.repository.DeviceRepository;
+import static com.everyonewaiter.domain.device.DevicePurpose.TABLE;
+import static com.everyonewaiter.domain.device.DeviceState.ACTIVE;
+
+import com.everyonewaiter.application.device.provided.DeviceFinder;
+import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.domain.store.entity.Store;
@@ -24,7 +27,7 @@ class StoreOpenEventHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(StoreOpenEventHandler.class);
 
   private final StoreRepository storeRepository;
-  private final DeviceRepository deviceRepository;
+  private final DeviceFinder deviceFinder;
   private final PosTableRepository posTableRepository;
 
   @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
@@ -34,7 +37,7 @@ class StoreOpenEventHandler {
     LOGGER.info("[매장 영업 시작 이벤트] storeId: {}", storeId);
 
     Map<Integer, PosTable> tables = new LinkedHashMap<>();
-    List<Device> devices = deviceRepository.findAllActiveByPurpose(storeId, Device.Purpose.TABLE);
+    List<Device> devices = deviceFinder.findAll(storeId, TABLE, ACTIVE);
     for (Device device : devices) {
       tables.computeIfAbsent(
           device.getTableNo(),

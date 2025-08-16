@@ -7,7 +7,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.everyonewaiter.IntegrationTest;
 import com.everyonewaiter.domain.contact.Contact;
-import com.everyonewaiter.domain.contact.ContactAdminReadRequest;
+import com.everyonewaiter.domain.contact.ContactAdminPageRequest;
 import com.everyonewaiter.domain.contact.ContactNotFoundException;
 import com.everyonewaiter.domain.shared.Paging;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ class ContactRepositoryTest extends IntegrationTest {
   void findAllByAdmin() {
     Contact contact = createContact();
 
-    Paging<Contact> pagedContacts = findAllByAdmin(new ContactAdminReadRequest());
+    Paging<Contact> pagedContacts = findAllByAdmin(new ContactAdminPageRequest());
 
     assertThat(pagedContacts.getContent()).hasSize(1);
     assertThat(pagedContacts.getContent().getFirst().getId()).isEqualTo(contact.getId());
@@ -51,14 +51,14 @@ class ContactRepositoryTest extends IntegrationTest {
     Contact contact = createContact();
 
     Paging<Contact> pagedContacts = findAllByAdmin(
-        new ContactAdminReadRequest(contact.getStoreName(), null, null, null, 1, 20)
+        new ContactAdminPageRequest(contact.getStoreName(), null, null, null, 1, 20)
     );
 
     assertThat(pagedContacts.getContent()).hasSize(1);
     assertThat(pagedContacts.getContent().getFirst().getId()).isEqualTo(contact.getId());
 
     Paging<Contact> emptyContacts = findAllByAdmin(
-        new ContactAdminReadRequest("나루", null, null, null, 1, 20)
+        new ContactAdminPageRequest("나루", null, null, null, 1, 20)
     );
 
     assertThat(emptyContacts.getContent()).isEmpty();
@@ -69,14 +69,14 @@ class ContactRepositoryTest extends IntegrationTest {
     Contact contact = createContact();
 
     Paging<Contact> pagedContacts = findAllByAdmin(
-        new ContactAdminReadRequest(null, contact.getPhoneNumber().value(), null, null, 1, 20)
+        new ContactAdminPageRequest(null, contact.getPhoneNumber().value(), null, null, 1, 20)
     );
 
     assertThat(pagedContacts.getContent()).hasSize(1);
     assertThat(pagedContacts.getContent().getFirst().getId()).isEqualTo(contact.getId());
 
     Paging<Contact> emptyContacts = findAllByAdmin(
-        new ContactAdminReadRequest(null, "01012345678", null, null, 1, 20)
+        new ContactAdminPageRequest(null, "01012345678", null, null, 1, 20)
     );
 
     assertThat(emptyContacts.getContent()).isEmpty();
@@ -87,14 +87,14 @@ class ContactRepositoryTest extends IntegrationTest {
     Contact contact = createContact();
 
     Paging<Contact> pagedContacts = findAllByAdmin(
-        new ContactAdminReadRequest(null, null, contact.getLicense().value(), null, 1, 20)
+        new ContactAdminPageRequest(null, null, contact.getLicense().value(), null, 1, 20)
     );
 
     assertThat(pagedContacts.getContent()).hasSize(1);
     assertThat(pagedContacts.getContent().getFirst().getId()).isEqualTo(contact.getId());
 
     Paging<Contact> emptyContacts = findAllByAdmin(
-        new ContactAdminReadRequest(null, null, "123-12-12345", null, 1, 20)
+        new ContactAdminPageRequest(null, null, "123-12-12345", null, 1, 20)
     );
 
     assertThat(emptyContacts.getContent()).isEmpty();
@@ -105,20 +105,20 @@ class ContactRepositoryTest extends IntegrationTest {
     Contact contact = createContact();
 
     Paging<Contact> pagedContacts = findAllByAdmin(
-        new ContactAdminReadRequest(null, null, null, contact.getState(), 1, 20)
+        new ContactAdminPageRequest(null, null, null, contact.getState(), 1, 20)
     );
 
     assertThat(pagedContacts.getContent()).hasSize(1);
     assertThat(pagedContacts.getContent().getFirst().getId()).isEqualTo(contact.getId());
 
     Paging<Contact> emptyContacts = findAllByAdmin(
-        new ContactAdminReadRequest(null, null, null, COMPLETE, 1, 20)
+        new ContactAdminPageRequest(null, null, null, COMPLETE, 1, 20)
     );
 
     assertThat(emptyContacts.getContent()).isEmpty();
   }
 
-  private Paging<Contact> findAllByAdmin(ContactAdminReadRequest readRequest) {
+  private Paging<Contact> findAllByAdmin(ContactAdminPageRequest readRequest) {
     return contactRepository.findAllByAdmin(readRequest);
   }
 

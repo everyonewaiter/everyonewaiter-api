@@ -1,6 +1,6 @@
 package com.everyonewaiter.adapter.web.api.common;
 
-import com.everyonewaiter.adapter.web.api.owner.dto.ApkVersionDetailResponse;
+import com.everyonewaiter.adapter.web.api.dto.ApkVersionDetailResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.domain.health.ServerInfo;
 import com.everyonewaiter.domain.shared.ErrorCode;

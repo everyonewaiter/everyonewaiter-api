@@ -2,7 +2,7 @@ package com.everyonewaiter.adapter.web.config;
 
 import static java.util.Objects.requireNonNull;
 
-import com.everyonewaiter.application.account.required.AccountRepository;
+import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.auth.required.JwtProvider;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
@@ -27,7 +27,7 @@ class AuthenticationAccountResolver implements HandlerMethodArgumentResolver {
   private static final String BEARER_PREFIX = "Bearer ";
 
   private final JwtProvider jwtProvider;
-  private final AccountRepository accountRepository;
+  private final AccountFinder accountFinder;
 
   @Override
   public boolean supportsParameter(@NonNull MethodParameter parameter) {
@@ -47,7 +47,7 @@ class AuthenticationAccountResolver implements HandlerMethodArgumentResolver {
     String accessToken = extractToken(webRequest);
     JwtPayload payload = jwtProvider.decode(accessToken).orElseThrow(AuthenticationException::new);
 
-    return accountRepository.findById(payload.id())
+    return accountFinder.find(payload.id())
         .map(account -> {
           AuthenticationAccount annotation = requireNonNull(
               parameter.getParameterAnnotation(AuthenticationAccount.class)

@@ -1,11 +1,11 @@
 package com.everyonewaiter.adapter.web.api.admin;
 
-import com.everyonewaiter.adapter.web.api.admin.dto.AccountAdminReadResponse;
-import com.everyonewaiter.adapter.web.api.admin.dto.AccountDetailResponse;
+import com.everyonewaiter.adapter.web.api.dto.AccountAdminReadResponse;
+import com.everyonewaiter.adapter.web.api.dto.AccountDetailResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.domain.account.Account;
-import com.everyonewaiter.domain.account.AccountAdminReadRequest;
+import com.everyonewaiter.domain.account.AccountAdminPageRequest;
 import com.everyonewaiter.domain.account.AccountAdminUpdateRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Paging;
@@ -36,7 +36,7 @@ interface AccountAdminApiSpecification {
       }
   )
   ResponseEntity<Paging<AccountAdminReadResponse>> getAccounts(
-      @ParameterObject AccountAdminReadRequest readRequest,
+      @ParameterObject AccountAdminPageRequest readRequest,
       @Parameter(hidden = true) Account account
   );
 

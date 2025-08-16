@@ -5,7 +5,8 @@ import com.everyonewaiter.application.order.OrderService;
 import com.everyonewaiter.application.order.StaffCallService;
 import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
-import com.everyonewaiter.domain.device.entity.Device;
+import com.everyonewaiter.domain.device.Device;
+import com.everyonewaiter.domain.device.DevicePurpose;
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.store.StoreOpen;
 import jakarta.validation.Valid;
@@ -31,7 +32,7 @@ class OrderController implements OrderControllerSpecification {
   @Override
   @GetMapping("/tables")
   public ResponseEntity<OrderResponse.Details> getOrdersByTable(
-      @AuthenticationDevice(purpose = Device.Purpose.TABLE) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.TABLE) Device device
   ) {
     OrderResponse.Details response = orderService.readAllByTable(
         device.getStore().getId(),
@@ -44,7 +45,7 @@ class OrderController implements OrderControllerSpecification {
   @GetMapping("/hall")
   public ResponseEntity<OrderResponse.Details> getOrdersByHall(
       @RequestParam boolean served,
-      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
     return ResponseEntity.ok(orderService.readAllByHall(device.getStore().getId(), served));
   }
@@ -54,7 +55,7 @@ class OrderController implements OrderControllerSpecification {
   @PostMapping
   public ResponseEntity<Void> create(
       @RequestBody @Valid OrderWriteRequest.Create request,
-      @AuthenticationDevice(purpose = {Device.Purpose.TABLE, Device.Purpose.POS}) Device device
+      @AuthenticationDevice(purpose = {DevicePurpose.TABLE, DevicePurpose.POS}) Device device
   ) {
     Order.Type orderType = device.isPrepaid() ? Order.Type.PREPAID : Order.Type.POSTPAID;
     Long orderId = orderService.createOrder(
@@ -70,7 +71,7 @@ class OrderController implements OrderControllerSpecification {
   @PostMapping("/{orderId}/serving")
   public ResponseEntity<Void> servingOrder(
       @PathVariable Long orderId,
-      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
     orderService.servingOrder(device.getStore().getId(), orderId);
     return ResponseEntity.noContent().build();
@@ -82,7 +83,7 @@ class OrderController implements OrderControllerSpecification {
   public ResponseEntity<Void> servingOrderMenu(
       @PathVariable Long orderId,
       @PathVariable Long orderMenuId,
-      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
     orderService.servingOrderMenu(device.getStore().getId(), orderId, orderMenuId);
     return ResponseEntity.noContent().build();
@@ -91,7 +92,7 @@ class OrderController implements OrderControllerSpecification {
   @Override
   @GetMapping("/staff-calls")
   public ResponseEntity<OrderResponse.StaffCallDetails> getStaffCalls(
-      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
     return ResponseEntity.ok(staffCallService.readAllIncomplete(device.getStore().getId()));
   }
@@ -101,7 +102,7 @@ class OrderController implements OrderControllerSpecification {
   @PostMapping("/staff-calls/{staffCallId}/complete")
   public ResponseEntity<Void> completeStaffCall(
       @PathVariable Long staffCallId,
-      @AuthenticationDevice(purpose = Device.Purpose.HALL) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
     staffCallService.complete(device.getStore().getId(), staffCallId);
     return ResponseEntity.noContent().build();
@@ -112,7 +113,7 @@ class OrderController implements OrderControllerSpecification {
   @PostMapping("/staff-calls")
   public ResponseEntity<Void> callStaff(
       @RequestBody @Valid OrderWriteRequest.StaffCallOption request,
-      @AuthenticationDevice(purpose = Device.Purpose.TABLE) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.TABLE) Device device
   ) {
     Long staffCallId = staffCallService.callStaff(
         device.getStore().getId(),

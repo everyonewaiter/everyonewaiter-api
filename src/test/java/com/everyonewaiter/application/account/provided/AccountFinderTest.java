@@ -8,7 +8,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import com.everyonewaiter.IntegrationTest;
 import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.domain.account.Account;
-import com.everyonewaiter.domain.account.AccountAdminReadRequest;
+import com.everyonewaiter.domain.account.AccountAdminPageRequest;
 import com.everyonewaiter.domain.account.AccountAdminView;
 import com.everyonewaiter.domain.account.AccountNotFoundException;
 import com.everyonewaiter.domain.shared.Paging;
@@ -68,7 +68,7 @@ class AccountFinderTest extends IntegrationTest {
   void findAllByAdmin() {
     Account account = createAccount();
 
-    Paging<AccountAdminView> views = accountFinder.findAllByAdmin(new AccountAdminReadRequest());
+    Paging<AccountAdminView> views = accountFinder.findAllByAdmin(new AccountAdminPageRequest());
 
     assertThat(views.getContent()).hasSize(1);
     assertThat(views.getContent().getFirst().id()).isEqualTo(account.getId());
@@ -82,11 +82,11 @@ class AccountFinderTest extends IntegrationTest {
 
   @Test
   void accountAdminReadRequestFail() {
-    checkValidation(new AccountAdminReadRequest(null, null, null, null, 0, 1));
-    checkValidation(new AccountAdminReadRequest(null, null, null, null, 1, 0));
+    checkValidation(new AccountAdminPageRequest(null, null, null, null, 0, 1));
+    checkValidation(new AccountAdminPageRequest(null, null, null, null, 1, 0));
   }
 
-  private void checkValidation(AccountAdminReadRequest readRequest) {
+  private void checkValidation(AccountAdminPageRequest readRequest) {
     assertThatThrownBy(() -> accountFinder.findAllByAdmin(readRequest))
         .isInstanceOf(ConstraintViolationException.class);
   }

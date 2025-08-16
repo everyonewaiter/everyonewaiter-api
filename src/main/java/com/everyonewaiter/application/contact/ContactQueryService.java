@@ -4,7 +4,7 @@ import com.everyonewaiter.application.contact.provided.ContactFinder;
 import com.everyonewaiter.application.contact.required.ContactRepository;
 import com.everyonewaiter.application.support.ReadOnlyTransactional;
 import com.everyonewaiter.domain.contact.Contact;
-import com.everyonewaiter.domain.contact.ContactAdminReadRequest;
+import com.everyonewaiter.domain.contact.ContactAdminPageRequest;
 import com.everyonewaiter.domain.shared.Paging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,8 @@ class ContactQueryService implements ContactFinder {
   private final ContactRepository contactRepository;
 
   @Override
-  public Paging<Contact> findAllByAdmin(ContactAdminReadRequest readRequest) {
-    return contactRepository.findAllByAdmin(readRequest);
+  public Paging<Contact> findAllByAdmin(ContactAdminPageRequest pageRequest) {
+    return contactRepository.findAllByAdmin(pageRequest);
   }
 
 }

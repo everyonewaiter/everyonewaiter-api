@@ -6,7 +6,7 @@ import static java.util.Objects.requireNonNull;
 
 import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.domain.account.Account;
-import com.everyonewaiter.domain.account.AccountAdminReadRequest;
+import com.everyonewaiter.domain.account.AccountAdminPageRequest;
 import com.everyonewaiter.domain.account.AccountAdminView;
 import com.everyonewaiter.domain.account.AccountNotFoundException;
 import com.everyonewaiter.domain.account.AccountPermission;
@@ -54,14 +54,14 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public Paging<AccountAdminView> findAllByAdmin(AccountAdminReadRequest readRequest) {
+  public Paging<AccountAdminView> findAllByAdmin(AccountAdminPageRequest pageRequest) {
     PathBuilder<Account> accountPath = new PathBuilder<>(account.getType(), account.getMetadata());
 
-    String email = readRequest.getEmail();
-    AccountState state = readRequest.getState();
-    AccountPermission permission = readRequest.getPermission();
-    Boolean hasStore = readRequest.getHasStore();
-    Pagination pagination = new Pagination(readRequest.getPage(), readRequest.getSize());
+    String email = pageRequest.getEmail();
+    AccountState state = pageRequest.getState();
+    AccountPermission permission = pageRequest.getPermission();
+    Boolean hasStore = pageRequest.getHasStore();
+    Pagination pagination = new Pagination(pageRequest.getPage(), pageRequest.getSize());
 
     List<AccountAdminView> views = queryFactory
         .select(

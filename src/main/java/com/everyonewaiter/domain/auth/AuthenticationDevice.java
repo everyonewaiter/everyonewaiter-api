@@ -1,6 +1,6 @@
 package com.everyonewaiter.domain.auth;
 
-import com.everyonewaiter.domain.device.entity.Device;
+import com.everyonewaiter.domain.device.DevicePurpose;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,11 +10,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AuthenticationDevice {
 
-  Device.Purpose[] purpose() default {
-      Device.Purpose.POS,
-      Device.Purpose.HALL,
-      Device.Purpose.TABLE,
-      Device.Purpose.WAITING
+  DevicePurpose[] purpose() default {
+      DevicePurpose.POS,
+      DevicePurpose.HALL,
+      DevicePurpose.TABLE,
+      DevicePurpose.WAITING
   };
 
 }

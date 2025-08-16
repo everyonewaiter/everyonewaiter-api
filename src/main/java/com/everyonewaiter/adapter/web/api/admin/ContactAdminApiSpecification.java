@@ -1,10 +1,10 @@
 package com.everyonewaiter.adapter.web.api.admin;
 
-import com.everyonewaiter.adapter.web.api.admin.dto.ContactAdminReadResponse;
+import com.everyonewaiter.adapter.web.api.dto.ContactAdminReadResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.domain.account.Account;
-import com.everyonewaiter.domain.contact.ContactAdminReadRequest;
+import com.everyonewaiter.domain.contact.ContactAdminPageRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Paging;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +33,7 @@ interface ContactAdminApiSpecification {
       }
   )
   ResponseEntity<Paging<ContactAdminReadResponse>> getContacts(
-      @ParameterObject ContactAdminReadRequest request,
+      @ParameterObject ContactAdminPageRequest request,
       @Parameter(hidden = true) Account account
   );
 

@@ -3,6 +3,9 @@ package com.everyonewaiter.application.account.provided;
 import static com.everyonewaiter.domain.account.AccountFixture.createAccountAdminUpdateRequest;
 import static com.everyonewaiter.domain.account.AccountFixture.createAccountCreateRequest;
 import static com.everyonewaiter.domain.account.AccountFixture.createPasswordEncoder;
+import static com.everyonewaiter.domain.account.AccountPermission.ADMIN;
+import static com.everyonewaiter.domain.account.AccountPermission.OWNER;
+import static com.everyonewaiter.domain.account.AccountState.ACTIVE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -10,8 +13,7 @@ import com.everyonewaiter.IntegrationTest;
 import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountAdminUpdateRequest;
-import com.everyonewaiter.domain.account.AccountPermission;
-import com.everyonewaiter.domain.account.AccountState;
+import com.everyonewaiter.domain.account.AccountNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -24,11 +26,25 @@ class AccountUpdaterTest extends IntegrationTest {
   private final AccountRepository accountRepository;
 
   @Test
+  void authorize() {
+    Account account = createAccount();
+
+    account = accountUpdater.authorize(account.getId(), OWNER);
+
+    assertThat(account.getPermission()).isEqualTo(OWNER);
+  }
+
+  @Test
+  void authorizeFail() {
+    assertThatThrownBy(() -> accountUpdater.authorize(999L, OWNER))
+        .isInstanceOf(AccountNotFoundException.class);
+  }
+
+  @Test
   void updateByAdmin() {
     Account adminAccount = createAccount();
 
-    ReflectionTestUtils.setField(adminAccount, "state", AccountState.ACTIVE);
-    ReflectionTestUtils.setField(adminAccount, "permission", AccountPermission.ADMIN);
+    ReflectionTestUtils.setField(adminAccount, "permission", ADMIN);
 
     Account userAccount = createAccount("user@gmail.com", "01087654321");
 
@@ -38,8 +54,8 @@ class AccountUpdaterTest extends IntegrationTest {
         createAccountAdminUpdateRequest()
     );
 
-    assertThat(userAccount.getState()).isEqualTo(AccountState.ACTIVE);
-    assertThat(userAccount.getPermission()).isEqualTo(AccountPermission.OWNER);
+    assertThat(userAccount.getState()).isEqualTo(ACTIVE);
+    assertThat(userAccount.getPermission()).isEqualTo(OWNER);
   }
 
   private Account createAccount() {
@@ -52,14 +68,16 @@ class AccountUpdaterTest extends IntegrationTest {
         createPasswordEncoder()
     );
 
+    ReflectionTestUtils.setField(account, "state", ACTIVE);
+
     return accountRepository.save(account);
   }
 
   @Test
   void accountAdminUpdateRequestFail() {
     checkValidation(new AccountAdminUpdateRequest(null, null));
-    checkValidation(new AccountAdminUpdateRequest(AccountState.ACTIVE, null));
-    checkValidation(new AccountAdminUpdateRequest(null, AccountPermission.OWNER));
+    checkValidation(new AccountAdminUpdateRequest(ACTIVE, null));
+    checkValidation(new AccountAdminUpdateRequest(null, OWNER));
   }
 
   private void checkValidation(AccountAdminUpdateRequest updateRequest) {

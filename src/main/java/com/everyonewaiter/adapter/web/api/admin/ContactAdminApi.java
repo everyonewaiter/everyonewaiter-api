@@ -1,13 +1,13 @@
 package com.everyonewaiter.adapter.web.api.admin;
 
-import com.everyonewaiter.adapter.web.api.admin.dto.ContactAdminReadResponse;
+import com.everyonewaiter.adapter.web.api.dto.ContactAdminReadResponse;
 import com.everyonewaiter.application.contact.provided.ContactFinder;
 import com.everyonewaiter.application.contact.provided.ContactProcessor;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.contact.Contact;
-import com.everyonewaiter.domain.contact.ContactAdminReadRequest;
+import com.everyonewaiter.domain.contact.ContactAdminPageRequest;
 import com.everyonewaiter.domain.shared.Paging;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +30,10 @@ class ContactAdminApi implements ContactAdminApiSpecification {
   @Override
   @GetMapping
   public ResponseEntity<Paging<ContactAdminReadResponse>> getContacts(
-      @ModelAttribute @Valid ContactAdminReadRequest request,
+      @ModelAttribute @Valid ContactAdminPageRequest pageRequest,
       @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
   ) {
-    Paging<Contact> contacts = contactFinder.findAllByAdmin(request);
+    Paging<Contact> contacts = contactFinder.findAllByAdmin(pageRequest);
 
     return ResponseEntity.ok(contacts.map(ContactAdminReadResponse::from));
   }

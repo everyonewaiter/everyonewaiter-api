@@ -6,7 +6,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.everyonewaiter.IntegrationTest;
 import com.everyonewaiter.domain.contact.Contact;
-import com.everyonewaiter.domain.contact.ContactAdminReadRequest;
+import com.everyonewaiter.domain.contact.ContactAdminPageRequest;
 import com.everyonewaiter.domain.shared.Paging;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ class ContactFinderTest extends IntegrationTest {
   void findAllByAdmin() {
     Contact contact = contactProcessor.create(createContactCreateRequest());
 
-    Paging<Contact> contacts = contactFinder.findAllByAdmin(new ContactAdminReadRequest());
+    Paging<Contact> contacts = contactFinder.findAllByAdmin(new ContactAdminPageRequest());
 
     assertThat(contacts.getContent()).hasSize(1);
     assertThat(contacts.getContent().getFirst().getId()).isEqualTo(contact.getId());
@@ -30,11 +30,11 @@ class ContactFinderTest extends IntegrationTest {
 
   @Test
   void readAdminRequestFail() {
-    checkValidation(new ContactAdminReadRequest(null, null, null, null, 0, 1));
-    checkValidation(new ContactAdminReadRequest(null, null, null, null, 1, 0));
+    checkValidation(new ContactAdminPageRequest(null, null, null, null, 0, 1));
+    checkValidation(new ContactAdminPageRequest(null, null, null, null, 1, 0));
   }
 
-  private void checkValidation(ContactAdminReadRequest readRequest) {
+  private void checkValidation(ContactAdminPageRequest readRequest) {
     assertThatThrownBy(() -> contactFinder.findAllByAdmin(readRequest))
         .isInstanceOf(ConstraintViolationException.class);
   }

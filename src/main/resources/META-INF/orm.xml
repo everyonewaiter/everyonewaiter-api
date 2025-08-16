@@ -30,11 +30,11 @@
     <table name="contact">
       <index
         name="idx_contact_store_name_license_phone_number"
-        column-list="storeName, license, phoneNumber"
+        column-list="store_name, license, phone_number"
       />
-      <index name="idx_contact_store_name_phone_number" column-list="storeName, phoneNumber"/>
-      <index name="idx_contact_license_phone_number" column-list="license, phoneNumber"/>
-      <index name="idx_contact_phone_number" column-list="phoneNumber"/>
+      <index name="idx_contact_store_name_phone_number" column-list="store_name, phone_number"/>
+      <index name="idx_contact_license_phone_number" column-list="license, phone_number"/>
+      <index name="idx_contact_phone_number" column-list="phone_number"/>
     </table>
 
     <attributes>
@@ -65,7 +65,7 @@
 
   <entity class="com.everyonewaiter.domain.account.Account">
     <table name="account">
-      <index name="idx_account_phone_number" column-list="phoneNumber"/>
+      <index name="idx_account_phone_number" column-list="phone_number"/>
       <index name="idx_account_email_permission_state" column-list="email, permission, state"/>
       <index name="idx_account_email_state" column-list="email, state"/>
       <index name="idx_account_permission_state" column-list="permission, state"/>
@@ -89,6 +89,44 @@
       </basic>
       <embedded name="email"/>
       <embedded name="phoneNumber"/>
+    </attributes>
+  </entity>
+
+  <entity class="com.everyonewaiter.domain.device.Device">
+    <table name="device">
+      <unique-constraint name="uk_device_store_id_name">
+        <column-name>store_id</column-name>
+        <column-name>name</column-name>
+      </unique-constraint>
+      <index name="idx_device_store_id_purpose_state" column-list="store_id, purpose, state"/>
+    </table>
+
+    <attributes>
+      <basic name="name">
+        <column name="name" nullable="false" length="20"/>
+      </basic>
+      <basic name="purpose">
+        <column name="purpose" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="tableNo">
+        <column name="table_no" nullable="false"/>
+      </basic>
+      <basic name="state">
+        <column name="state" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="paymentType">
+        <column name="payment_type" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="secretKey">
+        <column name="secret_key" nullable="false" length="30"/>
+      </basic>
+      <many-to-one name="store" fetch="LAZY" optional="false">
+        <join-column name="store_id" nullable="false"/>
+        <foreign-key constraint-mode="NO_CONSTRAINT"/>
+      </many-to-one>
     </attributes>
   </entity>
 

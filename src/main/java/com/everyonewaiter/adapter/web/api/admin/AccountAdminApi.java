@@ -1,11 +1,11 @@
 package com.everyonewaiter.adapter.web.api.admin;
 
-import com.everyonewaiter.adapter.web.api.admin.dto.AccountAdminReadResponse;
-import com.everyonewaiter.adapter.web.api.admin.dto.AccountDetailResponse;
+import com.everyonewaiter.adapter.web.api.dto.AccountAdminReadResponse;
+import com.everyonewaiter.adapter.web.api.dto.AccountDetailResponse;
 import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.account.provided.AccountUpdater;
 import com.everyonewaiter.domain.account.Account;
-import com.everyonewaiter.domain.account.AccountAdminReadRequest;
+import com.everyonewaiter.domain.account.AccountAdminPageRequest;
 import com.everyonewaiter.domain.account.AccountAdminUpdateRequest;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
@@ -32,11 +32,11 @@ class AccountAdminApi implements AccountAdminApiSpecification {
   @Override
   @GetMapping
   public ResponseEntity<Paging<AccountAdminReadResponse>> getAccounts(
-      @ModelAttribute @Valid AccountAdminReadRequest readRequest,
+      @ModelAttribute @Valid AccountAdminPageRequest pageRequest,
       @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
   ) {
     return ResponseEntity.ok(
-        accountFinder.findAllByAdmin(readRequest).map(AccountAdminReadResponse::from)
+        accountFinder.findAllByAdmin(pageRequest).map(AccountAdminReadResponse::from)
     );
   }
 

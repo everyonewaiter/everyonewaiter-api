@@ -2,7 +2,7 @@ package com.everyonewaiter.adapter.web.api.device;
 
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.domain.device.entity.Device;
+import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -1,7 +1,7 @@
 package com.everyonewaiter.application.account.provided;
 
 import com.everyonewaiter.domain.account.Account;
-import com.everyonewaiter.domain.account.AccountAdminReadRequest;
+import com.everyonewaiter.domain.account.AccountAdminPageRequest;
 import com.everyonewaiter.domain.account.AccountAdminView;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.shared.PhoneNumber;
@@ -16,6 +16,6 @@ public interface AccountFinder {
 
   Account findOrThrow(PhoneNumber phoneNumber);
 
-  Paging<AccountAdminView> findAllByAdmin(@Valid AccountAdminReadRequest readRequest);
+  Paging<AccountAdminView> findAllByAdmin(@Valid AccountAdminPageRequest pageRequest);
 
 }

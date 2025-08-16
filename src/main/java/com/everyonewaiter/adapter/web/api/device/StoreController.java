@@ -2,7 +2,8 @@ package com.everyonewaiter.adapter.web.api.device;
 
 import com.everyonewaiter.application.store.StoreService;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
-import com.everyonewaiter.domain.device.entity.Device;
+import com.everyonewaiter.domain.device.Device;
+import com.everyonewaiter.domain.device.DevicePurpose;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ class StoreController implements StoreControllerSpecification {
   @Override
   @PostMapping("/open")
   public ResponseEntity<Void> open(
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     storeService.open(device.getStore().getId());
     return ResponseEntity.noContent().build();
@@ -28,7 +29,7 @@ class StoreController implements StoreControllerSpecification {
   @Override
   @PostMapping("/close")
   public ResponseEntity<Void> close(
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     storeService.close(device.getStore().getId());
     return ResponseEntity.noContent().build();

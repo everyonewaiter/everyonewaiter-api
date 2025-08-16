@@ -4,7 +4,8 @@ import com.everyonewaiter.adapter.web.api.device.request.OrderPaymentWriteReques
 import com.everyonewaiter.application.order.OrderPaymentService;
 import com.everyonewaiter.application.order.response.OrderPaymentResponse;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
-import com.everyonewaiter.domain.device.entity.Device;
+import com.everyonewaiter.domain.device.Device;
+import com.everyonewaiter.domain.device.DevicePurpose;
 import com.everyonewaiter.domain.store.StoreOpen;
 import com.everyonewaiter.domain.support.DateConverter;
 import com.everyonewaiter.domain.support.TimeZone;
@@ -31,7 +32,7 @@ class OrderPaymentController implements OrderPaymentControllerSpecification {
   @GetMapping
   public ResponseEntity<OrderPaymentResponse.Details> getOrderPaymentsByPos(
       @RequestParam(value = "date", required = false) String date,
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     OrderPaymentResponse.Details response = orderPaymentService.readAllByPos(
         device.getStore().getId(),
@@ -47,7 +48,7 @@ class OrderPaymentController implements OrderPaymentControllerSpecification {
   public ResponseEntity<Void> approve(
       @PathVariable int tableNo,
       @RequestBody @Valid OrderPaymentWriteRequest.Approve request,
-      @AuthenticationDevice(purpose = {Device.Purpose.TABLE, Device.Purpose.POS}) Device device
+      @AuthenticationDevice(purpose = {DevicePurpose.TABLE, DevicePurpose.POS}) Device device
   ) {
     Long paymentId = orderPaymentService.approve(
         device.getStore().getId(),
@@ -63,7 +64,7 @@ class OrderPaymentController implements OrderPaymentControllerSpecification {
   public ResponseEntity<Void> cancel(
       @PathVariable Long orderPaymentId,
       @RequestBody @Valid OrderPaymentWriteRequest.Cancel request,
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     Long paymentId = orderPaymentService.cancel(
         device.getStore().getId(),

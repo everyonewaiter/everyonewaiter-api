@@ -4,7 +4,7 @@ import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.application.support.ReadOnlyTransactional;
 import com.everyonewaiter.domain.account.Account;
-import com.everyonewaiter.domain.account.AccountAdminReadRequest;
+import com.everyonewaiter.domain.account.AccountAdminPageRequest;
 import com.everyonewaiter.domain.account.AccountAdminView;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.shared.PhoneNumber;
@@ -37,8 +37,8 @@ class AccountQueryService implements AccountFinder {
   }
 
   @Override
-  public Paging<AccountAdminView> findAllByAdmin(AccountAdminReadRequest readRequest) {
-    return accountRepository.findAllByAdmin(readRequest);
+  public Paging<AccountAdminView> findAllByAdmin(AccountAdminPageRequest pageRequest) {
+    return accountRepository.findAllByAdmin(pageRequest);
   }
 
 }

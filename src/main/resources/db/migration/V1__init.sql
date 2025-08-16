@@ -115,6 +115,7 @@ create table device
     updated_at   datetime(6)                              not null,
     constraint uk_device_store_id_name unique (store_id, name)
 );
+create index idx_device_store_id_purpose_state on device (store_id, purpose, state);
 
 create table category
 (

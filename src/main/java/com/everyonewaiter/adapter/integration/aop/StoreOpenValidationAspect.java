@@ -1,6 +1,6 @@
 package com.everyonewaiter.adapter.integration.aop;
 
-import com.everyonewaiter.domain.device.entity.Device;
+import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.store.service.StoreValidator;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;

@@ -6,7 +6,7 @@ import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
 import com.everyonewaiter.application.sse.provided.SseConnector;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
-import com.everyonewaiter.domain.device.entity.Device;
+import com.everyonewaiter.domain.device.Device;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

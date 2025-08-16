@@ -38,7 +38,7 @@ public class RegistrationAdminResponse {
       return new PageView(
           adminPageView.id().toString(),
           adminPageView.accountId().toString(),
-          adminPageView.email(),
+          adminPageView.email().address(),
           adminPageView.name(),
           adminPageView.status(),
           adminPageView.createdAt(),
@@ -91,7 +91,7 @@ public class RegistrationAdminResponse {
       return new DetailView(
           adminDetailView.id().toString(),
           adminDetailView.accountId().toString(),
-          adminDetailView.email(),
+          adminDetailView.email().address(),
           adminDetailView.name(),
           adminDetailView.ceoName(),
           adminDetailView.address(),

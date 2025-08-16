@@ -1,6 +1,6 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
-import com.everyonewaiter.adapter.web.api.owner.dto.AccountProfileResponse;
+import com.everyonewaiter.adapter.web.api.dto.AccountProfileResponse;
 import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.account.provided.AccountRegister;
 import com.everyonewaiter.application.account.provided.AccountSignInHandler;

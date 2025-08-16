@@ -50,7 +50,7 @@ class SwaggerConfiguration {
   }
 
   @Bean
-  public GroupedOpenApi commonApi() {
+  public GroupedOpenApi common() {
     return GroupedOpenApi.builder()
         .group("0. Common")
         .addOperationCustomizer(errorResponse())
@@ -63,7 +63,7 @@ class SwaggerConfiguration {
   }
 
   @Bean
-  public GroupedOpenApi ownerApi() {
+  public GroupedOpenApi owner() {
     return GroupedOpenApi.builder()
         .group("1. Owner")
         .addOperationCustomizer(errorResponse())
@@ -74,7 +74,7 @@ class SwaggerConfiguration {
   }
 
   @Bean
-  public GroupedOpenApi deviceApi() {
+  public GroupedOpenApi device() {
     return GroupedOpenApi.builder()
         .group("2. Device")
         .addOperationCustomizer(errorResponse())
@@ -87,7 +87,7 @@ class SwaggerConfiguration {
   }
 
   @Bean
-  public GroupedOpenApi adminApi() {
+  public GroupedOpenApi admin() {
     return GroupedOpenApi.builder()
         .group("3. Admin")
         .addOperationCustomizer(errorResponse())

@@ -5,7 +5,8 @@ import com.everyonewaiter.application.pos.PosService;
 import com.everyonewaiter.application.pos.response.PosResponse;
 import com.everyonewaiter.application.sse.provided.SseSender;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
-import com.everyonewaiter.domain.device.entity.Device;
+import com.everyonewaiter.domain.device.Device;
+import com.everyonewaiter.domain.device.DevicePurpose;
 import com.everyonewaiter.domain.order.entity.Receipt;
 import com.everyonewaiter.domain.sse.ServerAction;
 import com.everyonewaiter.domain.sse.SseCategory;
@@ -39,7 +40,7 @@ class PosController implements PosControllerSpecification {
   @GetMapping("/revenue")
   public ResponseEntity<PosResponse.Revenue> getRevenue(
       @RequestParam(value = "date", required = false) String date,
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     PosResponse.Revenue response = posService.getRevenue(
         device.getStore().getId(),
@@ -53,7 +54,7 @@ class PosController implements PosControllerSpecification {
   @StoreOpen
   @GetMapping("/tables")
   public ResponseEntity<PosResponse.Tables> getTables(
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     return ResponseEntity.ok(posService.readAllActiveTables(device.getStore().getId()));
   }
@@ -62,7 +63,7 @@ class PosController implements PosControllerSpecification {
   @GetMapping("/tables/activities/{posTableActivityId}")
   public ResponseEntity<PosResponse.TableActivityDetail> getTableActivity(
       @PathVariable Long posTableActivityId,
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     PosResponse.TableActivityDetail response = posService.readTableActivity(
         device.getStore().getId(),
@@ -76,7 +77,7 @@ class PosController implements PosControllerSpecification {
   @GetMapping("/tables/{tableNo}")
   public ResponseEntity<PosResponse.TableActivityDetail> getActiveTableActivity(
       @PathVariable int tableNo,
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     Optional<PosResponse.TableActivityDetail> response = posService.readActiveTable(
         device.getStore().getId(),
@@ -90,7 +91,7 @@ class PosController implements PosControllerSpecification {
   @PostMapping("/tables/{tableNo}/complete")
   public ResponseEntity<Void> completeActivity(
       @PathVariable int tableNo,
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     posService.completeActivity(device.getStore().getId(), tableNo);
     return ResponseEntity.noContent().build();
@@ -102,7 +103,7 @@ class PosController implements PosControllerSpecification {
   public ResponseEntity<Void> moveTable(
       @PathVariable int sourceTableNo,
       @PathVariable int targetTableNo,
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     if (sourceTableNo != targetTableNo) {
       posService.moveTable(device.getStore().getId(), sourceTableNo, targetTableNo);
@@ -116,7 +117,7 @@ class PosController implements PosControllerSpecification {
   public ResponseEntity<Void> discount(
       @PathVariable int tableNo,
       @RequestBody @Valid PosWriteRequest.Discount request,
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     posService.discount(device.getStore().getId(), tableNo, request.discountPrice());
     return ResponseEntity.noContent().build();
@@ -128,7 +129,7 @@ class PosController implements PosControllerSpecification {
   public ResponseEntity<Void> cancelOrder(
       @PathVariable int tableNo,
       @PathVariable Long orderId,
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     posService.cancelOrder(device.getStore().getId(), tableNo, orderId);
     return ResponseEntity.noContent().build();
@@ -140,7 +141,7 @@ class PosController implements PosControllerSpecification {
   public ResponseEntity<Void> updateOrders(
       @PathVariable int tableNo,
       @RequestBody @Valid PosWriteRequest.UpdateOrders request,
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     Long storeId = Objects.requireNonNull(device.getStore().getId());
     Receipt receipt = posService.createDiffOrderReceipt(storeId, tableNo, request.toDomainDto());
@@ -160,7 +161,7 @@ class PosController implements PosControllerSpecification {
       @PathVariable int tableNo,
       @PathVariable Long orderId,
       @RequestBody @Valid PosWriteRequest.UpdateMemo request,
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     posService.updateMemo(device.getStore().getId(), tableNo, orderId, request.memo());
     return ResponseEntity.noContent().build();
@@ -171,7 +172,7 @@ class PosController implements PosControllerSpecification {
   @PostMapping("/tables/{tableNo}/resend-receipt")
   public ResponseEntity<Void> resendReceipt(
       @PathVariable int tableNo,
-      @AuthenticationDevice(purpose = Device.Purpose.POS) Device device
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     posService.resendReceipt(device.getStore().getId(), tableNo);
     return ResponseEntity.noContent().build();

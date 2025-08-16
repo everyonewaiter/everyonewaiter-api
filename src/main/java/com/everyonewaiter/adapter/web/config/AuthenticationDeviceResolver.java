@@ -1,13 +1,14 @@
 package com.everyonewaiter.adapter.web.config;
 
 import static com.everyonewaiter.adapter.web.HttpRequestParser.parseRequestUri;
+import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 
 import com.everyonewaiter.application.auth.required.SignatureEncoder;
+import com.everyonewaiter.application.device.provided.DeviceFinder;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
-import com.everyonewaiter.domain.device.entity.Device;
-import com.everyonewaiter.domain.device.repository.DeviceRepository;
-import com.everyonewaiter.domain.device.service.DeviceValidator;
+import com.everyonewaiter.domain.device.Device;
+import com.everyonewaiter.domain.shared.AccessDeniedException;
 import com.everyonewaiter.domain.shared.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
@@ -30,9 +31,8 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
   private static final String SIGNATURE = "x-ew-signature";
   private static final String TIMESTAMP = "x-ew-timestamp";
 
+  private final DeviceFinder deviceFinder;
   private final SignatureEncoder signatureEncoder;
-  private final DeviceValidator deviceValidator;
-  private final DeviceRepository deviceRepository;
 
   @Override
   public boolean supportsParameter(@NonNull MethodParameter parameter) {
@@ -52,30 +52,28 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
     HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
     RequestSignature requestSignature = new RequestSignature(request);
 
-    return deviceRepository.findById(requestSignature.deviceId)
+    return deviceFinder.find(requestSignature.deviceId)
         .map(device -> {
-          validateSignature(
-              requestSignature.signature,
-              requestSignature.plainText(device),
-              device.getSecretKey()
-          );
+          validateSignature(device, requestSignature);
 
-          return device;
-        })
-        .map(device -> {
           AuthenticationDevice annotation = requireNonNull(
               parameter.getParameterAnnotation(AuthenticationDevice.class)
           );
 
-          deviceValidator.validateDevicePurpose(device, annotation.purpose());
+          if (!device.isActive() || stream(annotation.purpose()).noneMatch(device::hasPurpose)) {
+            throw new AccessDeniedException();
+          }
 
           return device;
         })
         .orElseThrow(AuthenticationException::new);
   }
 
-  private void validateSignature(String encoded, String plainText, String secretKey) {
-    if (!signatureEncoder.matches(encoded, plainText, secretKey)) {
+  private void validateSignature(Device device, RequestSignature requestSignature) {
+    String signature = requestSignature.signature;
+    String plainText = requestSignature.plainText(device);
+
+    if (!signatureEncoder.matches(signature, plainText, device.getSecretKey())) {
       throw new AuthenticationException();
     }
   }

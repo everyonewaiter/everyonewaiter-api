@@ -6,7 +6,7 @@ import static com.everyonewaiter.domain.notification.EmailTemplate.STORE_REGISTR
 import static com.everyonewaiter.domain.support.ClientUri.AUTH_EMAIL;
 import static com.everyonewaiter.domain.support.ClientUri.STORE_REGISTRATION;
 
-import com.everyonewaiter.application.account.required.AccountRepository;
+import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.auth.required.JwtProvider;
 import com.everyonewaiter.application.notification.provided.NotificationSender;
 import com.everyonewaiter.domain.account.Account;
@@ -34,7 +34,7 @@ class EmailNotificationEventHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(EmailNotificationEventHandler.class);
 
   private final JwtProvider jwtProvider;
-  private final AccountRepository accountRepository;
+  private final AccountFinder accountFinder;
   private final NotificationSender notificationSender;
 
   @Async("eventTaskExecutor")
@@ -73,7 +73,7 @@ class EmailNotificationEventHandler {
     String storeName = event.businessLicense().getName();
     LOGGER.info("[매장 등록 신청 승인 알림 이벤트] accountId: {}, storeName: {}", accountId, storeName);
 
-    Account account = accountRepository.findByIdOrThrow(accountId);
+    Account account = accountFinder.findOrThrow(accountId);
 
     TemplateEmail templateEmail = new TemplateEmail(
         STORE_REGISTRATION_APPROVE,
@@ -91,7 +91,7 @@ class EmailNotificationEventHandler {
   public void consumeRegistrationRejectEvent(RegistrationRejectEvent event) {
     LOGGER.info("[매장 등록 신청 반려 이벤트] storeName: {}", event.storeName());
 
-    Account account = accountRepository.findByIdOrThrow(event.accountId());
+    Account account = accountFinder.findOrThrow(event.accountId());
 
     TemplateEmail templateEmail = new TemplateEmail(
         STORE_REGISTRATION_REJECT,

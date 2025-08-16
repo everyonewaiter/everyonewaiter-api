@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.store.view;
 
+import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.store.entity.Registration;
 import java.time.Instant;
 import lombok.AccessLevel;
@@ -11,7 +12,7 @@ public class RegistrationAdminView {
   public record Page(
       Long id,
       Long accountId,
-      String email,
+      Email email,
       String name,
       Registration.Status status,
       Instant createdAt,
@@ -23,7 +24,7 @@ public class RegistrationAdminView {
   public record Detail(
       Long id,
       Long accountId,
-      String email,
+      Email email,
       String name,
       String ceoName,
       String address,
