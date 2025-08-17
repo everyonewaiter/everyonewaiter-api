@@ -21,6 +21,7 @@ import com.everyonewaiter.domain.shared.ErrorCode;
 import feign.FeignException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -29,10 +30,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.util.DisconnectedClientHelper;
 
 @RestControllerAdvice
 class WebApiControllerAdvice {
@@ -201,6 +204,19 @@ class WebApiControllerAdvice {
     ErrorCode errorCode = ErrorCode.REQUEST_TIMEOUT;
 
     WebApiExceptionLogger.error(request, errorCode, exception);
+
+    return createResponseEntity(request, ErrorResponse.from(errorCode));
+  }
+
+  @ExceptionHandler({AsyncRequestNotUsableException.class, ClientAbortException.class})
+  public ResponseEntity<Object> handleException(HttpServletRequest request, Exception exception) {
+    ErrorCode errorCode = ErrorCode.REQUEST_TIMEOUT;
+
+    if (DisconnectedClientHelper.isClientDisconnectedException(exception)) {
+      WebApiExceptionLogger.warn(request, errorCode, exception);
+    } else {
+      WebApiExceptionLogger.error(request, errorCode, exception);
+    }
 
     return createResponseEntity(request, ErrorResponse.from(errorCode));
   }

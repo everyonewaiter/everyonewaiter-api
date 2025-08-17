@@ -1,14 +1,19 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
-import com.everyonewaiter.adapter.web.api.owner.request.CategoryWriteRequest;
-import com.everyonewaiter.application.menu.CategoryService;
-import com.everyonewaiter.application.menu.response.CategoryResponse;
+import com.everyonewaiter.adapter.web.api.dto.CategorySimpleResponses;
+import com.everyonewaiter.application.menu.provided.CategoryFinder;
+import com.everyonewaiter.application.menu.provided.CategoryManager;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
+import com.everyonewaiter.domain.menu.Category;
+import com.everyonewaiter.domain.menu.CategoryCreateRequest;
+import com.everyonewaiter.domain.menu.CategoryMovePositionRequest;
+import com.everyonewaiter.domain.menu.CategoryUpdateRequest;
 import com.everyonewaiter.domain.store.StoreOwner;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,18 +28,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1")
-class CategoryManagementController implements CategoryManagementControllerSpecification {
+class CategoryManagementApi implements CategoryManagementApiSpecification {
 
-  private final CategoryService categoryService;
+  private final CategoryFinder categoryFinder;
+  private final CategoryManager categoryManager;
 
   @Override
   @StoreOwner
   @GetMapping("/stores/{storeId}/categories")
-  public ResponseEntity<CategoryResponse.Simples> getCategories(
+  public ResponseEntity<CategorySimpleResponses> getCategories(
       @PathVariable Long storeId,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    return ResponseEntity.ok(categoryService.readAllSimples(storeId));
+    List<Category> categories = categoryFinder.findAll(storeId);
+
+    return ResponseEntity.ok(CategorySimpleResponses.from(categories));
   }
 
   @Override
@@ -42,11 +50,12 @@ class CategoryManagementController implements CategoryManagementControllerSpecif
   @PostMapping("/stores/{storeId}/categories")
   public ResponseEntity<Void> create(
       @PathVariable Long storeId,
-      @RequestBody @Valid CategoryWriteRequest.Create request,
+      @RequestBody @Valid CategoryCreateRequest createRequest,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    Long categoryId = categoryService.create(storeId, request.toDomainDto());
-    return ResponseEntity.created(URI.create(categoryId.toString())).build();
+    Category category = categoryManager.create(storeId, createRequest);
+
+    return ResponseEntity.created(URI.create(category.getNonNullId().toString())).build();
   }
 
   @Override
@@ -55,10 +64,11 @@ class CategoryManagementController implements CategoryManagementControllerSpecif
   public ResponseEntity<Void> update(
       @PathVariable Long storeId,
       @PathVariable Long categoryId,
-      @RequestBody @Valid CategoryWriteRequest.Update request,
+      @RequestBody @Valid CategoryUpdateRequest updateRequest,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    categoryService.update(categoryId, storeId, request.toDomainDto());
+    categoryManager.update(categoryId, storeId, updateRequest);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -69,10 +79,11 @@ class CategoryManagementController implements CategoryManagementControllerSpecif
       @PathVariable Long storeId,
       @PathVariable Long sourceId,
       @PathVariable Long targetId,
-      @RequestBody @Valid CategoryWriteRequest.MovePosition request,
+      @RequestBody @Valid CategoryMovePositionRequest movePositionRequest,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    categoryService.movePosition(sourceId, targetId, storeId, request.toDomainDto());
+    categoryManager.movePosition(sourceId, targetId, storeId, movePositionRequest);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -84,7 +95,7 @@ class CategoryManagementController implements CategoryManagementControllerSpecif
       @PathVariable Long categoryId,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    categoryService.delete(categoryId, storeId);
+    categoryManager.delete(categoryId, storeId);
     return ResponseEntity.noContent().build();
   }
 

@@ -1,7 +1,8 @@
 package com.everyonewaiter.domain.menu.entity;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
-import com.everyonewaiter.domain.menu.event.MenuImageDeleteEvent;
+import com.everyonewaiter.domain.menu.Category;
+import com.everyonewaiter.domain.menu.MenuImageDeleteEvent;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.shared.Position;
@@ -92,7 +93,7 @@ public class Menu extends AggregateRootEntity<Menu> {
       int lastPosition
   ) {
     Menu menu = new Menu();
-    menu.storeId = category.getStoreId();
+    menu.storeId = category.getStore().getNonNullId();
     menu.category = category;
     menu.name = name;
     menu.description = description;

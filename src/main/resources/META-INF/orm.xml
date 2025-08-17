@@ -222,6 +222,28 @@
       <embedded name="detail"/>
     </attributes>
   </entity>
+  `
+  <entity class="com.everyonewaiter.domain.menu.Category">
+    <table name="category">
+      <unique-constraint name="uk_category_store_id_name">
+        <column-name>store_id</column-name>
+        <column-name>name</column-name>
+      </unique-constraint>
+    </table>
+
+    <attributes>
+      <basic name="name">
+        <column name="name" nullable="false" length="20"/>
+      </basic>
+      <many-to-one name="store" fetch="LAZY" optional="false">
+        <join-column name="store_id" nullable="false" updatable="false"/>
+      </many-to-one>
+      <one-to-many name="menus" mapped-by="category" fetch="LAZY">
+        <order-by>position asc, id asc</order-by>
+      </one-to-many>
+      <embedded name="position"/>
+    </attributes>
+  </entity>
 
   <embeddable class="com.everyonewaiter.domain.shared.Email">
     <attributes>

@@ -1,9 +1,7 @@
 package com.everyonewaiter.application.device;
 
 import com.everyonewaiter.application.auth.provided.Authenticator;
-import com.everyonewaiter.application.device.provided.DeviceCreator;
-import com.everyonewaiter.application.device.provided.DeviceDeleter;
-import com.everyonewaiter.application.device.provided.DeviceUpdater;
+import com.everyonewaiter.application.device.provided.DeviceManager;
 import com.everyonewaiter.application.device.required.DeviceRepository;
 import com.everyonewaiter.application.store.provided.StoreFinder;
 import com.everyonewaiter.domain.auth.AuthPurpose;
@@ -22,7 +20,7 @@ import org.springframework.validation.annotation.Validated;
 @Service
 @Transactional
 @RequiredArgsConstructor
-class DeviceModifyService implements DeviceCreator, DeviceUpdater, DeviceDeleter {
+class DeviceModifyService implements DeviceManager {
 
   private final Authenticator authenticator;
   private final StoreFinder storeFinder;

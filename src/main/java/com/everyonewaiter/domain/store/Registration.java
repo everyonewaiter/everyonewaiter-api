@@ -12,7 +12,7 @@ import lombok.ToString;
 
 @Entity
 @Getter
-@ToString(callSuper = true)
+@ToString(exclude = "account", callSuper = true)
 @NoArgsConstructor(access = PROTECTED)
 public class Registration extends AggregateRootEntity<Registration> {
 

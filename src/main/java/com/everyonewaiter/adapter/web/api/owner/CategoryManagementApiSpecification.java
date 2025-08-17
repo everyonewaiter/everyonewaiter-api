@@ -1,10 +1,12 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
-import com.everyonewaiter.adapter.web.api.owner.request.CategoryWriteRequest;
+import com.everyonewaiter.adapter.web.api.dto.CategorySimpleResponses;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.application.menu.response.CategoryResponse;
 import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.menu.CategoryCreateRequest;
+import com.everyonewaiter.domain.menu.CategoryMovePositionRequest;
+import com.everyonewaiter.domain.menu.CategoryUpdateRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "메뉴 카테고리")
-interface CategoryManagementControllerSpecification {
+interface CategoryManagementApiSpecification {
 
   @Operation(summary = "카테고리 목록 조회", description = "카테고리 목록 조회 API")
   @ApiResponse(responseCode = "200", description = "카테고리 목록 조회 성공")
@@ -35,7 +37,7 @@ interface CategoryManagementControllerSpecification {
           ),
       }
   )
-  ResponseEntity<CategoryResponse.Simples> getCategories(
+  ResponseEntity<CategorySimpleResponses> getCategories(
       Long storeId,
       @Parameter(hidden = true) Account account
   );
@@ -69,7 +71,7 @@ interface CategoryManagementControllerSpecification {
   )
   ResponseEntity<Void> create(
       Long storeId,
-      @RequestBody CategoryWriteRequest.Create request,
+      @RequestBody CategoryCreateRequest createRequest,
       @Parameter(hidden = true) Account account
   );
 
@@ -103,7 +105,7 @@ interface CategoryManagementControllerSpecification {
   ResponseEntity<Void> update(
       Long storeId,
       Long categoryId,
-      @RequestBody CategoryWriteRequest.Update request,
+      @RequestBody CategoryUpdateRequest updateRequest,
       @Parameter(hidden = true) Account account
   );
 
@@ -139,7 +141,7 @@ interface CategoryManagementControllerSpecification {
       Long storeId,
       Long sourceId,
       Long targetId,
-      @RequestBody CategoryWriteRequest.MovePosition request,
+      @RequestBody CategoryMovePositionRequest movePositionRequest,
       @Parameter(hidden = true) Account account
   );
 

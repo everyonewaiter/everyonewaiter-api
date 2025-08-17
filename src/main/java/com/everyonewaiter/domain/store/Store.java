@@ -15,7 +15,7 @@ import lombok.ToString;
 
 @Entity
 @Getter
-@ToString(exclude = {"setting"}, callSuper = true)
+@ToString(exclude = {"account", "setting"}, callSuper = true)
 @NoArgsConstructor(access = PROTECTED)
 public class Store extends AggregateRootEntity<Store> {
 

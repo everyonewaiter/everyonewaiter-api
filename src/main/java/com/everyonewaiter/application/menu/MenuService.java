@@ -2,13 +2,13 @@ package com.everyonewaiter.application.menu;
 
 import com.everyonewaiter.application.image.provided.ImageManager;
 import com.everyonewaiter.application.menu.request.MenuWrite;
+import com.everyonewaiter.application.menu.required.CategoryRepository;
 import com.everyonewaiter.application.menu.response.MenuResponse;
 import com.everyonewaiter.application.support.CacheName;
-import com.everyonewaiter.domain.menu.entity.Category;
+import com.everyonewaiter.domain.menu.Category;
 import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.menu.entity.MenuOption;
 import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
-import com.everyonewaiter.domain.menu.repository.CategoryRepository;
 import com.everyonewaiter.domain.menu.repository.MenuRepository;
 import com.everyonewaiter.domain.menu.service.MenuValidator;
 import com.everyonewaiter.domain.shared.BusinessException;

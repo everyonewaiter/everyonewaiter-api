@@ -5,10 +5,8 @@ import com.everyonewaiter.adapter.web.api.dto.DeviceDetailResponse;
 import com.everyonewaiter.adapter.web.api.dto.DevicePageResponse;
 import com.everyonewaiter.adapter.web.api.dto.StoreSimpleResponses;
 import com.everyonewaiter.application.auth.provided.Authenticator;
-import com.everyonewaiter.application.device.provided.DeviceCreator;
-import com.everyonewaiter.application.device.provided.DeviceDeleter;
 import com.everyonewaiter.application.device.provided.DeviceFinder;
-import com.everyonewaiter.application.device.provided.DeviceUpdater;
+import com.everyonewaiter.application.device.provided.DeviceManager;
 import com.everyonewaiter.application.store.provided.StoreFinder;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
@@ -47,9 +45,7 @@ class DeviceManagementApi implements DeviceManagementApiSpecification {
   private final Authenticator authenticator;
   private final StoreFinder storeFinder;
   private final DeviceFinder deviceFinder;
-  private final DeviceCreator deviceCreator;
-  private final DeviceUpdater deviceUpdater;
-  private final DeviceDeleter deviceDeleter;
+  private final DeviceManager deviceManager;
 
   @Override
   @StoreOwner
@@ -83,7 +79,7 @@ class DeviceManagementApi implements DeviceManagementApiSpecification {
       @PathVariable Long storeId,
       @RequestBody @Valid DeviceCreateRequest createRequest
   ) {
-    Device device = deviceCreator.create(storeId, createRequest);
+    Device device = deviceManager.create(storeId, createRequest);
 
     return ResponseEntity.created(URI.create(device.getNonNullId().toString()))
         .body(DeviceCreateResponse.from(device));
@@ -121,7 +117,7 @@ class DeviceManagementApi implements DeviceManagementApiSpecification {
       @RequestBody @Valid DeviceUpdateRequest updateRequest,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    deviceUpdater.update(deviceId, storeId, updateRequest);
+    deviceManager.update(deviceId, storeId, updateRequest);
 
     return ResponseEntity.noContent().build();
   }
@@ -134,7 +130,7 @@ class DeviceManagementApi implements DeviceManagementApiSpecification {
       @PathVariable Long deviceId,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    deviceDeleter.delete(deviceId, storeId);
+    deviceManager.delete(deviceId, storeId);
 
     return ResponseEntity.noContent().build();
   }

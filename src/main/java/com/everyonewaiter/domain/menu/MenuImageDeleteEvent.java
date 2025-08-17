@@ -1,4 +1,4 @@
-package com.everyonewaiter.domain.menu.event;
+package com.everyonewaiter.domain.menu;
 
 public record MenuImageDeleteEvent(String menuImage) {
 

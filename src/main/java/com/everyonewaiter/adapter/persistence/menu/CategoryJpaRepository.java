@@ -1,6 +1,6 @@
-package com.everyonewaiter.infrastructure.menu;
+package com.everyonewaiter.adapter.persistence.menu;
 
-import com.everyonewaiter.domain.menu.entity.Category;
+import com.everyonewaiter.domain.menu.Category;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

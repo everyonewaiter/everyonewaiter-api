@@ -1,4 +1,4 @@
-package com.everyonewaiter.adapter.integration.sse;
+package com.everyonewaiter.adapter.persistence.sse;
 
 import com.everyonewaiter.application.sse.required.SseEventRepository;
 import java.time.Duration;

@@ -125,6 +125,7 @@ create table category
     position   int         not null,
     created_at datetime(6) not null,
     updated_at datetime(6) not null,
+    constraint fk_category_store_id foreign key (store_id) references store (id),
     constraint uk_category_store_id_name unique (store_id, name)
 );
 
