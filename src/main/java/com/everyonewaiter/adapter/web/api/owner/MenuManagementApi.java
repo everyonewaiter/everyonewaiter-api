@@ -1,19 +1,21 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
-import com.everyonewaiter.adapter.web.api.owner.request.MenuWriteRequest;
-import com.everyonewaiter.application.menu.MenuService;
-import com.everyonewaiter.application.menu.request.MenuWrite;
-import com.everyonewaiter.application.menu.response.MenuResponse;
-import com.everyonewaiter.application.sse.provided.SseSender;
+import com.everyonewaiter.adapter.web.api.dto.MenuSimpleResponses;
+import com.everyonewaiter.application.menu.provided.MenuFinder;
+import com.everyonewaiter.application.menu.provided.MenuManager;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
-import com.everyonewaiter.domain.sse.ServerAction;
-import com.everyonewaiter.domain.sse.SseCategory;
-import com.everyonewaiter.domain.sse.SseEvent;
+import com.everyonewaiter.domain.menu.Menu;
+import com.everyonewaiter.domain.menu.MenuCreateRequest;
+import com.everyonewaiter.domain.menu.MenuDeleteRequest;
+import com.everyonewaiter.domain.menu.MenuMovePositionRequest;
+import com.everyonewaiter.domain.menu.MenuUpdateRequest;
+import com.everyonewaiter.domain.menu.MenuView;
 import com.everyonewaiter.domain.store.StoreOwner;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,32 +33,34 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1")
-class MenuManagementController implements MenuManagementControllerSpecification {
+class MenuManagementApi implements MenuManagementApiSpecification {
 
-  private final SseSender sseSender;
-  private final MenuService menuService;
+  private final MenuFinder menuFinder;
+  private final MenuManager menuManager;
 
   @Override
   @StoreOwner
   @GetMapping("/stores/{storeId}/categories/{categoryId}/menus")
-  public ResponseEntity<MenuResponse.Simples> getMenus(
+  public ResponseEntity<MenuSimpleResponses> getMenus(
       @PathVariable Long storeId,
       @PathVariable Long categoryId,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    return ResponseEntity.ok(menuService.readAllSimples(storeId, categoryId));
+    List<Menu> menus = menuFinder.findAll(storeId, categoryId);
+
+    return ResponseEntity.ok(MenuSimpleResponses.from(menus));
   }
 
   @Override
   @StoreOwner
   @GetMapping("/stores/{storeId}/categories/{categoryId}/menus/{menuId}")
-  public ResponseEntity<MenuResponse.Detail> getMenu(
+  public ResponseEntity<MenuView.MenuDetail> getMenu(
       @PathVariable Long storeId,
       @PathVariable Long categoryId,
       @PathVariable Long menuId,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    return ResponseEntity.ok(menuService.readDetail(menuId, storeId, categoryId));
+    return ResponseEntity.ok(menuFinder.findViewOrThrow(menuId, storeId, categoryId));
   }
 
   @Override
@@ -69,16 +73,12 @@ class MenuManagementController implements MenuManagementControllerSpecification 
       @PathVariable Long storeId,
       @PathVariable Long categoryId,
       @RequestPart MultipartFile file,
-      @RequestPart @Valid MenuWriteRequest.Create request,
+      @RequestPart @Valid MenuCreateRequest request,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    MenuWrite.Create menuCreateRequest = request.toDomainDto(file);
-    Long menuId = menuService.create(categoryId, storeId, menuCreateRequest);
-    menuService.replaceMenuOptionGroups(menuId, storeId, menuCreateRequest.menuOptionGroups());
-    sseSender.send(storeId.toString(),
-        new SseEvent(storeId, SseCategory.MENU, ServerAction.CREATE)
-    );
-    return ResponseEntity.created(URI.create(menuId.toString())).build();
+    Menu menu = menuManager.create(categoryId, storeId, request, file);
+
+    return ResponseEntity.created(URI.create(menu.getNonNullId().toString())).build();
   }
 
   @Override
@@ -87,15 +87,11 @@ class MenuManagementController implements MenuManagementControllerSpecification 
   public ResponseEntity<Void> update(
       @PathVariable Long storeId,
       @PathVariable Long menuId,
-      @RequestBody @Valid MenuWriteRequest.Update request,
+      @RequestBody @Valid MenuUpdateRequest request,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    MenuWrite.Update menuUpdateRequest = request.toDomainDto();
-    menuService.update(menuId, storeId, menuUpdateRequest);
-    menuService.replaceMenuOptionGroups(menuId, storeId, menuUpdateRequest.menuOptionGroups());
-    sseSender.send(storeId.toString(),
-        new SseEvent(storeId, SseCategory.MENU, ServerAction.UPDATE, menuId)
-    );
+    menuManager.update(menuId, storeId, request);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -109,15 +105,11 @@ class MenuManagementController implements MenuManagementControllerSpecification 
       @PathVariable Long storeId,
       @PathVariable Long menuId,
       @RequestPart MultipartFile file,
-      @RequestPart @Valid MenuWriteRequest.Update request,
+      @RequestPart @Valid MenuUpdateRequest request,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    MenuWrite.Update menuUpdateRequest = request.toDomainDto();
-    menuService.update(menuId, storeId, menuUpdateRequest, file);
-    menuService.replaceMenuOptionGroups(menuId, storeId, menuUpdateRequest.menuOptionGroups());
-    sseSender.send(storeId.toString(),
-        new SseEvent(storeId, SseCategory.MENU, ServerAction.UPDATE, menuId)
-    );
+    menuManager.update(menuId, storeId, request, file);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -128,13 +120,11 @@ class MenuManagementController implements MenuManagementControllerSpecification 
       @PathVariable Long storeId,
       @PathVariable Long sourceId,
       @PathVariable Long targetId,
-      @RequestBody @Valid MenuWriteRequest.MovePosition request,
+      @RequestBody @Valid MenuMovePositionRequest movePositionRequest,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    menuService.movePosition(sourceId, targetId, storeId, request.toDomainDto());
-    sseSender.send(storeId.toString(),
-        new SseEvent(storeId, SseCategory.MENU, ServerAction.UPDATE)
-    );
+    menuManager.movePosition(sourceId, targetId, storeId, movePositionRequest);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -147,10 +137,8 @@ class MenuManagementController implements MenuManagementControllerSpecification 
       @PathVariable Long menuId,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    menuService.delete(menuId, storeId, categoryId);
-    sseSender.send(storeId.toString(),
-        new SseEvent(storeId, SseCategory.MENU, ServerAction.DELETE, menuId)
-    );
+    menuManager.delete(menuId, storeId, categoryId);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -159,13 +147,11 @@ class MenuManagementController implements MenuManagementControllerSpecification 
   @PostMapping("/stores/{storeId}/menus/delete")
   public ResponseEntity<Void> deleteAll(
       @PathVariable Long storeId,
-      @RequestBody @Valid MenuWriteRequest.Delete request,
+      @RequestBody @Valid MenuDeleteRequest deleteRequest,
       @AuthenticationAccount(permission = AccountPermission.OWNER) Account account
   ) {
-    menuService.deleteAll(storeId, request.toDomainDto());
-    sseSender.send(storeId.toString(),
-        new SseEvent(storeId, SseCategory.MENU, ServerAction.DELETE, request.menuIds())
-    );
+    menuManager.deleteAll(storeId, deleteRequest);
+
     return ResponseEntity.noContent().build();
   }
 

@@ -1,10 +1,10 @@
 package com.everyonewaiter.application.order;
 
+import com.everyonewaiter.application.menu.provided.MenuFinder;
 import com.everyonewaiter.application.order.request.OrderWrite;
 import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.application.support.DistributedLock;
-import com.everyonewaiter.domain.menu.entity.Menu;
-import com.everyonewaiter.domain.menu.repository.MenuRepository;
+import com.everyonewaiter.domain.menu.Menu;
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.order.entity.OrderMenu;
 import com.everyonewaiter.domain.order.entity.OrderOptionGroup;
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
-  private final MenuRepository menuRepository;
+  private final MenuFinder menuFinder;
   private final OrderValidator orderValidator;
   private final OrderFactory orderFactory;
   private final OrderRepository orderRepository;
@@ -63,7 +63,7 @@ public class OrderService {
   }
 
   private Map<Long, Menu> findMenus(Long storeId, Set<Long> menuIds) {
-    return menuRepository.findAllByStoreIdAndIds(storeId, menuIds.stream().toList())
+    return menuFinder.findAll(storeId, menuIds.stream().toList())
         .stream()
         .collect(Collectors.toMap(Menu::getId, menu -> menu));
   }

@@ -73,7 +73,8 @@ class SseService implements SseConnector, SseSender {
 
   @Override
   public void send(String prefix, SseEvent sseEvent) {
-    LOGGER.info("[SSE 이벤트 전송] 매장 ID: {}, 카테고리: {}", sseEvent.storeId(), sseEvent.category());
+    LOGGER.info("[SSE 이벤트 전송] 매장 ID: {}, 카테고리: {}, 서버 활동: {}",
+        sseEvent.storeId(), sseEvent.category(), sseEvent.action());
     LOGGER.info("[SSE 이벤트 본문] data: {}", sseEvent.data());
 
     String eventKey = EVENT.createKey(prefix);

@@ -2,9 +2,6 @@ package com.everyonewaiter.domain.menu;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import com.everyonewaiter.domain.menu.entity.Menu;
-import com.everyonewaiter.domain.menu.entity.MenuOption;
-import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.NoArgsConstructor;
@@ -33,10 +30,10 @@ public class MenuView {
       int spicy,
 
       @Schema(description = "메뉴 상태", example = "DEFAULT")
-      Menu.State state,
+      MenuState state,
 
       @Schema(description = "메뉴 라벨", example = "BEST")
-      Menu.Label label,
+      MenuLabel label,
 
       @Schema(description = "메뉴 이미지명", example = "license/202504/0KA652ZFZ26DG.webp")
       String image,
@@ -78,7 +75,7 @@ public class MenuView {
       String name,
 
       @Schema(description = "메뉴 옵션 그룹 타입 (필수, 옵셔널)", example = "MANDATORY")
-      MenuOptionGroup.Type type,
+      MenuOptionGroupType type,
 
       @Schema(description = "메뉴 옵션 주방 프린트 출력 여부", example = "true")
       boolean printEnabled,

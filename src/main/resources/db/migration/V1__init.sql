@@ -144,7 +144,9 @@ create table menu
     print_enabled boolean                                      not null,
     position      int                                          not null,
     created_at    datetime(6)                                  not null,
-    updated_at    datetime(6)                                  not null
+    updated_at    datetime(6)                                  not null,
+    constraint fk_menu_store_id foreign key (store_id) references store (id),
+    constraint fk_menu_category_id foreign key (category_id) references category (id) on delete cascade
 );
 create index idx_menu_store_id_position on menu (store_id, position asc);
 create index idx_menu_category_id_store_id on menu (category_id, store_id);

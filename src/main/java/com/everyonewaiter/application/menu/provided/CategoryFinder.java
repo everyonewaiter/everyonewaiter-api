@@ -10,4 +10,6 @@ public interface CategoryFinder {
 
   CategoryView.Categories findAllView(Long storeId);
 
+  Category findOrThrow(Long categoryId, Long storeId);
+
 }

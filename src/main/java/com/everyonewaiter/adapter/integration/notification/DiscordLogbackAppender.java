@@ -11,6 +11,7 @@ import com.everyonewaiter.domain.notification.DiscordEmbed;
 import com.everyonewaiter.domain.notification.DiscordEmbeds;
 import com.everyonewaiter.domain.notification.DiscordField;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -73,7 +74,7 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
   }
 
   private void handleError(HttpRequest request, ClientHttpResponse response) throws IOException {
-    String responseBody = new String(response.getBody().readAllBytes());
+    String responseBody = new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8);
 
     LOGGER.warn("[{} 디스코드 메시지 전송 실패] {}", response.getStatusText(), responseBody);
   }

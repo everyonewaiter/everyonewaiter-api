@@ -1,10 +1,14 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
-import com.everyonewaiter.adapter.web.api.owner.request.MenuWriteRequest;
+import com.everyonewaiter.adapter.web.api.dto.MenuSimpleResponses;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.application.menu.response.MenuResponse;
 import com.everyonewaiter.domain.account.Account;
+import com.everyonewaiter.domain.menu.MenuCreateRequest;
+import com.everyonewaiter.domain.menu.MenuDeleteRequest;
+import com.everyonewaiter.domain.menu.MenuMovePositionRequest;
+import com.everyonewaiter.domain.menu.MenuUpdateRequest;
+import com.everyonewaiter.domain.menu.MenuView;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "메뉴")
-interface MenuManagementControllerSpecification {
+interface MenuManagementApiSpecification {
 
   @Operation(summary = "메뉴 목록 조회", description = "메뉴 목록 조회 API")
   @ApiResponse(responseCode = "200", description = "메뉴 목록 조회 성공")
@@ -36,7 +40,7 @@ interface MenuManagementControllerSpecification {
           ),
       }
   )
-  ResponseEntity<MenuResponse.Simples> getMenus(
+  ResponseEntity<MenuSimpleResponses> getMenus(
       Long storeId,
       Long categoryId,
       @Parameter(hidden = true) Account account
@@ -65,7 +69,7 @@ interface MenuManagementControllerSpecification {
           ),
       }
   )
-  ResponseEntity<MenuResponse.Detail> getMenu(
+  ResponseEntity<MenuView.MenuDetail> getMenu(
       Long storeId,
       Long categoryId,
       Long menuId,
@@ -107,7 +111,7 @@ interface MenuManagementControllerSpecification {
       Long storeId,
       Long categoryId,
       MultipartFile file,
-      MenuWriteRequest.Create request,
+      MenuCreateRequest request,
       @Parameter(hidden = true) Account account
   );
 
@@ -141,7 +145,7 @@ interface MenuManagementControllerSpecification {
   ResponseEntity<Void> update(
       Long storeId,
       Long menuId,
-      @RequestBody MenuWriteRequest.Update request,
+      @RequestBody MenuUpdateRequest request,
       @Parameter(hidden = true) Account account
   );
 
@@ -176,7 +180,7 @@ interface MenuManagementControllerSpecification {
       Long storeId,
       Long menuId,
       MultipartFile file,
-      MenuWriteRequest.Update request,
+      MenuUpdateRequest request,
       @Parameter(hidden = true) Account account
   );
 
@@ -212,7 +216,7 @@ interface MenuManagementControllerSpecification {
       Long storeId,
       Long sourceId,
       Long targetId,
-      @RequestBody MenuWriteRequest.MovePosition request,
+      @RequestBody MenuMovePositionRequest movePositionRequest,
       @Parameter(hidden = true) Account account
   );
 
@@ -271,7 +275,7 @@ interface MenuManagementControllerSpecification {
   )
   ResponseEntity<Void> deleteAll(
       Long storeId,
-      @RequestBody MenuWriteRequest.Delete request,
+      @RequestBody MenuDeleteRequest deleteRequest,
       @Parameter(hidden = true) Account account
   );
 

@@ -5,7 +5,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 import com.everyonewaiter.application.image.provided.ImageManager;
 import com.everyonewaiter.domain.menu.CategoryDeleteEvent;
 import com.everyonewaiter.domain.menu.MenuImageDeleteEvent;
-import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.store.LicenseImageDeleteEvent;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -36,42 +35,41 @@ class ImageDeleteEventHandler {
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void handle(CategoryDeleteEvent event) {
-    LOGGER.info("[카테고리 메뉴 이미지 삭제] 카테고리 ID: {}", event.categoryId());
+    LOGGER.info("[카테고리 메뉴 이미지 삭제] 카테고리 ID: {}, 이미지: {}", event.categoryId(), event.menuImages());
 
-    List<String> menuImages = event.menus().stream()
-        .map(Menu::getImage)
-        .toList();
-
-    if (menuImages.isEmpty()) {
-      return;
-    }
-
-    try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
-      executorService.invokeAll(
-          menuImages.stream()
-              .map(menuImage ->
-                  (Callable<String>) () -> {
-                    imageManager.delete(menuImage);
-
-                    return menuImage;
-                  }
-              )
-              .toList()
-      );
-    } catch (InterruptedException exception) {
-      LOGGER.error("[카테고리 메뉴 이미지 삭제 중단] 카테고리 ID: {} 메뉴 이미지: {}",
-          event.categoryId(), menuImages, exception);
-
-      Thread.currentThread().interrupt();
-    }
+    deleteImages(event.menuImages());
   }
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void handle(MenuImageDeleteEvent event) {
-    LOGGER.info("[메뉴 이미지 삭제] 이미지: {}", event.menuImage());
+    LOGGER.info("[메뉴 이미지 삭제] 이미지: {}", event.menuImages());
 
-    imageManager.delete(event.menuImage());
+    deleteImages(event.menuImages());
+  }
+
+  private void deleteImages(List<String> images) {
+    if (images.isEmpty()) {
+      return;
+    }
+
+    try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
+      executorService.invokeAll(
+          images.stream()
+              .map(image ->
+                  (Callable<String>) () -> {
+                    imageManager.delete(image);
+
+                    return image;
+                  }
+              )
+              .toList()
+      );
+    } catch (InterruptedException exception) {
+      LOGGER.error("[이미지 삭제 중단] 메뉴 이미지: {}", images, exception);
+
+      Thread.currentThread().interrupt();
+    }
   }
 
 }

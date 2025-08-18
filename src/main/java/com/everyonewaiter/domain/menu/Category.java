@@ -8,7 +8,6 @@ import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
-import com.everyonewaiter.domain.menu.entity.Menu;
 import com.everyonewaiter.domain.shared.Position;
 import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.store.Store;
@@ -67,7 +66,12 @@ public class Category extends AggregateRootEntity<Category> {
   }
 
   public void delete() {
-    registerEvent(new CategoryDeleteEvent(getNonNullId(), getMenus()));
+    registerEvent(
+        new CategoryDeleteEvent(
+            getNonNullId(),
+            getMenus().stream().map(Menu::getImage).toList()
+        )
+    );
     registerEvent(new SseEvent(store.getNonNullId(), CATEGORY, DELETE, getNonNullId()));
   }
 

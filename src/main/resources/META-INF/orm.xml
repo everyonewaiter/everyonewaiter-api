@@ -222,7 +222,7 @@
       <embedded name="detail"/>
     </attributes>
   </entity>
-  `
+
   <entity class="com.everyonewaiter.domain.menu.Category">
     <table name="category">
       <unique-constraint name="uk_category_store_id_name">
@@ -241,6 +241,94 @@
       <one-to-many name="menus" mapped-by="category" fetch="LAZY">
         <order-by>position asc, id asc</order-by>
       </one-to-many>
+      <embedded name="position"/>
+    </attributes>
+  </entity>
+
+  <entity class="com.everyonewaiter.domain.menu.Menu">
+    <table name="menu">
+      <index name="idx_menu_store_id_position" column-list="store_id, position asc"/>
+      <index name="idx_menu_category_id_store_id" column-list="category_id, store_id"/>
+    </table>
+
+    <attributes>
+      <basic name="name">
+        <column name="name" nullable="false" length="30"/>
+      </basic>
+      <basic name="description">
+        <column name="description" nullable="false" length="100"/>
+      </basic>
+      <basic name="price">
+        <column name="price" nullable="false"/>
+      </basic>
+      <basic name="spicy">
+        <column name="spicy" nullable="false"/>
+      </basic>
+      <basic name="state">
+        <column name="state" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="label">
+        <column name="label" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="image">
+        <column name="image" nullable="false" length="30"/>
+      </basic>
+      <basic name="printEnabled">
+        <column name="print_enabled" nullable="false"/>
+      </basic>
+      <many-to-one name="store" fetch="LAZY" optional="false">
+        <join-column name="store_id" nullable="false" updatable="false"/>
+      </many-to-one>
+      <many-to-one name="category" fetch="LAZY" optional="false">
+        <join-column name="category_id" nullable="false"/>
+        <foreign-key
+          name="fk_menu_category_id"
+          foreign-key-definition="ON DELETE CASCADE"
+        />
+      </many-to-one>
+      <one-to-many name="menuOptionGroups" mapped-by="menu" fetch="LAZY" orphan-removal="true">
+        <order-by>position asc, id asc</order-by>
+        <cascade>
+          <cascade-all/>
+        </cascade>
+      </one-to-many>
+      <embedded name="position"/>
+    </attributes>
+  </entity>
+
+  <entity class="com.everyonewaiter.domain.menu.MenuOptionGroup">
+    <table name="menu_option_group"/>
+
+    <attributes>
+      <basic name="name">
+        <column name="name" nullable="false" length="30"/>
+      </basic>
+      <basic name="type">
+        <column name="type" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="printEnabled">
+        <column name="print_enabled" nullable="false"/>
+      </basic>
+      <many-to-one name="menu" fetch="LAZY" optional="false">
+        <join-column name="menu_id" nullable="false" updatable="false"/>
+        <foreign-key
+          name="fk_menu_option_group_menu_id"
+          foreign-key-definition="ON DELETE CASCADE"
+        />
+      </many-to-one>
+      <element-collection name="menuOptions">
+        <order-by>position asc</order-by>
+        <collection-table name="menu_option">
+          <join-column name="menu_option_group_id"/>
+          <foreign-key
+            name="fk_menu_option_menu_option_group_id"
+            foreign-key-definition="ON DELETE CASCADE"
+          />
+        </collection-table>
+      </element-collection>
       <embedded name="position"/>
     </attributes>
   </entity>
@@ -295,6 +383,18 @@
         <column name="license_image" nullable="false" length="33"/>
       </basic>
       <embedded name="license"/>
+    </attributes>
+  </embeddable>
+
+  <embeddable class="com.everyonewaiter.domain.menu.MenuOption">
+    <attributes>
+      <basic name="name">
+        <column name="name" nullable="false" length="30"/>
+      </basic>
+      <basic name="price">
+        <column name="price" nullable="false"/>
+      </basic>
+      <embedded name="position"/>
     </attributes>
   </embeddable>
 

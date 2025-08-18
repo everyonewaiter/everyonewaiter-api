@@ -1,7 +1,7 @@
 package com.everyonewaiter.domain.order.service;
 
-import com.everyonewaiter.domain.menu.entity.Menu;
-import com.everyonewaiter.domain.menu.entity.MenuOptionGroup;
+import com.everyonewaiter.domain.menu.Menu;
+import com.everyonewaiter.domain.menu.MenuOptionGroup;
 import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.order.entity.OrderMenu;
 import com.everyonewaiter.domain.order.entity.OrderOption;
