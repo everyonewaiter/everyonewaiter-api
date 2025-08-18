@@ -13,11 +13,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 import com.everyonewaiter.application.notification.provided.NotificationSender;
 import com.everyonewaiter.domain.auth.AuthCodeSendEvent;
 import com.everyonewaiter.domain.notification.AlimTalkMessage;
-import com.everyonewaiter.domain.shared.PhoneNumber;
-import com.everyonewaiter.domain.waiting.event.WaitingCancelByCustomerEvent;
-import com.everyonewaiter.domain.waiting.event.WaitingCancelByStoreEvent;
-import com.everyonewaiter.domain.waiting.event.WaitingCustomerCallEvent;
-import com.everyonewaiter.domain.waiting.event.WaitingRegistrationEvent;
+import com.everyonewaiter.domain.store.Store;
+import com.everyonewaiter.domain.waiting.Waiting;
+import com.everyonewaiter.domain.waiting.WaitingCancelByCustomerEvent;
+import com.everyonewaiter.domain.waiting.WaitingCancelByStoreEvent;
+import com.everyonewaiter.domain.waiting.WaitingCustomerCallEvent;
+import com.everyonewaiter.domain.waiting.WaitingRegistrationEvent;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.context.event.EventListener;
@@ -50,21 +51,25 @@ class AlimTalkNotificationEventHandler {
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void handle(WaitingRegistrationEvent event) {
-    LOGGER.info("[웨이팅 등록 이벤트] storeId: {}, storeName: {}", event.storeId(), event.storeName());
+    Waiting waiting = event.waiting();
+    Store store = waiting.getStore();
+
+    LOGGER.info("[웨이팅 등록 이벤트] storeId: {}, storeName: {}",
+        store.getNonNullId(), store.getDetail().getName());
 
     AlimTalkMessage message = new AlimTalkMessage(
         WAITING_REGISTRATION,
-        new PhoneNumber(event.phoneNumber()),
-        event.storeName(),
-        event.adult(),
-        event.infant(),
-        event.number(),
-        event.storeLandline(),
-        event.storeName()
+        waiting.getPhoneNumber(),
+        store.getDetail().getName(),
+        waiting.getAdult(),
+        waiting.getInfant(),
+        waiting.getNumber(),
+        store.getDetail().getLandline(),
+        store.getDetail().getName()
     );
-    message.addButton(WAITING_CANCEL, event.storeId(), event.accessKey());
-    message.addButton(CHECK_MY_TURN, event.storeId(), event.accessKey());
-    message.addButton(MENU_PREVIEW, event.storeId());
+    message.addButton(WAITING_CANCEL, store.getNonNullId(), waiting.getAccessKey());
+    message.addButton(CHECK_MY_TURN, store.getNonNullId(), waiting.getAccessKey());
+    message.addButton(MENU_PREVIEW, store.getNonNullId());
 
     notificationSender.sendAlimTalkOneToOne(message);
   }
@@ -72,15 +77,19 @@ class AlimTalkNotificationEventHandler {
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void handle(WaitingCustomerCallEvent event) {
-    LOGGER.info("[웨이팅 손님 호출 이벤트] storeId: {}, storeName: {}", event.storeId(), event.storeName());
+    Waiting waiting = event.waiting();
+    Store store = waiting.getStore();
+
+    LOGGER.info("[웨이팅 손님 호출 이벤트] storeId: {}, storeName: {}",
+        store.getNonNullId(), store.getDetail().getName());
 
     AlimTalkMessage message = new AlimTalkMessage(
         WAITING_CUSTOMER_CALL,
-        new PhoneNumber(event.phoneNumber()),
-        event.storeName(),
-        event.number()
+        waiting.getPhoneNumber(),
+        store.getDetail().getName(),
+        waiting.getNumber()
     );
-    message.addButton(WAITING_CANCEL, event.storeId(), event.accessKey());
+    message.addButton(WAITING_CANCEL, store.getNonNullId(), waiting.getAccessKey());
 
     notificationSender.sendAlimTalkOneToOne(message);
   }
@@ -88,13 +97,17 @@ class AlimTalkNotificationEventHandler {
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void handle(WaitingCancelByCustomerEvent event) {
-    LOGGER.info("[웨이팅 취소 (손님) 이벤트] storeId: {}, storeName: {}", event.storeId(), event.storeName());
+    Waiting waiting = event.waiting();
+    Store store = waiting.getStore();
+
+    LOGGER.info("[웨이팅 취소 (손님) 이벤트] storeId: {}, storeName: {}",
+        store.getNonNullId(), store.getDetail().getName());
 
     AlimTalkMessage message = new AlimTalkMessage(
         WAITING_CUSTOMER_CANCEL,
-        new PhoneNumber(event.phoneNumber()),
-        event.storeName(),
-        event.number()
+        waiting.getPhoneNumber(),
+        store.getDetail().getName(),
+        waiting.getNumber()
     );
 
     notificationSender.sendAlimTalkOneToOne(message);
@@ -103,13 +116,17 @@ class AlimTalkNotificationEventHandler {
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void handle(WaitingCancelByStoreEvent event) {
-    LOGGER.info("[웨이팅 취소 (매장) 이벤트] storeId: {}, storeName: {}", event.storeId(), event.storeName());
+    Waiting waiting = event.waiting();
+    Store store = waiting.getStore();
+
+    LOGGER.info("[웨이팅 취소 (매장) 이벤트] storeId: {}, storeName: {}",
+        store.getNonNullId(), store.getDetail().getName());
 
     AlimTalkMessage message = new AlimTalkMessage(
         WAITING_STORE_CANCEL,
-        new PhoneNumber(event.phoneNumber()),
-        event.storeName(),
-        event.number()
+        waiting.getPhoneNumber(),
+        store.getDetail().getName(),
+        waiting.getNumber()
     );
 
     notificationSender.sendAlimTalkOneToOne(message);

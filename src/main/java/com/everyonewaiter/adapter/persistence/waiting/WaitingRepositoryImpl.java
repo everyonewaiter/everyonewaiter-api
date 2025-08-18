@@ -1,15 +1,16 @@
-package com.everyonewaiter.infrastructure.waiting;
+package com.everyonewaiter.adapter.persistence.waiting;
 
 import static com.everyonewaiter.domain.store.QStore.store;
-import static com.everyonewaiter.domain.waiting.entity.QWaiting.waiting;
+import static com.everyonewaiter.domain.waiting.QWaiting.waiting;
+import static java.util.Objects.requireNonNullElse;
 
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
-import com.everyonewaiter.domain.waiting.entity.Waiting;
-import com.everyonewaiter.domain.waiting.repository.WaitingRepository;
+import com.everyonewaiter.application.waiting.required.WaitingRepository;
+import com.everyonewaiter.domain.shared.PhoneNumber;
+import com.everyonewaiter.domain.waiting.Waiting;
+import com.everyonewaiter.domain.waiting.WaitingNotFoundException;
+import com.everyonewaiter.domain.waiting.WaitingState;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,7 @@ class WaitingRepositoryImpl implements WaitingRepository {
   private final WaitingJpaRepository waitingJpaRepository;
 
   @Override
-  public int countByStoreId(Long storeId) {
+  public int findLastNumber(Long storeId) {
     Long waitingCount = queryFactory
         .select(waiting.count())
         .from(waiting)
@@ -32,11 +33,12 @@ class WaitingRepositoryImpl implements WaitingRepository {
             waiting.createdAt.gt(store.lastOpenedAt)
         )
         .fetchFirst();
-    return Math.toIntExact(Objects.requireNonNullElse(waitingCount, 0L));
+
+    return Math.toIntExact(requireNonNullElse(waitingCount, 0L));
   }
 
   @Override
-  public int countByStoreIdAndState(Long storeId, Waiting.State state) {
+  public int count(Long storeId, WaitingState state) {
     Long waitingCount = queryFactory
         .select(waiting.count())
         .from(waiting)
@@ -47,11 +49,12 @@ class WaitingRepositoryImpl implements WaitingRepository {
             waiting.createdAt.gt(store.lastOpenedAt)
         )
         .fetchFirst();
-    return Math.toIntExact(Objects.requireNonNullElse(waitingCount, 0L));
+
+    return Math.toIntExact(requireNonNullElse(waitingCount, 0L));
   }
 
   @Override
-  public int countByIdAndStoreIdAndState(Long waitingId, Long storeId, Waiting.State state) {
+  public int countLessThanId(Long waitingId, Long storeId, WaitingState state) {
     Long waitingCount = queryFactory
         .select(waiting.count())
         .from(waiting)
@@ -63,21 +66,22 @@ class WaitingRepositoryImpl implements WaitingRepository {
             waiting.createdAt.gt(store.lastOpenedAt)
         )
         .fetchFirst();
-    return Math.toIntExact(Objects.requireNonNullElse(waitingCount, 0L));
+
+    return Math.toIntExact(requireNonNullElse(waitingCount, 0L));
   }
 
   @Override
-  public boolean existsByPhoneNumberAndState(String phoneNumber, Waiting.State state) {
+  public boolean exists(PhoneNumber phoneNumber, WaitingState state) {
     return waitingJpaRepository.existsByPhoneNumberAndState(phoneNumber, state);
   }
 
   @Override
-  public boolean existsByStoreIdAndState(Long storeId, Waiting.State state) {
+  public boolean exists(Long storeId, WaitingState state) {
     return waitingJpaRepository.existsByStoreIdAndState(storeId, state);
   }
 
   @Override
-  public List<Waiting> findAllByStoreIdAndState(Long storeId, Waiting.State state) {
+  public List<Waiting> findAll(Long storeId, WaitingState state) {
     return queryFactory
         .select(waiting)
         .from(waiting)
@@ -91,7 +95,7 @@ class WaitingRepositoryImpl implements WaitingRepository {
   }
 
   @Override
-  public Waiting findByIdAndStoreIdOrThrow(Long waitingId, Long storeId) {
+  public Waiting findOrThrow(Long waitingId, Long storeId) {
     return Optional.ofNullable(
             queryFactory
                 .select(waiting)
@@ -103,11 +107,11 @@ class WaitingRepositoryImpl implements WaitingRepository {
                 )
                 .fetchFirst()
         )
-        .orElseThrow(() -> new BusinessException(ErrorCode.WAITING_NOT_FOUND));
+        .orElseThrow(WaitingNotFoundException::new);
   }
 
   @Override
-  public Waiting findByStoreIdAndAccessKey(Long storeId, String accessKey) {
+  public Waiting findOrThrow(Long storeId, String accessKey) {
     return Optional.ofNullable(
             queryFactory
                 .select(waiting)
@@ -119,7 +123,7 @@ class WaitingRepositoryImpl implements WaitingRepository {
                 )
                 .fetchFirst()
         )
-        .orElseThrow(() -> new BusinessException(ErrorCode.WAITING_NOT_FOUND));
+        .orElseThrow(WaitingNotFoundException::new);
   }
 
   @Override

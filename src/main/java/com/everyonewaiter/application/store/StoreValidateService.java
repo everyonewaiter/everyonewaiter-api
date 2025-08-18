@@ -2,6 +2,7 @@ package com.everyonewaiter.application.store;
 
 import com.everyonewaiter.application.store.provided.StoreValidator;
 import com.everyonewaiter.application.store.required.StoreRepository;
+import com.everyonewaiter.application.waiting.required.WaitingRepository;
 import com.everyonewaiter.domain.pos.entity.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.domain.shared.BusinessException;
@@ -9,8 +10,7 @@ import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.store.ClosedStoreException;
 import com.everyonewaiter.domain.store.StoreNotFoundException;
 import com.everyonewaiter.domain.store.StoreStatus;
-import com.everyonewaiter.domain.waiting.entity.Waiting;
-import com.everyonewaiter.domain.waiting.repository.WaitingRepository;
+import com.everyonewaiter.domain.waiting.WaitingState;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -51,7 +51,7 @@ class StoreValidateService implements StoreValidator {
     if (posTables.stream().anyMatch(PosTable::hasActiveActivity)) {
       throw new BusinessException(ErrorCode.INCOMPLETE_POS_TABLE_ACTIVITY);
     }
-    if (waitingRepository.existsByStoreIdAndState(storeId, Waiting.State.REGISTRATION)) {
+    if (waitingRepository.exists(storeId, WaitingState.REGISTRATION)) {
       throw new BusinessException(ErrorCode.INCOMPLETE_WAITING);
     }
   }

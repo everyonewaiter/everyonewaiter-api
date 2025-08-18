@@ -1,11 +1,13 @@
 package com.everyonewaiter.adapter.web.api.device;
 
-import com.everyonewaiter.adapter.web.api.device.request.WaitingWriteRequest;
+import com.everyonewaiter.adapter.web.api.dto.WaitingCountResponse;
+import com.everyonewaiter.adapter.web.api.dto.WaitingDetailResponses;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.application.waiting.response.WaitingResponse;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.shared.ErrorCode;
+import com.everyonewaiter.domain.waiting.WaitingMyTurnView;
+import com.everyonewaiter.domain.waiting.WaitingRegisterRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -17,7 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "웨이팅")
-interface WaitingControllerSpecification {
+interface WaitingApiSpecification {
 
   @Operation(
       summary = "[HALL] 웨이팅 목록 조회",
@@ -38,7 +40,7 @@ interface WaitingControllerSpecification {
           ),
       }
   )
-  ResponseEntity<WaitingResponse.Details> getWaitings(@Parameter(hidden = true) Device device);
+  ResponseEntity<WaitingDetailResponses> getWaitings(@Parameter(hidden = true) Device device);
 
   @Operation(
       summary = "[WAITING] 웨이팅 수 조회",
@@ -59,7 +61,7 @@ interface WaitingControllerSpecification {
           ),
       }
   )
-  ResponseEntity<WaitingResponse.RegistrationCount> count(@Parameter(hidden = true) Device device);
+  ResponseEntity<WaitingCountResponse> count(@Parameter(hidden = true) Device device);
 
   @SecurityRequirements
   @Operation(
@@ -74,7 +76,7 @@ interface WaitingControllerSpecification {
       code = ErrorCode.WAITING_NOT_FOUND,
       exampleName = "웨이팅 액세스 키로 매장의 웨이팅을 찾을 수 없는 경우"
   )
-  ResponseEntity<WaitingResponse.MyTurn> myTurn(Long storeId, String accessKey);
+  ResponseEntity<WaitingMyTurnView> myTurn(Long storeId, String accessKey);
 
   @Operation(summary = "[WAITING] 웨이팅 등록", description = "웨이팅 등록 API")
   @ApiResponse(
@@ -107,8 +109,8 @@ interface WaitingControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Void> create(
-      @RequestBody WaitingWriteRequest.Create request,
+  ResponseEntity<Void> register(
+      @RequestBody WaitingRegisterRequest registerRequest,
       @Parameter(hidden = true) Device device
   );
 

@@ -121,11 +121,10 @@
         <enumerated>STRING</enumerated>
       </basic>
       <basic name="secretKey">
-        <column name="secret_key" nullable="false" length="30"/>
+        <column name="secret_key" nullable="false" updatable="false" length="30"/>
       </basic>
       <many-to-one name="store" fetch="LAZY" optional="false">
         <join-column name="store_id" nullable="false"/>
-        <foreign-key constraint-mode="NO_CONSTRAINT"/>
       </many-to-one>
     </attributes>
   </entity>
@@ -152,7 +151,6 @@
       </basic>
       <many-to-one name="account" fetch="LAZY" optional="false">
         <join-column name="account_id" nullable="false" updatable="false"/>
-        <foreign-key constraint-mode="NO_CONSTRAINT"/>
       </many-to-one>
       <embedded name="detail"/>
     </attributes>
@@ -194,9 +192,7 @@
   </entity>
 
   <entity class="com.everyonewaiter.domain.store.Store">
-    <table name="store">
-      <index name="idx_store_account_id" column-list="account_id"/>
-    </table>
+    <table name="store"/>
 
     <attributes>
       <basic name="status">
@@ -211,7 +207,6 @@
       </basic>
       <many-to-one name="account" fetch="LAZY" optional="false">
         <join-column name="account_id" nullable="false" updatable="false"/>
-        <foreign-key constraint-mode="NO_CONSTRAINT"/>
       </many-to-one>
       <one-to-one name="setting" fetch="LAZY" optional="false">
         <join-column name="setting_id" nullable="false" updatable="false"/>
@@ -333,6 +328,45 @@
     </attributes>
   </entity>
 
+  <entity class="com.everyonewaiter.domain.waiting.Waiting">
+    <table name="waiting">
+      <index name="idx_waiting_store_id_created_at" column-list="store_id, created_at desc"/>
+      <index
+        name="idx_waiting_store_id_state_created_at"
+        column-list="store_id, state, created_at desc"
+      />
+      <index name="idx_waiting_store_id_access_key" column-list="store_id, access_key"/>
+      <index name="idx_waiting_phone_number_state" column-list="phone_number, state"/>
+    </table>
+
+    <attributes>
+      <basic name="adult">
+        <column name="adult" nullable="false"/>
+      </basic>
+      <basic name="infant">
+        <column name="infant" nullable="false"/>
+      </basic>
+      <basic name="number">
+        <column name="number" nullable="false"/>
+      </basic>
+      <basic name="initWaitingTeamCount">
+        <column name="init_waiting_team_count" nullable="false"/>
+      </basic>
+      <basic name="accessKey">
+        <column name="access_key" nullable="false" updatable="false" length="30"/>
+      </basic>
+      <basic name="state">
+        <column name="state" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <many-to-one name="store" fetch="LAZY" optional="false">
+        <join-column name="store_id" nullable="false" updatable="false"/>
+      </many-to-one>
+      <embedded name="phoneNumber"/>
+      <embedded name="customerCall"/>
+    </attributes>
+  </entity>
+
   <embeddable class="com.everyonewaiter.domain.shared.Email">
     <attributes>
       <basic name="address">
@@ -395,6 +429,17 @@
         <column name="price" nullable="false"/>
       </basic>
       <embedded name="position"/>
+    </attributes>
+  </embeddable>
+
+  <embeddable class="com.everyonewaiter.domain.waiting.CustomerCall">
+    <attributes>
+      <basic name="count">
+        <column name="call_count" nullable="false"/>
+      </basic>
+      <basic name="lastCallTime">
+        <column name="last_call_time" nullable="false"/>
+      </basic>
     </attributes>
   </embeddable>
 

@@ -1,14 +1,19 @@
 package com.everyonewaiter.adapter.web.api.device;
 
-import com.everyonewaiter.adapter.web.api.device.request.WaitingWriteRequest;
-import com.everyonewaiter.application.waiting.WaitingService;
-import com.everyonewaiter.application.waiting.response.WaitingResponse;
+import com.everyonewaiter.adapter.web.api.dto.WaitingCountResponse;
+import com.everyonewaiter.adapter.web.api.dto.WaitingDetailResponses;
+import com.everyonewaiter.application.waiting.provided.WaitingAdministrator;
+import com.everyonewaiter.application.waiting.provided.WaitingCustomer;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
 import com.everyonewaiter.domain.store.StoreOpen;
+import com.everyonewaiter.domain.waiting.Waiting;
+import com.everyonewaiter.domain.waiting.WaitingMyTurnView;
+import com.everyonewaiter.domain.waiting.WaitingRegisterRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,44 +26,50 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1")
-class WaitingController implements WaitingControllerSpecification {
+class WaitingApi implements WaitingApiSpecification {
 
-  private final WaitingService waitingService;
+  private final WaitingCustomer waitingCustomer;
+  private final WaitingAdministrator waitingAdministrator;
 
   @Override
   @GetMapping("/waitings")
-  public ResponseEntity<WaitingResponse.Details> getWaitings(
+  public ResponseEntity<WaitingDetailResponses> getWaitings(
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    return ResponseEntity.ok(waitingService.readAll(device.getStore().getId()));
+    List<Waiting> waitings = waitingAdministrator.findAll(device.getStore().getNonNullId());
+
+    return ResponseEntity.ok(WaitingDetailResponses.from(waitings));
   }
 
   @Override
   @GetMapping("/waitings/count")
-  public ResponseEntity<WaitingResponse.RegistrationCount> count(
+  public ResponseEntity<WaitingCountResponse> count(
       @AuthenticationDevice(purpose = DevicePurpose.WAITING) Device device
   ) {
-    return ResponseEntity.ok(waitingService.getRegistrationCount(device.getStore().getId()));
+    int waitingCount = waitingAdministrator.getCount(device.getStore().getNonNullId());
+
+    return ResponseEntity.ok(WaitingCountResponse.from(waitingCount));
   }
 
   @Override
   @GetMapping("/stores/{storeId}/waitings/{accessKey}/my-turn")
-  public ResponseEntity<WaitingResponse.MyTurn> myTurn(
+  public ResponseEntity<WaitingMyTurnView> myTurn(
       @PathVariable Long storeId,
       @PathVariable String accessKey
   ) {
-    return ResponseEntity.ok(waitingService.getMyTurn(storeId, accessKey));
+    return ResponseEntity.ok(waitingCustomer.getMyTurn(storeId, accessKey));
   }
 
   @Override
   @StoreOpen
   @PostMapping("/waitings")
-  public ResponseEntity<Void> create(
-      @RequestBody @Valid WaitingWriteRequest.Create request,
+  public ResponseEntity<Void> register(
+      @RequestBody @Valid WaitingRegisterRequest registerRequest,
       @AuthenticationDevice(purpose = DevicePurpose.WAITING) Device device
   ) {
-    Long waitingId = waitingService.create(device.getStore().getId(), request.toDomainDto());
-    return ResponseEntity.created(URI.create(waitingId.toString())).build();
+    Waiting waiting = waitingCustomer.register(device.getStore().getNonNullId(), registerRequest);
+
+    return ResponseEntity.created(URI.create(waiting.getNonNullId().toString())).build();
   }
 
   @Override
@@ -67,7 +78,8 @@ class WaitingController implements WaitingControllerSpecification {
       @PathVariable Long waitingId,
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    waitingService.call(waitingId, device.getStore().getId());
+    waitingAdministrator.customerCall(waitingId, device.getStore().getNonNullId());
+
     return ResponseEntity.noContent().build();
   }
 
@@ -77,7 +89,8 @@ class WaitingController implements WaitingControllerSpecification {
       @PathVariable Long waitingId,
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    waitingService.complete(waitingId, device.getStore().getId());
+    waitingAdministrator.complete(waitingId, device.getStore().getNonNullId());
+
     return ResponseEntity.noContent().build();
   }
 
@@ -87,14 +100,16 @@ class WaitingController implements WaitingControllerSpecification {
       @PathVariable Long waitingId,
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    waitingService.cancel(waitingId, device.getStore().getId());
+    waitingAdministrator.cancel(waitingId, device.getStore().getNonNullId());
+
     return ResponseEntity.noContent().build();
   }
 
   @Override
   @PostMapping("/stores/{storeId}/waitings/{accessKey}/cancel")
   public ResponseEntity<Void> cancel(@PathVariable Long storeId, @PathVariable String accessKey) {
-    waitingService.cancel(storeId, accessKey);
+    waitingCustomer.cancel(storeId, accessKey);
+
     return ResponseEntity.noContent().build();
   }
 
