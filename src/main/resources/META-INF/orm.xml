@@ -367,6 +367,34 @@
     </attributes>
   </entity>
 
+  <entity class="com.everyonewaiter.domain.staffcall.StaffCall">
+    <table name="staff_call">
+      <index
+        name="idx_staff_call_store_id_state_created_at"
+        column-list="store_id, state, created_at desc"
+      />
+    </table>
+
+    <attributes>
+      <basic name="tableNo">
+        <column name="table_no" nullable="false"/>
+      </basic>
+      <basic name="name">
+        <column name="name" nullable="false" length="20"/>
+      </basic>
+      <basic name="state">
+        <column name="state" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="completeTime">
+        <column name="complete_time" nullable="false"/>
+      </basic>
+      <many-to-one name="store" fetch="LAZY" optional="false">
+        <join-column name="store_id" nullable="false" updatable="false"/>
+      </many-to-one>
+    </attributes>
+  </entity>
+
   <embeddable class="com.everyonewaiter.domain.shared.Email">
     <attributes>
       <basic name="address">

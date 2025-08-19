@@ -1,12 +1,12 @@
-package com.everyonewaiter.infrastructure.order;
+package com.everyonewaiter.adapter.persistence.staffcall;
 
-import static com.everyonewaiter.domain.order.entity.QStaffCall.staffCall;
+import static com.everyonewaiter.domain.staffcall.QStaffCall.staffCall;
 import static com.everyonewaiter.domain.store.QStore.store;
 
-import com.everyonewaiter.domain.order.entity.StaffCall;
-import com.everyonewaiter.domain.order.repository.StaffCallRepository;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
+import com.everyonewaiter.application.staffcall.required.StaffCallRepository;
+import com.everyonewaiter.domain.staffcall.StaffCall;
+import com.everyonewaiter.domain.staffcall.StaffCallNotFoundException;
+import com.everyonewaiter.domain.staffcall.StaffCallState;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,23 +20,23 @@ class StaffCallRepositoryImpl implements StaffCallRepository {
   private final StaffCallJpaRepository staffCallJpaRepository;
 
   @Override
-  public List<StaffCall> findAllIncompleteByStoreId(Long storeId) {
+  public List<StaffCall> findAllIncompleted(Long storeId) {
     return queryFactory
         .select(staffCall)
         .from(staffCall)
         .innerJoin(staffCall.store, store).fetchJoin()
         .where(
             staffCall.store.id.eq(storeId),
-            staffCall.state.eq(StaffCall.State.INCOMPLETE),
+            staffCall.state.eq(StaffCallState.INCOMPLETE),
             staffCall.createdAt.gt(store.lastOpenedAt)
         )
         .fetch();
   }
 
   @Override
-  public StaffCall findByIdAndStoreIdOrThrow(Long staffCallId, Long storeId) {
+  public StaffCall findOrThrow(Long staffCallId, Long storeId) {
     return staffCallJpaRepository.findByIdAndStoreId(staffCallId, storeId)
-        .orElseThrow(() -> new BusinessException(ErrorCode.STAFF_CALL_NOT_FOUND));
+        .orElseThrow(StaffCallNotFoundException::new);
   }
 
   @Override

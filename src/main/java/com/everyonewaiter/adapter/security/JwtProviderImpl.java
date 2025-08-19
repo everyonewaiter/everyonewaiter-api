@@ -1,5 +1,7 @@
 package com.everyonewaiter.adapter.security;
 
+import static java.util.Objects.requireNonNull;
+
 import com.everyonewaiter.application.auth.required.JwtProvider;
 import com.everyonewaiter.domain.auth.JwtPayload;
 import io.jsonwebtoken.Claims;
@@ -10,16 +12,24 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
 import javax.crypto.SecretKey;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-class JwtProviderImpl implements JwtProvider {
+class JwtProviderImpl implements InitializingBean, JwtProvider {
 
-  private final SecretKey secretKey;
+  private final String secretKey;
+
+  private SecretKey signingKey;
 
   public JwtProviderImpl(@Value("${jwt.secret-key}") String secretKey) {
-    this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+    this.secretKey = requireNonNull(secretKey);
+  }
+
+  @Override
+  public void afterPropertiesSet() {
+    this.signingKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
   }
 
   @Override
@@ -31,7 +41,7 @@ class JwtProviderImpl implements JwtProvider {
         .subject(payload.subject())
         .issuedAt(now)
         .expiration(new Date(now.getTime() + expiration.toMillis()))
-        .signWith(secretKey)
+        .signWith(signingKey)
         .compact();
   }
 
@@ -40,7 +50,7 @@ class JwtProviderImpl implements JwtProvider {
     try {
       Claims payload = Jwts
           .parser()
-          .verifyWith(secretKey)
+          .verifyWith(signingKey)
           .build()
           .parseSignedClaims(token)
           .getPayload();

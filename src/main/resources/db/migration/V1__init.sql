@@ -307,6 +307,7 @@ create table staff_call
     state         enum ('INCOMPLETE' ,'COMPLETE') not null,
     complete_time datetime(6)                     not null,
     created_at    datetime(6)                     not null,
-    updated_at    datetime(6)                     not null
+    updated_at    datetime(6)                     not null,
+    constraint fk_staff_call_store_id foreign key (store_id) references store (id)
 );
 create index idx_staff_call_store_id_state_created_at on staff_call (store_id, state, created_at desc);

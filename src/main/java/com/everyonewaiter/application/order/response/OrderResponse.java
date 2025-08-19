@@ -4,7 +4,8 @@ import com.everyonewaiter.domain.order.entity.Order;
 import com.everyonewaiter.domain.order.entity.OrderMenu;
 import com.everyonewaiter.domain.order.entity.OrderOption;
 import com.everyonewaiter.domain.order.entity.OrderOptionGroup;
-import com.everyonewaiter.domain.order.entity.StaffCall;
+import com.everyonewaiter.domain.staffcall.StaffCall;
+import com.everyonewaiter.domain.staffcall.StaffCallState;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
 import java.util.List;
@@ -214,7 +215,7 @@ public class OrderResponse {
       String name,
 
       @Schema(description = "직원 호출 상태", example = "INCOMPLETE")
-      StaffCall.State state,
+      StaffCallState state,
 
       @Schema(description = "직원 호출 완료 시간", example = "1970-01-01 00:00:00")
       Instant completeTime,

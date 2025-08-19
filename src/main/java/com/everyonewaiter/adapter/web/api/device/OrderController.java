@@ -2,7 +2,6 @@ package com.everyonewaiter.adapter.web.api.device;
 
 import com.everyonewaiter.adapter.web.api.device.request.OrderWriteRequest;
 import com.everyonewaiter.application.order.OrderService;
-import com.everyonewaiter.application.order.StaffCallService;
 import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 class OrderController implements OrderControllerSpecification {
 
   private final OrderService orderService;
-  private final StaffCallService staffCallService;
 
   @Override
   @GetMapping("/tables")
@@ -87,40 +85,6 @@ class OrderController implements OrderControllerSpecification {
   ) {
     orderService.servingOrderMenu(device.getStore().getId(), orderId, orderMenuId);
     return ResponseEntity.noContent().build();
-  }
-
-  @Override
-  @GetMapping("/staff-calls")
-  public ResponseEntity<OrderResponse.StaffCallDetails> getStaffCalls(
-      @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
-  ) {
-    return ResponseEntity.ok(staffCallService.readAllIncomplete(device.getStore().getId()));
-  }
-
-  @Override
-  @StoreOpen
-  @PostMapping("/staff-calls/{staffCallId}/complete")
-  public ResponseEntity<Void> completeStaffCall(
-      @PathVariable Long staffCallId,
-      @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
-  ) {
-    staffCallService.complete(device.getStore().getId(), staffCallId);
-    return ResponseEntity.noContent().build();
-  }
-
-  @Override
-  @StoreOpen
-  @PostMapping("/staff-calls")
-  public ResponseEntity<Void> callStaff(
-      @RequestBody @Valid OrderWriteRequest.StaffCallOption request,
-      @AuthenticationDevice(purpose = DevicePurpose.TABLE) Device device
-  ) {
-    Long staffCallId = staffCallService.callStaff(
-        device.getStore().getId(),
-        device.getTableNo(),
-        request.optionName()
-    );
-    return ResponseEntity.created(URI.create(staffCallId.toString())).build();
   }
 
 }
