@@ -2,6 +2,7 @@ package com.everyonewaiter.application.waiting;
 
 import static com.everyonewaiter.domain.waiting.WaitingState.REGISTRATION;
 
+import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.application.support.ReadOnlyTransactional;
 import com.everyonewaiter.application.waiting.provided.WaitingAdministrator;
 import com.everyonewaiter.application.waiting.required.WaitingRepository;
@@ -21,6 +22,7 @@ class WaitingAdminService implements WaitingAdministrator {
 
   @Override
   @Transactional
+  @DistributedLock(key = "#storeId + '-waiting'")
   public Waiting customerCall(Long waitingId, Long storeId) {
     Waiting waiting = waitingRepository.findOrThrow(waitingId, storeId);
 
@@ -31,6 +33,7 @@ class WaitingAdminService implements WaitingAdministrator {
 
   @Override
   @Transactional
+  @DistributedLock(key = "#storeId + '-waiting'")
   public Waiting complete(Long waitingId, Long storeId) {
     Waiting waiting = waitingRepository.findOrThrow(waitingId, storeId);
 
@@ -41,6 +44,7 @@ class WaitingAdminService implements WaitingAdministrator {
 
   @Override
   @Transactional
+  @DistributedLock(key = "#storeId + '-waiting'")
   public Waiting cancel(Long waitingId, Long storeId) {
     Waiting waiting = waitingRepository.findOrThrow(waitingId, storeId);
 

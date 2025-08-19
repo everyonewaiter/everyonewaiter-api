@@ -3,6 +3,7 @@ package com.everyonewaiter.application.waiting;
 import static com.everyonewaiter.domain.waiting.WaitingState.REGISTRATION;
 
 import com.everyonewaiter.application.store.provided.StoreFinder;
+import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.application.support.ReadOnlyTransactional;
 import com.everyonewaiter.application.waiting.provided.WaitingCustomer;
 import com.everyonewaiter.application.waiting.required.WaitingRepository;
@@ -27,6 +28,7 @@ class WaitingCustomerService implements WaitingCustomer {
 
   @Override
   @Transactional
+  @DistributedLock(key = "#storeId + '-waiting'")
   public Waiting register(Long storeId, WaitingRegisterRequest registerRequest) {
     validateWaitingRegister(new PhoneNumber(registerRequest.phoneNumber()));
 
@@ -50,6 +52,7 @@ class WaitingCustomerService implements WaitingCustomer {
 
   @Override
   @Transactional
+  @DistributedLock(key = "#storeId + '-waiting'")
   public Waiting cancel(Long storeId, String accessKey) {
     Waiting waiting = waitingRepository.findOrThrow(storeId, accessKey);
 
