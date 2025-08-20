@@ -1,8 +1,12 @@
 package com.everyonewaiter.domain.order;
 
+import static com.everyonewaiter.domain.order.OrderOption.createOrderOptions;
+import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateEntity;
+import com.everyonewaiter.domain.menu.Menu;
+import com.everyonewaiter.domain.menu.MenuOptionGroup;
 import jakarta.persistence.Entity;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,28 +29,43 @@ public class OrderOptionGroup extends AggregateEntity {
 
   private List<OrderOption> orderOptions = new ArrayList<>();
 
-  public static OrderOptionGroup create(OrderMenu orderMenu, String name, boolean printEnabled) {
+  public static OrderOptionGroup create(
+      Menu menu,
+      OrderMenu orderMenu,
+      OrderOptionGroupModifyRequest request
+  ) {
+    MenuOptionGroup menuOptionGroup = menu.getMenuOptionGroup(request.menuOptionGroupId());
+
     OrderOptionGroup orderOptionGroup = new OrderOptionGroup();
 
-    orderOptionGroup.orderMenu = orderMenu;
-    orderOptionGroup.name = name;
-    orderOptionGroup.printEnabled = printEnabled;
+    orderOptionGroup.orderMenu = requireNonNull(orderMenu);
+    orderOptionGroup.name = requireNonNull(menuOptionGroup.getName());
+    orderOptionGroup.printEnabled = menuOptionGroup.isPrintEnabled();
+    orderOptionGroup.orderOptions.addAll(
+        createOrderOptions(menuOptionGroup, request.orderOptions())
+    );
 
     return orderOptionGroup;
   }
 
-  public void addOrderOption(OrderOption orderOption) {
-    orderOptions.add(orderOption);
+  public static List<OrderOptionGroup> createOrderOptionGroups(
+      Menu menu,
+      OrderMenu orderMenu,
+      List<OrderOptionGroupModifyRequest> requests
+  ) {
+    return requests.stream()
+        .map(request -> create(menu, orderMenu, request))
+        .toList();
+  }
+
+  public long calculateTotalPrice() {
+    return getOrderOptions().stream()
+        .mapToLong(OrderOption::getPrice)
+        .sum();
   }
 
   public List<OrderOption> getOrderOptions() {
     return Collections.unmodifiableList(orderOptions);
-  }
-
-  public long getOrderOptionPrice() {
-    return getOrderOptions().stream()
-        .mapToLong(OrderOption::getPrice)
-        .sum();
   }
 
   public List<String> getFormattedOrderOptions() {

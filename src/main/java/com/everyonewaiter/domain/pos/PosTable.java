@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.pos;
 
+import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
@@ -47,8 +48,8 @@ public class PosTable extends AggregateRootEntity<PosTable> {
   public static PosTable create(Store store, String prefix, String suffix, int tableNo) {
     PosTable posTable = new PosTable();
 
-    posTable.store = store;
-    posTable.name = prefix + "-" + suffix;
+    posTable.store = requireNonNull(store);
+    posTable.name = requireNonNull(prefix) + "-" + requireNonNull(suffix);
     posTable.tableNo = tableNo;
     posTable.active = true;
 

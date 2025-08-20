@@ -1,5 +1,7 @@
 package com.everyonewaiter.domain.pos;
 
+import static java.util.Objects.requireNonNull;
+
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.order.Order;
 import com.everyonewaiter.domain.order.OrderType;
@@ -11,7 +13,6 @@ import jakarta.persistence.Entity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,8 +42,8 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
   public static PosTableActivity create(PosTable posTable) {
     PosTableActivity posTableActivity = new PosTableActivity();
 
-    posTableActivity.store = posTable.getStore();
-    posTableActivity.posTable = posTable;
+    posTableActivity.posTable = requireNonNull(posTable);
+    posTableActivity.store = requireNonNull(posTable.getStore());
     posTableActivity.tableNo = posTable.getTableNo();
     posTableActivity.active = true;
 
@@ -170,7 +171,7 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
 
   public Order getOrder(Long orderId) {
     return getOrders().stream()
-        .filter(order -> Objects.requireNonNull(order.getId()).equals(orderId))
+        .filter(order -> requireNonNull(order.getId()).equals(orderId))
         .findAny()
         .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
   }
@@ -181,7 +182,7 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
 
   public Order getOrderedOrder(Long orderId) {
     return getOrderedOrders().stream()
-        .filter(order -> Objects.requireNonNull(order.getId()).equals(orderId))
+        .filter(order -> requireNonNull(order.getId()).equals(orderId))
         .findAny()
         .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
   }

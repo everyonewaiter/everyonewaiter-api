@@ -2,6 +2,7 @@ package com.everyonewaiter.domain.order;
 
 import static com.everyonewaiter.domain.order.OrderCategory.ADDITIONAL;
 import static com.everyonewaiter.domain.order.OrderCategory.INITIAL;
+import static com.everyonewaiter.domain.order.OrderMenu.createOrderMenus;
 import static com.everyonewaiter.domain.order.OrderState.CANCEL;
 import static com.everyonewaiter.domain.sse.ServerAction.CREATE;
 import static com.everyonewaiter.domain.sse.ServerAction.UPDATE;
@@ -10,6 +11,7 @@ import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
+import com.everyonewaiter.domain.menu.Menu;
 import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
@@ -19,6 +21,7 @@ import jakarta.persistence.Entity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,26 +52,27 @@ public class Order extends AggregateRootEntity<Order> {
 
   private List<OrderMenu> orderMenus = new ArrayList<>();
 
-  public static Order create(PosTableActivity posTableActivity, OrderType type, String memo) {
+  public static Order create(
+      Map<Long, Menu> menus,
+      PosTableActivity activity,
+      OrderType orderType,
+      OrderCreateRequest request
+  ) {
     Order order = new Order();
 
-    order.store = requireNonNull(posTableActivity.getStore());
-    order.posTableActivity = requireNonNull(posTableActivity);
-    order.category = posTableActivity.hasOrder() ? ADDITIONAL : INITIAL;
-    order.type = requireNonNull(type);
+    order.posTableActivity = requireNonNull(activity);
+    order.store = requireNonNull(activity.getStore());
+    order.category = activity.hasOrder() ? ADDITIONAL : INITIAL;
+    order.type = requireNonNull(orderType);
     order.state = OrderState.ORDER;
-    order.memo = requireNonNull(memo);
+    order.memo = requireNonNull(request.memo());
     order.serving = new Serving();
+    order.orderMenus.addAll(createOrderMenus(menus, order, request.orderMenus()));
 
-    order.registerEvent(new OrderCreateEvent(order.getId(), order.store.getId()));
-    order.registerEvent(new SseEvent(order.store.getId(), ORDER, CREATE));
+    order.registerEvent(new OrderCreateEvent(order.getNonNullId(), order.store.getNonNullId()));
+    order.registerEvent(new SseEvent(order.store.getNonNullId(), ORDER, CREATE));
 
     return order;
-  }
-
-  public void addOrderMenu(OrderMenu orderMenu) {
-    this.orderMenus.add(orderMenu);
-    this.price += orderMenu.calculateTotalPrice();
   }
 
   public void moveTable(PosTableActivity posTableActivity) {
@@ -91,7 +95,7 @@ public class Order extends AggregateRootEntity<Order> {
     if (this.serving.isServed()) {
       throw new BusinessException(ErrorCode.ALREADY_COMPLETED_SERVING);
     } else {
-      getOrderMenu(orderMenuId).servingOrCancel();
+      getOrderMenu(orderMenuId).toggleServing();
       registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getId()));
     }
   }
@@ -111,14 +115,14 @@ public class Order extends AggregateRootEntity<Order> {
     } else {
       orderMenu.updateQuantity(quantity);
     }
-    this.price = calculatePrice();
+    this.price = calculateTotalPrice();
 
     if (!hasOrderMenu()) {
       this.state = CANCEL;
     }
   }
 
-  private long calculatePrice() {
+  private long calculateTotalPrice() {
     return getOrderMenus().stream()
         .mapToLong(OrderMenu::calculateTotalPrice)
         .sum();
@@ -155,7 +159,7 @@ public class Order extends AggregateRootEntity<Order> {
   }
 
   public int getOrderMenuCount() {
-    return orderMenus.size();
+    return getOrderMenus().size();
   }
 
   public List<OrderMenu> getOrderMenus() {

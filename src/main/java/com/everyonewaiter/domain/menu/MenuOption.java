@@ -33,7 +33,7 @@ public class MenuOption {
     return menuOption;
   }
 
-  static List<MenuOption> createMenuOptions(List<MenuOptionModifyRequest> requests) {
+  public static List<MenuOption> createMenuOptions(List<MenuOptionModifyRequest> requests) {
     AtomicInteger menuOptionPosition = new AtomicInteger(0);
 
     return requests.stream()

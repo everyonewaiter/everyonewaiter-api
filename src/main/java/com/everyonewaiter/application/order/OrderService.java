@@ -1,16 +1,18 @@
 package com.everyonewaiter.application.order;
 
 import com.everyonewaiter.application.menu.provided.MenuFinder;
-import com.everyonewaiter.application.order.request.OrderWrite;
 import com.everyonewaiter.application.order.response.OrderResponse;
+import com.everyonewaiter.application.pos.provided.PosTableActivityFinder;
 import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.menu.Menu;
+import com.everyonewaiter.domain.order.EmptyShoppingCartException;
 import com.everyonewaiter.domain.order.Order;
-import com.everyonewaiter.domain.order.OrderMenu;
-import com.everyonewaiter.domain.order.OrderOptionGroup;
+import com.everyonewaiter.domain.order.OrderCreateRequest;
+import com.everyonewaiter.domain.order.OrderMenuModifyRequest;
+import com.everyonewaiter.domain.order.OrderMenuNotFoundException;
+import com.everyonewaiter.domain.order.OrderType;
 import com.everyonewaiter.domain.order.repository.OrderRepository;
-import com.everyonewaiter.domain.order.service.OrderFactory;
-import com.everyonewaiter.domain.order.service.OrderValidator;
+import com.everyonewaiter.domain.pos.PosTableActivity;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,48 +26,39 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
   private final MenuFinder menuFinder;
-  private final OrderValidator orderValidator;
-  private final OrderFactory orderFactory;
+  private final PosTableActivityFinder activityFinder;
   private final OrderRepository orderRepository;
 
   @Transactional
   @DistributedLock(key = "#storeId + '-' + #tableNo")
-  public Long createOrder(Long storeId, int tableNo, OrderWrite.Create request) {
-    Set<Long> menuIds = request.orderMenus()
-        .stream().map(OrderWrite.OrderMenu::menuId)
-        .collect(Collectors.toSet());
-    orderValidator.validateCreateOrder(storeId, menuIds);
+  public Order create(Long storeId, OrderType orderType, OrderCreateRequest createRequest) {
+    Map<Long, Menu> menus = findMenus(storeId, createRequest);
+    PosTableActivity activity = activityFinder.findActiveOrCreate(storeId, createRequest.tableNo());
 
-    Map<Long, Menu> menus = findMenus(storeId, menuIds);
-    Order order = orderFactory.createOrder(storeId, tableNo, request.type(), request.memo());
+    Order order = Order.create(menus, activity, orderType, createRequest);
 
-    for (OrderWrite.OrderMenu orderMenuCreateRequest : request.orderMenus()) {
-      Menu menu = menus.get(orderMenuCreateRequest.menuId());
-      int quantity = orderMenuCreateRequest.quantity();
-
-      OrderMenu orderMenu = orderFactory.createOrderMenu(order, menu, quantity);
-      for (OrderWrite.OptionGroup orderMenuOptionGroup : orderMenuCreateRequest.menuOptionGroups()) {
-        Long menuOptionGroupId = orderMenuOptionGroup.menuOptionGroupId();
-
-        Map<String, Long> orderOptions = orderMenuOptionGroup.orderOptions()
-            .stream()
-            .collect(Collectors.toMap(OrderWrite.Option::name, OrderWrite.Option::price));
-        OrderOptionGroup orderOptionGroup =
-            orderFactory.createOrderOptionGroup(orderMenu, menu, menuOptionGroupId, orderOptions);
-
-        orderMenu.addOrderOptionGroup(orderOptionGroup);
-      }
-
-      order.addOrderMenu(orderMenu);
-    }
-
-    return orderRepository.save(order).getId();
+    return orderRepository.save(order);
   }
 
-  private Map<Long, Menu> findMenus(Long storeId, Set<Long> menuIds) {
-    return menuFinder.findAll(storeId, menuIds.stream().toList())
+  private Map<Long, Menu> findMenus(Long storeId, OrderCreateRequest createRequest) {
+    Set<Long> menuIds = createRequest.orderMenus()
+        .stream()
+        .map(OrderMenuModifyRequest::menuId)
+        .collect(Collectors.toSet());
+
+    if (menuIds.isEmpty()) {
+      throw new EmptyShoppingCartException();
+    }
+
+    Map<Long, Menu> menus = menuFinder.findAll(storeId, menuIds.stream().toList())
         .stream()
         .collect(Collectors.toMap(Menu::getId, menu -> menu));
+
+    if (menus.size() != menuIds.size()) {
+      throw new OrderMenuNotFoundException();
+    }
+
+    return menus;
   }
 
   @Transactional

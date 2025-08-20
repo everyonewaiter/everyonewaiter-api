@@ -1,10 +1,10 @@
 package com.everyonewaiter.adapter.web.api.device;
 
-import com.everyonewaiter.adapter.web.api.device.request.OrderWriteRequest;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.domain.device.Device;
+import com.everyonewaiter.domain.order.OrderCreateRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -99,7 +99,7 @@ interface OrderControllerSpecification {
       }
   )
   ResponseEntity<Void> create(
-      @RequestBody OrderWriteRequest.Create request,
+      @RequestBody OrderCreateRequest createRequest,
       @Parameter(hidden = true) Device device
   );
 

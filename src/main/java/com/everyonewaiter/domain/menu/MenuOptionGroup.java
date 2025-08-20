@@ -50,7 +50,7 @@ public class MenuOptionGroup extends AggregateEntity {
     return menuOptionGroup;
   }
 
-  static List<MenuOptionGroup> createMenuOptionGroups(
+  public static List<MenuOptionGroup> createMenuOptionGroups(
       Menu menu,
       List<MenuOptionGroupModifyRequest> requests
   ) {

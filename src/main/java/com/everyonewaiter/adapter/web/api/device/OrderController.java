@@ -1,11 +1,12 @@
 package com.everyonewaiter.adapter.web.api.device;
 
-import com.everyonewaiter.adapter.web.api.device.request.OrderWriteRequest;
 import com.everyonewaiter.application.order.OrderService;
 import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
+import com.everyonewaiter.domain.order.Order;
+import com.everyonewaiter.domain.order.OrderCreateRequest;
 import com.everyonewaiter.domain.order.OrderType;
 import com.everyonewaiter.domain.store.StoreOpen;
 import jakarta.validation.Valid;
@@ -52,16 +53,14 @@ class OrderController implements OrderControllerSpecification {
   @StoreOpen
   @PostMapping
   public ResponseEntity<Void> create(
-      @RequestBody @Valid OrderWriteRequest.Create request,
+      @RequestBody @Valid OrderCreateRequest createRequest,
       @AuthenticationDevice(purpose = {DevicePurpose.TABLE, DevicePurpose.POS}) Device device
   ) {
     OrderType orderType = device.isPrepaid() ? OrderType.PREPAID : OrderType.POSTPAID;
-    Long orderId = orderService.createOrder(
-        device.getStore().getId(),
-        request.tableNo(),
-        request.toDomainDto(orderType)
-    );
-    return ResponseEntity.created(URI.create(orderId.toString())).build();
+
+    Order order = orderService.create(device.getStore().getNonNullId(), orderType, createRequest);
+
+    return ResponseEntity.created(URI.create(order.getNonNullId().toString())).build();
   }
 
   @Override
