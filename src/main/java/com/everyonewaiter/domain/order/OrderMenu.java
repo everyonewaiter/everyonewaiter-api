@@ -1,58 +1,37 @@
-package com.everyonewaiter.domain.order.entity;
+package com.everyonewaiter.domain.order;
+
+import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateEntity;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
-import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 
-@Table(name = "orders_menu")
 @Entity
 @Getter
 @ToString(exclude = {"order", "orderOptionGroups"}, callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class OrderMenu extends AggregateEntity {
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "orders_id", nullable = false)
-  @OnDelete(action = OnDeleteAction.CASCADE)
   private Order order;
 
-  @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "price", nullable = false)
   private long price;
 
-  @Column(name = "quantity", nullable = false)
   private int quantity;
 
-  @Embedded
   private Serving serving = new Serving();
 
-  @Column(name = "print_enabled", nullable = false)
   private boolean printEnabled;
 
-  @OneToMany(mappedBy = "orderMenu", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderBy("id asc")
   private List<OrderOptionGroup> orderOptionGroups = new ArrayList<>();
 
   public static OrderMenu create(

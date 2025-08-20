@@ -1,11 +1,10 @@
 package com.everyonewaiter.infrastructure.pos;
 
-import static com.everyonewaiter.domain.pos.entity.QPosTable.posTable;
+import static com.everyonewaiter.domain.pos.QPosTable.posTable;
 
-import com.everyonewaiter.domain.pos.entity.PosTable;
+import com.everyonewaiter.domain.pos.PosTable;
+import com.everyonewaiter.domain.pos.PosTableNotFoundException;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +16,17 @@ class PosTableRepositoryImpl implements PosTableRepository {
 
   private final JPAQueryFactory queryFactory;
   private final PosTableJpaRepository posTableJpaRepository;
+
+  @Override
+  public List<PosTable> findAllActive(Long storeId) {
+    return posTableJpaRepository.findAllByStoreIdAndActive(storeId, true);
+  }
+
+  @Override
+  public PosTable findActiveOrThrow(Long storeId, int tableNo) {
+    return posTableJpaRepository.findByStoreIdAndTableNoAndActive(storeId, tableNo, true)
+        .orElseThrow(PosTableNotFoundException::new);
+  }
 
   @Override
   public void close(Long storeId) {
@@ -38,17 +48,6 @@ class PosTableRepositoryImpl implements PosTableRepository {
   @Override
   public void saveAll(List<PosTable> posTables) {
     posTableJpaRepository.saveAll(posTables);
-  }
-
-  @Override
-  public PosTable findActiveByStoreIdAndTableNo(Long storeId, int tableNo) {
-    return posTableJpaRepository.findByStoreIdAndTableNoAndActive(storeId, tableNo, true)
-        .orElseThrow(() -> new BusinessException(ErrorCode.POS_TABLE_NOT_FOUND));
-  }
-
-  @Override
-  public List<PosTable> findAllActiveByStoreId(Long storeId) {
-    return posTableJpaRepository.findAllByStoreIdAndActive(storeId, true);
   }
 
 }

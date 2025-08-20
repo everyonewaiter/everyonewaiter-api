@@ -3,9 +3,9 @@ package com.everyonewaiter.adapter.persistence.store;
 import static com.everyonewaiter.domain.account.QAccount.account;
 import static com.everyonewaiter.domain.store.QRegistration.registration;
 import static java.util.Objects.requireNonNull;
+import static org.springframework.util.StringUtils.hasText;
 
 import com.everyonewaiter.application.store.required.RegistrationRepository;
-import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.shared.Pagination;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.store.Registration;
@@ -14,14 +14,12 @@ import com.everyonewaiter.domain.store.RegistrationNotFoundException;
 import com.everyonewaiter.domain.store.RegistrationPageRequest;
 import com.everyonewaiter.domain.store.RegistrationStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 @Repository
 @RequiredArgsConstructor
@@ -86,10 +84,6 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
   public Paging<Registration> findAllByAdmin(
       RegistrationAdminPageRequest pageRequest
   ) {
-    PathBuilder<Account> accountPath = new PathBuilder<>(account.getType(), account.getMetadata());
-    PathBuilder<Registration> registrationPath =
-        new PathBuilder<>(registration.getType(), registration.getMetadata());
-
     String email = pageRequest.getEmail();
     String name = pageRequest.getName();
     RegistrationStatus status = pageRequest.getStatus();
@@ -100,8 +94,8 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
         .from(registration)
         .innerJoin(registration.account, account).fetchJoin()
         .where(
-            emailStratsWith(accountPath, email),
-            nameStartsWith(registrationPath, name),
+            emailStratsWith(email),
+            nameStartsWith(name),
             statusEq(status)
         )
         .orderBy(registration.id.desc())
@@ -114,8 +108,8 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
         .from(registration)
         .innerJoin(registration.account, account).fetchJoin()
         .where(
-            emailStratsWith(accountPath, email),
-            nameStartsWith(registrationPath, name),
+            emailStratsWith(email),
+            nameStartsWith(name),
             statusEq(status)
         )
         .orderBy(registration.id.desc())
@@ -131,23 +125,13 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
   }
 
   @Nullable
-  private BooleanExpression emailStratsWith(
-      PathBuilder<Account> accountPath,
-      @Nullable String email
-  ) {
-    return StringUtils.hasText(email)
-        ? accountPath.get("email").getString("address").startsWith(email)
-        : null;
+  private BooleanExpression emailStratsWith(@Nullable String email) {
+    return hasText(email) ? account.email.address.startsWith(email) : null;
   }
 
   @Nullable
-  private BooleanExpression nameStartsWith(
-      PathBuilder<Registration> registrationPath,
-      @Nullable String name
-  ) {
-    return StringUtils.hasText(name)
-        ? registrationPath.get("detail").getString("name").startsWith(name)
-        : null;
+  private BooleanExpression nameStartsWith(@Nullable String name) {
+    return hasText(name) ? registration.detail.name.startsWith(name) : null;
   }
 
   @Nullable

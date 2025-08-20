@@ -2,9 +2,9 @@ package com.everyonewaiter.application.pos.response;
 
 import com.everyonewaiter.application.order.response.OrderPaymentResponse;
 import com.everyonewaiter.application.order.response.OrderResponse;
-import com.everyonewaiter.domain.order.entity.Order;
-import com.everyonewaiter.domain.pos.entity.PosTable;
-import com.everyonewaiter.domain.pos.entity.PosTableActivity;
+import com.everyonewaiter.domain.order.OrderType;
+import com.everyonewaiter.domain.pos.PosTable;
+import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.pos.view.PosTableActivityView;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
@@ -49,7 +49,7 @@ public class PosResponse {
 
       @Nullable
       @Schema(description = "주문 타입", example = "POSTPAID")
-      Order.Type orderType,
+      OrderType orderType,
 
       @Nullable
       @Schema(description = "주문 시간", example = "2025-01-01 12:00:00")
@@ -105,7 +105,7 @@ public class PosResponse {
       int tableNo,
 
       @Schema(description = "테이블 결제 타입", example = "POSTPAID")
-      Order.Type orderType,
+      OrderType orderType,
 
       @Schema(description = "총 주문 금액", example = "10000")
       long totalOrderPrice,

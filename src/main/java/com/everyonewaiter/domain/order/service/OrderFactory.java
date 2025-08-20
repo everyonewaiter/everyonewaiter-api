@@ -2,12 +2,13 @@ package com.everyonewaiter.domain.order.service;
 
 import com.everyonewaiter.domain.menu.Menu;
 import com.everyonewaiter.domain.menu.MenuOptionGroup;
-import com.everyonewaiter.domain.order.entity.Order;
-import com.everyonewaiter.domain.order.entity.OrderMenu;
-import com.everyonewaiter.domain.order.entity.OrderOption;
-import com.everyonewaiter.domain.order.entity.OrderOptionGroup;
-import com.everyonewaiter.domain.pos.entity.PosTable;
-import com.everyonewaiter.domain.pos.entity.PosTableActivity;
+import com.everyonewaiter.domain.order.Order;
+import com.everyonewaiter.domain.order.OrderMenu;
+import com.everyonewaiter.domain.order.OrderOption;
+import com.everyonewaiter.domain.order.OrderOptionGroup;
+import com.everyonewaiter.domain.order.OrderType;
+import com.everyonewaiter.domain.pos.PosTable;
+import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.domain.shared.Position;
@@ -23,7 +24,7 @@ public class OrderFactory {
   private final PosTableRepository posTableRepository;
   private final PosTableActivityRepository posTableActivityRepository;
 
-  public Order createOrder(Long storeId, int tableNo, Order.Type type, String memo) {
+  public Order createOrder(Long storeId, int tableNo, OrderType type, String memo) {
     PosTableActivity posTableActivity = getOrCreatePosTableActivity(storeId, tableNo);
     return Order.create(posTableActivity, type, memo);
   }
@@ -62,12 +63,12 @@ public class OrderFactory {
 
   private PosTableActivity getOrCreatePosTableActivity(Long storeId, int tableNo) {
     Optional<PosTableActivity> posTableActivity =
-        posTableActivityRepository.findByStoreIdAndTableNo(storeId, tableNo);
+        posTableActivityRepository.findActive(storeId, tableNo);
 
     if (posTableActivity.isPresent()) {
       return posTableActivity.get();
     } else {
-      PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+      PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
       PosTableActivity newActivity = PosTableActivity.create(posTable);
       return posTableActivityRepository.save(newActivity);
     }

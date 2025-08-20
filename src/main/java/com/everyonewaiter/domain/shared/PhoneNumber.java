@@ -2,8 +2,10 @@ package com.everyonewaiter.domain.shared;
 
 import static org.springframework.util.Assert.isTrue;
 
+import jakarta.persistence.Embeddable;
 import java.util.regex.Pattern;
 
+@Embeddable
 public record PhoneNumber(String value) {
 
   public static final String PHONE_NUMBER_REGEX = "^01[016789]\\d{8}$";

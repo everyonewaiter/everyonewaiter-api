@@ -1,12 +1,12 @@
 package com.everyonewaiter.infrastructure.order;
 
-import static com.everyonewaiter.domain.order.entity.QOrder.order;
-import static com.everyonewaiter.domain.order.entity.QOrderMenu.orderMenu;
-import static com.everyonewaiter.domain.pos.entity.QPosTable.posTable;
-import static com.everyonewaiter.domain.pos.entity.QPosTableActivity.posTableActivity;
+import static com.everyonewaiter.domain.order.QOrder.order;
+import static com.everyonewaiter.domain.order.QOrderMenu.orderMenu;
+import static com.everyonewaiter.domain.pos.QPosTable.posTable;
+import static com.everyonewaiter.domain.pos.QPosTableActivity.posTableActivity;
 import static com.everyonewaiter.domain.store.QStore.store;
 
-import com.everyonewaiter.domain.order.entity.Order;
+import com.everyonewaiter.domain.order.Order;
 import com.everyonewaiter.domain.order.repository.OrderRepository;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;

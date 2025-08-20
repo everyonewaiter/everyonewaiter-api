@@ -1,7 +1,7 @@
 package com.everyonewaiter.domain.order.service;
 
-import com.everyonewaiter.domain.order.entity.Order;
-import com.everyonewaiter.domain.order.entity.OrderMenu;
+import com.everyonewaiter.domain.order.Order;
+import com.everyonewaiter.domain.order.OrderMenu;
 import com.everyonewaiter.domain.order.entity.Receipt;
 import com.everyonewaiter.domain.order.entity.ReceiptMenu;
 import com.everyonewaiter.domain.order.repository.ReceiptRepository;

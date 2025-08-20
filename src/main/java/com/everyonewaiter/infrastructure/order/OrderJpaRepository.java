@@ -1,6 +1,6 @@
 package com.everyonewaiter.infrastructure.order;
 
-import com.everyonewaiter.domain.order.entity.Order;
+import com.everyonewaiter.domain.order.Order;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -3,6 +3,7 @@ package com.everyonewaiter.adapter.persistence.account;
 import static com.everyonewaiter.domain.account.QAccount.account;
 import static com.everyonewaiter.domain.store.QStore.store;
 import static java.util.Objects.requireNonNull;
+import static org.springframework.util.StringUtils.hasText;
 
 import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.domain.account.Account;
@@ -17,14 +18,12 @@ import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 @Repository
 @RequiredArgsConstructor
@@ -55,8 +54,6 @@ class AccountRepositoryImpl implements AccountRepository {
 
   @Override
   public Paging<AccountAdminPageView> findAllByAdmin(AccountAdminPageRequest pageRequest) {
-    PathBuilder<Account> accountPath = new PathBuilder<>(account.getType(), account.getMetadata());
-
     String email = pageRequest.getEmail();
     AccountState state = pageRequest.getState();
     AccountPermission permission = pageRequest.getPermission();
@@ -80,7 +77,7 @@ class AccountRepositoryImpl implements AccountRepository {
         .from(account)
         .leftJoin(store).on(account.id.eq(store.account.id))
         .where(
-            emailStratsWith(accountPath, email),
+            emailStratsWith(email),
             stateEq(state),
             permissionEq(permission),
             hasStoreEq(hasStore)
@@ -95,7 +92,7 @@ class AccountRepositoryImpl implements AccountRepository {
         .from(account)
         .leftJoin(store).on(account.id.eq(store.account.id))
         .where(
-            emailStratsWith(accountPath, email),
+            emailStratsWith(email),
             stateEq(state),
             permissionEq(permission),
             hasStoreEq(hasStore)
@@ -139,13 +136,8 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Nullable
-  private BooleanExpression emailStratsWith(
-      PathBuilder<Account> accountPath,
-      @Nullable String email
-  ) {
-    return StringUtils.hasText(email)
-        ? accountPath.get("email").getString("address").startsWith(email)
-        : null;
+  private BooleanExpression emailStratsWith(@Nullable String email) {
+    return hasText(email) ? account.email.address.startsWith(email) : null;
   }
 
   @Nullable

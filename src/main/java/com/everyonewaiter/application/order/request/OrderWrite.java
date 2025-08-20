@@ -1,6 +1,6 @@
 package com.everyonewaiter.application.order.request;
 
-import com.everyonewaiter.domain.order.entity.Order;
+import com.everyonewaiter.domain.order.OrderType;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderWrite {
 
-  public record Create(Order.Type type, String memo, List<OrderMenu> orderMenus) {
+  public record Create(OrderType type, String memo, List<OrderMenu> orderMenus) {
 
   }
 

@@ -1,4 +1,4 @@
-package com.everyonewaiter.application.store;
+package com.everyonewaiter.application.pos;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.transaction.event.TransactionPhase.BEFORE_COMMIT;
@@ -12,18 +12,17 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
 @RequiredArgsConstructor
-class StoreCloseEventHandler {
+class PosTableInactiveEventHandler {
 
-  private static final Logger LOGGER = getLogger(StoreCloseEventHandler.class);
+  private static final Logger LOGGER = getLogger(PosTableInactiveEventHandler.class);
 
   private final PosTableRepository posTableRepository;
 
   @TransactionalEventListener(phase = BEFORE_COMMIT)
   public void handle(StoreCloseEvent event) {
-    Long storeId = event.storeId();
-    LOGGER.info("[매장 영업 종료 이벤트] storeId: {}", storeId);
+    LOGGER.info("[매장 영업 종료 이벤트] storeId: {}", event.storeId());
 
-    posTableRepository.close(storeId);
+    posTableRepository.close(event.storeId());
   }
 
 }

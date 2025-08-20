@@ -2,9 +2,9 @@ package com.everyonewaiter.application.order;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-import com.everyonewaiter.domain.order.entity.Order;
+import com.everyonewaiter.domain.order.Order;
+import com.everyonewaiter.domain.order.OrderCreateEvent;
 import com.everyonewaiter.domain.order.entity.Receipt;
-import com.everyonewaiter.domain.order.event.OrderCreateEvent;
 import com.everyonewaiter.domain.order.repository.OrderRepository;
 import com.everyonewaiter.domain.order.service.ReceiptFactory;
 import com.everyonewaiter.domain.sse.ServerAction;

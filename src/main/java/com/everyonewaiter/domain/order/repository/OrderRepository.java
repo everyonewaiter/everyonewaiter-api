@@ -1,6 +1,6 @@
 package com.everyonewaiter.domain.order.repository;
 
-import com.everyonewaiter.domain.order.entity.Order;
+import com.everyonewaiter.domain.order.Order;
 import java.util.List;
 
 public interface OrderRepository {

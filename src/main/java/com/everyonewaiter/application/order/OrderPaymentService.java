@@ -5,7 +5,7 @@ import com.everyonewaiter.application.order.response.OrderPaymentResponse;
 import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.order.entity.OrderPayment;
 import com.everyonewaiter.domain.order.repository.OrderPaymentRepository;
-import com.everyonewaiter.domain.pos.entity.PosTableActivity;
+import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
 import java.time.Instant;
 import java.util.List;
@@ -24,7 +24,7 @@ public class OrderPaymentService {
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public Long approve(Long storeId, int tableNo, OrderPaymentWrite.Approve request) {
     PosTableActivity posTableActivity =
-        posTableActivityRepository.findByStoreIdAndTableNoOrThrow(storeId, tableNo);
+        posTableActivityRepository.findActiveOrThrow(storeId, tableNo);
 
     OrderPayment orderPayment = OrderPayment.approve(
         posTableActivity,

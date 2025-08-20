@@ -3,13 +3,13 @@ package com.everyonewaiter.application.pos;
 import com.everyonewaiter.application.order.request.OrderWrite;
 import com.everyonewaiter.application.pos.response.PosResponse;
 import com.everyonewaiter.application.support.DistributedLock;
-import com.everyonewaiter.domain.order.entity.OrderMenu;
+import com.everyonewaiter.domain.order.OrderMenu;
 import com.everyonewaiter.domain.order.entity.OrderPayment;
 import com.everyonewaiter.domain.order.entity.Receipt;
 import com.everyonewaiter.domain.order.entity.ReceiptMenu;
 import com.everyonewaiter.domain.order.service.ReceiptFactory;
-import com.everyonewaiter.domain.pos.entity.PosTable;
-import com.everyonewaiter.domain.pos.entity.PosTableActivity;
+import com.everyonewaiter.domain.pos.PosTable;
+import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.domain.shared.BusinessException;
@@ -35,7 +35,7 @@ public class PosService {
   @Transactional
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public void completeActivity(Long storeId, int tableNo) {
-    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
     posTable.completeActiveActivity();
     posTableRepository.save(posTable);
   }
@@ -43,7 +43,7 @@ public class PosService {
   @Transactional
   @DistributedLock(key = {"#storeId + '-' + #sourceTableNo", "#storeId + '-' + #targetTableNo"})
   public void moveTable(Long storeId, int sourceTableNo, int targetTableNo) {
-    List<PosTable> posTables = posTableRepository.findAllActiveByStoreId(storeId);
+    List<PosTable> posTables = posTableRepository.findAllActive(storeId);
     PosTable sourcePosTable = getPosTable(posTables, sourceTableNo);
     PosTable targetPosTable = getPosTable(posTables, targetTableNo);
 
@@ -64,7 +64,7 @@ public class PosService {
   @Transactional
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public void discount(Long storeId, int tableNo, long discountPrice) {
-    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
     posTable.discount(discountPrice);
     posTableRepository.save(posTable);
   }
@@ -72,7 +72,7 @@ public class PosService {
   @Transactional
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public void cancelOrder(Long storeId, int tableNo, Long orderId) {
-    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
     posTable.cancelOrder(orderId);
     posTableRepository.save(posTable);
   }
@@ -83,7 +83,7 @@ public class PosService {
       int tableNo,
       OrderWrite.UpdateOrders request
   ) {
-    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
     Map<Long, OrderMenu> orderMenus = posTable.getActivePrintEnabledOrderedOrderMenus()
         .stream()
         .collect(Collectors.toMap(OrderMenu::getId, orderMenu -> orderMenu));
@@ -111,7 +111,7 @@ public class PosService {
   @Transactional
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public void updateOrders(Long storeId, int tableNo, OrderWrite.UpdateOrders request) {
-    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
 
     for (OrderWrite.UpdateOrder order : request.orders()) {
       Long orderId = order.orderId();
@@ -128,14 +128,14 @@ public class PosService {
   @Transactional
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public void updateMemo(Long storeId, int tableNo, Long orderId, String memo) {
-    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
     posTable.updateMemo(orderId, memo);
     posTableRepository.save(posTable);
   }
 
   @Transactional(readOnly = true)
   public void resendReceipt(Long storeId, int tableNo) {
-    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
 
     Receipt receipt = receiptFactory.createReceipt(
         storeId,
@@ -149,19 +149,19 @@ public class PosService {
   @Transactional(readOnly = true)
   public PosResponse.TableActivityDetail readTableActivity(Long storeId, Long posTableActivityId) {
     PosTableActivity activity =
-        posTableActivityRepository.findByIdAndStoreIdOrThrow(posTableActivityId, storeId);
+        posTableActivityRepository.findOrThrow(posTableActivityId, storeId);
     return PosResponse.TableActivityDetail.from(activity);
   }
 
   @Transactional(readOnly = true)
   public Optional<PosResponse.TableActivityDetail> readActiveTable(Long storeId, int tableNo) {
-    PosTable posTable = posTableRepository.findActiveByStoreIdAndTableNo(storeId, tableNo);
+    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
     return posTable.getActiveActivity().map(PosResponse.TableActivityDetail::from);
   }
 
   @Transactional(readOnly = true)
   public PosResponse.Tables readAllActiveTables(Long storeId) {
-    List<PosTable> posTables = posTableRepository.findAllActiveByStoreId(storeId);
+    List<PosTable> posTables = posTableRepository.findAllActive(storeId);
     return PosResponse.Tables.from(posTables);
   }
 

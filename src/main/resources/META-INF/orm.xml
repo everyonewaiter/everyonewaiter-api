@@ -395,6 +395,178 @@
     </attributes>
   </entity>
 
+  <entity class="com.everyonewaiter.domain.order.Order">
+    <table name="orders">
+      <index name="idx_orders_store_id_created_at" column-list="store_id, created_at desc"/>
+    </table>
+
+    <attributes>
+      <basic name="category">
+        <column name="category" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="type">
+        <column name="type" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="state">
+        <column name="state" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="price">
+        <column name="price" nullable="false"/>
+      </basic>
+      <basic name="memo">
+        <column name="memo" nullable="false" length="30"/>
+      </basic>
+      <many-to-one name="store" fetch="LAZY" optional="false">
+        <join-column name="store_id" nullable="false" updatable="false"/>
+      </many-to-one>
+      <many-to-one name="posTableActivity" fetch="LAZY" optional="false">
+        <join-column name="pos_table_activity_id" nullable="false"/>
+      </many-to-one>
+      <one-to-many name="orderMenus" mapped-by="order" fetch="LAZY" orphan-removal="true">
+        <order-by>id asc</order-by>
+        <cascade>
+          <cascade-all/>
+        </cascade>
+      </one-to-many>
+      <embedded name="serving"/>
+    </attributes>
+  </entity>
+
+  <entity class="com.everyonewaiter.domain.order.OrderMenu">
+    <table name="orders_menu"/>
+
+    <attributes>
+      <basic name="name">
+        <column name="name" nullable="false" length="30"/>
+      </basic>
+      <basic name="price">
+        <column name="price" nullable="false"/>
+      </basic>
+      <basic name="quantity">
+        <column name="quantity" nullable="false"/>
+      </basic>
+      <basic name="printEnabled">
+        <column name="print_enabled" nullable="false"/>
+      </basic>
+      <many-to-one name="order" fetch="LAZY" optional="false">
+        <join-column name="orders_id" nullable="false" updatable="false"/>
+        <foreign-key
+          name="fk_orders_menu_orders_id"
+          foreign-key-definition="ON DELETE CASCADE"
+        />
+      </many-to-one>
+      <one-to-many
+        name="orderOptionGroups"
+        mapped-by="orderMenu"
+        fetch="LAZY"
+        orphan-removal="true"
+      >
+        <order-by>id asc</order-by>
+        <cascade>
+          <cascade-all/>
+        </cascade>
+      </one-to-many>
+      <embedded name="serving"/>
+    </attributes>
+  </entity>
+
+  <entity class="com.everyonewaiter.domain.order.OrderOptionGroup">
+    <table name="orders_option_group"/>
+
+    <attributes>
+      <basic name="name">
+        <column name="name" nullable="false" length="30"/>
+      </basic>
+      <basic name="printEnabled">
+        <column name="print_enabled" nullable="false"/>
+      </basic>
+      <many-to-one name="orderMenu" fetch="LAZY" optional="false">
+        <join-column name="orders_menu_id" nullable="false" updatable="false"/>
+        <foreign-key
+          name="fk_orders_option_group_orders_menu_id"
+          foreign-key-definition="ON DELETE CASCADE"
+        />
+      </many-to-one>
+      <element-collection name="orderOptions">
+        <order-by>position asc</order-by>
+        <collection-table name="orders_option">
+          <join-column name="orders_option_group_id"/>
+          <foreign-key
+            name="fk_orders_option_orders_option_group_id"
+            foreign-key-definition="ON DELETE CASCADE"
+          />
+        </collection-table>
+      </element-collection>
+    </attributes>
+  </entity>
+
+  <entity class="com.everyonewaiter.domain.pos.PosTable">
+    <table name="pos_table">
+      <index
+        name="idx_pos_table_store_id_active_table_no"
+        column-list="store_id, active, table_no"
+      />
+    </table>
+
+    <attributes>
+      <basic name="name">
+        <column name="name" nullable="false" length="20"/>
+      </basic>
+      <basic name="tableNo">
+        <column name="table_no" nullable="false"/>
+      </basic>
+      <basic name="active">
+        <column name="active" nullable="false"/>
+      </basic>
+      <many-to-one name="store" fetch="LAZY" optional="false">
+        <join-column name="store_id" nullable="false" updatable="false"/>
+      </many-to-one>
+      <one-to-many name="activities" mapped-by="posTable" fetch="LAZY">
+        <order-by>id desc</order-by>
+      </one-to-many>
+    </attributes>
+  </entity>
+
+  <entity class="com.everyonewaiter.domain.pos.PosTableActivity">
+    <table name="pos_table_activity">
+      <index
+        name="idx_pos_table_activity_store_id_active_created_at"
+        column-list="store_id, active, created_at desc"
+      />
+      <index
+        name="idx_pos_table_activity_store_id_active_table_no"
+        column-list="store_id, active, table_no"
+      />
+    </table>
+
+    <attributes>
+      <basic name="tableNo">
+        <column name="table_no" nullable="false"/>
+      </basic>
+      <basic name="discount">
+        <column name="discount" nullable="false"/>
+      </basic>
+      <basic name="active">
+        <column name="active" nullable="false"/>
+      </basic>
+      <many-to-one name="store" fetch="LAZY" optional="false">
+        <join-column name="store_id" nullable="false" updatable="false"/>
+      </many-to-one>
+      <many-to-one name="posTable" fetch="LAZY" optional="false">
+        <join-column name="pos_table_id" nullable="false"/>
+      </many-to-one>
+      <one-to-many name="orders" mapped-by="posTableActivity" fetch="LAZY">
+        <order-by>id asc</order-by>
+      </one-to-many>
+      <one-to-many name="payments" mapped-by="posTableActivity" fetch="LAZY">
+        <order-by>id asc</order-by>
+      </one-to-many>
+    </attributes>
+  </entity>
+
   <embeddable class="com.everyonewaiter.domain.shared.Email">
     <attributes>
       <basic name="address">
@@ -468,6 +640,29 @@
       <basic name="lastCallTime">
         <column name="last_call_time" nullable="false"/>
       </basic>
+    </attributes>
+  </embeddable>
+
+  <embeddable class="com.everyonewaiter.domain.order.Serving">
+    <attributes>
+      <basic name="served">
+        <column name="served" nullable="false"/>
+      </basic>
+      <basic name="servedTime">
+        <column name="served_time" nullable="false"/>
+      </basic>
+    </attributes>
+  </embeddable>
+
+  <embeddable class="com.everyonewaiter.domain.order.OrderOption">
+    <attributes>
+      <basic name="name">
+        <column name="name" nullable="false" length="30"/>
+      </basic>
+      <basic name="price">
+        <column name="price" nullable="false"/>
+      </basic>
+      <embedded name="position"/>
     </attributes>
   </embeddable>
 

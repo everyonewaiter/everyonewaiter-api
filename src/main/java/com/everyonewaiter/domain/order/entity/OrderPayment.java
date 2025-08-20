@@ -1,7 +1,7 @@
 package com.everyonewaiter.domain.order.entity;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
-import com.everyonewaiter.domain.pos.entity.PosTableActivity;
+import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.sse.ServerAction;

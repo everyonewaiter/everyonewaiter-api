@@ -1,20 +1,20 @@
 package com.everyonewaiter.infrastructure.pos;
 
-import static com.everyonewaiter.domain.order.entity.QOrder.order;
+import static com.everyonewaiter.domain.order.QOrder.order;
 import static com.everyonewaiter.domain.order.entity.QOrderPayment.orderPayment;
-import static com.everyonewaiter.domain.pos.entity.QPosTable.posTable;
-import static com.everyonewaiter.domain.pos.entity.QPosTableActivity.posTableActivity;
+import static com.everyonewaiter.domain.pos.QPosTable.posTable;
+import static com.everyonewaiter.domain.pos.QPosTableActivity.posTableActivity;
+import static java.util.Objects.requireNonNullElse;
 
 import com.everyonewaiter.domain.order.entity.OrderPayment;
-import com.everyonewaiter.domain.pos.entity.PosTableActivity;
+import com.everyonewaiter.domain.pos.PosTableActiveActivityNotFoundException;
+import com.everyonewaiter.domain.pos.PosTableActivity;
+import com.everyonewaiter.domain.pos.PosTableActivityNotFoundException;
 import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
 import com.everyonewaiter.domain.pos.view.PosTableActivityView;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.Instant;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -76,11 +76,33 @@ class PosTableActivityRepositoryImpl implements PosTableActivityRepository {
             posTableActivity.createdAt.loe(end)
         )
         .fetchFirst();
-    return Objects.requireNonNullElse(revenue, 0L);
+
+    return requireNonNullElse(revenue, 0L);
   }
 
   @Override
-  public PosTableActivity findByIdAndStoreIdOrThrow(Long posTableActivityId, Long storeId) {
+  public Optional<PosTableActivity> findActive(Long storeId, int tableNo) {
+    return Optional.ofNullable(
+        queryFactory
+            .select(posTableActivity)
+            .from(posTableActivity)
+            .where(
+                posTableActivity.store.id.eq(storeId),
+                posTableActivity.active.isTrue(),
+                posTableActivity.tableNo.eq(tableNo)
+            )
+            .fetchFirst()
+    );
+  }
+
+  @Override
+  public PosTableActivity findActiveOrThrow(Long storeId, int tableNo) {
+    return findActive(storeId, tableNo)
+        .orElseThrow(PosTableActiveActivityNotFoundException::new);
+  }
+
+  @Override
+  public PosTableActivity findOrThrow(Long posTableActivityId, Long storeId) {
     return Optional.ofNullable(
             queryFactory
                 .select(posTableActivity)
@@ -92,29 +114,7 @@ class PosTableActivityRepositoryImpl implements PosTableActivityRepository {
                 )
                 .fetchFirst()
         )
-        .orElseThrow(() -> new BusinessException(ErrorCode.POS_TABLE_ACTIVITY_NOT_FOUND));
-  }
-
-  @Override
-  public Optional<PosTableActivity> findByStoreIdAndTableNo(Long storeId, int tableNo) {
-    return Optional.ofNullable(
-        queryFactory
-            .select(posTableActivity)
-            .from(posTableActivity)
-            .innerJoin(posTableActivity.posTable, posTable).fetchJoin()
-            .where(
-                posTableActivity.store.id.eq(storeId),
-                posTableActivity.active.isTrue(),
-                posTableActivity.posTable.tableNo.eq(tableNo)
-            )
-            .fetchFirst()
-    );
-  }
-
-  @Override
-  public PosTableActivity findByStoreIdAndTableNoOrThrow(Long storeId, int tableNo) {
-    return findByStoreIdAndTableNo(storeId, tableNo)
-        .orElseThrow(() -> new BusinessException(ErrorCode.POS_TABLE_ACTIVE_ACTIVITY_NOT_FOUND));
+        .orElseThrow(PosTableActivityNotFoundException::new);
   }
 
   @Override

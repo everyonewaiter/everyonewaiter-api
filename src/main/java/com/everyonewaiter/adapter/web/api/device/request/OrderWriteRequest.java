@@ -1,7 +1,7 @@
 package com.everyonewaiter.adapter.web.api.device.request;
 
 import com.everyonewaiter.application.order.request.OrderWrite;
-import com.everyonewaiter.domain.order.entity.Order;
+import com.everyonewaiter.domain.order.OrderType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -35,7 +35,7 @@ public class OrderWriteRequest {
       List<@Valid CreateOrderMenu> orderMenus
   ) {
 
-    public OrderWrite.Create toDomainDto(Order.Type type) {
+    public OrderWrite.Create toDomainDto(OrderType type) {
       return new OrderWrite.Create(
           type,
           memo,
@@ -116,16 +116,6 @@ public class OrderWriteRequest {
     public OrderWrite.Option toDomainDto() {
       return new OrderWrite.Option(name, price);
     }
-
-  }
-
-  @Schema(name = "OrderWriteRequest.StaffCallOption")
-  public record StaffCallOption(
-      @Schema(description = "직원 호출 옵션명", example = "직원 호출", requiredMode = Schema.RequiredMode.REQUIRED)
-      @NotBlank(message = "직원 호출 옵션명을 입력해 주세요.")
-      @Size(min = 1, max = 10, message = "직원 호출 옵션명은 1자 이상 10자 이하로 입력해 주세요.")
-      String optionName
-  ) {
 
   }
 

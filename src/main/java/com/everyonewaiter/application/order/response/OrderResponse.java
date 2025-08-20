@@ -1,11 +1,12 @@
 package com.everyonewaiter.application.order.response;
 
-import com.everyonewaiter.domain.order.entity.Order;
-import com.everyonewaiter.domain.order.entity.OrderMenu;
-import com.everyonewaiter.domain.order.entity.OrderOption;
-import com.everyonewaiter.domain.order.entity.OrderOptionGroup;
-import com.everyonewaiter.domain.staffcall.StaffCall;
-import com.everyonewaiter.domain.staffcall.StaffCallState;
+import com.everyonewaiter.domain.order.Order;
+import com.everyonewaiter.domain.order.OrderCategory;
+import com.everyonewaiter.domain.order.OrderMenu;
+import com.everyonewaiter.domain.order.OrderOption;
+import com.everyonewaiter.domain.order.OrderOptionGroup;
+import com.everyonewaiter.domain.order.OrderState;
+import com.everyonewaiter.domain.order.OrderType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
 import java.util.List;
@@ -38,13 +39,13 @@ public class OrderResponse {
       String storeId,
 
       @Schema(description = "주문 카테고리 (첫 주문, 추가 주문)", example = "INITIAL")
-      Order.Category category,
+      OrderCategory category,
 
       @Schema(description = "주문 타입", example = "POSTPAID")
-      Order.Type type,
+      OrderType type,
 
       @Schema(description = "주문 상태", example = "ORDER")
-      Order.State state,
+      OrderState state,
 
       @Schema(description = "테이블 이름", example = "T-1")
       String tableName,
@@ -185,53 +186,6 @@ public class OrderResponse {
       return new Option(
           orderOption.getName(),
           orderOption.getPrice()
-      );
-    }
-
-  }
-
-  @Schema(name = "OrderResponse.StaffCallDetails")
-  public record StaffCallDetails(List<StaffCallDetail> staffCalls) {
-
-    public static StaffCallDetails from(List<StaffCall> staffCalls) {
-      return new StaffCallDetails(
-          staffCalls.stream()
-              .map(StaffCallDetail::from)
-              .toList()
-      );
-    }
-
-  }
-
-  @Schema(name = "OrderResponse.StaffCallDetail")
-  public record StaffCallDetail(
-      @Schema(description = "직원 호출 ID", example = "\"694865267482835533\"")
-      String staffCallId,
-
-      @Schema(description = "테이블 번호", example = "1")
-      int tableNo,
-
-      @Schema(description = "직원 호출 옵션명", example = "직원 호출")
-      String name,
-
-      @Schema(description = "직원 호출 상태", example = "INCOMPLETE")
-      StaffCallState state,
-
-      @Schema(description = "직원 호출 완료 시간", example = "1970-01-01 00:00:00")
-      Instant completeTime,
-
-      @Schema(description = "직원 호출 시간", example = "2025-01-01 12:00:00")
-      Instant createdAt
-  ) {
-
-    public static StaffCallDetail from(StaffCall staffCall) {
-      return new StaffCallDetail(
-          Objects.requireNonNull(staffCall.getId()).toString(),
-          staffCall.getTableNo(),
-          staffCall.getName(),
-          staffCall.getState(),
-          staffCall.getCompleteTime(),
-          staffCall.getCreatedAt()
       );
     }
 

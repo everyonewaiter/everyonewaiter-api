@@ -1,6 +1,7 @@
 package com.everyonewaiter.adapter.persistence.contact;
 
 import static com.everyonewaiter.domain.contact.QContact.contact;
+import static org.springframework.util.StringUtils.hasText;
 
 import com.everyonewaiter.application.contact.required.ContactRepository;
 import com.everyonewaiter.domain.contact.Contact;
@@ -11,14 +12,12 @@ import com.everyonewaiter.domain.shared.BusinessLicense;
 import com.everyonewaiter.domain.shared.Pagination;
 import com.everyonewaiter.domain.shared.Paging;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 @Repository
 @RequiredArgsConstructor
@@ -43,8 +42,6 @@ class ContactRepositoryImpl implements ContactRepository {
 
   @Override
   public Paging<Contact> findAllByAdmin(ContactAdminPageRequest pageRequest) {
-    PathBuilder<Contact> contactPath = new PathBuilder<>(contact.getType(), contact.getMetadata());
-
     String storeName = pageRequest.getStoreName();
     String phoneNumber = pageRequest.getPhoneNumber();
     String license = pageRequest.getLicense();
@@ -57,8 +54,8 @@ class ContactRepositoryImpl implements ContactRepository {
         .from(contact)
         .where(
             storeNameStratsWith(storeName),
-            phoneNumberStratsWith(contactPath, phoneNumber),
-            licenseStratsWith(contactPath, license),
+            phoneNumberStratsWith(phoneNumber),
+            licenseStratsWith(license),
             stateEq(state)
         )
         .orderBy(contact.id.desc())
@@ -71,8 +68,8 @@ class ContactRepositoryImpl implements ContactRepository {
         .from(contact)
         .where(
             storeNameStratsWith(storeName),
-            phoneNumberStratsWith(contactPath, phoneNumber),
-            licenseStratsWith(contactPath, license),
+            phoneNumberStratsWith(phoneNumber),
+            licenseStratsWith(license),
             stateEq(state)
         )
         .orderBy(contact.id.desc())
@@ -95,27 +92,17 @@ class ContactRepositoryImpl implements ContactRepository {
 
   @Nullable
   private BooleanExpression storeNameStratsWith(@Nullable String storeName) {
-    return StringUtils.hasText(storeName) ? contact.storeName.startsWith(storeName) : null;
+    return hasText(storeName) ? contact.storeName.startsWith(storeName) : null;
   }
 
   @Nullable
-  private BooleanExpression phoneNumberStratsWith(
-      PathBuilder<Contact> contactPath,
-      @Nullable String phoneNumber
-  ) {
-    return StringUtils.hasText(phoneNumber)
-        ? contactPath.get("phoneNumber").getString("value").startsWith(phoneNumber)
-        : null;
+  private BooleanExpression phoneNumberStratsWith(@Nullable String phoneNumber) {
+    return hasText(phoneNumber) ? contact.phoneNumber.value.startsWith(phoneNumber) : null;
   }
 
   @Nullable
-  private BooleanExpression licenseStratsWith(
-      PathBuilder<Contact> contactPath,
-      @Nullable String license
-  ) {
-    return StringUtils.hasText(license)
-        ? contactPath.get("license").getString("value").startsWith(license)
-        : null;
+  private BooleanExpression licenseStratsWith(@Nullable String license) {
+    return hasText(license) ? contact.license.value.startsWith(license) : null;
   }
 
   @Nullable

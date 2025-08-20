@@ -4,11 +4,13 @@ import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.shared.BusinessLicense;
+import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Embeddable
 @Getter
 @ToString
 @EqualsAndHashCode

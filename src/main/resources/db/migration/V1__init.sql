@@ -204,7 +204,8 @@ create table pos_table
     table_no   int         not null,
     active     boolean     not null,
     created_at datetime(6) not null,
-    updated_at datetime(6) not null
+    updated_at datetime(6) not null,
+    constraint fk_pos_table_store_id foreign key (store_id) references store (id)
 );
 create index idx_pos_table_store_id_active_table_no on pos_table (store_id, active, table_no);
 
@@ -213,13 +214,16 @@ create table pos_table_activity
     id           bigint primary key,
     store_id     bigint      not null,
     pos_table_id bigint      not null,
+    table_no     int         not null,
     discount     bigint      not null,
     active       boolean     not null,
     created_at   datetime(6) not null,
-    updated_at   datetime(6) not null
+    updated_at   datetime(6) not null,
+    constraint fk_pos_table_activity_store_id foreign key (store_id) references store (id),
+    constraint fk_pos_table_activity_pos_table_id foreign key (pos_table_id) references pos_table (id)
 );
-create index idx_pos_table_activity_store_id_created_at on pos_table_activity (store_id, created_at desc);
-create index idx_pos_table_activity_pos_table_id on pos_table_activity (pos_table_id);
+create index idx_pos_table_activity_store_id_active_created_at on pos_table_activity (store_id, active, created_at desc);
+create index idx_pos_table_activity_store_id_active_table_no on pos_table_activity (store_id, active, table_no);
 
 create table orders
 (
@@ -234,10 +238,11 @@ create table orders
     served                boolean                        not null,
     served_time           datetime(6)                    not null,
     created_at            datetime(6)                    not null,
-    updated_at            datetime(6)                    not null
+    updated_at            datetime(6)                    not null,
+    constraint foreign key (store_id) references store (id),
+    constraint foreign key (pos_table_activity_id) references pos_table_activity (id)
 );
 create index idx_orders_store_id_created_at on orders (store_id, created_at desc);
-create index idx_orders_pos_table_activity_id on orders (pos_table_activity_id);
 
 create table orders_menu
 (

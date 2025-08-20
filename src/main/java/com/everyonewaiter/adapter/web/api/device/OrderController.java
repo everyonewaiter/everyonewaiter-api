@@ -6,7 +6,7 @@ import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
-import com.everyonewaiter.domain.order.entity.Order;
+import com.everyonewaiter.domain.order.OrderType;
 import com.everyonewaiter.domain.store.StoreOpen;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -55,7 +55,7 @@ class OrderController implements OrderControllerSpecification {
       @RequestBody @Valid OrderWriteRequest.Create request,
       @AuthenticationDevice(purpose = {DevicePurpose.TABLE, DevicePurpose.POS}) Device device
   ) {
-    Order.Type orderType = device.isPrepaid() ? Order.Type.PREPAID : Order.Type.POSTPAID;
+    OrderType orderType = device.isPrepaid() ? OrderType.PREPAID : OrderType.POSTPAID;
     Long orderId = orderService.createOrder(
         device.getStore().getId(),
         request.tableNo(),

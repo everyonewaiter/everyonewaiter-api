@@ -3,7 +3,7 @@ package com.everyonewaiter.application.store;
 import com.everyonewaiter.application.store.provided.StoreValidator;
 import com.everyonewaiter.application.store.required.StoreRepository;
 import com.everyonewaiter.application.waiting.required.WaitingRepository;
-import com.everyonewaiter.domain.pos.entity.PosTable;
+import com.everyonewaiter.domain.pos.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
@@ -46,7 +46,7 @@ class StoreValidateService implements StoreValidator {
 
   @Override
   public void checkPossibleClose(Long storeId) {
-    List<PosTable> posTables = posTableRepository.findAllActiveByStoreId(storeId);
+    List<PosTable> posTables = posTableRepository.findAllActive(storeId);
 
     if (posTables.stream().anyMatch(PosTable::hasActiveActivity)) {
       throw new BusinessException(ErrorCode.INCOMPLETE_POS_TABLE_ACTIVITY);

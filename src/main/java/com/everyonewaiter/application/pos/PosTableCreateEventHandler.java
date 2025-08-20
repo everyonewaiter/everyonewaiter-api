@@ -1,4 +1,4 @@
-package com.everyonewaiter.application.store;
+package com.everyonewaiter.application.pos;
 
 import static com.everyonewaiter.domain.device.DevicePurpose.TABLE;
 import static com.everyonewaiter.domain.device.DeviceState.ACTIVE;
@@ -6,9 +6,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.transaction.event.TransactionPhase.BEFORE_COMMIT;
 
 import com.everyonewaiter.application.device.provided.DeviceFinder;
-import com.everyonewaiter.application.store.required.StoreRepository;
+import com.everyonewaiter.application.store.provided.StoreFinder;
 import com.everyonewaiter.domain.device.Device;
-import com.everyonewaiter.domain.pos.entity.PosTable;
+import com.everyonewaiter.domain.pos.PosTable;
 import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.domain.store.Store;
 import com.everyonewaiter.domain.store.StoreOpenEvent;
@@ -22,37 +22,41 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
 @RequiredArgsConstructor
-class StoreOpenEventHandler {
+class PosTableCreateEventHandler {
 
-  private static final Logger LOGGER = getLogger(StoreOpenEventHandler.class);
+  private static final Logger LOGGER = getLogger(PosTableCreateEventHandler.class);
 
-  private final StoreRepository storeRepository;
+  private final StoreFinder storeFinder;
   private final DeviceFinder deviceFinder;
   private final PosTableRepository posTableRepository;
 
   @TransactionalEventListener(phase = BEFORE_COMMIT)
   public void handle(StoreOpenEvent event) {
     Long storeId = event.storeId();
-    Store store = storeRepository.findByIdOrThrow(storeId);
+
     LOGGER.info("[매장 영업 시작 이벤트] storeId: {}", storeId);
 
-    Map<Integer, PosTable> tables = new LinkedHashMap<>();
+    Store store = storeFinder.findOrThrow(storeId);
     List<Device> devices = deviceFinder.findAll(storeId, TABLE, ACTIVE);
+
+    Map<Integer, PosTable> tables = new LinkedHashMap<>();
     for (Device device : devices) {
-      tables.computeIfAbsent(
-          device.getTableNo(),
-          tableNo -> PosTable.create(store, "T", tableNo)
-      );
+      int tableNo = device.getTableNo();
+
+      tables.computeIfAbsent(tableNo, tn -> PosTable.create(store, "T", tn));
     }
 
     for (int i = 1; i <= store.getSetting().getExtraTableCount(); i++) {
       PosTable table = PosTable.create(store, "추가", String.valueOf(i), 10000 + i);
+
       tables.put(table.getTableNo(), table);
     }
 
-    if (!tables.isEmpty()) {
-      posTableRepository.saveAll(tables.values().stream().toList());
+    if (tables.isEmpty()) {
+      return;
     }
+
+    posTableRepository.saveAll(tables.values().stream().toList());
   }
 
 }

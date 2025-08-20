@@ -2,8 +2,10 @@ package com.everyonewaiter.domain.shared;
 
 import static org.springframework.util.Assert.isTrue;
 
+import jakarta.persistence.Embeddable;
 import java.util.regex.Pattern;
 
+@Embeddable
 public record Email(String address) {
 
   public static final String EMAIL_REGEX = "^[\\w+-.*]+@[\\w-]+\\.[\\w-.]+$";

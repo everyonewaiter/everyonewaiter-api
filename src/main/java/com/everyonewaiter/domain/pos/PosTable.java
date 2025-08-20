@@ -1,8 +1,11 @@
-package com.everyonewaiter.domain.pos.entity;
+package com.everyonewaiter.domain.pos;
+
+import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
-import com.everyonewaiter.domain.order.entity.Order;
-import com.everyonewaiter.domain.order.entity.OrderMenu;
+import com.everyonewaiter.domain.order.Order;
+import com.everyonewaiter.domain.order.OrderMenu;
+import com.everyonewaiter.domain.order.OrderType;
 import com.everyonewaiter.domain.order.entity.Receipt;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
@@ -10,49 +13,31 @@ import com.everyonewaiter.domain.sse.ServerAction;
 import com.everyonewaiter.domain.sse.SseCategory;
 import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.store.Store;
-import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
-import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
-@Table(name = "pos_table")
 @Entity
 @Getter
 @ToString(exclude = {"store", "activities"}, callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class PosTable extends AggregateRootEntity<PosTable> {
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "store_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   private Store store;
 
-  @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "table_no", nullable = false)
   private int tableNo;
 
-  @Column(name = "active", nullable = false)
-  private boolean active = true;
+  private boolean active;
 
-  @OneToMany(mappedBy = "posTable")
-  @OrderBy("id desc")
   private List<PosTableActivity> activities = new ArrayList<>();
 
   public static PosTable create(Store store, String prefix, int tableNo) {
@@ -61,9 +46,12 @@ public class PosTable extends AggregateRootEntity<PosTable> {
 
   public static PosTable create(Store store, String prefix, String suffix, int tableNo) {
     PosTable posTable = new PosTable();
+
     posTable.store = store;
     posTable.name = prefix + "-" + suffix;
     posTable.tableNo = tableNo;
+    posTable.active = true;
+
     return posTable;
   }
 
@@ -134,7 +122,7 @@ public class PosTable extends AggregateRootEntity<PosTable> {
     return !getActiveOrderedOrders().isEmpty();
   }
 
-  public Optional<Order.Type> getActiveTablePaymentType() {
+  public Optional<OrderType> getActiveTablePaymentType() {
     Optional<PosTableActivity> posTableActivity = getActiveActivity();
     return posTableActivity.map(PosTableActivity::getTablePaymentType);
   }

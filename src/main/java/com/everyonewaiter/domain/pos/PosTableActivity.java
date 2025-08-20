@@ -1,21 +1,13 @@
-package com.everyonewaiter.domain.pos.entity;
+package com.everyonewaiter.domain.pos;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
-import com.everyonewaiter.domain.order.entity.Order;
+import com.everyonewaiter.domain.order.Order;
+import com.everyonewaiter.domain.order.OrderType;
 import com.everyonewaiter.domain.order.entity.OrderPayment;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.store.Store;
-import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
-import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,39 +18,34 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
-@Table(name = "pos_table_activity")
 @Entity
 @Getter
 @ToString(exclude = {"store", "posTable", "orders", "payments"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "store_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   private Store store;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "pos_table_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   private PosTable posTable;
 
-  @Column(name = "discount", nullable = false)
+  private int tableNo;
+
   private long discount;
 
-  @Column(name = "active", nullable = false)
-  private boolean active = true;
+  private boolean active;
 
-  @OneToMany(mappedBy = "posTableActivity")
-  @OrderBy("id asc")
   private List<Order> orders = new ArrayList<>();
 
-  @OneToMany(mappedBy = "posTableActivity")
-  @OrderBy("id asc")
   private List<OrderPayment> payments = new ArrayList<>();
 
   public static PosTableActivity create(PosTable posTable) {
     PosTableActivity posTableActivity = new PosTableActivity();
+
     posTableActivity.store = posTable.getStore();
     posTableActivity.posTable = posTable;
+    posTableActivity.tableNo = posTable.getTableNo();
+    posTableActivity.active = true;
+
     return posTableActivity;
   }
 
@@ -152,7 +139,7 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
   }
 
   public boolean isPostpaidTable() {
-    return getTablePaymentType() == Order.Type.POSTPAID;
+    return getTablePaymentType() == OrderType.POSTPAID;
   }
 
   public long getTotalOrderPrice() {
@@ -175,10 +162,10 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
     return getTotalOrderPrice() - getTotalPaymentPrice() - discount;
   }
 
-  public Order.Type getTablePaymentType() {
+  public OrderType getTablePaymentType() {
     return getOrderedOrders().stream().allMatch(Order::isPrepaid)
-        ? Order.Type.PREPAID
-        : Order.Type.POSTPAID;
+        ? OrderType.PREPAID
+        : OrderType.POSTPAID;
   }
 
   public Order getOrder(Long orderId) {
