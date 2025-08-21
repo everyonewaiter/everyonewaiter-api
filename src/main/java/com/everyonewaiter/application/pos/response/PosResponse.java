@@ -1,8 +1,8 @@
 package com.everyonewaiter.application.pos.response;
 
 import com.everyonewaiter.application.order.response.OrderPaymentResponse;
-import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.domain.order.OrderType;
+import com.everyonewaiter.domain.order.OrderView;
 import com.everyonewaiter.domain.pos.PosTable;
 import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.pos.view.PosTableActivityView;
@@ -123,7 +123,7 @@ public class PosResponse {
       boolean active,
 
       @Schema(description = "주문 목록")
-      List<OrderResponse.Detail> orders,
+      List<OrderView.OrderDetail> orders,
 
       @Schema(description = "주문 결제 목록")
       List<OrderPaymentResponse.Detail> orderPayments
@@ -143,7 +143,7 @@ public class PosResponse {
           posTableActivity.getRemainingPaymentPriceWithDiscount(),
           posTableActivity.isActive(),
           posTableActivity.getOrderedOrders().stream()
-              .map(OrderResponse.Detail::from)
+              .map(OrderView.OrderDetail::from)
               .toList(),
           posTableActivity.getPayments().stream()
               .map(OrderPaymentResponse.Detail::from)

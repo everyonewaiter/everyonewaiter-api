@@ -1,7 +1,7 @@
 package com.everyonewaiter.adapter.web.api.device;
 
+import com.everyonewaiter.adapter.web.api.dto.CategoryDetailResponses;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
-import com.everyonewaiter.domain.menu.CategoryView;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,6 +20,6 @@ interface MenuApiSpecification {
       code = ErrorCode.STORE_NOT_FOUND,
       exampleName = "매장을 찾을 수 없는 경우"
   )
-  ResponseEntity<CategoryView.Categories> getStoreMenus(Long storeId);
+  ResponseEntity<CategoryDetailResponses> getStoreMenus(Long storeId);
 
 }

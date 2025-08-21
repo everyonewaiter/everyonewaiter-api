@@ -32,8 +32,7 @@ class StaffCallApi implements StaffCallApiSpecification {
   public ResponseEntity<StaffCallDetailResponses> getStaffCalls(
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    List<StaffCall> staffCalls =
-        staffCallManager.findAllIncompleted(device.getStore().getNonNullId());
+    List<StaffCall> staffCalls = staffCallManager.findAllIncompleted(device.getStoreId());
 
     return ResponseEntity.ok(StaffCallDetailResponses.from(staffCalls));
   }
@@ -45,8 +44,8 @@ class StaffCallApi implements StaffCallApiSpecification {
       @RequestBody @Valid StaffCallCreateRequest createRequest,
       @AuthenticationDevice(purpose = DevicePurpose.TABLE) Device device
   ) {
-    StaffCall staffCall = staffCallManager
-        .create(device.getStore().getNonNullId(), device.getTableNo(), createRequest);
+    StaffCall staffCall =
+        staffCallManager.create(device.getStoreId(), device.getTableNo(), createRequest);
 
     return ResponseEntity.created(URI.create(staffCall.getNonNullId().toString())).build();
   }
@@ -58,7 +57,7 @@ class StaffCallApi implements StaffCallApiSpecification {
       @PathVariable Long staffCallId,
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    staffCallManager.complete(device.getStore().getNonNullId(), staffCallId);
+    staffCallManager.complete(device.getStoreId(), staffCallId);
 
     return ResponseEntity.noContent().build();
   }

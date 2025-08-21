@@ -47,6 +47,8 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
     posTableActivity.tableNo = posTable.getTableNo();
     posTableActivity.active = true;
 
+    posTableActivity.posTable.addActivity(posTableActivity);
+
     return posTableActivity;
   }
 

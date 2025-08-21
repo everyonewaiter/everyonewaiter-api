@@ -34,8 +34,7 @@ class SseApi implements SseApiSpecification {
     response.setHeader(CACHE_CONTROL, "no-cache");
     response.setHeader("X-Accel-Buffering", "no");
 
-    Long storeId = device.getStore().getNonNullId();
-    SseEmitter sseEmitter = sseConnector.connect(storeId.toString(), lastEventId);
+    SseEmitter sseEmitter = sseConnector.connect(device.getStoreId().toString(), lastEventId);
 
     return ResponseEntity.ok(sseEmitter);
   }

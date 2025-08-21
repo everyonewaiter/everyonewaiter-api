@@ -37,7 +37,7 @@ public record DevicePageResponse(
   public static DevicePageResponse from(Device device) {
     return new DevicePageResponse(
         device.getNonNullId().toString(),
-        device.getStore().getNonNullId().toString(),
+        device.getStoreId().toString(),
         device.getName(),
         device.getPurpose(),
         device.getState(),

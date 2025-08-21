@@ -69,6 +69,8 @@ public class Order extends AggregateRootEntity<Order> {
     order.serving = new Serving();
     order.orderMenus.addAll(createOrderMenus(menus, order, request.orderMenus()));
 
+    order.posTableActivity.addOrder(order);
+
     order.registerEvent(new OrderCreateEvent(order.getNonNullId(), order.store.getNonNullId()));
     order.registerEvent(new SseEvent(order.store.getNonNullId(), ORDER, CREATE));
 
@@ -83,21 +85,23 @@ public class Order extends AggregateRootEntity<Order> {
 
   public void serving() {
     if (this.serving.isServed()) {
-      throw new BusinessException(ErrorCode.ALREADY_COMPLETED_SERVING);
-    } else {
-      this.serving.complete();
-      getOrderMenus().forEach(OrderMenu::serving);
-      registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getId()));
+      throw new AlreadyCompletedServingOrderException();
     }
+
+    getOrderMenus().forEach(OrderMenu::serving);
+    this.serving.complete();
+
+    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getNonNullId()));
   }
 
-  public void servingMenu(Long orderMenuId) {
+  public void serving(Long orderMenuId) {
     if (this.serving.isServed()) {
-      throw new BusinessException(ErrorCode.ALREADY_COMPLETED_SERVING);
-    } else {
-      getOrderMenu(orderMenuId).toggleServing();
-      registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getId()));
+      throw new AlreadyCompletedServingOrderException();
     }
+
+    getOrderMenu(orderMenuId).toggleServing();
+
+    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getNonNullId()));
   }
 
   public void cancel() {

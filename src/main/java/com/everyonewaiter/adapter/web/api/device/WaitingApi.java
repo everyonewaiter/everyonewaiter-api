@@ -36,7 +36,7 @@ class WaitingApi implements WaitingApiSpecification {
   public ResponseEntity<WaitingDetailResponses> getWaitings(
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    List<Waiting> waitings = waitingAdministrator.findAll(device.getStore().getNonNullId());
+    List<Waiting> waitings = waitingAdministrator.findAll(device.getStoreId());
 
     return ResponseEntity.ok(WaitingDetailResponses.from(waitings));
   }
@@ -46,7 +46,7 @@ class WaitingApi implements WaitingApiSpecification {
   public ResponseEntity<WaitingCountResponse> count(
       @AuthenticationDevice(purpose = DevicePurpose.WAITING) Device device
   ) {
-    int waitingCount = waitingAdministrator.getCount(device.getStore().getNonNullId());
+    int waitingCount = waitingAdministrator.getCount(device.getStoreId());
 
     return ResponseEntity.ok(WaitingCountResponse.from(waitingCount));
   }
@@ -67,7 +67,7 @@ class WaitingApi implements WaitingApiSpecification {
       @RequestBody @Valid WaitingRegisterRequest registerRequest,
       @AuthenticationDevice(purpose = DevicePurpose.WAITING) Device device
   ) {
-    Waiting waiting = waitingCustomer.register(device.getStore().getNonNullId(), registerRequest);
+    Waiting waiting = waitingCustomer.register(device.getStoreId(), registerRequest);
 
     return ResponseEntity.created(URI.create(waiting.getNonNullId().toString())).build();
   }
@@ -78,7 +78,7 @@ class WaitingApi implements WaitingApiSpecification {
       @PathVariable Long waitingId,
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    waitingAdministrator.customerCall(waitingId, device.getStore().getNonNullId());
+    waitingAdministrator.customerCall(waitingId, device.getStoreId());
 
     return ResponseEntity.noContent().build();
   }
@@ -89,7 +89,7 @@ class WaitingApi implements WaitingApiSpecification {
       @PathVariable Long waitingId,
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    waitingAdministrator.complete(waitingId, device.getStore().getNonNullId());
+    waitingAdministrator.complete(waitingId, device.getStoreId());
 
     return ResponseEntity.noContent().build();
   }
@@ -100,7 +100,7 @@ class WaitingApi implements WaitingApiSpecification {
       @PathVariable Long waitingId,
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    waitingAdministrator.cancel(waitingId, device.getStore().getNonNullId());
+    waitingAdministrator.cancel(waitingId, device.getStoreId());
 
     return ResponseEntity.noContent().build();
   }

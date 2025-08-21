@@ -2,10 +2,10 @@ package com.everyonewaiter.application.order;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+import com.everyonewaiter.application.order.required.OrderRepository;
 import com.everyonewaiter.domain.order.Order;
 import com.everyonewaiter.domain.order.OrderCreateEvent;
 import com.everyonewaiter.domain.order.entity.Receipt;
-import com.everyonewaiter.domain.order.repository.OrderRepository;
 import com.everyonewaiter.domain.order.service.ReceiptFactory;
 import com.everyonewaiter.domain.sse.ServerAction;
 import com.everyonewaiter.domain.sse.SseCategory;
@@ -35,7 +35,7 @@ class OrderCreateEventHandler {
   public void consume(OrderCreateEvent event) {
     LOGGER.info("[주문 생성 이벤트] 주문 ID: {}", event.orderId());
 
-    Order order = orderRepository.findByIdOrThrow(event.orderId());
+    Order order = orderRepository.findOrThrow(event.orderId());
     Receipt receipt = receiptFactory.createReceipt(order);
 
     applicationEventPublisher.publishEvent(

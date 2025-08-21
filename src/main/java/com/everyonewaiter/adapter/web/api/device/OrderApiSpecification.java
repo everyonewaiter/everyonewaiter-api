@@ -1,8 +1,8 @@
 package com.everyonewaiter.adapter.web.api.device;
 
+import com.everyonewaiter.adapter.web.api.dto.OrderDetailResponses;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.application.order.response.OrderResponse;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.order.OrderCreateRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "주문")
-interface OrderControllerSpecification {
+interface OrderApiSpecification {
 
   @Operation(summary = "[TABLE] 활성 주문 목록 조회", description = "활성 주문 목록 조회 API")
   @ApiResponse(responseCode = "200", description = "활성 주문 목록 조회 성공")
@@ -31,7 +31,7 @@ interface OrderControllerSpecification {
           ),
       }
   )
-  ResponseEntity<OrderResponse.Details> getOrdersByTable(
+  ResponseEntity<OrderDetailResponses> getOrdersByTable(
       @Parameter(hidden = true) Device device
   );
 
@@ -50,7 +50,7 @@ interface OrderControllerSpecification {
           ),
       }
   )
-  ResponseEntity<OrderResponse.Details> getOrdersByHall(
+  ResponseEntity<OrderDetailResponses> getOrdersByHall(
       boolean served,
       @Parameter(hidden = true) Device device
   );

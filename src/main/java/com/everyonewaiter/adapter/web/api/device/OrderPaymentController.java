@@ -35,7 +35,7 @@ class OrderPaymentController implements OrderPaymentControllerSpecification {
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     OrderPaymentResponse.Details response = orderPaymentService.readAllByPos(
-        device.getStore().getId(),
+        device.getStoreId(),
         DateConverter.convertToUtcStartInstant(TimeZone.ASIA_SEOUL, date),
         DateConverter.convertToUtcEndInstant(TimeZone.ASIA_SEOUL, date)
     );
@@ -51,7 +51,7 @@ class OrderPaymentController implements OrderPaymentControllerSpecification {
       @AuthenticationDevice(purpose = {DevicePurpose.TABLE, DevicePurpose.POS}) Device device
   ) {
     Long paymentId = orderPaymentService.approve(
-        device.getStore().getId(),
+        device.getStoreId(),
         tableNo,
         request.toDomainDto()
     );
@@ -67,7 +67,7 @@ class OrderPaymentController implements OrderPaymentControllerSpecification {
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     Long paymentId = orderPaymentService.cancel(
-        device.getStore().getId(),
+        device.getStoreId(),
         orderPaymentId,
         request.toDomainDto()
     );

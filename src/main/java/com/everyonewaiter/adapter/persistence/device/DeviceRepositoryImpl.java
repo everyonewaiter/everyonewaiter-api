@@ -27,7 +27,16 @@ class DeviceRepositoryImpl implements DeviceRepository {
 
   @Override
   public boolean exists(Long storeId, String name) {
-    return deviceJpaRepository.existsByStoreIdAndName(storeId, name);
+    Integer selectOne = queryFactory
+        .selectOne()
+        .from(device)
+        .where(
+            device.store.id.eq(storeId),
+            device.name.eq(name)
+        )
+        .fetchFirst();
+
+    return selectOne != null;
   }
 
   @Override

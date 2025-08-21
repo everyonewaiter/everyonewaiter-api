@@ -15,7 +15,6 @@ import com.everyonewaiter.domain.store.StoreOpen;
 import com.everyonewaiter.domain.support.DateConverter;
 import com.everyonewaiter.domain.support.TimeZone;
 import jakarta.validation.Valid;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +42,7 @@ class PosController implements PosControllerSpecification {
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     PosResponse.Revenue response = posService.getRevenue(
-        device.getStore().getId(),
+        device.getStoreId(),
         DateConverter.convertToUtcStartInstant(TimeZone.ASIA_SEOUL, date),
         DateConverter.convertToUtcEndInstant(TimeZone.ASIA_SEOUL, date)
     );
@@ -56,7 +55,7 @@ class PosController implements PosControllerSpecification {
   public ResponseEntity<PosResponse.Tables> getTables(
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    return ResponseEntity.ok(posService.readAllActiveTables(device.getStore().getId()));
+    return ResponseEntity.ok(posService.readAllActiveTables(device.getStoreId()));
   }
 
   @Override
@@ -66,7 +65,7 @@ class PosController implements PosControllerSpecification {
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     PosResponse.TableActivityDetail response = posService.readTableActivity(
-        device.getStore().getId(),
+        device.getStoreId(),
         posTableActivityId
     );
     return ResponseEntity.ok(response);
@@ -80,7 +79,7 @@ class PosController implements PosControllerSpecification {
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     Optional<PosResponse.TableActivityDetail> response = posService.readActiveTable(
-        device.getStore().getId(),
+        device.getStoreId(),
         tableNo
     );
     return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
@@ -93,7 +92,7 @@ class PosController implements PosControllerSpecification {
       @PathVariable int tableNo,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    posService.completeActivity(device.getStore().getId(), tableNo);
+    posService.completeActivity(device.getStoreId(), tableNo);
     return ResponseEntity.noContent().build();
   }
 
@@ -106,7 +105,7 @@ class PosController implements PosControllerSpecification {
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     if (sourceTableNo != targetTableNo) {
-      posService.moveTable(device.getStore().getId(), sourceTableNo, targetTableNo);
+      posService.moveTable(device.getStoreId(), sourceTableNo, targetTableNo);
     }
     return ResponseEntity.noContent().build();
   }
@@ -119,7 +118,7 @@ class PosController implements PosControllerSpecification {
       @RequestBody @Valid PosWriteRequest.Discount request,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    posService.discount(device.getStore().getId(), tableNo, request.discountPrice());
+    posService.discount(device.getStoreId(), tableNo, request.discountPrice());
     return ResponseEntity.noContent().build();
   }
 
@@ -131,7 +130,7 @@ class PosController implements PosControllerSpecification {
       @PathVariable Long orderId,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    posService.cancelOrder(device.getStore().getId(), tableNo, orderId);
+    posService.cancelOrder(device.getStoreId(), tableNo, orderId);
     return ResponseEntity.noContent().build();
   }
 
@@ -143,9 +142,9 @@ class PosController implements PosControllerSpecification {
       @RequestBody @Valid PosWriteRequest.UpdateOrders request,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    Long storeId = Objects.requireNonNull(device.getStore().getId());
+    Long storeId = device.getStoreId();
     Receipt receipt = posService.createDiffOrderReceipt(storeId, tableNo, request.toDomainDto());
-    posService.updateOrders(device.getStore().getId(), tableNo, request.toDomainDto());
+    posService.updateOrders(storeId, tableNo, request.toDomainDto());
     if (!receipt.receiptMenus().isEmpty()) {
       sseSender.send(storeId.toString(),
           new SseEvent(storeId, SseCategory.RECEIPT, ServerAction.UPDATE, receipt)
@@ -163,7 +162,7 @@ class PosController implements PosControllerSpecification {
       @RequestBody @Valid PosWriteRequest.UpdateMemo request,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    posService.updateMemo(device.getStore().getId(), tableNo, orderId, request.memo());
+    posService.updateMemo(device.getStoreId(), tableNo, orderId, request.memo());
     return ResponseEntity.noContent().build();
   }
 
@@ -174,7 +173,7 @@ class PosController implements PosControllerSpecification {
       @PathVariable int tableNo,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    posService.resendReceipt(device.getStore().getId(), tableNo);
+    posService.resendReceipt(device.getStoreId(), tableNo);
     return ResponseEntity.noContent().build();
   }
 

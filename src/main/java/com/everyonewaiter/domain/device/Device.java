@@ -143,4 +143,8 @@ public class Device extends AggregateRootEntity<Device> {
     registerEvent(new SseEvent(store.getNonNullId(), DEVICE, DELETE, getNonNullId()));
   }
 
+  public Long getStoreId() {
+    return store.getNonNullId();
+  }
+
 }

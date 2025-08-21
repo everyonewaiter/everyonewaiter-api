@@ -1,4 +1,4 @@
-package com.everyonewaiter.infrastructure.order;
+package com.everyonewaiter.adapter.persistence.order;
 
 import com.everyonewaiter.domain.order.Order;
 import java.util.Optional;

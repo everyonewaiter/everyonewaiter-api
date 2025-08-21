@@ -1,37 +1,17 @@
-package com.everyonewaiter.application.order.response;
+package com.everyonewaiter.domain.order;
 
-import com.everyonewaiter.domain.order.Order;
-import com.everyonewaiter.domain.order.OrderCategory;
-import com.everyonewaiter.domain.order.OrderMenu;
-import com.everyonewaiter.domain.order.OrderOption;
-import com.everyonewaiter.domain.order.OrderOptionGroup;
-import com.everyonewaiter.domain.order.OrderState;
-import com.everyonewaiter.domain.order.OrderType;
+import static lombok.AccessLevel.PRIVATE;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrderResponse {
+@NoArgsConstructor(access = PRIVATE)
+public class OrderView {
 
-  @Schema(name = "OrderResponse.Details")
-  public record Details(List<Detail> orders) {
-
-    public static Details from(List<Order> orders) {
-      return new Details(
-          orders.stream()
-              .map(Detail::from)
-              .toList()
-      );
-    }
-
-  }
-
-  @Schema(name = "OrderResponse.Detail")
-  public record Detail(
+  @Schema(name = "OrderView.OrderDetail")
+  public record OrderDetail(
       @Schema(description = "주문 ID", example = "\"694865267482835533\"")
       String orderId,
 
@@ -75,10 +55,10 @@ public class OrderResponse {
       Instant updatedAt
   ) {
 
-    public static Detail from(Order order) {
-      return new Detail(
-          Objects.requireNonNull(order.getId()).toString(),
-          Objects.requireNonNull(order.getStore().getId()).toString(),
+    public static OrderDetail from(Order order) {
+      return new OrderDetail(
+          order.getNonNullId().toString(),
+          order.getStore().getNonNullId().toString(),
           order.getCategory(),
           order.getType(),
           order.getState(),
@@ -99,7 +79,7 @@ public class OrderResponse {
 
   }
 
-  @Schema(name = "OrderResponse.OrderMenuDetail")
+  @Schema(name = "OrderView.OrderMenuDetail")
   public record OrderMenuDetail(
       @Schema(description = "주문 메뉴 ID", example = "\"694865267482835533\"")
       String orderMenuId,
@@ -123,12 +103,12 @@ public class OrderResponse {
       boolean printEnabled,
 
       @Schema(description = "주문 메뉴 옵션 그룹 목록")
-      List<OptionGroup> orderOptionGroups
+      List<OrderOptionGroupDetail> orderOptionGroups
   ) {
 
     public static OrderMenuDetail from(OrderMenu orderMenu) {
       return new OrderMenuDetail(
-          Objects.requireNonNull(orderMenu.getId()).toString(),
+          orderMenu.getNonNullId().toString(),
           orderMenu.getName(),
           orderMenu.getPrice(),
           orderMenu.getQuantity(),
@@ -137,15 +117,15 @@ public class OrderResponse {
           orderMenu.isPrintEnabled(),
           orderMenu.getOrderOptionGroups()
               .stream()
-              .map(OptionGroup::from)
+              .map(OrderOptionGroupDetail::from)
               .toList()
       );
     }
 
   }
 
-  @Schema(name = "OrderResponse.OptionGroup")
-  public record OptionGroup(
+  @Schema(name = "OrderView.OrderOptionGroupDetail")
+  public record OrderOptionGroupDetail(
       @Schema(description = "주문 메뉴 옵션 그룹 ID", example = "\"694865267482835533\"")
       String orderOptionGroupId,
 
@@ -156,25 +136,25 @@ public class OrderResponse {
       boolean printEnabled,
 
       @Schema(description = "주문 메뉴 옵션 목록")
-      List<Option> orderOptions
+      List<OrderOptionDetail> orderOptions
   ) {
 
-    public static OptionGroup from(OrderOptionGroup orderOptionGroup) {
-      return new OptionGroup(
-          Objects.requireNonNull(orderOptionGroup.getId()).toString(),
+    public static OrderOptionGroupDetail from(OrderOptionGroup orderOptionGroup) {
+      return new OrderOptionGroupDetail(
+          orderOptionGroup.getNonNullId().toString(),
           orderOptionGroup.getName(),
           orderOptionGroup.isPrintEnabled(),
           orderOptionGroup.getOrderOptions()
               .stream()
-              .map(Option::from)
+              .map(OrderOptionDetail::from)
               .toList()
       );
     }
 
   }
 
-  @Schema(name = "OrderResponse.Option")
-  public record Option(
+  @Schema(name = "OrderView.OrderOptionDetail")
+  public record OrderOptionDetail(
       @Schema(description = "주문 메뉴 옵션명", example = "미디움")
       String name,
 
@@ -182,11 +162,8 @@ public class OrderResponse {
       long price
   ) {
 
-    public static Option from(OrderOption orderOption) {
-      return new Option(
-          orderOption.getName(),
-          orderOption.getPrice()
-      );
+    public static OrderOptionDetail from(OrderOption orderOption) {
+      return new OrderOptionDetail(orderOption.getName(), orderOption.getPrice());
     }
 
   }

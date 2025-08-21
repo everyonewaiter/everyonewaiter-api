@@ -1,16 +1,19 @@
 package com.everyonewaiter.adapter.web.api.device;
 
-import com.everyonewaiter.application.order.OrderService;
-import com.everyonewaiter.application.order.response.OrderResponse;
+import com.everyonewaiter.adapter.web.api.dto.OrderDetailResponses;
+import com.everyonewaiter.application.order.provided.OrderFinder;
+import com.everyonewaiter.application.order.provided.OrderServer;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
 import com.everyonewaiter.domain.order.Order;
 import com.everyonewaiter.domain.order.OrderCreateRequest;
 import com.everyonewaiter.domain.order.OrderType;
+import com.everyonewaiter.domain.order.OrderView;
 import com.everyonewaiter.domain.store.StoreOpen;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,29 +27,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/orders")
-class OrderController implements OrderControllerSpecification {
+class OrderApi implements OrderApiSpecification {
 
-  private final OrderService orderService;
+  private final OrderFinder orderFinder;
+  private final OrderServer orderServer;
 
   @Override
   @GetMapping("/tables")
-  public ResponseEntity<OrderResponse.Details> getOrdersByTable(
+  public ResponseEntity<OrderDetailResponses> getOrdersByTable(
       @AuthenticationDevice(purpose = DevicePurpose.TABLE) Device device
   ) {
-    OrderResponse.Details response = orderService.readAllByTable(
-        device.getStore().getId(),
-        device.getTableNo()
-    );
-    return ResponseEntity.ok(response);
+    var orders = orderFinder.findAllActive(device.getStoreId(), device.getTableNo());
+
+    return ResponseEntity.ok(OrderDetailResponses.from(orders));
   }
 
   @Override
   @GetMapping("/hall")
-  public ResponseEntity<OrderResponse.Details> getOrdersByHall(
+  public ResponseEntity<OrderDetailResponses> getOrdersByHall(
       @RequestParam boolean served,
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    return ResponseEntity.ok(orderService.readAllByHall(device.getStore().getId(), served));
+    List<OrderView.OrderDetail> orders = orderFinder.findAll(device.getStoreId(), served);
+
+    return ResponseEntity.ok(OrderDetailResponses.from(orders));
   }
 
   @Override
@@ -58,7 +62,7 @@ class OrderController implements OrderControllerSpecification {
   ) {
     OrderType orderType = device.isPrepaid() ? OrderType.PREPAID : OrderType.POSTPAID;
 
-    Order order = orderService.create(device.getStore().getNonNullId(), orderType, createRequest);
+    Order order = orderServer.create(device.getStoreId(), orderType, createRequest);
 
     return ResponseEntity.created(URI.create(order.getNonNullId().toString())).build();
   }
@@ -70,7 +74,8 @@ class OrderController implements OrderControllerSpecification {
       @PathVariable Long orderId,
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    orderService.servingOrder(device.getStore().getId(), orderId);
+    orderServer.serving(device.getStoreId(), orderId);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -82,7 +87,8 @@ class OrderController implements OrderControllerSpecification {
       @PathVariable Long orderMenuId,
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    orderService.servingOrderMenu(device.getStore().getId(), orderId, orderMenuId);
+    orderServer.serving(device.getStoreId(), orderId, orderMenuId);
+
     return ResponseEntity.noContent().build();
   }
 

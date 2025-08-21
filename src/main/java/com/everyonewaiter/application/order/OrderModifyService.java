@@ -1,7 +1,8 @@
 package com.everyonewaiter.application.order;
 
 import com.everyonewaiter.application.menu.provided.MenuFinder;
-import com.everyonewaiter.application.order.response.OrderResponse;
+import com.everyonewaiter.application.order.provided.OrderServer;
+import com.everyonewaiter.application.order.required.OrderRepository;
 import com.everyonewaiter.application.pos.provided.PosTableActivityFinder;
 import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.menu.Menu;
@@ -11,25 +12,26 @@ import com.everyonewaiter.domain.order.OrderCreateRequest;
 import com.everyonewaiter.domain.order.OrderMenuModifyRequest;
 import com.everyonewaiter.domain.order.OrderMenuNotFoundException;
 import com.everyonewaiter.domain.order.OrderType;
-import com.everyonewaiter.domain.order.repository.OrderRepository;
 import com.everyonewaiter.domain.pos.PosTableActivity;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class OrderService {
+class OrderModifyService implements OrderServer {
 
   private final MenuFinder menuFinder;
   private final PosTableActivityFinder activityFinder;
   private final OrderRepository orderRepository;
 
-  @Transactional
+  @Override
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public Order create(Long storeId, OrderType orderType, OrderCreateRequest createRequest) {
     Map<Long, Menu> menus = findMenus(storeId, createRequest);
@@ -61,30 +63,22 @@ public class OrderService {
     return menus;
   }
 
-  @Transactional
-  public void servingOrder(Long storeId, Long orderId) {
-    Order order = orderRepository.findByIdAndStoreIdOrThrow(orderId, storeId);
+  @Override
+  public Order serving(Long storeId, Long orderId) {
+    Order order = orderRepository.findOrThrow(orderId, storeId);
+
     order.serving();
-    orderRepository.save(order);
+
+    return orderRepository.save(order);
   }
 
-  @Transactional
-  public void servingOrderMenu(Long storeId, Long orderId, Long orderMenuId) {
-    Order order = orderRepository.findByIdAndStoreIdOrThrow(orderId, storeId);
-    order.servingMenu(orderMenuId);
-    orderRepository.save(order);
-  }
+  @Override
+  public Order serving(Long storeId, Long orderId, Long orderMenuId) {
+    Order order = orderRepository.findOrThrow(orderId, storeId);
 
-  @Transactional(readOnly = true)
-  public OrderResponse.Details readAllByTable(Long storeId, int tableNo) {
-    List<Order> orders = orderRepository.findAllActiveByStoreIdAndTableNo(storeId, tableNo);
-    return OrderResponse.Details.from(orders);
-  }
+    order.serving(orderMenuId);
 
-  @Transactional(readOnly = true)
-  public OrderResponse.Details readAllByHall(Long storeId, boolean served) {
-    List<Order> orders = orderRepository.findAllByStoreIdAndServed(storeId, served);
-    return OrderResponse.Details.from(orders);
+    return orderRepository.save(order);
   }
 
 }

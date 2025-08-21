@@ -34,7 +34,7 @@ class StoreOpenValidationAspect {
 
     for (Object arg : args) {
       if (arg instanceof Device device) {
-        storeValidator.checkIsOpened(device.getStore().getId());
+        storeValidator.checkIsOpened(device.getStoreId());
         break;
       }
     }
