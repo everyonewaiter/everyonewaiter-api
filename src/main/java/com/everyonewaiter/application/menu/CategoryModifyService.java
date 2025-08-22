@@ -4,6 +4,7 @@ import com.everyonewaiter.application.menu.provided.CategoryManager;
 import com.everyonewaiter.application.menu.required.CategoryRepository;
 import com.everyonewaiter.application.store.provided.StoreFinder;
 import com.everyonewaiter.application.support.CacheName;
+import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.menu.AlreadyUseCategoryNameException;
 import com.everyonewaiter.domain.menu.Category;
 import com.everyonewaiter.domain.menu.CategoryCreateRequest;
@@ -27,6 +28,7 @@ class CategoryModifyService implements CategoryManager {
   private final CategoryRepository categoryRepository;
 
   @Override
+  @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Category create(Long storeId, CategoryCreateRequest createRequest) {
     validateCategoryCreate(storeId, createRequest);
@@ -51,6 +53,7 @@ class CategoryModifyService implements CategoryManager {
   }
 
   @Override
+  @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Category update(Long categoryId, Long storeId, CategoryUpdateRequest updateRequest) {
     validateCategoryUpdate(categoryId, storeId, updateRequest);
@@ -73,6 +76,7 @@ class CategoryModifyService implements CategoryManager {
   }
 
   @Override
+  @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Category movePosition(
       Long sourceId,
@@ -92,6 +96,7 @@ class CategoryModifyService implements CategoryManager {
   }
 
   @Override
+  @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void delete(Long categoryId, Long storeId) {
     Category category = categoryRepository.findByIdAndStoreIdOrThrow(categoryId, storeId);

@@ -8,6 +8,7 @@ import com.everyonewaiter.application.menu.provided.CategoryFinder;
 import com.everyonewaiter.application.menu.provided.MenuManager;
 import com.everyonewaiter.application.menu.required.MenuRepository;
 import com.everyonewaiter.application.support.CacheName;
+import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.menu.Category;
 import com.everyonewaiter.domain.menu.ExceedMaxMenuCountException;
 import com.everyonewaiter.domain.menu.Menu;
@@ -39,6 +40,7 @@ class MenuModifyService implements MenuManager {
   private final ApplicationEventPublisher applicationEventPublisher;
 
   @Override
+  @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Menu create(
       Long categoryId,
@@ -70,6 +72,7 @@ class MenuModifyService implements MenuManager {
   }
 
   @Override
+  @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Menu update(Long menuId, Long storeId, MenuUpdateRequest updateRequest) {
     Menu menu = menuRepository.findOrThrow(menuId, storeId);
@@ -80,6 +83,7 @@ class MenuModifyService implements MenuManager {
   }
 
   @Override
+  @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Menu update(
       Long menuId,
@@ -95,6 +99,7 @@ class MenuModifyService implements MenuManager {
   }
 
   @Override
+  @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Menu movePosition(
       Long sourceId,
@@ -114,6 +119,7 @@ class MenuModifyService implements MenuManager {
   }
 
   @Override
+  @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void delete(Long menuId, Long storeId, Long categoryId) {
     Menu menu = menuRepository.findOrThrow(menuId, storeId, categoryId);
@@ -124,6 +130,7 @@ class MenuModifyService implements MenuManager {
   }
 
   @Override
+  @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void deleteAll(Long storeId, MenuDeleteRequest deleteRequest) {
     List<Menu> menus = menuRepository.findAll(storeId, deleteRequest.menuIds());
