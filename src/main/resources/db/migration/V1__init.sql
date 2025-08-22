@@ -298,10 +298,11 @@ create table orders_payment
     cash_receipt_no       varchar(30)                         not null,
     cash_receipt_type     enum ('NONE', 'DEDUCTION', 'PROOF') not null,
     created_at            datetime(6)                         not null,
-    updated_at            datetime(6)                         not null
+    updated_at            datetime(6)                         not null,
+    constraint fk_orders_payment_store_id foreign key (store_id) references store (id),
+    constraint fk_orders_payment_pos_table_activity_id foreign key (pos_table_activity_id) references pos_table_activity (id)
 );
 create index idx_orders_payment_store_id_created_at on orders_payment (store_id, created_at desc);
-create index idx_orders_payment_pos_table_activity_id on orders_payment (pos_table_activity_id);
 
 create table staff_call
 (

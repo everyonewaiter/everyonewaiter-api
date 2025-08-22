@@ -1,12 +1,13 @@
 package com.everyonewaiter.infrastructure.pos;
 
 import static com.everyonewaiter.domain.order.QOrder.order;
-import static com.everyonewaiter.domain.order.entity.QOrderPayment.orderPayment;
+import static com.everyonewaiter.domain.order.QOrderPayment.orderPayment;
 import static com.everyonewaiter.domain.pos.QPosTable.posTable;
 import static com.everyonewaiter.domain.pos.QPosTableActivity.posTableActivity;
 import static java.util.Objects.requireNonNullElse;
 
-import com.everyonewaiter.domain.order.entity.OrderPayment;
+import com.everyonewaiter.domain.order.OrderPaymentMethod;
+import com.everyonewaiter.domain.order.OrderPaymentState;
 import com.everyonewaiter.domain.pos.PosTableActiveActivityNotFoundException;
 import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.pos.PosTableActivityNotFoundException;
@@ -58,8 +59,8 @@ class PosTableActivityRepositoryImpl implements PosTableActivityRepository {
       Long storeId,
       Instant start,
       Instant end,
-      OrderPayment.Method method,
-      OrderPayment.State state
+      OrderPaymentMethod method,
+      OrderPaymentState state
   ) {
     Long revenue = queryFactory
         .select(orderPayment.amount.sumLong())

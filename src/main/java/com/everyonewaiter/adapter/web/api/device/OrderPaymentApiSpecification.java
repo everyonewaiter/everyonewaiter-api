@@ -1,10 +1,11 @@
 package com.everyonewaiter.adapter.web.api.device;
 
-import com.everyonewaiter.adapter.web.api.device.request.OrderPaymentWriteRequest;
+import com.everyonewaiter.adapter.web.api.dto.OrderPaymentDetailResponses;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.application.order.response.OrderPaymentResponse;
 import com.everyonewaiter.domain.device.Device;
+import com.everyonewaiter.domain.order.OrderPaymentApproveRequest;
+import com.everyonewaiter.domain.order.OrderPaymentCancelRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,7 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "주문 결제")
-interface OrderPaymentControllerSpecification {
+interface OrderPaymentApiSpecification {
 
   @Operation(
       summary = "[POS] 결제 내역 조회",
@@ -41,7 +42,7 @@ interface OrderPaymentControllerSpecification {
           ),
       }
   )
-  ResponseEntity<OrderPaymentResponse.Details> getOrderPaymentsByPos(
+  ResponseEntity<OrderPaymentDetailResponses> getOrderPaymentsByPos(
       String date,
       @Parameter(hidden = true) Device device
   );
@@ -79,7 +80,7 @@ interface OrderPaymentControllerSpecification {
   )
   ResponseEntity<Void> approve(
       int tableNo,
-      @RequestBody OrderPaymentWriteRequest.Approve request,
+      @RequestBody OrderPaymentApproveRequest approveRequest,
       @Parameter(hidden = true) Device device
   );
 
@@ -120,7 +121,7 @@ interface OrderPaymentControllerSpecification {
   )
   ResponseEntity<Void> cancel(
       Long orderPaymentId,
-      @RequestBody OrderPaymentWriteRequest.Cancel request,
+      @RequestBody OrderPaymentCancelRequest cancelRequest,
       @Parameter(hidden = true) Device device
   );
 

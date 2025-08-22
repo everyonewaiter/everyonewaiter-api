@@ -1,32 +1,17 @@
-package com.everyonewaiter.application.order.response;
+package com.everyonewaiter.domain.order;
 
-import com.everyonewaiter.domain.order.entity.OrderPayment;
+import static lombok.AccessLevel.PRIVATE;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrderPaymentResponse {
+@NoArgsConstructor(access = PRIVATE)
+public class OrderPaymentView {
 
-  @Schema(name = "OrderPaymentResponse.Details")
-  public record Details(List<Detail> orderPayments) {
-
-    public static Details from(List<OrderPayment> orderPayments) {
-      return new Details(
-          orderPayments.stream()
-              .map(Detail::from)
-              .toList()
-      );
-    }
-
-  }
-
-  @Schema(name = "OrderPaymentResponse.Detail")
-  public record Detail(
+  @Schema(name = "OrderPaymentView.OrderPaymentDetail")
+  public record OrderPaymentDetail(
       @Schema(description = "주문 결제 ID", example = "\"694865267482835533\"")
       String orderPaymentId,
 
@@ -37,10 +22,10 @@ public class OrderPaymentResponse {
       String storeId,
 
       @Schema(description = "결제 상태", example = "APPROVE")
-      OrderPayment.State state,
+      OrderPaymentState state,
 
       @Schema(description = "결제 수단", example = "CARD")
-      OrderPayment.Method method,
+      OrderPaymentMethod method,
 
       @Schema(description = "결제 금액", example = "10000")
       long amount,
@@ -83,17 +68,17 @@ public class OrderPaymentResponse {
       String cashReceiptNo,
 
       @Schema(description = "현금 영수증 타입", example = "DEDUCTION")
-      OrderPayment.CashReceiptType cashReceiptType,
+      CashReceiptType cashReceiptType,
 
       @Schema(description = "주문 결제 생성일", example = "2025-01-01 12:00:00")
       Instant createdAt
   ) {
 
-    public static Detail from(OrderPayment orderPayment) {
-      return new Detail(
-          Objects.requireNonNull(orderPayment.getId()).toString(),
-          Objects.requireNonNull(orderPayment.getPosTableActivity().getId()).toString(),
-          Objects.requireNonNull(orderPayment.getStore().getId()).toString(),
+    public static OrderPaymentDetail from(OrderPayment orderPayment) {
+      return new OrderPaymentDetail(
+          orderPayment.getNonNullId().toString(),
+          orderPayment.getPosTableActivity().getNonNullId().toString(),
+          orderPayment.getStore().getNonNullId().toString(),
           orderPayment.getState(),
           orderPayment.getMethod(),
           orderPayment.getAmount(),

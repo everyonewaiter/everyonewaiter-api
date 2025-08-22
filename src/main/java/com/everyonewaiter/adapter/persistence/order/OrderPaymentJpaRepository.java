@@ -1,6 +1,6 @@
-package com.everyonewaiter.infrastructure.order;
+package com.everyonewaiter.adapter.persistence.order;
 
-import com.everyonewaiter.domain.order.entity.OrderPayment;
+import com.everyonewaiter.domain.order.OrderPayment;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

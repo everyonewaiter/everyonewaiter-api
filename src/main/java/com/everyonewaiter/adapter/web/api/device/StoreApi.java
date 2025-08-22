@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/stores")
-class StoreController implements StoreControllerSpecification {
+class StoreApi implements StoreApiSpecification {
 
   private final StoreManager storeManager;
 

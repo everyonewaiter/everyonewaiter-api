@@ -1,6 +1,7 @@
 package com.everyonewaiter.domain.pos.repository;
 
-import com.everyonewaiter.domain.order.entity.OrderPayment;
+import com.everyonewaiter.domain.order.OrderPaymentMethod;
+import com.everyonewaiter.domain.order.OrderPaymentState;
 import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.pos.view.PosTableActivityView;
 import java.time.Instant;
@@ -14,8 +15,8 @@ public interface PosTableActivityRepository {
       Long storeId,
       Instant start,
       Instant end,
-      OrderPayment.Method method,
-      OrderPayment.State state
+      OrderPaymentMethod method,
+      OrderPaymentState state
   );
 
   Optional<PosTableActivity> findActive(Long storeId, int tableNo);

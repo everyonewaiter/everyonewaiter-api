@@ -4,7 +4,8 @@ import com.everyonewaiter.application.order.request.OrderWrite;
 import com.everyonewaiter.application.pos.response.PosResponse;
 import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.order.OrderMenu;
-import com.everyonewaiter.domain.order.entity.OrderPayment;
+import com.everyonewaiter.domain.order.OrderPaymentMethod;
+import com.everyonewaiter.domain.order.OrderPaymentState;
 import com.everyonewaiter.domain.order.entity.Receipt;
 import com.everyonewaiter.domain.order.entity.ReceiptMenu;
 import com.everyonewaiter.domain.order.service.ReceiptFactory;
@@ -168,10 +169,10 @@ public class PosService {
   public PosResponse.Revenue getRevenue(Long storeId, Instant start, Instant end) {
     return PosResponse.Revenue.from(
         posTableActivityRepository.getTotalRevenue(storeId, start, end),
-        getRevenue(storeId, start, end, OrderPayment.Method.CASH, OrderPayment.State.APPROVE),
-        getRevenue(storeId, start, end, OrderPayment.Method.CARD, OrderPayment.State.APPROVE),
-        getRevenue(storeId, start, end, OrderPayment.Method.CASH, OrderPayment.State.CANCEL),
-        getRevenue(storeId, start, end, OrderPayment.Method.CARD, OrderPayment.State.CANCEL)
+        getRevenue(storeId, start, end, OrderPaymentMethod.CASH, OrderPaymentState.APPROVE),
+        getRevenue(storeId, start, end, OrderPaymentMethod.CARD, OrderPaymentState.APPROVE),
+        getRevenue(storeId, start, end, OrderPaymentMethod.CASH, OrderPaymentState.CANCEL),
+        getRevenue(storeId, start, end, OrderPaymentMethod.CARD, OrderPaymentState.CANCEL)
     );
   }
 
@@ -179,8 +180,8 @@ public class PosService {
       Long storeId,
       Instant start,
       Instant end,
-      OrderPayment.Method method,
-      OrderPayment.State state
+      OrderPaymentMethod method,
+      OrderPaymentState state
   ) {
     return posTableActivityRepository.getPaymentRevenue(storeId, start, end, method, state);
   }

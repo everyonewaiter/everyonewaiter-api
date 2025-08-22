@@ -6,4 +6,6 @@ public interface PosTableActivityFinder {
 
   PosTableActivity findActiveOrCreate(Long storeId, int tableNo);
 
+  PosTableActivity findActiveOrThrow(Long storeId, int tableNo);
+
 }

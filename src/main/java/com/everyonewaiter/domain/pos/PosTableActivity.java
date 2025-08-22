@@ -4,8 +4,8 @@ import static java.util.Objects.requireNonNull;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.order.Order;
+import com.everyonewaiter.domain.order.OrderPayment;
 import com.everyonewaiter.domain.order.OrderType;
-import com.everyonewaiter.domain.order.entity.OrderPayment;
 import com.everyonewaiter.domain.shared.BusinessException;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.store.Store;
@@ -58,10 +58,7 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
 
   public void addPayment(OrderPayment orderPayment) {
     this.payments.add(orderPayment);
-  }
 
-  public void addApprovePayment(OrderPayment orderPayment) {
-    addPayment(orderPayment);
     if (isPostpaidTable() && getRemainingPaymentPriceWithDiscount() <= 0) {
       this.active = false;
     }
@@ -153,7 +150,7 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
 
   public long getTotalPaymentPrice() {
     return getPayments().stream()
-        .mapToLong(OrderPayment::getTotalPaymentPrice)
+        .mapToLong(OrderPayment::getPaymentPrice)
         .sum();
   }
 

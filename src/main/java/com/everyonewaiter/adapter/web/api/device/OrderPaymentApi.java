@@ -1,16 +1,20 @@
 package com.everyonewaiter.adapter.web.api.device;
 
-import com.everyonewaiter.adapter.web.api.device.request.OrderPaymentWriteRequest;
-import com.everyonewaiter.application.order.OrderPaymentService;
-import com.everyonewaiter.application.order.response.OrderPaymentResponse;
+import com.everyonewaiter.adapter.web.api.dto.OrderPaymentDetailResponses;
+import com.everyonewaiter.application.order.provided.OrderPaymentCreator;
+import com.everyonewaiter.application.order.provided.OrderPaymentFinder;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
+import com.everyonewaiter.domain.order.OrderPayment;
+import com.everyonewaiter.domain.order.OrderPaymentApproveRequest;
+import com.everyonewaiter.domain.order.OrderPaymentCancelRequest;
 import com.everyonewaiter.domain.store.StoreOpen;
 import com.everyonewaiter.domain.support.DateConverter;
 import com.everyonewaiter.domain.support.TimeZone;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,22 +28,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/orders/payments")
-class OrderPaymentController implements OrderPaymentControllerSpecification {
+class OrderPaymentApi implements OrderPaymentApiSpecification {
 
-  private final OrderPaymentService orderPaymentService;
+  private final OrderPaymentFinder orderPaymentFinder;
+  private final OrderPaymentCreator orderPaymentCreator;
 
   @Override
   @GetMapping
-  public ResponseEntity<OrderPaymentResponse.Details> getOrderPaymentsByPos(
+  public ResponseEntity<OrderPaymentDetailResponses> getOrderPaymentsByPos(
       @RequestParam(value = "date", required = false) String date,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    OrderPaymentResponse.Details response = orderPaymentService.readAllByPos(
+    List<OrderPayment> orderPayments = orderPaymentFinder.findAll(
         device.getStoreId(),
         DateConverter.convertToUtcStartInstant(TimeZone.ASIA_SEOUL, date),
         DateConverter.convertToUtcEndInstant(TimeZone.ASIA_SEOUL, date)
     );
-    return ResponseEntity.ok(response);
+
+    return ResponseEntity.ok(OrderPaymentDetailResponses.from(orderPayments));
   }
 
   @Override
@@ -47,15 +53,12 @@ class OrderPaymentController implements OrderPaymentControllerSpecification {
   @PostMapping("/{tableNo}/approve")
   public ResponseEntity<Void> approve(
       @PathVariable int tableNo,
-      @RequestBody @Valid OrderPaymentWriteRequest.Approve request,
+      @RequestBody @Valid OrderPaymentApproveRequest approveRequest,
       @AuthenticationDevice(purpose = {DevicePurpose.TABLE, DevicePurpose.POS}) Device device
   ) {
-    Long paymentId = orderPaymentService.approve(
-        device.getStoreId(),
-        tableNo,
-        request.toDomainDto()
-    );
-    return ResponseEntity.created(URI.create(paymentId.toString())).build();
+    var payment = orderPaymentCreator.approve(device.getStoreId(), tableNo, approveRequest);
+
+    return ResponseEntity.created(URI.create(payment.getNonNullId().toString())).build();
   }
 
   @Override
@@ -63,15 +66,12 @@ class OrderPaymentController implements OrderPaymentControllerSpecification {
   @PostMapping("/{orderPaymentId}/cancel")
   public ResponseEntity<Void> cancel(
       @PathVariable Long orderPaymentId,
-      @RequestBody @Valid OrderPaymentWriteRequest.Cancel request,
+      @RequestBody @Valid OrderPaymentCancelRequest cancelRequest,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    Long paymentId = orderPaymentService.cancel(
-        device.getStoreId(),
-        orderPaymentId,
-        request.toDomainDto()
-    );
-    return ResponseEntity.created(URI.create(paymentId.toString())).build();
+    var payment = orderPaymentCreator.cancel(device.getStoreId(), orderPaymentId, cancelRequest);
+
+    return ResponseEntity.created(URI.create(payment.getNonNullId().toString())).build();
   }
 
 }

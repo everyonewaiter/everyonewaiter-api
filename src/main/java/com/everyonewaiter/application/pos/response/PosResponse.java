@@ -1,6 +1,6 @@
 package com.everyonewaiter.application.pos.response;
 
-import com.everyonewaiter.application.order.response.OrderPaymentResponse;
+import com.everyonewaiter.domain.order.OrderPaymentView;
 import com.everyonewaiter.domain.order.OrderType;
 import com.everyonewaiter.domain.order.OrderView;
 import com.everyonewaiter.domain.pos.PosTable;
@@ -126,7 +126,7 @@ public class PosResponse {
       List<OrderView.OrderDetail> orders,
 
       @Schema(description = "주문 결제 목록")
-      List<OrderPaymentResponse.Detail> orderPayments
+      List<OrderPaymentView.OrderPaymentDetail> orderPayments
   ) {
 
     public static TableActivityDetail from(PosTableActivity posTableActivity) {
@@ -146,7 +146,7 @@ public class PosResponse {
               .map(OrderView.OrderDetail::from)
               .toList(),
           posTableActivity.getPayments().stream()
-              .map(OrderPaymentResponse.Detail::from)
+              .map(OrderPaymentView.OrderPaymentDetail::from)
               .toList()
       );
     }

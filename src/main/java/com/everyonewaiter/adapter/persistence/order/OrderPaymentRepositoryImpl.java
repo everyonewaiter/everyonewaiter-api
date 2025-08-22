@@ -1,11 +1,10 @@
-package com.everyonewaiter.infrastructure.order;
+package com.everyonewaiter.adapter.persistence.order;
 
-import static com.everyonewaiter.domain.order.entity.QOrderPayment.orderPayment;
+import static com.everyonewaiter.domain.order.QOrderPayment.orderPayment;
 
-import com.everyonewaiter.domain.order.entity.OrderPayment;
-import com.everyonewaiter.domain.order.repository.OrderPaymentRepository;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
+import com.everyonewaiter.application.order.required.OrderPaymentRepository;
+import com.everyonewaiter.domain.order.OrderPayment;
+import com.everyonewaiter.domain.order.OrderPaymentNotFoundException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.Instant;
 import java.util.List;
@@ -20,7 +19,7 @@ class OrderPaymentRepositoryImpl implements OrderPaymentRepository {
   private final OrderPaymentJpaRepository orderPaymentJpaRepository;
 
   @Override
-  public List<OrderPayment> findAllByStoreIdAndDate(Long storeId, Instant start, Instant end) {
+  public List<OrderPayment> findAll(Long storeId, Instant start, Instant end) {
     return queryFactory
         .select(orderPayment)
         .from(orderPayment)
@@ -34,9 +33,9 @@ class OrderPaymentRepositoryImpl implements OrderPaymentRepository {
   }
 
   @Override
-  public OrderPayment findByIdAndStoreId(Long orderPaymentId, Long storeId) {
+  public OrderPayment findOrThrow(Long orderPaymentId, Long storeId) {
     return orderPaymentJpaRepository.findByIdAndStoreId(orderPaymentId, storeId)
-        .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_PAYMENT_NOT_FOUND));
+        .orElseThrow(OrderPaymentNotFoundException::new);
   }
 
   @Override

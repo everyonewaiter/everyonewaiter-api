@@ -1,6 +1,7 @@
 package com.everyonewaiter.application.order;
 
 import com.everyonewaiter.application.menu.provided.MenuFinder;
+import com.everyonewaiter.application.order.provided.OrderFinder;
 import com.everyonewaiter.application.order.provided.OrderServer;
 import com.everyonewaiter.application.order.required.OrderRepository;
 import com.everyonewaiter.application.pos.provided.PosTableActivityFinder;
@@ -27,8 +28,9 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 class OrderModifyService implements OrderServer {
 
-  private final MenuFinder menuFinder;
   private final PosTableActivityFinder activityFinder;
+  private final MenuFinder menuFinder;
+  private final OrderFinder orderFinder;
   private final OrderRepository orderRepository;
 
   @Override
@@ -65,7 +67,7 @@ class OrderModifyService implements OrderServer {
 
   @Override
   public Order serving(Long storeId, Long orderId) {
-    Order order = orderRepository.findOrThrow(orderId, storeId);
+    Order order = orderFinder.findOrThrow(orderId, storeId);
 
     order.serving();
 
@@ -74,7 +76,7 @@ class OrderModifyService implements OrderServer {
 
   @Override
   public Order serving(Long storeId, Long orderId, Long orderMenuId) {
-    Order order = orderRepository.findOrThrow(orderId, storeId);
+    Order order = orderFinder.findOrThrow(orderId, storeId);
 
     order.serving(orderMenuId);
 

@@ -2,6 +2,8 @@ package com.everyonewaiter.application.order;
 
 import com.everyonewaiter.application.order.provided.OrderFinder;
 import com.everyonewaiter.application.order.required.OrderRepository;
+import com.everyonewaiter.application.support.ReadOnlyTransactional;
+import com.everyonewaiter.domain.order.Order;
 import com.everyonewaiter.domain.order.OrderView;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,18 @@ class OrderQueryService implements OrderFinder {
     return orderRepository.findAllActive(storeId, tableNo).stream()
         .map(OrderView.OrderDetail::from)
         .toList();
+  }
+
+  @Override
+  @ReadOnlyTransactional
+  public Order findOrThrow(Long orderId) {
+    return orderRepository.findOrThrow(orderId);
+  }
+
+  @Override
+  @ReadOnlyTransactional
+  public Order findOrThrow(Long orderId, Long storeId) {
+    return orderRepository.findOrThrow(orderId, storeId);
   }
 
 }

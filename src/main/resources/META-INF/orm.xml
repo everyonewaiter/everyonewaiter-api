@@ -503,6 +503,75 @@
     </attributes>
   </entity>
 
+  <entity class="com.everyonewaiter.domain.order.OrderPayment">
+    <table name="orders_payment">
+      <index
+        name="idx_orders_payment_store_id_created_at"
+        column-list="store_id, created_at desc"
+      />
+    </table>
+
+    <attributes>
+      <basic name="method">
+        <column name="method" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="state">
+        <column name="state" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <basic name="amount">
+        <column name="amount" nullable="false"/>
+      </basic>
+      <basic name="cancellable">
+        <column name="cancellable" nullable="false"/>
+      </basic>
+      <basic name="approvalNo">
+        <column name="approval_no" nullable="false" length="30"/>
+      </basic>
+      <basic name="installment">
+        <column name="installment" nullable="false" length="10"/>
+      </basic>
+      <basic name="cardNo">
+        <column name="card_no" nullable="false" length="30"/>
+      </basic>
+      <basic name="issuerName">
+        <column name="issuer_name" nullable="false" length="30"/>
+      </basic>
+      <basic name="purchaseName">
+        <column name="purchase_name" nullable="false" length="30"/>
+      </basic>
+      <basic name="merchantNo">
+        <column name="merchant_no" nullable="false" length="30"/>
+      </basic>
+      <basic name="tradeTime">
+        <column name="trade_time" nullable="false" length="20"/>
+      </basic>
+      <basic name="tradeUniqueNo">
+        <column name="trade_unique_no" nullable="false" length="30"/>
+      </basic>
+      <basic name="vat">
+        <column name="vat" nullable="false"/>
+      </basic>
+      <basic name="supplyAmount">
+        <column name="supply_amount" nullable="false"/>
+      </basic>
+      <basic name="cashReceiptNo">
+        <column name="cash_receipt_no" nullable="false" length="30"/>
+      </basic>
+      <basic name="cashReceiptType">
+        <column name="cash_receipt_type" nullable="false"/>
+        <enumerated>STRING</enumerated>
+      </basic>
+      <many-to-one name="store" fetch="LAZY" optional="false">
+        <join-column name="store_id" nullable="false" updatable="false"/>
+      </many-to-one>
+      <many-to-one name="posTableActivity" fetch="LAZY" optional="false">
+        <join-column name="pos_table_activity_id" nullable="false"/>
+      </many-to-one>
+    </attributes>
+  </entity>
+
   <entity class="com.everyonewaiter.domain.pos.PosTable">
     <table name="pos_table">
       <index

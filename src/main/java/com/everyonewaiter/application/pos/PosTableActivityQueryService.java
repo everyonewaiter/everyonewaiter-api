@@ -2,6 +2,7 @@ package com.everyonewaiter.application.pos;
 
 import com.everyonewaiter.application.pos.provided.PosTableActivityCreator;
 import com.everyonewaiter.application.pos.provided.PosTableActivityFinder;
+import com.everyonewaiter.application.support.ReadOnlyTransactional;
 import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,12 @@ class PosTableActivityQueryService implements PosTableActivityFinder {
   public PosTableActivity findActiveOrCreate(Long storeId, int tableNo) {
     return posTableActivityRepository.findActive(storeId, tableNo)
         .orElseGet(() -> posTableActivityCreator.create(storeId, tableNo));
+  }
+
+  @Override
+  @ReadOnlyTransactional
+  public PosTableActivity findActiveOrThrow(Long storeId, int tableNo) {
+    return posTableActivityRepository.findActiveOrThrow(storeId, tableNo);
   }
 
 }
