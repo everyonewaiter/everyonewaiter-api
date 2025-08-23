@@ -1,15 +1,17 @@
-package com.everyonewaiter.domain.pos.repository;
+package com.everyonewaiter.application.pos.required;
 
 import com.everyonewaiter.domain.order.OrderPaymentMethod;
 import com.everyonewaiter.domain.order.OrderPaymentState;
+import com.everyonewaiter.domain.order.OrderState;
 import com.everyonewaiter.domain.pos.PosTableActivity;
-import com.everyonewaiter.domain.pos.view.PosTableActivityView;
 import java.time.Instant;
 import java.util.Optional;
 
 public interface PosTableActivityRepository {
 
-  PosTableActivityView.TotalRevenue getTotalRevenue(Long storeId, Instant start, Instant end);
+  long getDiscountRevenue(Long storeId, Instant start, Instant end);
+
+  long getOrderRevenue(Long storeId, Instant start, Instant end, OrderState state);
 
   long getPaymentRevenue(
       Long storeId,

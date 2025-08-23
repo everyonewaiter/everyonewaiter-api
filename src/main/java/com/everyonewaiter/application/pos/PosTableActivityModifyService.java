@@ -1,10 +1,10 @@
 package com.everyonewaiter.application.pos;
 
 import com.everyonewaiter.application.pos.provided.PosTableActivityCreator;
+import com.everyonewaiter.application.pos.required.PosTableActivityRepository;
+import com.everyonewaiter.application.pos.required.PosTableRepository;
 import com.everyonewaiter.domain.pos.PosTable;
 import com.everyonewaiter.domain.pos.PosTableActivity;
-import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
-import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

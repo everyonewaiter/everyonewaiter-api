@@ -1,21 +1,24 @@
 package com.everyonewaiter.adapter.web.api.device;
 
-import com.everyonewaiter.adapter.web.api.device.request.PosWriteRequest;
+import com.everyonewaiter.adapter.web.api.dto.PosTableDetailResponses;
 import com.everyonewaiter.application.pos.PosService;
-import com.everyonewaiter.application.pos.response.PosResponse;
+import com.everyonewaiter.application.pos.provided.PosTableActivityFinder;
+import com.everyonewaiter.application.pos.provided.PosTableFinder;
+import com.everyonewaiter.application.pos.provided.PosTableManager;
+import com.everyonewaiter.application.pos.provided.PosTableOrderManager;
 import com.everyonewaiter.application.sse.provided.SseSender;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
-import com.everyonewaiter.domain.order.entity.Receipt;
-import com.everyonewaiter.domain.sse.ServerAction;
-import com.everyonewaiter.domain.sse.SseCategory;
-import com.everyonewaiter.domain.sse.SseEvent;
+import com.everyonewaiter.domain.order.OrderMemoUpdateRequest;
+import com.everyonewaiter.domain.order.OrderUpdateRequests;
+import com.everyonewaiter.domain.pos.PosTableDiscountRequest;
+import com.everyonewaiter.domain.pos.PosView;
 import com.everyonewaiter.domain.store.StoreOpen;
 import com.everyonewaiter.domain.support.DateConverter;
 import com.everyonewaiter.domain.support.TimeZone;
 import jakarta.validation.Valid;
-import java.util.Optional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,70 +33,62 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/pos")
-class PosController implements PosControllerSpecification {
+class PosApi implements PosApiSpecification {
 
   private final SseSender sseSender;
   private final PosService posService;
+  private final PosTableFinder posTableFinder;
+  private final PosTableActivityFinder posTableActivityFinder;
+  private final PosTableManager posTableManager;
+  private final PosTableOrderManager posTableOrderManager;
 
   @Override
   @GetMapping("/revenue")
-  public ResponseEntity<PosResponse.Revenue> getRevenue(
+  public ResponseEntity<PosView.Revenue> getRevenue(
       @RequestParam(value = "date", required = false) String date,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    PosResponse.Revenue response = posService.getRevenue(
+    PosView.Revenue revenue = posTableActivityFinder.getRevenue(
         device.getStoreId(),
         DateConverter.convertToUtcStartInstant(TimeZone.ASIA_SEOUL, date),
         DateConverter.convertToUtcEndInstant(TimeZone.ASIA_SEOUL, date)
     );
-    return ResponseEntity.ok(response);
+
+    return ResponseEntity.ok(revenue);
   }
 
   @Override
   @StoreOpen
   @GetMapping("/tables")
-  public ResponseEntity<PosResponse.Tables> getTables(
+  public ResponseEntity<PosTableDetailResponses> getTables(
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    return ResponseEntity.ok(posService.readAllActiveTables(device.getStoreId()));
+    List<PosView.PosTableDetail> posTables = posTableFinder.findAllActive(device.getStoreId());
+
+    return ResponseEntity.ok(PosTableDetailResponses.from(posTables));
   }
 
   @Override
   @GetMapping("/tables/activities/{posTableActivityId}")
-  public ResponseEntity<PosResponse.TableActivityDetail> getTableActivity(
+  public ResponseEntity<PosView.PosTableActivityDetail> getTableActivity(
       @PathVariable Long posTableActivityId,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    PosResponse.TableActivityDetail response = posService.readTableActivity(
-        device.getStoreId(),
-        posTableActivityId
+    return ResponseEntity.ok(
+        posTableActivityFinder.findOrThrow(device.getStoreId(), posTableActivityId)
     );
-    return ResponseEntity.ok(response);
   }
 
   @Override
   @StoreOpen
   @GetMapping("/tables/{tableNo}")
-  public ResponseEntity<PosResponse.TableActivityDetail> getActiveTableActivity(
+  public ResponseEntity<PosView.PosTableActivityDetail> getActiveTableActivity(
       @PathVariable int tableNo,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    Optional<PosResponse.TableActivityDetail> response = posService.readActiveTable(
-        device.getStoreId(),
-        tableNo
-    );
-    return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
-  }
-
-  @Override
-  @StoreOpen
-  @PostMapping("/tables/{tableNo}/complete")
-  public ResponseEntity<Void> completeActivity(
-      @PathVariable int tableNo,
-      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
-  ) {
-    posService.completeActivity(device.getStoreId(), tableNo);
-    return ResponseEntity.noContent().build();
+    return posTableFinder.findActiveActivity(device.getStoreId(), tableNo)
+        .map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.noContent().build());
   }
 
   @Override
@@ -104,9 +99,8 @@ class PosController implements PosControllerSpecification {
       @PathVariable int targetTableNo,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    if (sourceTableNo != targetTableNo) {
-      posService.moveTable(device.getStoreId(), sourceTableNo, targetTableNo);
-    }
+    posTableManager.moveTable(device.getStoreId(), sourceTableNo, targetTableNo);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -115,10 +109,23 @@ class PosController implements PosControllerSpecification {
   @PostMapping("/tables/{tableNo}/discount")
   public ResponseEntity<Void> discount(
       @PathVariable int tableNo,
-      @RequestBody @Valid PosWriteRequest.Discount request,
+      @RequestBody @Valid PosTableDiscountRequest discountRequest,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    posService.discount(device.getStoreId(), tableNo, request.discountPrice());
+    posTableManager.discount(device.getStoreId(), tableNo, discountRequest);
+
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @StoreOpen
+  @PostMapping("/tables/{tableNo}/complete")
+  public ResponseEntity<Void> completeActivity(
+      @PathVariable int tableNo,
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
+  ) {
+    posTableManager.completeActivity(device.getStoreId(), tableNo);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -130,7 +137,8 @@ class PosController implements PosControllerSpecification {
       @PathVariable Long orderId,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    posService.cancelOrder(device.getStoreId(), tableNo, orderId);
+    posTableOrderManager.cancel(device.getStoreId(), tableNo, orderId);
+
     return ResponseEntity.noContent().build();
   }
 
@@ -139,30 +147,25 @@ class PosController implements PosControllerSpecification {
   @PutMapping("/tables/{tableNo}/orders")
   public ResponseEntity<Void> updateOrders(
       @PathVariable int tableNo,
-      @RequestBody @Valid PosWriteRequest.UpdateOrders request,
+      @RequestBody @Valid OrderUpdateRequests updateRequests,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    Long storeId = device.getStoreId();
-    Receipt receipt = posService.createDiffOrderReceipt(storeId, tableNo, request.toDomainDto());
-    posService.updateOrders(storeId, tableNo, request.toDomainDto());
-    if (!receipt.receiptMenus().isEmpty()) {
-      sseSender.send(storeId.toString(),
-          new SseEvent(storeId, SseCategory.RECEIPT, ServerAction.UPDATE, receipt)
-      );
-    }
+    posTableOrderManager.update(device.getStoreId(), tableNo, updateRequests);
+
     return ResponseEntity.noContent().build();
   }
 
   @Override
   @StoreOpen
   @PutMapping("/tables/{tableNo}/orders/{orderId}/memo")
-  public ResponseEntity<Void> updateMemo(
+  public ResponseEntity<Void> updateOrderMemo(
       @PathVariable int tableNo,
       @PathVariable Long orderId,
-      @RequestBody @Valid PosWriteRequest.UpdateMemo request,
+      @RequestBody @Valid OrderMemoUpdateRequest updateRequest,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    posService.updateMemo(device.getStoreId(), tableNo, orderId, request.memo());
+    posTableOrderManager.update(device.getStoreId(), tableNo, orderId, updateRequest);
+
     return ResponseEntity.noContent().build();
   }
 

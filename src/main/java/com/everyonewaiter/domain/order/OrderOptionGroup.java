@@ -64,14 +64,14 @@ public class OrderOptionGroup extends AggregateEntity {
         .sum();
   }
 
-  public List<OrderOption> getOrderOptions() {
-    return Collections.unmodifiableList(orderOptions);
-  }
-
   public List<String> getFormattedOrderOptions() {
     return getOrderOptions().stream()
         .map(option -> "- %s: %s".formatted(name, option.getName()))
         .toList();
+  }
+
+  public List<OrderOption> getOrderOptions() {
+    return Collections.unmodifiableList(orderOptions);
   }
 
 }

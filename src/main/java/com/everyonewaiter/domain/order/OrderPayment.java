@@ -136,9 +136,11 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
   }
 
   public void moveTable(PosTableActivity posTableActivity) {
+    this.posTableActivity.removePayment(this);
+
     this.posTableActivity = posTableActivity;
 
-    posTableActivity.addPayment(this);
+    this.posTableActivity.addPayment(this);
   }
 
   public boolean isCard() {

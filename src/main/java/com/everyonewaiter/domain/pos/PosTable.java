@@ -1,17 +1,21 @@
 package com.everyonewaiter.domain.pos;
 
+import static com.everyonewaiter.domain.sse.ServerAction.GET;
+import static com.everyonewaiter.domain.sse.ServerAction.UPDATE;
+import static com.everyonewaiter.domain.sse.SseCategory.ORDER;
+import static com.everyonewaiter.domain.sse.SseCategory.POS;
+import static com.everyonewaiter.domain.sse.SseCategory.RECEIPT;
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.order.Order;
+import com.everyonewaiter.domain.order.OrderMemoUpdateRequest;
 import com.everyonewaiter.domain.order.OrderMenu;
 import com.everyonewaiter.domain.order.OrderType;
+import com.everyonewaiter.domain.order.OrderUpdateRequest;
+import com.everyonewaiter.domain.order.OrderUpdateRequests;
 import com.everyonewaiter.domain.order.entity.Receipt;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
-import com.everyonewaiter.domain.sse.ServerAction;
-import com.everyonewaiter.domain.sse.SseCategory;
 import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.store.Store;
 import jakarta.persistence.Entity;
@@ -60,90 +64,103 @@ public class PosTable extends AggregateRootEntity<PosTable> {
     this.activities.add(posTableActivity);
   }
 
+  public void removeActivity(PosTableActivity posTableActivity) {
+    this.activities.remove(posTableActivity);
+  }
+
+  public void merge(PosTable source) {
+    PosTableActivity sourceActivity = source.getActiveActivityOrThrow();
+    PosTableActivity targetActivity = getActiveActivityOrThrow();
+
+    targetActivity.merge(sourceActivity);
+
+    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE));
+    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE));
+  }
+
+  public void move(PosTable target) {
+    PosTableActivity sourceActivity = getActiveActivityOrThrow();
+
+    sourceActivity.moveTable(target);
+
+    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE));
+    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE));
+  }
+
+  public void discount(PosTableDiscountRequest discountRequest) {
+    PosTableActivity activeActivity = getActiveActivityOrThrow();
+
+    activeActivity.discount(discountRequest.discountPrice());
+
+    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
+  }
+
   public void completeActiveActivity() {
-    PosTableActivity posTableActivity = getActiveActivityOrThrow();
-    posTableActivity.complete();
-    registerEvent(new SseEvent(store.getId(), SseCategory.POS, ServerAction.UPDATE, getTableNo()));
-  }
+    PosTableActivity activeActivity = getActiveActivityOrThrow();
 
-  public void merge(PosTable sourcePosTable) {
-    PosTableActivity sourcePosTableActivity = sourcePosTable.getActiveActivityOrThrow();
-    PosTableActivity targetPosTableActivity = getActiveActivityOrThrow();
-    targetPosTableActivity.mergeTableActivity(sourcePosTableActivity);
-    registerSseUpdateEvent();
-  }
+    activeActivity.complete();
 
-  public void move(PosTable targetPosTable) {
-    PosTableActivity sourcePosTableActivity = getActiveActivityOrThrow();
-    sourcePosTableActivity.moveTable(targetPosTable);
-    this.activities.remove(sourcePosTableActivity);
-    registerSseUpdateEvent();
-  }
-
-  public void discount(long discountPrice) {
-    getActiveActivityOrThrow().discount(discountPrice);
-    registerEvent(new SseEvent(store.getId(), SseCategory.POS, ServerAction.UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
   }
 
   public void cancelOrder(Long orderId) {
-    PosTableActivity posTableActivity = getActiveActivityOrThrow();
-    posTableActivity.cancelOrder(orderId);
-    registerSseUpdateEvent(getTableNo());
+    PosTableActivity activeActivity = getActiveActivityOrThrow();
+
+    activeActivity.cancelOrder(orderId);
+
+    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
   }
 
-  public void updateOrder(Long orderId, Long orderMenuId, int quantity) {
+  public void updateOrder(OrderUpdateRequests updateRequests) {
     PosTableActivity posTableActivity = getActiveActivityOrThrow();
-    posTableActivity.updateOrder(orderId, orderMenuId, quantity);
+
+    for (OrderUpdateRequest updateRequest : updateRequests.orders()) {
+      posTableActivity.updateOrder(updateRequest);
+    }
+
+    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
   }
 
-  public void updateMemo(Long orderId, String memo) {
-    PosTableActivity posTableActivity = getActiveActivityOrThrow();
-    posTableActivity.updateMemo(orderId, memo);
-    registerSseUpdateEvent(getTableNo());
+  public void updateOrder(Long orderId, OrderMemoUpdateRequest updateRequest) {
+    PosTableActivity activeActivity = getActiveActivityOrThrow();
+
+    activeActivity.updateOrder(orderId, updateRequest);
+
+    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
   }
 
   public void resendReceipt(Receipt receipt) {
-    registerEvent(new SseEvent(store.getId(), SseCategory.RECEIPT, ServerAction.GET, receipt));
-  }
-
-  public void registerSseUpdateEvent() {
-    registerSseUpdateEvent(null);
+    registerEvent(new SseEvent(store.getId(), RECEIPT, GET, receipt));
   }
 
   public void registerSseUpdateEvent(Object data) {
-    registerEvent(new SseEvent(store.getId(), SseCategory.ORDER, ServerAction.UPDATE, data));
-    registerEvent(new SseEvent(store.getId(), SseCategory.POS, ServerAction.UPDATE, data));
+    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, data));
+    registerEvent(new SseEvent(store.getId(), POS, UPDATE, data));
   }
 
   public boolean hasActiveActivity() {
     return getActiveActivity().isPresent();
   }
 
-  public boolean hasActiveOrder() {
-    return !getActiveOrderedOrders().isEmpty();
+  public boolean hasOrder() {
+    return !getOrderedOrders().isEmpty();
   }
 
-  public Optional<OrderType> getActiveTablePaymentType() {
-    Optional<PosTableActivity> posTableActivity = getActiveActivity();
-    return posTableActivity.map(PosTableActivity::getTablePaymentType);
+  public Optional<OrderType> getTablePaymentType() {
+    return getActiveActivity().map(PosTableActivity::getTablePaymentType);
   }
 
-  public Optional<Instant> getActiveActivityTime() {
+  public Optional<Instant> getActivityCreatedAt() {
     return getActiveActivity().map(PosTableActivity::getCreatedAt);
   }
 
-  public long getActiveTotalOrderPrice() {
-    return getActiveOrderedOrders().stream()
-        .mapToLong(Order::getTotalOrderPrice)
-        .sum();
-  }
-
-  public long getActiveDiscountPrice() {
-    return getActiveActivity().map(PosTableActivity::getDiscount).orElse(0L);
-  }
-
   public Optional<String> getFirstOrderMenuName() {
-    List<Order> orders = getActiveOrderedOrders();
+    List<Order> orders = getOrderedOrders();
+
     if (orders.isEmpty()) {
       return Optional.empty();
     } else {
@@ -151,14 +168,20 @@ public class PosTable extends AggregateRootEntity<PosTable> {
     }
   }
 
-  public int getActiveOrderMenuCount() {
-    return getActiveOrderedOrders().stream()
+  public int getOrderMenuCount() {
+    return getOrderedOrders().stream()
         .mapToInt(Order::getOrderMenuCount)
         .sum();
   }
 
-  public List<PosTableActivity> getActivities() {
-    return Collections.unmodifiableList(activities);
+  public long getTableTotalOrderPrice() {
+    return getOrderedOrders().stream()
+        .mapToLong(Order::getTotalOrderPrice)
+        .sum();
+  }
+
+  public long getDiscountPrice() {
+    return getActiveActivity().map(PosTableActivity::getDiscount).orElse(0L);
   }
 
   public Optional<PosTableActivity> getActiveActivity() {
@@ -168,21 +191,24 @@ public class PosTable extends AggregateRootEntity<PosTable> {
   }
 
   public PosTableActivity getActiveActivityOrThrow() {
-    return getActiveActivity()
-        .orElseThrow(() -> new BusinessException(ErrorCode.POS_TABLE_ACTIVE_ACTIVITY_NOT_FOUND));
+    return getActiveActivity().orElseThrow(PosTableActiveActivityNotFoundException::new);
   }
 
-  public List<Order> getActiveOrderedOrders() {
+  public List<Order> getOrderedOrders() {
     return getActiveActivity().stream()
         .flatMap(posTableActivity -> posTableActivity.getOrderedOrders().stream())
         .toList();
   }
 
-  public List<OrderMenu> getActivePrintEnabledOrderedOrderMenus() {
-    return getActiveOrderedOrders().stream()
+  public List<OrderMenu> getPrintEnabledOrderedOrderMenus() {
+    return getOrderedOrders().stream()
         .flatMap(order -> order.getOrderMenus().stream())
         .filter(OrderMenu::isPrintEnabled)
         .toList();
+  }
+
+  public List<PosTableActivity> getActivities() {
+    return Collections.unmodifiableList(activities);
   }
 
 }

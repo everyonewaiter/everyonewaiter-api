@@ -1,4 +1,4 @@
-package com.everyonewaiter.infrastructure.pos;
+package com.everyonewaiter.adapter.persistence.pos;
 
 import static com.everyonewaiter.domain.order.QOrder.order;
 import static com.everyonewaiter.domain.order.QOrderPayment.orderPayment;
@@ -6,14 +6,13 @@ import static com.everyonewaiter.domain.pos.QPosTable.posTable;
 import static com.everyonewaiter.domain.pos.QPosTableActivity.posTableActivity;
 import static java.util.Objects.requireNonNullElse;
 
+import com.everyonewaiter.application.pos.required.PosTableActivityRepository;
 import com.everyonewaiter.domain.order.OrderPaymentMethod;
 import com.everyonewaiter.domain.order.OrderPaymentState;
+import com.everyonewaiter.domain.order.OrderState;
 import com.everyonewaiter.domain.pos.PosTableActiveActivityNotFoundException;
 import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.pos.PosTableActivityNotFoundException;
-import com.everyonewaiter.domain.pos.repository.PosTableActivityRepository;
-import com.everyonewaiter.domain.pos.view.PosTableActivityView;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.Instant;
 import java.util.Optional;
@@ -28,23 +27,10 @@ class PosTableActivityRepositoryImpl implements PosTableActivityRepository {
   private final PosTableActivityJpaRepository posTableActivityJpaRepository;
 
   @Override
-  public PosTableActivityView.TotalRevenue getTotalRevenue(
-      Long storeId,
-      Instant start,
-      Instant end
-  ) {
-    return queryFactory
-        .select(
-            Projections.constructor(
-                PosTableActivityView.TotalRevenue.class,
-                order.price.sumLong(),
-                posTableActivity.discount.sumLong(),
-                orderPayment.amount.sumLong()
-            )
-        )
+  public long getDiscountRevenue(Long storeId, Instant start, Instant end) {
+    Long revenue = queryFactory
+        .select(posTableActivity.discount.sumLong())
         .from(posTableActivity)
-        .leftJoin(posTableActivity.orders, order)
-        .leftJoin(posTableActivity.payments, orderPayment)
         .where(
             posTableActivity.store.id.eq(storeId),
             posTableActivity.active.isFalse(),
@@ -52,6 +38,25 @@ class PosTableActivityRepositoryImpl implements PosTableActivityRepository {
             posTableActivity.createdAt.loe(end)
         )
         .fetchFirst();
+
+    return requireNonNullElse(revenue, 0L);
+  }
+
+  @Override
+  public long getOrderRevenue(Long storeId, Instant start, Instant end, OrderState state) {
+    Long revenue = queryFactory
+        .select(order.price.sumLong())
+        .from(posTableActivity)
+        .leftJoin(posTableActivity.orders, order).on(order.state.eq(state))
+        .where(
+            posTableActivity.store.id.eq(storeId),
+            posTableActivity.active.isFalse(),
+            posTableActivity.createdAt.goe(start),
+            posTableActivity.createdAt.loe(end)
+        )
+        .fetchFirst();
+
+    return requireNonNullElse(revenue, 0L);
   }
 
   @Override

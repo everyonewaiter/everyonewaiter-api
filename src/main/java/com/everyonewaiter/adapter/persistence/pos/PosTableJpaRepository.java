@@ -1,4 +1,4 @@
-package com.everyonewaiter.infrastructure.pos;
+package com.everyonewaiter.adapter.persistence.pos;
 
 import com.everyonewaiter.domain.pos.PosTable;
 import java.util.List;

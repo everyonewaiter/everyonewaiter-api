@@ -1,13 +1,16 @@
 package com.everyonewaiter.domain.pos;
 
 import static java.util.Objects.requireNonNull;
+import static org.springframework.util.Assert.state;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.order.Order;
+import com.everyonewaiter.domain.order.OrderMemoUpdateRequest;
+import com.everyonewaiter.domain.order.OrderMenuQuantityUpdateRequest;
+import com.everyonewaiter.domain.order.OrderNotFoundException;
 import com.everyonewaiter.domain.order.OrderPayment;
 import com.everyonewaiter.domain.order.OrderType;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
+import com.everyonewaiter.domain.order.OrderUpdateRequest;
 import com.everyonewaiter.domain.store.Store;
 import jakarta.persistence.Entity;
 import java.util.ArrayList;
@@ -56,6 +59,10 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
     this.orders.add(order);
   }
 
+  public void removeOrder(Order order) {
+    this.orders.remove(order);
+  }
+
   public void addPayment(OrderPayment orderPayment) {
     this.payments.add(orderPayment);
 
@@ -64,70 +71,80 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
     }
   }
 
-  public void complete() {
-    if (getRemainingPaymentPriceWithDiscount() > 0) {
-      throw new BusinessException(ErrorCode.HAS_REMAINING_PAYMENT_PRICE);
-    }
-    this.active = false;
+  public void removePayment(OrderPayment orderPayment) {
+    this.payments.remove(orderPayment);
   }
 
-  public void mergeTableActivity(PosTableActivity sourcePosTableActivity) {
-    this.discount += sourcePosTableActivity.discount;
-    sourcePosTableActivity.discount = 0;
+  public void merge(PosTableActivity sourceActivity) {
+    this.tableNo = sourceActivity.tableNo;
+    this.discount += sourceActivity.discount;
 
-    sourcePosTableActivity.orders.forEach(sourceOrder -> sourceOrder.moveTable(this));
-    sourcePosTableActivity.orders.clear();
+    sourceActivity.orders.forEach(sourceOrder -> sourceOrder.moveTable(this));
+    sourceActivity.payments.forEach(sourcePayment -> sourcePayment.moveTable(this));
 
-    sourcePosTableActivity.payments.forEach(sourcePayment -> sourcePayment.moveTable(this));
-    sourcePosTableActivity.payments.clear();
-
-    sourcePosTableActivity.active = false;
+    sourceActivity.discount = 0;
+    sourceActivity.active = false;
   }
 
   public void moveTable(PosTable posTable) {
+    this.posTable.removeActivity(this);
+
     this.posTable = posTable;
-    posTable.addActivity(this);
+    this.tableNo = posTable.getTableNo();
+
+    this.posTable.addActivity(this);
   }
 
   public void discount(long discountPrice) {
-    long totalRemainingPrice = getRemainingPaymentPrice();
-    if (discountPrice > totalRemainingPrice) {
-      discountPrice = totalRemainingPrice;
+    setDiscountPrice(discountPrice);
+  }
+
+  public void complete() {
+    state(this.active, "POS 테이블 액티비티가 이미 비활성화 상태입니다.");
+
+    if (getRemainingPaymentPriceWithDiscount() > 0) {
+      throw new HasRemainingPaymentException();
     }
-    this.discount = discountPrice;
+
+    this.active = false;
   }
 
   public void cancelOrder(Long orderId) {
-    Order order = getOrder(orderId);
-    order.cancel();
+    Order orderedOrder = getOrderedOrder(orderId);
 
-    long totalRemainingPrice = getRemainingPaymentPrice();
-    if (this.discount > totalRemainingPrice) {
-      this.discount = totalRemainingPrice;
-    }
+    orderedOrder.cancel();
 
-    if (!hasOrderedOrder()) {
-      this.active = false;
-    }
+    setDiscountPrice(this.discount);
+
+    tryInactivate();
   }
 
-  public void updateOrder(Long orderId, Long orderMenuId, int quantity) {
-    Order order = getOrderedOrder(orderId);
-    order.updateOrderMenu(orderMenuId, quantity);
+  public void updateOrder(OrderUpdateRequest updateRequest) {
+    Order order = getOrderedOrder(updateRequest.orderId());
 
-    long totalRemainingPrice = getRemainingPaymentPrice();
-    if (this.discount > totalRemainingPrice) {
-      this.discount = totalRemainingPrice;
+    for (OrderMenuQuantityUpdateRequest menuUpdateRequest : updateRequest.orderMenus()) {
+      order.updateOrderMenu(menuUpdateRequest);
     }
 
-    if (!hasOrderedOrder()) {
-      this.active = false;
-    }
+    setDiscountPrice(this.discount);
+
+    tryInactivate();
   }
 
-  public void updateMemo(Long orderId, String memo) {
+  public void updateOrder(Long orderId, OrderMemoUpdateRequest updateRequest) {
     Order order = getOrder(orderId);
-    order.updateMemo(memo);
+
+    order.update(updateRequest);
+  }
+
+  private void setDiscountPrice(long discountPrice) {
+    this.discount = Math.min(discountPrice, getRemainingPaymentPrice());
+  }
+
+  private void tryInactivate() {
+    if (!hasOrder() && !hasOrderedOrder()) {
+      this.active = false;
+    }
   }
 
   public boolean hasOrder() {
@@ -142,6 +159,14 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
     return getTablePaymentType() == OrderType.POSTPAID;
   }
 
+  public long getRemainingPaymentPrice() {
+    return getTotalOrderPrice() - getTotalPaymentPrice();
+  }
+
+  public long getRemainingPaymentPriceWithDiscount() {
+    return getRemainingPaymentPrice() - discount;
+  }
+
   public long getTotalOrderPrice() {
     return getOrderedOrders().stream()
         .mapToLong(Order::getTotalOrderPrice)
@@ -154,14 +179,6 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
         .sum();
   }
 
-  public long getRemainingPaymentPrice() {
-    return getTotalOrderPrice() - getTotalPaymentPrice();
-  }
-
-  public long getRemainingPaymentPriceWithDiscount() {
-    return getTotalOrderPrice() - getTotalPaymentPrice() - discount;
-  }
-
   public OrderType getTablePaymentType() {
     return getOrderedOrders().stream().allMatch(Order::isPrepaid)
         ? OrderType.PREPAID
@@ -172,18 +189,14 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
     return getOrders().stream()
         .filter(order -> requireNonNull(order.getId()).equals(orderId))
         .findAny()
-        .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
-  }
-
-  public List<Order> getOrders() {
-    return Collections.unmodifiableList(orders);
+        .orElseThrow(OrderNotFoundException::new);
   }
 
   public Order getOrderedOrder(Long orderId) {
     return getOrderedOrders().stream()
         .filter(order -> requireNonNull(order.getId()).equals(orderId))
         .findAny()
-        .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
+        .orElseThrow(OrderNotFoundException::new);
   }
 
   public List<Order> getOrderedOrders() {
@@ -192,10 +205,8 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
         .toList();
   }
 
-  public List<Order> getCanceledOrders() {
-    return getOrders().stream()
-        .filter(Order::isCanceled)
-        .toList();
+  public List<Order> getOrders() {
+    return Collections.unmodifiableList(orders);
   }
 
   public List<OrderPayment> getPayments() {

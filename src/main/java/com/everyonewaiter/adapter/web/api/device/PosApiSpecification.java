@@ -1,10 +1,13 @@
 package com.everyonewaiter.adapter.web.api.device;
 
-import com.everyonewaiter.adapter.web.api.device.request.PosWriteRequest;
+import com.everyonewaiter.adapter.web.api.dto.PosTableDetailResponses;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
-import com.everyonewaiter.application.pos.response.PosResponse;
 import com.everyonewaiter.domain.device.Device;
+import com.everyonewaiter.domain.order.OrderMemoUpdateRequest;
+import com.everyonewaiter.domain.order.OrderUpdateRequests;
+import com.everyonewaiter.domain.pos.PosTableDiscountRequest;
+import com.everyonewaiter.domain.pos.PosView;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,7 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "POS")
-interface PosControllerSpecification {
+interface PosApiSpecification {
 
   @Operation(
       summary = "[POS] 매출 확인",
@@ -38,7 +41,7 @@ interface PosControllerSpecification {
           ),
       }
   )
-  ResponseEntity<PosResponse.Revenue> getRevenue(
+  ResponseEntity<PosView.Revenue> getRevenue(
       String date,
       @Parameter(hidden = true) Device device
   );
@@ -70,7 +73,7 @@ interface PosControllerSpecification {
           ),
       }
   )
-  ResponseEntity<PosResponse.Tables> getTables(@Parameter(hidden = true) Device device);
+  ResponseEntity<PosTableDetailResponses> getTables(@Parameter(hidden = true) Device device);
 
   @Operation(summary = "[POS] 테이블 액티비티 상세 조회", description = "테이블 액티비티 상세 조회 API")
   @ApiResponse(responseCode = "200", description = "테이블 액티비티 상세 조회 성공")
@@ -91,7 +94,7 @@ interface PosControllerSpecification {
           ),
       }
   )
-  ResponseEntity<PosResponse.TableActivityDetail> getTableActivity(
+  ResponseEntity<PosView.PosTableActivityDetail> getTableActivity(
       Long posTableActivityId,
       @Parameter(hidden = true) Device device
   );
@@ -128,49 +131,7 @@ interface PosControllerSpecification {
           ),
       }
   )
-  ResponseEntity<PosResponse.TableActivityDetail> getActiveTableActivity(
-      int tableNo,
-      @Parameter(hidden = true) Device device
-  );
-
-  @Operation(
-      summary = "[POS] 테이블 완료",
-      description = "테이블 완료 API<br/><br/>"
-          + "현재 활성화 되어 있는 테이블 액티비티를 완료 상태로 변경합니다.<br/>"
-          + "해당 API는 주로 선결제 테이블에서 사용됩니다.<br/>"
-          + "후결제 테이블 또한 테이블 할인을 통해 잔여 결제 금액이 0원인 경우 해당 API를 사용할 수 있습니다."
-  )
-  @ApiResponse(responseCode = "204", description = "테이블 액티비티 완료 성공")
-  @ApiErrorResponses(
-      summary = "테이블 액티비티 완료 실패",
-      value = {
-          @ApiErrorResponse(
-              code = ErrorCode.HAS_REMAINING_PAYMENT_PRICE,
-              exampleName = "결제할 잔액이 남아있는 경우"
-          ),
-          @ApiErrorResponse(
-              code = ErrorCode.STORE_IS_CLOSED,
-              exampleName = "매장이 영업중이지 않은 경우"
-          ),
-          @ApiErrorResponse(
-              code = ErrorCode.UNAUTHORIZED,
-              exampleName = "인증 시그니처가 유효하지 않은 경우"
-          ),
-          @ApiErrorResponse(
-              code = ErrorCode.FORBIDDEN,
-              exampleName = "기기의 사용 용도가 POS가 아닌 경우"
-          ),
-          @ApiErrorResponse(
-              code = ErrorCode.POS_TABLE_NOT_FOUND,
-              exampleName = "활성화 된 POS 테이블을 찾을 수 없는 경우"
-          ),
-          @ApiErrorResponse(
-              code = ErrorCode.POS_TABLE_ACTIVE_ACTIVITY_NOT_FOUND,
-              exampleName = "활성화 된 POS 테이블 액티비티를 찾을 수 없는 경우"
-          ),
-      }
-  )
-  ResponseEntity<Void> completeActivity(
+  ResponseEntity<PosView.PosTableActivityDetail> getActiveTableActivity(
       int tableNo,
       @Parameter(hidden = true) Device device
   );
@@ -237,7 +198,49 @@ interface PosControllerSpecification {
   )
   ResponseEntity<Void> discount(
       int tableNo,
-      @RequestBody PosWriteRequest.Discount request,
+      @RequestBody PosTableDiscountRequest discountRequest,
+      @Parameter(hidden = true) Device device
+  );
+
+  @Operation(
+      summary = "[POS] 테이블 완료",
+      description = "테이블 완료 API<br/><br/>"
+          + "현재 활성화 되어 있는 테이블 액티비티를 완료 상태로 변경합니다.<br/>"
+          + "해당 API는 주로 선결제 테이블에서 사용됩니다.<br/>"
+          + "후결제 테이블 또한 테이블 할인을 통해 잔여 결제 금액이 0원인 경우 해당 API를 사용할 수 있습니다."
+  )
+  @ApiResponse(responseCode = "204", description = "테이블 액티비티 완료 성공")
+  @ApiErrorResponses(
+      summary = "테이블 액티비티 완료 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.HAS_REMAINING_PAYMENT_PRICE,
+              exampleName = "결제할 잔액이 남아있는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_IS_CLOSED,
+              exampleName = "매장이 영업중이지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 POS가 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.POS_TABLE_NOT_FOUND,
+              exampleName = "활성화 된 POS 테이블을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.POS_TABLE_ACTIVE_ACTIVITY_NOT_FOUND,
+              exampleName = "활성화 된 POS 테이블 액티비티를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> completeActivity(
+      int tableNo,
       @Parameter(hidden = true) Device device
   );
 
@@ -311,7 +314,7 @@ interface PosControllerSpecification {
   )
   ResponseEntity<Void> updateOrders(
       int tableNo,
-      @RequestBody PosWriteRequest.UpdateOrders request,
+      @RequestBody OrderUpdateRequests updateRequests,
       @Parameter(hidden = true) Device device
   );
 
@@ -346,10 +349,10 @@ interface PosControllerSpecification {
           ),
       }
   )
-  ResponseEntity<Void> updateMemo(
+  ResponseEntity<Void> updateOrderMemo(
       int tableNo,
       Long orderId,
-      @RequestBody PosWriteRequest.UpdateMemo request,
+      @RequestBody OrderMemoUpdateRequest updateRequest,
       @Parameter(hidden = true) Device device
   );
 

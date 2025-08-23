@@ -13,8 +13,6 @@ import static lombok.AccessLevel.PROTECTED;
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.menu.Menu;
 import com.everyonewaiter.domain.pos.PosTableActivity;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
 import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.store.Store;
 import jakarta.persistence.Entity;
@@ -78,9 +76,11 @@ public class Order extends AggregateRootEntity<Order> {
   }
 
   public void moveTable(PosTableActivity posTableActivity) {
+    this.posTableActivity.removeOrder(this);
+
     this.posTableActivity = posTableActivity;
-    posTableActivity.addOrder(this);
-    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE));
+
+    this.posTableActivity.addOrder(this);
   }
 
   public void serving() {
@@ -105,20 +105,22 @@ public class Order extends AggregateRootEntity<Order> {
   }
 
   public void cancel() {
-    if (this.state == OrderState.ORDER) {
-      this.state = CANCEL;
-    } else {
-      throw new BusinessException(ErrorCode.ALREADY_CANCELED_ORDER);
+    if (isCanceled()) {
+      throw new AlreadyCanceledOrderException();
     }
+
+    this.state = CANCEL;
   }
 
-  public void updateOrderMenu(Long orderMenuId, int quantity) {
-    OrderMenu orderMenu = getOrderMenu(orderMenuId);
-    if (quantity <= 0) {
+  public void updateOrderMenu(OrderMenuQuantityUpdateRequest updateRequest) {
+    OrderMenu orderMenu = getOrderMenu(updateRequest.orderMenuId());
+
+    if (updateRequest.quantity() == 0) {
       orderMenus.remove(orderMenu);
     } else {
-      orderMenu.updateQuantity(quantity);
+      orderMenu.update(updateRequest.quantity());
     }
+
     this.price = calculateTotalPrice();
 
     if (!hasOrderMenu()) {
@@ -132,8 +134,8 @@ public class Order extends AggregateRootEntity<Order> {
         .sum();
   }
 
-  public void updateMemo(String memo) {
-    this.memo = memo;
+  public void update(OrderMemoUpdateRequest updateRequest) {
+    this.memo = requireNonNull(updateRequest.memo());
   }
 
   public boolean isPrepaid() {
@@ -166,10 +168,6 @@ public class Order extends AggregateRootEntity<Order> {
     return getOrderMenus().size();
   }
 
-  public List<OrderMenu> getOrderMenus() {
-    return Collections.unmodifiableList(orderMenus);
-  }
-
   public OrderMenu getOrderMenu(Long orderMenuId) {
     return getOrderMenus().stream()
         .filter(orderMenu -> orderMenu.getNonNullId().equals(orderMenuId))
@@ -181,6 +179,10 @@ public class Order extends AggregateRootEntity<Order> {
     return getOrderMenus().stream()
         .filter(OrderMenu::isPrintEnabled)
         .toList();
+  }
+
+  public List<OrderMenu> getOrderMenus() {
+    return Collections.unmodifiableList(orderMenus);
   }
 
 }

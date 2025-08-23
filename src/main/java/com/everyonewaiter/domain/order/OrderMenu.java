@@ -6,8 +6,6 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateEntity;
 import com.everyonewaiter.domain.menu.Menu;
-import com.everyonewaiter.domain.shared.BusinessException;
-import com.everyonewaiter.domain.shared.ErrorCode;
 import jakarta.persistence.Entity;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -100,32 +98,32 @@ public class OrderMenu extends AggregateEntity {
     }
   }
 
-  public void updateQuantity(int quantity) {
-    if (quantity > 0) {
-      this.quantity = quantity;
-    } else {
-      throw new BusinessException(ErrorCode.ORDER_MENU_QUANTITY_POSITIVE);
+  public void update(int quantity) {
+    if (quantity <= 0) {
+      throw new InvalidOrderMenuQuantityException();
     }
+
+    this.quantity = quantity;
   }
 
   public long calculateTotalPrice() {
     long totalPrice = price;
 
-    for (OrderOptionGroup orderOptionGroup : orderOptionGroups) {
+    for (OrderOptionGroup orderOptionGroup : getOrderOptionGroups()) {
       totalPrice += orderOptionGroup.calculateTotalPrice();
     }
 
     return totalPrice * quantity;
   }
 
-  public List<OrderOptionGroup> getOrderOptionGroups() {
-    return Collections.unmodifiableList(orderOptionGroups);
-  }
-
   public List<OrderOptionGroup> getPrintEnabledOrderOptionGroups() {
     return getOrderOptionGroups().stream()
         .filter(OrderOptionGroup::isPrintEnabled)
         .toList();
+  }
+
+  public List<OrderOptionGroup> getOrderOptionGroups() {
+    return Collections.unmodifiableList(orderOptionGroups);
   }
 
 }

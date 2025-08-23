@@ -6,10 +6,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.transaction.event.TransactionPhase.BEFORE_COMMIT;
 
 import com.everyonewaiter.application.device.provided.DeviceFinder;
+import com.everyonewaiter.application.pos.required.PosTableRepository;
 import com.everyonewaiter.application.store.provided.StoreFinder;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.pos.PosTable;
-import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.everyonewaiter.domain.store.Store;
 import com.everyonewaiter.domain.store.StoreOpenEvent;
 import java.util.LinkedHashMap;

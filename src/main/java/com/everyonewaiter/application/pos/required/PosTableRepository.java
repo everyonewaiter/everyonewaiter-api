@@ -1,4 +1,4 @@
-package com.everyonewaiter.domain.pos.repository;
+package com.everyonewaiter.application.pos.required;
 
 import com.everyonewaiter.domain.pos.PosTable;
 import java.util.List;
@@ -9,10 +9,10 @@ public interface PosTableRepository {
 
   PosTable findActiveOrThrow(Long storeId, int tableNo);
 
-  void close(Long storeId);
-
   PosTable save(PosTable posTable);
 
   void saveAll(List<PosTable> posTables);
+
+  void close(Long storeId);
 
 }

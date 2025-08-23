@@ -3,7 +3,7 @@ package com.everyonewaiter.application.pos;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.transaction.event.TransactionPhase.BEFORE_COMMIT;
 
-import com.everyonewaiter.domain.pos.repository.PosTableRepository;
+import com.everyonewaiter.application.pos.required.PosTableRepository;
 import com.everyonewaiter.domain.store.StoreCloseEvent;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

@@ -1,10 +1,10 @@
-package com.everyonewaiter.infrastructure.pos;
+package com.everyonewaiter.adapter.persistence.pos;
 
 import static com.everyonewaiter.domain.pos.QPosTable.posTable;
 
+import com.everyonewaiter.application.pos.required.PosTableRepository;
 import com.everyonewaiter.domain.pos.PosTable;
 import com.everyonewaiter.domain.pos.PosTableNotFoundException;
-import com.everyonewaiter.domain.pos.repository.PosTableRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +29,16 @@ class PosTableRepositoryImpl implements PosTableRepository {
   }
 
   @Override
+  public PosTable save(PosTable posTable) {
+    return posTableJpaRepository.save(posTable);
+  }
+
+  @Override
+  public void saveAll(List<PosTable> posTables) {
+    posTableJpaRepository.saveAll(posTables);
+  }
+
+  @Override
   public void close(Long storeId) {
     queryFactory
         .update(posTable)
@@ -38,16 +48,6 @@ class PosTableRepositoryImpl implements PosTableRepository {
             posTable.active.isTrue()
         )
         .execute();
-  }
-
-  @Override
-  public PosTable save(PosTable posTable) {
-    return posTableJpaRepository.save(posTable);
-  }
-
-  @Override
-  public void saveAll(List<PosTable> posTables) {
-    posTableJpaRepository.saveAll(posTables);
   }
 
 }
