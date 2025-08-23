@@ -4,6 +4,7 @@ import static com.everyonewaiter.domain.notification.EmailTemplate.EMAIL_AUTHENT
 import static com.everyonewaiter.domain.notification.EmailTemplate.STORE_REGISTRATION_APPROVE;
 import static com.everyonewaiter.domain.notification.EmailTemplate.STORE_REGISTRATION_REJECT;
 import static com.everyonewaiter.domain.support.ClientUri.AUTH_EMAIL;
+import static com.everyonewaiter.domain.support.ClientUri.BASE_URL;
 import static com.everyonewaiter.domain.support.ClientUri.STORE_REGISTRATION;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -54,7 +55,7 @@ class EmailNotificationEventHandler {
 
     JwtPayload payload = new JwtPayload(JwtFixedId.VERIFICATION_EMAIL_ID, email.address());
     String authToken = jwtProvider.encode(payload, Duration.ofDays(1));
-    String authUri = AUTH_EMAIL.formatted(email.address(), authToken);
+    String authUri = BASE_URL + AUTH_EMAIL.formatted(email.address(), authToken);
 
     TemplateEmail templateEmail = new TemplateEmail(
         EMAIL_AUTHENTICATION,
@@ -81,7 +82,7 @@ class EmailNotificationEventHandler {
         "[모두의 웨이터] 매장 등록 신청이 승인되었습니다."
     );
     templateEmail.addTemplateVariable("name", storeName);
-    templateEmail.addTemplateVariable("storeRegistrationUrl", STORE_REGISTRATION);
+    templateEmail.addTemplateVariable("storeRegistrationUrl", BASE_URL + STORE_REGISTRATION);
 
     notificationSender.sendEmailOneToOne(templateEmail);
   }
@@ -100,7 +101,7 @@ class EmailNotificationEventHandler {
     );
     templateEmail.addTemplateVariable("name", event.storeName());
     templateEmail.addTemplateVariable("reason", event.rejectReason());
-    templateEmail.addTemplateVariable("storeRegistrationUrl", STORE_REGISTRATION);
+    templateEmail.addTemplateVariable("storeRegistrationUrl", BASE_URL + STORE_REGISTRATION);
 
     notificationSender.sendEmailOneToOne(templateEmail);
   }
