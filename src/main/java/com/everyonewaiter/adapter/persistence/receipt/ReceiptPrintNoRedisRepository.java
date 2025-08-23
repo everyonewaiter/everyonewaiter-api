@@ -2,7 +2,7 @@ package com.everyonewaiter.adapter.persistence.receipt;
 
 import static java.util.Objects.requireNonNullElse;
 
-import com.everyonewaiter.application.receipt.required.ReceiptRepository;
+import com.everyonewaiter.application.receipt.required.ReceiptPrintNoRepository;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -10,14 +10,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-class ReceiptRedisRepository implements ReceiptRepository {
+class ReceiptPrintNoRedisRepository implements ReceiptPrintNoRepository {
 
   private static final String PRINT_NO_KEY_PREFIX = "print_no:";
 
   private final RedisTemplate<String, String> redisTemplate;
 
   @Override
-  public int getPrintNo(Long storeId) {
+  public int get(Long storeId) {
     String key = PRINT_NO_KEY_PREFIX + storeId;
 
     String value = requireNonNullElse(redisTemplate.opsForValue().get(key), "1");
@@ -26,7 +26,7 @@ class ReceiptRedisRepository implements ReceiptRepository {
   }
 
   @Override
-  public void incrementPrintNo(Long storeId) {
+  public void increment(Long storeId) {
     String key = PRINT_NO_KEY_PREFIX + storeId;
 
     Long incrementedValue = redisTemplate.opsForValue().increment(key);
@@ -37,7 +37,7 @@ class ReceiptRedisRepository implements ReceiptRepository {
   }
 
   @Override
-  public void deletePrintNo(Long storeId) {
+  public void delete(Long storeId) {
     String key = PRINT_NO_KEY_PREFIX + storeId;
 
     redisTemplate.delete(key);

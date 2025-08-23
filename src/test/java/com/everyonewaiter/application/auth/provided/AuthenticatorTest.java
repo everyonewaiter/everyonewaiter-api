@@ -108,7 +108,7 @@ class AuthenticatorTest extends IntegrationTest {
     assertThatThrownBy(() -> authenticator.sendAuthCode(SIGN_UP, sendAuthCodeRequest))
         .isInstanceOf(AlreadyUsePhoneException.class);
 
-    when(accountRepository.existsState(any(PhoneNumber.class), eq(ACTIVE))).thenReturn(false);
+    when(accountRepository.exists(any(PhoneNumber.class), eq(ACTIVE))).thenReturn(false);
 
     assertThatThrownBy(() -> authenticator.sendAuthCode(CREATE_DEVICE, sendAuthCodeRequest))
         .isInstanceOf(AccountNotFoundException.class);
@@ -154,7 +154,7 @@ class AuthenticatorTest extends IntegrationTest {
   void sendAuthMail() {
     SendAuthMailRequest sendAuthMailRequest = createSendAuthMailRequest();
 
-    when(accountRepository.existsState(any(Email.class), eq(INACTIVE))).thenReturn(true);
+    when(accountRepository.exists(any(Email.class), eq(INACTIVE))).thenReturn(true);
 
     authenticator.sendAuthMail(sendAuthMailRequest);
 
@@ -168,7 +168,7 @@ class AuthenticatorTest extends IntegrationTest {
   void sendAuthMailFail() {
     SendAuthMailRequest sendAuthMailRequest = createSendAuthMailRequest();
 
-    when(accountRepository.existsState(any(Email.class), eq(INACTIVE))).thenReturn(false);
+    when(accountRepository.exists(any(Email.class), eq(INACTIVE))).thenReturn(false);
 
     assertThatThrownBy(() -> authenticator.sendAuthMail(sendAuthMailRequest))
         .isInstanceOf(AlreadyVerifiedEmailException.class);

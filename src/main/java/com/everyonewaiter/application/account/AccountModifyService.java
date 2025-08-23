@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.account;
 
+import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.account.provided.AccountRegister;
 import com.everyonewaiter.application.account.provided.AccountUpdater;
 import com.everyonewaiter.application.account.provided.AccountValidator;
@@ -25,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 class AccountModifyService implements AccountRegister, AccountUpdater {
 
   private final Authenticator authenticator;
+  private final AccountFinder accountFinder;
   private final AccountValidator accountValidator;
   private final AccountRepository accountRepository;
   private final PasswordEncoder passwordEncoder;
@@ -51,7 +53,7 @@ class AccountModifyService implements AccountRegister, AccountUpdater {
   public Account activate(String authMailToken) {
     Email email = authenticator.verifyAuthMail(authMailToken);
 
-    Account account = accountRepository.findByEmailOrThrow(email);
+    Account account = accountFinder.findOrThrow(email);
 
     account.activate();
 
@@ -60,7 +62,7 @@ class AccountModifyService implements AccountRegister, AccountUpdater {
 
   @Override
   public Account authorize(Long accountId, AccountPermission permission) {
-    Account account = accountRepository.findByIdOrThrow(accountId);
+    Account account = accountFinder.findOrThrow(accountId);
 
     account.authorize(permission);
 
@@ -73,7 +75,7 @@ class AccountModifyService implements AccountRegister, AccountUpdater {
       Long userAccountId,
       AccountAdminUpdateRequest updateRequest
   ) {
-    Account userAccount = accountRepository.findByIdOrThrow(userAccountId);
+    Account userAccount = accountFinder.findOrThrow(userAccountId);
 
     adminAccount.update(userAccount, updateRequest);
 

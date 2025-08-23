@@ -7,15 +7,15 @@ import com.everyonewaiter.domain.store.RegistrationPageRequest;
 
 public interface RegistrationRepository {
 
-  Registration findByIdOrThrow(Long registrationId);
+  Paging<Registration> findAll(Long accountId, RegistrationPageRequest pageRequest);
 
-  Registration findByIdAndAccountIdOrThrow(Long registrationId, Long accountId);
+  Paging<Registration> findAll(RegistrationAdminPageRequest pageRequest);
 
-  Paging<Registration> findAllByAccountId(Long accountId, RegistrationPageRequest pageRequest);
+  Registration findOrThrow(Long registrationId);
 
-  Registration findByAdminOrThrow(Long registrationId);
+  Registration findOrThrow(Long registrationId, Long accountId);
 
-  Paging<Registration> findAllByAdmin(RegistrationAdminPageRequest pageRequest);
+  Registration findWithAccountOrThrow(Long registrationId);
 
   Registration save(Registration registration);
 

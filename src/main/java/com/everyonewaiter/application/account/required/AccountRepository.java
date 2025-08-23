@@ -13,23 +13,23 @@ public interface AccountRepository {
 
   boolean exists(Email email);
 
-  boolean existsState(Email email, AccountState state);
+  boolean exists(Email email, AccountState state);
 
   boolean exists(PhoneNumber phoneNumber);
 
-  boolean existsState(PhoneNumber phoneNumber, AccountState state);
+  boolean exists(PhoneNumber phoneNumber, AccountState state);
 
-  Paging<AccountAdminPageView> findAllByAdmin(AccountAdminPageRequest pageRequest);
+  Paging<AccountAdminPageView> findAll(AccountAdminPageRequest pageRequest);
 
-  Optional<Account> findById(Long accountId);
+  Optional<Account> find(Long accountId);
 
-  Account findByIdOrThrow(Long accountId);
+  Account findOrThrow(Long accountId);
 
-  Optional<Account> findByEmail(Email email);
+  Optional<Account> find(Email email);
 
-  Account findByEmailOrThrow(Email email);
+  Account findOrThrow(Email email);
 
-  Account findByPhoneOrThrow(PhoneNumber phoneNumber);
+  Account findOrThrow(PhoneNumber phoneNumber);
 
   Account save(Account account);
 

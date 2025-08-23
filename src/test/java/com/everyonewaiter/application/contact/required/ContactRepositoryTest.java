@@ -37,27 +37,27 @@ class ContactRepositoryTest extends IntegrationTest {
   }
 
   @Test
-  void findAllByAdmin() {
+  void findAll() {
     Contact contact = createContact();
 
-    Paging<Contact> pagedContacts = findAllByAdmin(new ContactAdminPageRequest());
+    Paging<Contact> pagedContacts = findAll(new ContactAdminPageRequest());
 
     assertThat(pagedContacts.getContent()).hasSize(1);
     assertThat(pagedContacts.getContent().getFirst().getId()).isEqualTo(contact.getId());
   }
 
   @Test
-  void findAllByAdminWhereName() {
+  void findAllWhereName() {
     Contact contact = createContact();
 
-    Paging<Contact> pagedContacts = findAllByAdmin(
+    Paging<Contact> pagedContacts = findAll(
         new ContactAdminPageRequest(contact.getStoreName(), null, null, null, 1, 20)
     );
 
     assertThat(pagedContacts.getContent()).hasSize(1);
     assertThat(pagedContacts.getContent().getFirst().getId()).isEqualTo(contact.getId());
 
-    Paging<Contact> emptyContacts = findAllByAdmin(
+    Paging<Contact> emptyContacts = findAll(
         new ContactAdminPageRequest("나루", null, null, null, 1, 20)
     );
 
@@ -65,17 +65,17 @@ class ContactRepositoryTest extends IntegrationTest {
   }
 
   @Test
-  void findAllByAdminWherePhoneNumber() {
+  void findAllWherePhoneNumber() {
     Contact contact = createContact();
 
-    Paging<Contact> pagedContacts = findAllByAdmin(
+    Paging<Contact> pagedContacts = findAll(
         new ContactAdminPageRequest(null, contact.getPhoneNumber().value(), null, null, 1, 20)
     );
 
     assertThat(pagedContacts.getContent()).hasSize(1);
     assertThat(pagedContacts.getContent().getFirst().getId()).isEqualTo(contact.getId());
 
-    Paging<Contact> emptyContacts = findAllByAdmin(
+    Paging<Contact> emptyContacts = findAll(
         new ContactAdminPageRequest(null, "01012345678", null, null, 1, 20)
     );
 
@@ -83,17 +83,17 @@ class ContactRepositoryTest extends IntegrationTest {
   }
 
   @Test
-  void findAllByAdminWhereLicense() {
+  void findAllWhereLicense() {
     Contact contact = createContact();
 
-    Paging<Contact> pagedContacts = findAllByAdmin(
+    Paging<Contact> pagedContacts = findAll(
         new ContactAdminPageRequest(null, null, contact.getLicense().value(), null, 1, 20)
     );
 
     assertThat(pagedContacts.getContent()).hasSize(1);
     assertThat(pagedContacts.getContent().getFirst().getId()).isEqualTo(contact.getId());
 
-    Paging<Contact> emptyContacts = findAllByAdmin(
+    Paging<Contact> emptyContacts = findAll(
         new ContactAdminPageRequest(null, null, "123-12-12345", null, 1, 20)
     );
 
@@ -101,40 +101,40 @@ class ContactRepositoryTest extends IntegrationTest {
   }
 
   @Test
-  void findAllByAdminWhereState() {
+  void findAllWhereState() {
     Contact contact = createContact();
 
-    Paging<Contact> pagedContacts = findAllByAdmin(
+    Paging<Contact> pagedContacts = findAll(
         new ContactAdminPageRequest(null, null, null, contact.getState(), 1, 20)
     );
 
     assertThat(pagedContacts.getContent()).hasSize(1);
     assertThat(pagedContacts.getContent().getFirst().getId()).isEqualTo(contact.getId());
 
-    Paging<Contact> emptyContacts = findAllByAdmin(
+    Paging<Contact> emptyContacts = findAll(
         new ContactAdminPageRequest(null, null, null, COMPLETE, 1, 20)
     );
 
     assertThat(emptyContacts.getContent()).isEmpty();
   }
 
-  private Paging<Contact> findAllByAdmin(ContactAdminPageRequest readRequest) {
-    return contactRepository.findAllByAdmin(readRequest);
+  private Paging<Contact> findAll(ContactAdminPageRequest readRequest) {
+    return contactRepository.findAll(readRequest);
   }
 
   @Test
-  void findByIdOrThrow() {
+  void findOrThrow() {
     Contact contact = createContact();
 
-    Contact found = contactRepository.findByIdOrThrow(contact.getId());
+    Contact found = contactRepository.findOrThrow(contact.getId());
 
     assertThat(found.getId()).isNotNull();
     assertThat(found.getId()).isEqualTo(contact.getId());
   }
 
   @Test
-  void findByIdOrThrowFail() {
-    assertThatThrownBy(() -> contactRepository.findByIdOrThrow(999L))
+  void findOrThrowFail() {
+    assertThatThrownBy(() -> contactRepository.findOrThrow(999L))
         .isInstanceOf(ContactNotFoundException.class);
   }
 

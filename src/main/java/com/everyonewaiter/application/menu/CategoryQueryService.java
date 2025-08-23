@@ -36,7 +36,7 @@ class CategoryQueryService implements CategoryFinder {
   @Override
   @ReadOnlyTransactional
   public Category findOrThrow(Long categoryId, Long storeId) {
-    return categoryRepository.findByIdAndStoreIdOrThrow(categoryId, storeId);
+    return categoryRepository.findOrThrow(categoryId, storeId);
   }
 
 }

@@ -10,6 +10,10 @@ public interface MenuFinder {
 
   List<Menu> findAll(Long storeId, List<Long> menuIds);
 
+  Menu findOrThrow(Long menuId, Long storeId);
+
+  Menu findOrThrow(Long categoryId, Long menuId, Long storeId);
+
   MenuView.MenuDetail findViewOrThrow(Long menuId, Long storeId, Long categoryId);
 
 }

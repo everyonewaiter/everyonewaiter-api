@@ -20,7 +20,7 @@ public interface DeviceRepository {
 
   Optional<Device> findById(Long deviceId);
 
-  Device findByIdAndStoreIdOrThrow(Long deviceId, Long storeId);
+  Device findOrThrow(Long deviceId, Long storeId);
 
   Device save(Device device);
 

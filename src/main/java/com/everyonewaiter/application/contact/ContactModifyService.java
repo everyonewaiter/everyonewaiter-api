@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.contact;
 
+import com.everyonewaiter.application.contact.provided.ContactFinder;
 import com.everyonewaiter.application.contact.provided.ContactProcessor;
 import com.everyonewaiter.application.contact.required.ContactRepository;
 import com.everyonewaiter.domain.contact.AlreadyExistsUncompletedContactException;
@@ -17,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 class ContactModifyService implements ContactProcessor {
 
+  private final ContactFinder contactFinder;
   private final ContactRepository contactRepository;
 
   @Override
@@ -30,7 +32,7 @@ class ContactModifyService implements ContactProcessor {
 
   @Override
   public Contact processing(Long contactId) {
-    Contact contact = contactRepository.findByIdOrThrow(contactId);
+    Contact contact = contactFinder.findOrThrow(contactId);
 
     contact.processing();
 
@@ -39,7 +41,7 @@ class ContactModifyService implements ContactProcessor {
 
   @Override
   public Contact complete(Long contactId) {
-    Contact contact = contactRepository.findByIdOrThrow(contactId);
+    Contact contact = contactFinder.findOrThrow(contactId);
 
     contact.complete();
 

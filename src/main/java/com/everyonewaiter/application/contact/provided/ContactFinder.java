@@ -9,4 +9,6 @@ public interface ContactFinder {
 
   Paging<Contact> findAllByAdmin(@Valid ContactAdminPageRequest pageRequest);
 
+  Contact findOrThrow(Long contactId);
+
 }

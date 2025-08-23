@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.menu;
 
+import com.everyonewaiter.application.menu.provided.CategoryFinder;
 import com.everyonewaiter.application.menu.provided.CategoryManager;
 import com.everyonewaiter.application.menu.required.CategoryRepository;
 import com.everyonewaiter.application.store.provided.StoreFinder;
@@ -25,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 class CategoryModifyService implements CategoryManager {
 
   private final StoreFinder storeFinder;
+  private final CategoryFinder categoryFinder;
   private final CategoryRepository categoryRepository;
 
   @Override
@@ -43,6 +45,7 @@ class CategoryModifyService implements CategoryManager {
 
   private void validateCategoryCreate(Long storeId, CategoryCreateRequest createRequest) {
     Long categoryCount = categoryRepository.count(storeId);
+
     if (categoryCount >= 30) {
       throw new ExceedMaxCategoryCountException();
     }
@@ -58,7 +61,7 @@ class CategoryModifyService implements CategoryManager {
   public Category update(Long categoryId, Long storeId, CategoryUpdateRequest updateRequest) {
     validateCategoryUpdate(categoryId, storeId, updateRequest);
 
-    Category category = categoryRepository.findByIdAndStoreIdOrThrow(categoryId, storeId);
+    Category category = categoryFinder.findOrThrow(categoryId, storeId);
 
     category.update(updateRequest);
 
@@ -84,8 +87,8 @@ class CategoryModifyService implements CategoryManager {
       Long storeId,
       CategoryMovePositionRequest movePositionRequest
   ) {
-    Category source = categoryRepository.findByIdAndStoreIdOrThrow(sourceId, storeId);
-    Category target = categoryRepository.findByIdAndStoreIdOrThrow(targetId, storeId);
+    Category source = categoryFinder.findOrThrow(sourceId, storeId);
+    Category target = categoryFinder.findOrThrow(targetId, storeId);
 
     boolean isMoved = source.movePosition(target, movePositionRequest);
     if (isMoved) {
@@ -99,7 +102,7 @@ class CategoryModifyService implements CategoryManager {
   @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void delete(Long categoryId, Long storeId) {
-    Category category = categoryRepository.findByIdAndStoreIdOrThrow(categoryId, storeId);
+    Category category = categoryFinder.findOrThrow(categoryId, storeId);
 
     category.delete();
 

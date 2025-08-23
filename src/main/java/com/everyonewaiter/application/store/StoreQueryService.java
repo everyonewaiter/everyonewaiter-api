@@ -28,12 +28,17 @@ class StoreQueryService implements StoreFinder {
 
   @Override
   public Store findOrThrow(Long storeId) {
-    return storeRepository.findByIdOrThrow(storeId);
+    return storeRepository.findOrThrow(storeId);
   }
 
   @Override
   public Store findOrThrow(Long storeId, PhoneNumber phoneNumber) {
-    return storeRepository.findByIdAndPhoneOrThrow(storeId, phoneNumber);
+    return storeRepository.findOrThrow(storeId, phoneNumber);
+  }
+
+  @Override
+  public Store findOrThrow(Long storeId, Long accountId) {
+    return storeRepository.findOrThrow(storeId, accountId);
   }
 
 }

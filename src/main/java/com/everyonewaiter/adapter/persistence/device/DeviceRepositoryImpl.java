@@ -106,7 +106,7 @@ class DeviceRepositoryImpl implements DeviceRepository {
   }
 
   @Override
-  public Device findByIdAndStoreIdOrThrow(Long deviceId, Long storeId) {
+  public Device findOrThrow(Long deviceId, Long storeId) {
     return Optional.ofNullable(
             queryFactory
                 .select(device)

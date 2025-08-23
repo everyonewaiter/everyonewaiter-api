@@ -14,4 +14,6 @@ public interface StoreFinder {
 
   Store findOrThrow(Long storeId, PhoneNumber phoneNumber);
 
+  Store findOrThrow(Long storeId, Long accountId);
+
 }

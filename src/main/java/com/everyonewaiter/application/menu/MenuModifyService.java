@@ -5,6 +5,7 @@ import static com.everyonewaiter.domain.sse.SseCategory.MENU;
 
 import com.everyonewaiter.application.image.provided.ImageManager;
 import com.everyonewaiter.application.menu.provided.CategoryFinder;
+import com.everyonewaiter.application.menu.provided.MenuFinder;
 import com.everyonewaiter.application.menu.provided.MenuManager;
 import com.everyonewaiter.application.menu.required.MenuRepository;
 import com.everyonewaiter.application.support.CacheName;
@@ -36,6 +37,7 @@ class MenuModifyService implements MenuManager {
 
   private final ImageManager imageManager;
   private final CategoryFinder categoryFinder;
+  private final MenuFinder menuFinder;
   private final MenuRepository menuRepository;
   private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -75,7 +77,7 @@ class MenuModifyService implements MenuManager {
   @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Menu update(Long menuId, Long storeId, MenuUpdateRequest updateRequest) {
-    Menu menu = menuRepository.findOrThrow(menuId, storeId);
+    Menu menu = menuFinder.findOrThrow(menuId, storeId);
 
     menu.update(updateRequest);
 
@@ -91,7 +93,7 @@ class MenuModifyService implements MenuManager {
       MenuUpdateRequest updateRequest,
       MultipartFile file
   ) {
-    Menu menu = menuRepository.findOrThrow(menuId, storeId);
+    Menu menu = menuFinder.findOrThrow(menuId, storeId);
 
     menu.update(updateRequest, imageManager.upload("menu", file));
 
@@ -107,8 +109,8 @@ class MenuModifyService implements MenuManager {
       Long storeId,
       MenuMovePositionRequest movePositionRequest
   ) {
-    Menu source = menuRepository.findOrThrow(sourceId, storeId);
-    Menu target = menuRepository.findOrThrow(targetId, storeId);
+    Menu source = menuFinder.findOrThrow(sourceId, storeId);
+    Menu target = menuFinder.findOrThrow(targetId, storeId);
 
     boolean isMoved = source.movePosition(target, movePositionRequest);
     if (isMoved) {
@@ -122,7 +124,7 @@ class MenuModifyService implements MenuManager {
   @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void delete(Long menuId, Long storeId, Long categoryId) {
-    Menu menu = menuRepository.findOrThrow(menuId, storeId, categoryId);
+    Menu menu = menuFinder.findOrThrow(menuId, storeId, categoryId);
 
     menu.delete();
 
@@ -133,7 +135,7 @@ class MenuModifyService implements MenuManager {
   @DistributedLock(key = "#storeId + '-menu'")
   @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void deleteAll(Long storeId, MenuDeleteRequest deleteRequest) {
-    List<Menu> menus = menuRepository.findAll(storeId, deleteRequest.menuIds());
+    List<Menu> menus = menuFinder.findAll(storeId, deleteRequest.menuIds());
 
     if (menus.size() == deleteRequest.menuIds().size()) {
       menuRepository.deleteAll(menus);

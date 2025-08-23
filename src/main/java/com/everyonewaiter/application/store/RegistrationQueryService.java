@@ -21,27 +21,27 @@ class RegistrationQueryService implements RegistrationFinder {
 
   @Override
   public Registration findOrThrow(Long registrationId) {
-    return registrationRepository.findByIdOrThrow(registrationId);
+    return registrationRepository.findOrThrow(registrationId);
   }
 
   @Override
   public Registration findOrThrow(Long registrationId, Long accountId) {
-    return registrationRepository.findByIdAndAccountIdOrThrow(registrationId, accountId);
+    return registrationRepository.findOrThrow(registrationId, accountId);
   }
 
   @Override
   public Paging<Registration> findAll(Long accountId, RegistrationPageRequest pageRequest) {
-    return registrationRepository.findAllByAccountId(accountId, pageRequest);
+    return registrationRepository.findAll(accountId, pageRequest);
   }
 
   @Override
   public Registration findByAdminOrThrow(Long registrationId) {
-    return registrationRepository.findByAdminOrThrow(registrationId);
+    return registrationRepository.findWithAccountOrThrow(registrationId);
   }
 
   @Override
   public Paging<Registration> findAllByAdmin(RegistrationAdminPageRequest pageRequest) {
-    return registrationRepository.findAllByAdmin(pageRequest);
+    return registrationRepository.findAll(pageRequest);
   }
 
 }

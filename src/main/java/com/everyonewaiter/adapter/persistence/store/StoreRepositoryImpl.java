@@ -33,7 +33,7 @@ class StoreRepositoryImpl implements StoreRepository {
   }
 
   @Override
-  public boolean existsStatus(Long storeId, StoreStatus status) {
+  public boolean exists(Long storeId, StoreStatus status) {
     return storeJpaRepository.existsByIdAndStatus(storeId, status);
   }
 
@@ -57,7 +57,7 @@ class StoreRepositoryImpl implements StoreRepository {
   }
 
   @Override
-  public Store findByIdOrThrow(Long storeId) {
+  public Store findOrThrow(Long storeId) {
     return Optional.ofNullable(
             queryFactory
                 .select(store)
@@ -70,13 +70,13 @@ class StoreRepositoryImpl implements StoreRepository {
   }
 
   @Override
-  public Store findByIdAndAccountIdOrThrow(Long storeId, Long accountId) {
+  public Store findOrThrow(Long storeId, Long accountId) {
     return storeJpaRepository.findByIdAndAccountId(storeId, accountId)
         .orElseThrow(StoreNotFoundException::new);
   }
 
   @Override
-  public Store findByIdAndPhoneOrThrow(Long storeId, PhoneNumber phoneNumber) {
+  public Store findOrThrow(Long storeId, PhoneNumber phoneNumber) {
     return Optional.ofNullable(
             queryFactory
                 .select(store)

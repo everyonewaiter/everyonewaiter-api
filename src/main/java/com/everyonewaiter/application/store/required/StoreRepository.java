@@ -11,17 +11,17 @@ public interface StoreRepository {
 
   boolean exists(Long storeId, Long accountId);
 
-  boolean existsStatus(Long storeId, StoreStatus status);
+  boolean exists(Long storeId, StoreStatus status);
 
   List<Store> findAll(Long accountId);
 
   List<Store> findAll(PhoneNumber phoneNumber);
 
-  Store findByIdOrThrow(Long storeId);
+  Store findOrThrow(Long storeId);
 
-  Store findByIdAndAccountIdOrThrow(Long storeId, Long accountId);
+  Store findOrThrow(Long storeId, Long accountId);
 
-  Store findByIdAndPhoneOrThrow(Long storeId, PhoneNumber phoneNumber);
+  Store findOrThrow(Long storeId, PhoneNumber phoneNumber);
 
   Store save(Store store);
 

@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface PosTableActivityRepository {
 
+  boolean existsActive(Long storeId);
+
   long getDiscountRevenue(Long storeId, Instant start, Instant end);
 
   long getOrderRevenue(Long storeId, Instant start, Instant end, OrderState state);

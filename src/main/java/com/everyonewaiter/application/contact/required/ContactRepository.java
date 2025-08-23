@@ -9,9 +9,9 @@ public interface ContactRepository {
 
   boolean existsUncompleted(String storeName, BusinessLicense license);
 
-  Paging<Contact> findAllByAdmin(ContactAdminPageRequest pageRequest);
+  Paging<Contact> findAll(ContactAdminPageRequest pageRequest);
 
-  Contact findByIdOrThrow(Long contactId);
+  Contact findOrThrow(Long contactId);
 
   Contact save(Contact contact);
 

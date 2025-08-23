@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.account;
 
+import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.account.provided.AccountSignInHandler;
 import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.application.auth.provided.SignInTokenProvider;
@@ -22,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 class AccountSignInService implements AccountSignInHandler {
 
+  private final AccountFinder accountFinder;
   private final AccountRepository accountRepository;
   private final PasswordEncoder passwordEncoder;
   private final SignInTokenProvider signInTokenProvider;
@@ -30,7 +32,7 @@ class AccountSignInService implements AccountSignInHandler {
   public SignInToken signIn(AccountSignInRequest signInRequest) {
     Email email = new Email(signInRequest.email());
 
-    Account account = accountRepository.findByEmail(email).orElseThrow(FailedSignInException::new);
+    Account account = accountFinder.find(email).orElseThrow(FailedSignInException::new);
 
     account.signIn(signInRequest, passwordEncoder);
 

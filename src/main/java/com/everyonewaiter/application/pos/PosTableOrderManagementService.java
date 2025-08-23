@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.pos;
 
+import com.everyonewaiter.application.pos.provided.PosTableFinder;
 import com.everyonewaiter.application.pos.provided.PosTableOrderManager;
 import com.everyonewaiter.application.pos.required.PosTableRepository;
 import com.everyonewaiter.application.receipt.provided.ReceiptCreator;
@@ -20,12 +21,13 @@ import org.springframework.validation.annotation.Validated;
 class PosTableOrderManagementService implements PosTableOrderManager {
 
   private final ReceiptCreator receiptCreator;
+  private final PosTableFinder posTableFinder;
   private final PosTableRepository posTableRepository;
 
   @Override
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public PosTable cancel(Long storeId, int tableNo, Long orderId) {
-    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
+    PosTable posTable = posTableFinder.findActiveOrThrow(storeId, tableNo);
 
     posTable.cancelOrder(orderId);
 
@@ -35,7 +37,7 @@ class PosTableOrderManagementService implements PosTableOrderManager {
   @Override
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public PosTable update(Long storeId, int tableNo, OrderUpdateRequests updateRequests) {
-    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
+    PosTable posTable = posTableFinder.findActiveOrThrow(storeId, tableNo);
 
     Receipt diff = receiptCreator.createDiff(storeId, posTable.getOrderedOrders(), updateRequests);
 
@@ -52,7 +54,7 @@ class PosTableOrderManagementService implements PosTableOrderManager {
       Long orderId,
       OrderMemoUpdateRequest updateRequest
   ) {
-    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
+    PosTable posTable = posTableFinder.findActiveOrThrow(storeId, tableNo);
 
     posTable.updateOrder(orderId, updateRequest);
 

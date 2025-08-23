@@ -7,6 +7,7 @@ import com.everyonewaiter.application.support.ReadOnlyTransactional;
 import com.everyonewaiter.domain.staffcall.StaffCall;
 import com.everyonewaiter.domain.staffcall.StaffCallCreateRequest;
 import com.everyonewaiter.domain.staffcall.StaffCallOptionNotFoundException;
+import com.everyonewaiter.domain.staffcall.StaffCallState;
 import com.everyonewaiter.domain.store.Store;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ class StaffCallManagementService implements StaffCallManager {
   @Override
   @ReadOnlyTransactional
   public List<StaffCall> findAllIncompleted(Long storeId) {
-    return staffCallRepository.findAllIncompleted(storeId);
+    return staffCallRepository.findAll(storeId, StaffCallState.INCOMPLETE);
   }
 
 }

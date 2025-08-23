@@ -15,7 +15,7 @@ public interface CategoryRepository {
 
   List<Category> findAll(Long storeId);
 
-  Category findByIdAndStoreIdOrThrow(Long categoryId, Long storeId);
+  Category findOrThrow(Long categoryId, Long storeId);
 
   Category save(Category category);
 

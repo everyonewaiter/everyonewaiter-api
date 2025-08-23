@@ -36,14 +36,14 @@ class AccountValidateService implements AccountValidator {
 
   @Override
   public void checkPossibleSendAuthMail(Email email) {
-    if (!accountRepository.existsState(email, AccountState.INACTIVE)) {
+    if (!accountRepository.exists(email, AccountState.INACTIVE)) {
       throw new AlreadyVerifiedEmailException();
     }
   }
 
   @Override
   public void checkPossibleSendAuthCode(PhoneNumber phoneNumber) {
-    if (!accountRepository.existsState(phoneNumber, AccountState.ACTIVE)) {
+    if (!accountRepository.exists(phoneNumber, AccountState.ACTIVE)) {
       throw new AccountNotFoundException();
     }
   }

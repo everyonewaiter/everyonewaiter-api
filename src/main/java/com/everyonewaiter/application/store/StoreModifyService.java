@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.store;
 
+import com.everyonewaiter.application.store.provided.StoreFinder;
 import com.everyonewaiter.application.store.provided.StoreManager;
 import com.everyonewaiter.application.store.required.StoreRepository;
 import com.everyonewaiter.domain.store.Store;
@@ -15,12 +16,13 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 class StoreModifyService implements StoreManager {
 
+  private final StoreFinder storeFinder;
   private final StoreValidateService storeValidator;
   private final StoreRepository storeRepository;
 
   @Override
   public Store open(Long storeId) {
-    Store store = storeRepository.findByIdOrThrow(storeId);
+    Store store = storeFinder.findOrThrow(storeId);
 
     store.open();
 
@@ -31,7 +33,7 @@ class StoreModifyService implements StoreManager {
   public Store close(Long storeId) {
     storeValidator.checkPossibleClose(storeId);
 
-    Store store = storeRepository.findByIdOrThrow(storeId);
+    Store store = storeFinder.findOrThrow(storeId);
 
     store.close();
 
@@ -40,7 +42,7 @@ class StoreModifyService implements StoreManager {
 
   @Override
   public Store update(Long storeId, Long accountId, StoreUpdateRequest updateRequest) {
-    Store store = storeRepository.findByIdAndAccountIdOrThrow(storeId, accountId);
+    Store store = storeFinder.findOrThrow(storeId, accountId);
 
     store.update(updateRequest);
 

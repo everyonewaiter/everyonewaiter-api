@@ -2,6 +2,8 @@ package com.everyonewaiter.application.pos;
 
 import com.everyonewaiter.application.pos.provided.PosTableFinder;
 import com.everyonewaiter.application.pos.required.PosTableRepository;
+import com.everyonewaiter.application.support.ReadOnlyTransactional;
+import com.everyonewaiter.domain.pos.PosTable;
 import com.everyonewaiter.domain.pos.PosView;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +24,12 @@ class PosTableQueryService implements PosTableFinder {
         .stream()
         .map(PosView.PosTableDetail::from)
         .toList();
+  }
+
+  @Override
+  @ReadOnlyTransactional
+  public PosTable findActiveOrThrow(Long storeId, int tableNo) {
+    return posTableRepository.findActiveOrThrow(storeId, tableNo);
   }
 
   @Override

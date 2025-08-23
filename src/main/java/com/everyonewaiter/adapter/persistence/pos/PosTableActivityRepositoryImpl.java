@@ -27,6 +27,20 @@ class PosTableActivityRepositoryImpl implements PosTableActivityRepository {
   private final PosTableActivityJpaRepository posTableActivityJpaRepository;
 
   @Override
+  public boolean existsActive(Long storeId) {
+    Integer selectOne = queryFactory
+        .selectOne()
+        .from(posTableActivity)
+        .where(
+            posTableActivity.store.id.eq(storeId),
+            posTableActivity.active.isTrue()
+        )
+        .fetchFirst();
+
+    return selectOne != null;
+  }
+
+  @Override
   public long getDiscountRevenue(Long storeId, Instant start, Instant end) {
     Long revenue = queryFactory
         .select(posTableActivity.discount.sumLong())

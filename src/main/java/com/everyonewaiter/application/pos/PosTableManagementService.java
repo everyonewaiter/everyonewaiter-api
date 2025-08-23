@@ -1,5 +1,6 @@
 package com.everyonewaiter.application.pos;
 
+import com.everyonewaiter.application.pos.provided.PosTableFinder;
 import com.everyonewaiter.application.pos.provided.PosTableManager;
 import com.everyonewaiter.application.pos.required.PosTableRepository;
 import com.everyonewaiter.application.support.DistributedLock;
@@ -17,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 class PosTableManagementService implements PosTableManager {
 
+  private final PosTableFinder posTableFinder;
   private final PosTableRepository posTableRepository;
 
   @Override
@@ -26,8 +28,8 @@ class PosTableManagementService implements PosTableManager {
       return Optional.empty();
     }
 
-    PosTable source = posTableRepository.findActiveOrThrow(storeId, sourceTableNo);
-    PosTable target = posTableRepository.findActiveOrThrow(storeId, targetTableNo);
+    PosTable source = posTableFinder.findActiveOrThrow(storeId, sourceTableNo);
+    PosTable target = posTableFinder.findActiveOrThrow(storeId, targetTableNo);
 
     if (target.hasActiveActivity()) {
       target.merge(source);
@@ -43,7 +45,7 @@ class PosTableManagementService implements PosTableManager {
   @Override
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public PosTable discount(Long storeId, int tableNo, PosTableDiscountRequest discountRequest) {
-    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
+    PosTable posTable = posTableFinder.findActiveOrThrow(storeId, tableNo);
 
     posTable.discount(discountRequest);
 
@@ -53,7 +55,7 @@ class PosTableManagementService implements PosTableManager {
   @Override
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public PosTable completeActivity(Long storeId, int tableNo) {
-    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
+    PosTable posTable = posTableFinder.findActiveOrThrow(storeId, tableNo);
 
     posTable.completeActiveActivity();
 
@@ -63,7 +65,7 @@ class PosTableManagementService implements PosTableManager {
   @Override
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public PosTable resendReceipt(Long storeId, int tableNo) {
-    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
+    PosTable posTable = posTableFinder.findActiveOrThrow(storeId, tableNo);
 
     posTable.resendReceipt();
 

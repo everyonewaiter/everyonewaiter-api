@@ -29,19 +29,7 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
   private final RegistrationJpaRepository registrationJpaRepository;
 
   @Override
-  public Registration findByIdOrThrow(Long registrationId) {
-    return registrationJpaRepository.findById(registrationId)
-        .orElseThrow(RegistrationNotFoundException::new);
-  }
-
-  @Override
-  public Registration findByIdAndAccountIdOrThrow(Long registrationId, Long accountId) {
-    return registrationJpaRepository.findByIdAndAccountId(registrationId, accountId)
-        .orElseThrow(RegistrationNotFoundException::new);
-  }
-
-  @Override
-  public Paging<Registration> findAllByAccountId(
+  public Paging<Registration> findAll(
       Long accountId,
       RegistrationPageRequest pageRequest
   ) {
@@ -68,20 +56,7 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
   }
 
   @Override
-  public Registration findByAdminOrThrow(Long registrationId) {
-    return Optional.ofNullable(
-            queryFactory
-                .select(registration)
-                .from(registration)
-                .innerJoin(registration.account, account).fetchJoin()
-                .where(registration.id.eq(registrationId))
-                .fetchOne()
-        )
-        .orElseThrow(RegistrationNotFoundException::new);
-  }
-
-  @Override
-  public Paging<Registration> findAllByAdmin(
+  public Paging<Registration> findAll(
       RegistrationAdminPageRequest pageRequest
   ) {
     String email = pageRequest.getEmail();
@@ -117,6 +92,31 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
         .fetchOne();
 
     return new Paging<>(registrations, requireNonNull(count), pagination);
+  }
+
+  @Override
+  public Registration findOrThrow(Long registrationId) {
+    return registrationJpaRepository.findById(registrationId)
+        .orElseThrow(RegistrationNotFoundException::new);
+  }
+
+  @Override
+  public Registration findOrThrow(Long registrationId, Long accountId) {
+    return registrationJpaRepository.findByIdAndAccountId(registrationId, accountId)
+        .orElseThrow(RegistrationNotFoundException::new);
+  }
+
+  @Override
+  public Registration findWithAccountOrThrow(Long registrationId) {
+    return Optional.ofNullable(
+            queryFactory
+                .select(registration)
+                .from(registration)
+                .innerJoin(registration.account, account).fetchJoin()
+                .where(registration.id.eq(registrationId))
+                .fetchOne()
+        )
+        .orElseThrow(RegistrationNotFoundException::new);
   }
 
   @Override

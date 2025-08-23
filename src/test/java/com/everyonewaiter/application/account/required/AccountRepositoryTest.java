@@ -37,11 +37,11 @@ class AccountRepositoryTest extends IntegrationTest {
   }
 
   @Test
-  void existsStateByEmail() {
+  void existsByEmailAndState() {
     Account account = createAccount();
 
-    assertThat(accountRepository.existsState(account.getEmail(), INACTIVE)).isTrue();
-    assertThat(accountRepository.existsState(account.getEmail(), ACTIVE)).isFalse();
+    assertThat(accountRepository.exists(account.getEmail(), INACTIVE)).isTrue();
+    assertThat(accountRepository.exists(account.getEmail(), ACTIVE)).isFalse();
   }
 
   @Test
@@ -56,35 +56,35 @@ class AccountRepositoryTest extends IntegrationTest {
   }
 
   @Test
-  void existsStateByPhone() {
+  void existsByPhoneAndState() {
     Account account = createAccount();
 
-    assertThat(accountRepository.existsState(account.getPhoneNumber(), INACTIVE)).isTrue();
-    assertThat(accountRepository.existsState(account.getPhoneNumber(), ACTIVE)).isFalse();
+    assertThat(accountRepository.exists(account.getPhoneNumber(), INACTIVE)).isTrue();
+    assertThat(accountRepository.exists(account.getPhoneNumber(), ACTIVE)).isFalse();
   }
 
   @Test
-  void findAllByAdmin() {
+  void findAll() {
     Account account = createAccount();
 
-    Paging<AccountAdminPageView> pagedViews = findAllByAdmin(new AccountAdminPageRequest());
+    Paging<AccountAdminPageView> pagedViews = findAll(new AccountAdminPageRequest());
 
     assertThat(pagedViews.getContent()).hasSize(1);
     assertThat(pagedViews.getContent().getFirst().id()).isEqualTo(account.getId());
   }
 
   @Test
-  void findAllByAdminWhereEmail() {
+  void findAllWhereEmail() {
     Account account = createAccount();
 
-    Paging<AccountAdminPageView> pagedViews = findAllByAdmin(
+    Paging<AccountAdminPageView> pagedViews = findAll(
         new AccountAdminPageRequest(account.getEmail().address(), null, null, null, 1, 20)
     );
 
     assertThat(pagedViews.getContent()).hasSize(1);
     assertThat(pagedViews.getContent().getFirst().id()).isEqualTo(account.getId());
 
-    Paging<AccountAdminPageView> emptyViews = findAllByAdmin(
+    Paging<AccountAdminPageView> emptyViews = findAll(
         new AccountAdminPageRequest("user@everyonewaiter.com", null, null, null, 1, 20)
     );
 
@@ -92,17 +92,17 @@ class AccountRepositoryTest extends IntegrationTest {
   }
 
   @Test
-  void findAllByAdminWhereState() {
+  void findAllWhereState() {
     Account account = createAccount();
 
-    Paging<AccountAdminPageView> pagedViews = findAllByAdmin(
+    Paging<AccountAdminPageView> pagedViews = findAll(
         new AccountAdminPageRequest(null, account.getState(), null, null, 1, 20)
     );
 
     assertThat(pagedViews.getContent()).hasSize(1);
     assertThat(pagedViews.getContent().getFirst().id()).isEqualTo(account.getId());
 
-    Paging<AccountAdminPageView> emptyViews = findAllByAdmin(
+    Paging<AccountAdminPageView> emptyViews = findAll(
         new AccountAdminPageRequest(null, ACTIVE, null, null, 1, 20)
     );
 
@@ -110,17 +110,17 @@ class AccountRepositoryTest extends IntegrationTest {
   }
 
   @Test
-  void findAllByAdminWherePermission() {
+  void findAllWherePermission() {
     Account account = createAccount();
 
-    Paging<AccountAdminPageView> pagedViews = findAllByAdmin(
+    Paging<AccountAdminPageView> pagedViews = findAll(
         new AccountAdminPageRequest(null, null, account.getPermission(), null, 1, 20)
     );
 
     assertThat(pagedViews.getContent()).hasSize(1);
     assertThat(pagedViews.getContent().getFirst().id()).isEqualTo(account.getId());
 
-    Paging<AccountAdminPageView> emptyViews = findAllByAdmin(
+    Paging<AccountAdminPageView> emptyViews = findAll(
         new AccountAdminPageRequest(null, null, OWNER, null, 1, 20)
     );
 
@@ -128,17 +128,17 @@ class AccountRepositoryTest extends IntegrationTest {
   }
 
   @Test
-  void findAllByAdminWhereHasStore() {
+  void findAllWhereHasStore() {
     Account account = createAccount();
 
-    Paging<AccountAdminPageView> pagedViews = findAllByAdmin(
+    Paging<AccountAdminPageView> pagedViews = findAll(
         new AccountAdminPageRequest(null, null, null, false, 1, 20)
     );
 
     assertThat(pagedViews.getContent()).hasSize(1);
     assertThat(pagedViews.getContent().getFirst().id()).isEqualTo(account.getId());
 
-    Paging<AccountAdminPageView> emptyViews = findAllByAdmin(
+    Paging<AccountAdminPageView> emptyViews = findAll(
         new AccountAdminPageRequest(null, null, null, true, 1, 20)
     );
 
@@ -149,18 +149,18 @@ class AccountRepositoryTest extends IntegrationTest {
   void findById() {
     Account account = createAccount();
 
-    assertThat(accountRepository.findById(account.getId())).isPresent();
-    assertThat(accountRepository.findById(999L)).isEmpty();
+    assertThat(accountRepository.find(account.getId())).isPresent();
+    assertThat(accountRepository.find(999L)).isEmpty();
   }
 
   @Test
   void findByIdOrThrow() {
     Account account = createAccount();
 
-    assertThatCode(() -> accountRepository.findByIdOrThrow(account.getId()))
+    assertThatCode(() -> accountRepository.findOrThrow(account.getId()))
         .doesNotThrowAnyException();
 
-    assertThatThrownBy(() -> accountRepository.findByIdOrThrow(999L))
+    assertThatThrownBy(() -> accountRepository.findOrThrow(999L))
         .isInstanceOf(AccountNotFoundException.class);
   }
 
@@ -168,18 +168,18 @@ class AccountRepositoryTest extends IntegrationTest {
   void findByEmail() {
     Account account = createAccount();
 
-    assertThat(accountRepository.findByEmail(account.getEmail())).isPresent();
-    assertThat(accountRepository.findByEmail(new Email("user@everyonewaiter.com"))).isEmpty();
+    assertThat(accountRepository.find(account.getEmail())).isPresent();
+    assertThat(accountRepository.find(new Email("user@everyonewaiter.com"))).isEmpty();
   }
 
   @Test
   void findByEmailOrThrow() {
     Account account = createAccount();
 
-    assertThatCode(() -> accountRepository.findByEmailOrThrow(account.getEmail()))
+    assertThatCode(() -> accountRepository.findOrThrow(account.getEmail()))
         .doesNotThrowAnyException();
 
-    assertThatThrownBy(() -> accountRepository.findByEmailOrThrow(new Email("user@gmail.com")))
+    assertThatThrownBy(() -> accountRepository.findOrThrow(new Email("user@gmail.com")))
         .isInstanceOf(AccountNotFoundException.class);
   }
 
@@ -187,10 +187,10 @@ class AccountRepositoryTest extends IntegrationTest {
   void findByPhoneOrThrow() {
     Account account = createAccount();
 
-    assertThatCode(() -> accountRepository.findByPhoneOrThrow(account.getPhoneNumber()))
+    assertThatCode(() -> accountRepository.findOrThrow(account.getPhoneNumber()))
         .doesNotThrowAnyException();
 
-    assertThatThrownBy(() -> accountRepository.findByPhoneOrThrow(new PhoneNumber("01087654321")))
+    assertThatThrownBy(() -> accountRepository.findOrThrow(new PhoneNumber("01087654321")))
         .isInstanceOf(AccountNotFoundException.class);
   }
 
@@ -200,8 +200,8 @@ class AccountRepositoryTest extends IntegrationTest {
     return accountRepository.save(account);
   }
 
-  private Paging<AccountAdminPageView> findAllByAdmin(AccountAdminPageRequest readRequest) {
-    return accountRepository.findAllByAdmin(readRequest);
+  private Paging<AccountAdminPageView> findAll(AccountAdminPageRequest readRequest) {
+    return accountRepository.findAll(readRequest);
   }
 
 }

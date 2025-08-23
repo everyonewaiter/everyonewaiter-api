@@ -65,7 +65,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
   }
 
   @Override
-  public Category findByIdAndStoreIdOrThrow(Long categoryId, Long storeId) {
+  public Category findOrThrow(Long categoryId, Long storeId) {
     return categoryJpaRepository.findByIdAndStoreId(categoryId, storeId)
         .orElseThrow(CategoryNotFoundException::new);
   }

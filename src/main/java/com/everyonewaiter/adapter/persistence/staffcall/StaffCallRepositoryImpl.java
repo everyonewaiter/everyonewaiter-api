@@ -20,14 +20,14 @@ class StaffCallRepositoryImpl implements StaffCallRepository {
   private final StaffCallJpaRepository staffCallJpaRepository;
 
   @Override
-  public List<StaffCall> findAllIncompleted(Long storeId) {
+  public List<StaffCall> findAll(Long storeId, StaffCallState state) {
     return queryFactory
         .select(staffCall)
         .from(staffCall)
         .innerJoin(staffCall.store, store).fetchJoin()
         .where(
             staffCall.store.id.eq(storeId),
-            staffCall.state.eq(StaffCallState.INCOMPLETE),
+            staffCall.state.eq(state),
             staffCall.createdAt.gt(store.lastOpenedAt)
         )
         .fetch();

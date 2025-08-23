@@ -20,7 +20,12 @@ class ContactQueryService implements ContactFinder {
 
   @Override
   public Paging<Contact> findAllByAdmin(ContactAdminPageRequest pageRequest) {
-    return contactRepository.findAllByAdmin(pageRequest);
+    return contactRepository.findAll(pageRequest);
+  }
+
+  @Override
+  public Contact findOrThrow(Long contactId) {
+    return contactRepository.findOrThrow(contactId);
   }
 
 }

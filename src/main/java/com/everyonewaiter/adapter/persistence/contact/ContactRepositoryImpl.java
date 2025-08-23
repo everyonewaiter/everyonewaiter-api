@@ -41,7 +41,7 @@ class ContactRepositoryImpl implements ContactRepository {
   }
 
   @Override
-  public Paging<Contact> findAllByAdmin(ContactAdminPageRequest pageRequest) {
+  public Paging<Contact> findAll(ContactAdminPageRequest pageRequest) {
     String storeName = pageRequest.getStoreName();
     String phoneNumber = pageRequest.getPhoneNumber();
     String license = pageRequest.getLicense();
@@ -80,7 +80,7 @@ class ContactRepositoryImpl implements ContactRepository {
   }
 
   @Override
-  public Contact findByIdOrThrow(Long contactId) {
+  public Contact findOrThrow(Long contactId) {
     return contactJpaRepository.findById(contactId)
         .orElseThrow(ContactNotFoundException::new);
   }

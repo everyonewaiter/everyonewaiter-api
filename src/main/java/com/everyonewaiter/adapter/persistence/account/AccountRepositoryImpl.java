@@ -38,7 +38,7 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public boolean existsState(Email email, AccountState state) {
+  public boolean exists(Email email, AccountState state) {
     return accountJpaRepository.existsByEmailAndState(email, state);
   }
 
@@ -48,12 +48,12 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public boolean existsState(PhoneNumber phoneNumber, AccountState state) {
+  public boolean exists(PhoneNumber phoneNumber, AccountState state) {
     return accountJpaRepository.existsByPhoneNumberAndState(phoneNumber, state);
   }
 
   @Override
-  public Paging<AccountAdminPageView> findAllByAdmin(AccountAdminPageRequest pageRequest) {
+  public Paging<AccountAdminPageView> findAll(AccountAdminPageRequest pageRequest) {
     String email = pageRequest.getEmail();
     AccountState state = pageRequest.getState();
     AccountPermission permission = pageRequest.getPermission();
@@ -105,27 +105,27 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public Optional<Account> findById(Long accountId) {
+  public Optional<Account> find(Long accountId) {
     return accountJpaRepository.findById(accountId);
   }
 
   @Override
-  public Account findByIdOrThrow(Long accountId) {
-    return findById(accountId).orElseThrow(AccountNotFoundException::new);
+  public Account findOrThrow(Long accountId) {
+    return find(accountId).orElseThrow(AccountNotFoundException::new);
   }
 
   @Override
-  public Optional<Account> findByEmail(Email email) {
+  public Optional<Account> find(Email email) {
     return accountJpaRepository.findByEmail(email);
   }
 
   @Override
-  public Account findByEmailOrThrow(Email email) {
-    return findByEmail(email).orElseThrow(AccountNotFoundException::new);
+  public Account findOrThrow(Email email) {
+    return find(email).orElseThrow(AccountNotFoundException::new);
   }
 
   @Override
-  public Account findByPhoneOrThrow(PhoneNumber phoneNumber) {
+  public Account findOrThrow(PhoneNumber phoneNumber) {
     return accountJpaRepository.findByPhoneNumber(phoneNumber)
         .orElseThrow(AccountNotFoundException::new);
   }

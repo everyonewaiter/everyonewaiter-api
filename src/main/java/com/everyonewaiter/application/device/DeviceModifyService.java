@@ -1,6 +1,7 @@
 package com.everyonewaiter.application.device;
 
 import com.everyonewaiter.application.auth.provided.Authenticator;
+import com.everyonewaiter.application.device.provided.DeviceFinder;
 import com.everyonewaiter.application.device.provided.DeviceManager;
 import com.everyonewaiter.application.device.required.DeviceRepository;
 import com.everyonewaiter.application.store.provided.StoreFinder;
@@ -24,6 +25,7 @@ class DeviceModifyService implements DeviceManager {
 
   private final Authenticator authenticator;
   private final StoreFinder storeFinder;
+  private final DeviceFinder deviceFinder;
   private final DeviceRepository deviceRepository;
 
   @Override
@@ -56,7 +58,7 @@ class DeviceModifyService implements DeviceManager {
   public Device update(Long deviceId, Long storeId, DeviceUpdateRequest updateRequest) {
     validateDeviceUpdate(deviceId, storeId, updateRequest);
 
-    Device device = deviceRepository.findByIdAndStoreIdOrThrow(deviceId, storeId);
+    Device device = deviceFinder.findOrThrow(deviceId, storeId);
 
     switch (updateRequest.purpose()) {
       case POS -> device.updatePos(updateRequest);
@@ -80,7 +82,7 @@ class DeviceModifyService implements DeviceManager {
 
   @Override
   public void delete(Long deviceId, Long storeId) {
-    Device device = deviceRepository.findByIdAndStoreIdOrThrow(deviceId, storeId);
+    Device device = deviceFinder.findOrThrow(deviceId, storeId);
 
     device.delete();
 
