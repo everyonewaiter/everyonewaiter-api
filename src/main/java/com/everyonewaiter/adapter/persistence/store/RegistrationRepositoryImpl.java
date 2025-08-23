@@ -81,7 +81,7 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
     Long count = queryFactory
         .select(registration.count())
         .from(registration)
-        .innerJoin(registration.account, account).fetchJoin()
+        .innerJoin(registration.account, account)
         .where(
             emailStratsWith(email),
             nameStartsWith(name),
