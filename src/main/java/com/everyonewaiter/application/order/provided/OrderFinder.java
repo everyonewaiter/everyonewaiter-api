@@ -10,6 +10,8 @@ public interface OrderFinder {
 
   List<OrderView.OrderDetail> findAllActive(Long storeId, int tableNo);
 
+  List<Order> findAll(List<Long> orderIds);
+
   Order findOrThrow(Long orderId);
 
   Order findOrThrow(Long orderId, Long storeId);

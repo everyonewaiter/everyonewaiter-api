@@ -9,13 +9,13 @@ public interface PosTableOrderManager {
 
   PosTable cancel(Long storeId, int tableNo, Long orderId);
 
+  PosTable update(Long storeId, int tableNo, @Valid OrderUpdateRequests updateRequests);
+
   PosTable update(
       Long storeId,
       int tableNo,
       Long orderId,
       @Valid OrderMemoUpdateRequest updateRequest
   );
-
-  PosTable update(Long storeId, int tableNo, @Valid OrderUpdateRequests updateRequests);
 
 }

@@ -60,4 +60,14 @@ class PosTableManagementService implements PosTableManager {
     return posTableRepository.save(posTable);
   }
 
+  @Override
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
+  public PosTable resendReceipt(Long storeId, int tableNo) {
+    PosTable posTable = posTableRepository.findActiveOrThrow(storeId, tableNo);
+
+    posTable.resendReceipt();
+
+    return posTableRepository.save(posTable);
+  }
+
 }

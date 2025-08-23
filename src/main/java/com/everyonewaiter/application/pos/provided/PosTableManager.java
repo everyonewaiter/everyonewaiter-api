@@ -13,4 +13,6 @@ public interface PosTableManager {
 
   PosTable completeActivity(Long storeId, int tableNo);
 
+  PosTable resendReceipt(Long storeId, int tableNo);
+
 }

@@ -17,7 +17,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @Service
 @RequiredArgsConstructor
-class StaffCallService implements StaffCallManager {
+class StaffCallManagementService implements StaffCallManager {
 
   private final StoreFinder storeFinder;
   private final StaffCallRepository staffCallRepository;

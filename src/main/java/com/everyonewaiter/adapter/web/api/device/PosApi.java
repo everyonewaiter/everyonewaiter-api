@@ -1,12 +1,10 @@
 package com.everyonewaiter.adapter.web.api.device;
 
 import com.everyonewaiter.adapter.web.api.dto.PosTableDetailResponses;
-import com.everyonewaiter.application.pos.PosService;
 import com.everyonewaiter.application.pos.provided.PosTableActivityFinder;
 import com.everyonewaiter.application.pos.provided.PosTableFinder;
 import com.everyonewaiter.application.pos.provided.PosTableManager;
 import com.everyonewaiter.application.pos.provided.PosTableOrderManager;
-import com.everyonewaiter.application.sse.provided.SseSender;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
@@ -35,8 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/pos")
 class PosApi implements PosApiSpecification {
 
-  private final SseSender sseSender;
-  private final PosService posService;
   private final PosTableFinder posTableFinder;
   private final PosTableActivityFinder posTableActivityFinder;
   private final PosTableManager posTableManager;
@@ -176,7 +172,8 @@ class PosApi implements PosApiSpecification {
       @PathVariable int tableNo,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    posService.resendReceipt(device.getStoreId(), tableNo);
+    posTableManager.resendReceipt(device.getStoreId(), tableNo);
+
     return ResponseEntity.noContent().build();
   }
 

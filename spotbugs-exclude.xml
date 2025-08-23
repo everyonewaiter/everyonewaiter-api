@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+  <Match>
+    <Bug code="EQ" pattern="EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS"/>
+  </Match>
+
+  <Match>
+    <Method name="equals"/>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+  </Match>
+  <Match>
+    <Method name="hashCode"/>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+  </Match>
+
+  <Match>
+    <Or>
+      <Class name="~.*View"/>
+      <Class name="com.everyonewaiter.domain.menu.CategoryView$CategoryDetail"/>
+      <Class name="com.everyonewaiter.domain.menu.MenuView$MenuDetail"/>
+      <Class name="com.everyonewaiter.domain.menu.MenuView$MenuOptionGroupDetail"/>
+      <Class name="com.everyonewaiter.domain.menu.MenuView$MenuOptionDetail"/>
+      <Class name="com.everyonewaiter.domain.order.OrderView$OrderDetail"/>
+      <Class name="com.everyonewaiter.domain.order.OrderView$OrderMenuDetail"/>
+      <Class name="com.everyonewaiter.domain.order.OrderView$OrderOptionGroupDetail"/>
+      <Class name="com.everyonewaiter.domain.order.OrderView$OrderOptionDetail"/>
+      <Class name="com.everyonewaiter.domain.order.OrderPaymentView$OrderPaymentDetail"/>
+      <Class name="com.everyonewaiter.domain.pos.PosView$PosTableDetail"/>
+      <Class name="com.everyonewaiter.domain.pos.PosView$PosTableActivityDetail"/>
+      <Class name="~.*Event"/>
+      <Class name="com.everyonewaiter.domain.notification.DiscordEmbeds"/>
+      <Class name="~.*Request"/>
+      <Class name="~.*Requests"/>
+      <Package name="com.everyonewaiter.domain.receipt"/>
+      <Package name="com.everyonewaiter.adapter.web.api.dto"/>
+    </Or>
+    <Bug pattern="EI_EXPOSE_REP"/>
+  </Match>
+
+  <Match>
+    <Or>
+      <Class name="~.*View"/>
+      <Class name="com.everyonewaiter.domain.menu.CategoryView$CategoryDetail"/>
+      <Class name="com.everyonewaiter.domain.menu.MenuView$MenuDetail"/>
+      <Class name="com.everyonewaiter.domain.menu.MenuView$MenuOptionGroupDetail"/>
+      <Class name="com.everyonewaiter.domain.menu.MenuView$MenuOptionDetail"/>
+      <Class name="com.everyonewaiter.domain.order.OrderView$OrderDetail"/>
+      <Class name="com.everyonewaiter.domain.order.OrderView$OrderMenuDetail"/>
+      <Class name="com.everyonewaiter.domain.order.OrderView$OrderOptionGroupDetail"/>
+      <Class name="com.everyonewaiter.domain.order.OrderView$OrderOptionDetail"/>
+      <Class name="com.everyonewaiter.domain.order.OrderPaymentView$OrderPaymentDetail"/>
+      <Class name="com.everyonewaiter.domain.pos.PosView$PosTableDetail"/>
+      <Class name="com.everyonewaiter.domain.pos.PosView$PosTableActivityDetail"/>
+      <Class name="~.*Event"/>
+      <Class name="com.everyonewaiter.domain.notification.DiscordEmbeds"/>
+      <Class name="~.*Request"/>
+      <Class name="~.*Requests"/>
+      <Method name="moveTable"/>
+      <Package name="com.everyonewaiter.domain.receipt"/>
+      <Package name="com.everyonewaiter.adapter.web.api.dto"/>
+    </Or>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
+</FindBugsFilter>

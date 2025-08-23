@@ -89,7 +89,7 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
   public void moveTable(PosTable posTable) {
     this.posTable.removeActivity(this);
 
-    this.posTable = posTable;
+    this.posTable = requireNonNull(posTable);
     this.tableNo = posTable.getTableNo();
 
     this.posTable.addActivity(this);

@@ -1,21 +1,20 @@
 package com.everyonewaiter.domain.pos;
 
-import static com.everyonewaiter.domain.sse.ServerAction.GET;
 import static com.everyonewaiter.domain.sse.ServerAction.UPDATE;
 import static com.everyonewaiter.domain.sse.SseCategory.ORDER;
 import static com.everyonewaiter.domain.sse.SseCategory.POS;
-import static com.everyonewaiter.domain.sse.SseCategory.RECEIPT;
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.order.Order;
 import com.everyonewaiter.domain.order.OrderMemoUpdateRequest;
-import com.everyonewaiter.domain.order.OrderMenu;
 import com.everyonewaiter.domain.order.OrderType;
+import com.everyonewaiter.domain.order.OrderUpdateEvent;
 import com.everyonewaiter.domain.order.OrderUpdateRequest;
 import com.everyonewaiter.domain.order.OrderUpdateRequests;
-import com.everyonewaiter.domain.order.entity.Receipt;
+import com.everyonewaiter.domain.receipt.Receipt;
+import com.everyonewaiter.domain.receipt.ReceiptResendEvent;
 import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.store.Store;
 import jakarta.persistence.Entity;
@@ -113,13 +112,14 @@ public class PosTable extends AggregateRootEntity<PosTable> {
     registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
   }
 
-  public void updateOrder(OrderUpdateRequests updateRequests) {
+  public void updateOrder(OrderUpdateRequests updateRequests, Receipt diff) {
     PosTableActivity posTableActivity = getActiveActivityOrThrow();
 
     for (OrderUpdateRequest updateRequest : updateRequests.orders()) {
       posTableActivity.updateOrder(updateRequest);
     }
 
+    registerEvent(new OrderUpdateEvent(store.getNonNullId(), tableNo, diff));
     registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getTableNo()));
     registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
   }
@@ -133,13 +133,12 @@ public class PosTable extends AggregateRootEntity<PosTable> {
     registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
   }
 
-  public void resendReceipt(Receipt receipt) {
-    registerEvent(new SseEvent(store.getId(), RECEIPT, GET, receipt));
-  }
+  public void resendReceipt() {
+    List<Long> orderIds = getOrderedOrders().stream()
+        .map(Order::getNonNullId)
+        .toList();
 
-  public void registerSseUpdateEvent(Object data) {
-    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, data));
-    registerEvent(new SseEvent(store.getId(), POS, UPDATE, data));
+    registerEvent(new ReceiptResendEvent(store.getNonNullId(), orderIds));
   }
 
   public boolean hasActiveActivity() {
@@ -197,13 +196,6 @@ public class PosTable extends AggregateRootEntity<PosTable> {
   public List<Order> getOrderedOrders() {
     return getActiveActivity().stream()
         .flatMap(posTableActivity -> posTableActivity.getOrderedOrders().stream())
-        .toList();
-  }
-
-  public List<OrderMenu> getPrintEnabledOrderedOrderMenus() {
-    return getOrderedOrders().stream()
-        .flatMap(order -> order.getOrderMenus().stream())
-        .filter(OrderMenu::isPrintEnabled)
         .toList();
   }
 

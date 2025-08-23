@@ -22,6 +22,16 @@ class OrderRepositoryImpl implements OrderRepository {
   private final OrderJpaRepository orderJpaRepository;
 
   @Override
+  public List<Order> findAll(List<Long> orderIds) {
+    return queryFactory
+        .select(order)
+        .from(order)
+        .leftJoin(order.orderMenus, orderMenu).fetchJoin()
+        .where(order.id.in(orderIds))
+        .fetch();
+  }
+
+  @Override
   public List<Order> findAll(Long storeId, boolean served) {
     return queryFactory
         .select(order)

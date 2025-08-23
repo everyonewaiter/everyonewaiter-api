@@ -138,7 +138,7 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
   public void moveTable(PosTableActivity posTableActivity) {
     this.posTableActivity.removePayment(this);
 
-    this.posTableActivity = posTableActivity;
+    this.posTableActivity = requireNonNull(posTableActivity);
 
     this.posTableActivity.addPayment(this);
   }

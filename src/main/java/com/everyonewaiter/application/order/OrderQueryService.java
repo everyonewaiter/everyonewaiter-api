@@ -33,6 +33,11 @@ class OrderQueryService implements OrderFinder {
   }
 
   @Override
+  public List<Order> findAll(List<Long> orderIds) {
+    return orderRepository.findAll(orderIds);
+  }
+
+  @Override
   @ReadOnlyTransactional
   public Order findOrThrow(Long orderId) {
     return orderRepository.findOrThrow(orderId);
