@@ -62,6 +62,7 @@ class StoreRepositoryImpl implements StoreRepository {
             queryFactory
                 .select(store)
                 .from(store)
+                .innerJoin(store.account, account).fetchJoin()
                 .innerJoin(store.setting, setting).fetchJoin()
                 .where(store.id.eq(storeId))
                 .fetchFirst()
