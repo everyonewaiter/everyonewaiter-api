@@ -1,7 +1,5 @@
 package com.everyonewaiter.domain.sse;
 
-import static java.util.Objects.requireNonNull;
-
 import jakarta.annotation.Nullable;
 
 public record SseEvent(
@@ -17,7 +15,7 @@ public record SseEvent(
   }
 
   public SseEvent(Long storeId, SseCategory category, ServerAction action, @Nullable Object data) {
-    this(requireNonNull(storeId), category, action, data != null, data);
+    this(storeId, category, action, data != null, data);
   }
 
 }
