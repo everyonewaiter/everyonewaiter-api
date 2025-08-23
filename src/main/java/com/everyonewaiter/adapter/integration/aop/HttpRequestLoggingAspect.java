@@ -24,7 +24,11 @@ class HttpRequestLoggingAspect {
 
   private static final String DELIMITER = ", ";
 
-  @Pointcut("execution(* com.everyonewaiter.adapter.web.api.*.*(..)) && @annotation(org.springframework.web.bind.annotation.RestController)")
+  @Pointcut(
+      "execution(* com.everyonewaiter.adapter.web.api.*.*(..))"
+          + " && !@annotation(com.everyonewaiter.application.support.ExcludeLogging)"
+          + " && @annotation(org.springframework.web.bind.annotation.RestController)"
+  )
   public void controller() {
     // Pointcut for all controllers
   }

@@ -2,6 +2,7 @@ package com.everyonewaiter.adapter.web.api.common;
 
 import com.everyonewaiter.adapter.web.api.dto.ApkVersionDetailResponse;
 import com.everyonewaiter.application.health.provided.HealthCheckFinder;
+import com.everyonewaiter.application.support.ExcludeLogging;
 import com.everyonewaiter.domain.health.ApkVersion;
 import com.everyonewaiter.domain.health.ServerInfo;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ class HealthCheckApi implements HealthCheckApiSpecification {
   private final HealthCheckFinder healthCheckFinder;
 
   @Override
+  @ExcludeLogging
   @GetMapping("/server-versions")
   public ResponseEntity<ServerInfo> getServerVersion() {
     ServerInfo serverInfo = healthCheckFinder.findServerInfo();
@@ -26,6 +28,7 @@ class HealthCheckApi implements HealthCheckApiSpecification {
   }
 
   @Override
+  @ExcludeLogging
   @GetMapping("/apk-versions")
   public ResponseEntity<ApkVersionDetailResponse> getLatestApkVersion() {
     ApkVersion latestApkVersion = healthCheckFinder.findLatestApkVersion();
