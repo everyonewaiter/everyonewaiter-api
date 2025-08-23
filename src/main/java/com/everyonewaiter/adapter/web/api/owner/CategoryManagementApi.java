@@ -55,7 +55,7 @@ class CategoryManagementApi implements CategoryManagementApiSpecification {
   ) {
     Category category = categoryManager.create(storeId, createRequest);
 
-    return ResponseEntity.created(URI.create(category.getNonNullId().toString())).build();
+    return ResponseEntity.created(URI.create(String.valueOf(category.getId()))).build();
   }
 
   @Override

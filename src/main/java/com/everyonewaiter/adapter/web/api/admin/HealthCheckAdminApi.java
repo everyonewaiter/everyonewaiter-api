@@ -30,7 +30,7 @@ class HealthCheckAdminApi implements HealthCheckAdminApiSpecification {
   ) {
     ApkVersion apkVersion = healthCheckCreator.createApkVersion(request);
 
-    return ResponseEntity.created(URI.create(apkVersion.getNonNullId().toString())).build();
+    return ResponseEntity.created(URI.create(String.valueOf(apkVersion.getId()))).build();
   }
 
 }

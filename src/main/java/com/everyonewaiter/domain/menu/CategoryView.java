@@ -23,7 +23,7 @@ public class CategoryView {
 
     public static CategoryDetail from(Category category) {
       return new CategoryDetail(
-          category.getNonNullId().toString(),
+          String.valueOf(category.getId()),
           category.getName(),
           category.getMenus()
               .stream()

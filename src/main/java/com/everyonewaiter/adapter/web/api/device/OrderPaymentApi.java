@@ -58,7 +58,7 @@ class OrderPaymentApi implements OrderPaymentApiSpecification {
   ) {
     var payment = orderPaymentCreator.approve(device.getStoreId(), tableNo, approveRequest);
 
-    return ResponseEntity.created(URI.create(payment.getNonNullId().toString())).build();
+    return ResponseEntity.created(URI.create(String.valueOf(payment.getId()))).build();
   }
 
   @Override
@@ -71,7 +71,7 @@ class OrderPaymentApi implements OrderPaymentApiSpecification {
   ) {
     var payment = orderPaymentCreator.cancel(device.getStoreId(), orderPaymentId, cancelRequest);
 
-    return ResponseEntity.created(URI.create(payment.getNonNullId().toString())).build();
+    return ResponseEntity.created(URI.create(String.valueOf(payment.getId()))).build();
   }
 
 }

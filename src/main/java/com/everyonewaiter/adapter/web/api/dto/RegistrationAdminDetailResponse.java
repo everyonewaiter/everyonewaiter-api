@@ -46,8 +46,8 @@ public record RegistrationAdminDetailResponse(
 
   public static RegistrationAdminDetailResponse from(Registration registration) {
     return new RegistrationAdminDetailResponse(
-        registration.getNonNullId().toString(),
-        registration.getAccount().getNonNullId().toString(),
+        String.valueOf(registration.getId()),
+        String.valueOf(registration.getAccount().getId()),
         registration.getAccount().getEmail().address(),
         registration.getDetail().getName(),
         registration.getDetail().getCeoName(),

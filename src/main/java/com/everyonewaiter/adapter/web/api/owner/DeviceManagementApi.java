@@ -81,7 +81,7 @@ class DeviceManagementApi implements DeviceManagementApiSpecification {
   ) {
     Device device = deviceManager.create(storeId, createRequest);
 
-    return ResponseEntity.created(URI.create(device.getNonNullId().toString()))
+    return ResponseEntity.created(URI.create(String.valueOf(device.getId())))
         .body(DeviceCreateResponse.from(device));
   }
 

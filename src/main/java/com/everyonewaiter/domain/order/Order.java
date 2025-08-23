@@ -69,8 +69,8 @@ public class Order extends AggregateRootEntity<Order> {
 
     order.posTableActivity.addOrder(order);
 
-    order.registerEvent(new OrderCreateEvent(order.getNonNullId(), order.store.getNonNullId()));
-    order.registerEvent(new SseEvent(order.store.getNonNullId(), ORDER, CREATE));
+    order.registerEvent(new OrderCreateEvent(order.getId(), order.store.getId()));
+    order.registerEvent(new SseEvent(order.store.getId(), ORDER, CREATE));
 
     return order;
   }
@@ -91,7 +91,7 @@ public class Order extends AggregateRootEntity<Order> {
     getOrderMenus().forEach(OrderMenu::serving);
     this.serving.complete();
 
-    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getNonNullId()));
+    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getId()));
   }
 
   public void serving(Long orderMenuId) {
@@ -101,7 +101,7 @@ public class Order extends AggregateRootEntity<Order> {
 
     getOrderMenu(orderMenuId).toggleServing();
 
-    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getNonNullId()));
+    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getId()));
   }
 
   public void cancel() {
@@ -170,7 +170,7 @@ public class Order extends AggregateRootEntity<Order> {
 
   public OrderMenu getOrderMenu(Long orderMenuId) {
     return getOrderMenus().stream()
-        .filter(orderMenu -> orderMenu.getNonNullId().equals(orderMenuId))
+        .filter(orderMenu -> requireNonNull(orderMenu.getId()).equals(orderMenuId))
         .findFirst()
         .orElseThrow(OrderMenuNotFoundException::new);
   }

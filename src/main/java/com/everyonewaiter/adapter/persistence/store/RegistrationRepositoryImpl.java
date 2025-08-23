@@ -38,7 +38,6 @@ class RegistrationRepositoryImpl implements RegistrationRepository {
     List<Registration> registrations = queryFactory
         .select(registration)
         .from(registration)
-        .innerJoin(registration.account, account).fetchJoin()
         .where(registration.account.id.eq(accountId))
         .orderBy(registration.id.desc())
         .limit(pagination.limit())

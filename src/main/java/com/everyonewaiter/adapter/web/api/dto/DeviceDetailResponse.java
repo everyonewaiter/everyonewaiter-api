@@ -42,7 +42,7 @@ public record DeviceDetailResponse(
 
   public static DeviceDetailResponse from(Device device) {
     return new DeviceDetailResponse(
-        device.getNonNullId().toString(),
+        String.valueOf(device.getId()),
         device.getStoreId().toString(),
         device.getStore().getDetail().getName(),
         device.getName(),

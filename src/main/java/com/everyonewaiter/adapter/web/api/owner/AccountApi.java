@@ -59,7 +59,7 @@ class AccountApi implements AccountApiSpecification {
   public ResponseEntity<Void> signUp(@RequestBody @Valid AccountCreateRequest createRequest) {
     Account account = accountRegister.register(createRequest);
 
-    return ResponseEntity.created(URI.create(account.getNonNullId().toString())).build();
+    return ResponseEntity.created(URI.create(String.valueOf(account.getId()))).build();
   }
 
   @Override

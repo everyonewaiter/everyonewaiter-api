@@ -13,7 +13,7 @@ public record CategorySimpleResponse(
 ) {
 
   public static CategorySimpleResponse from(Category category) {
-    return new CategorySimpleResponse(category.getNonNullId().toString(), category.getName());
+    return new CategorySimpleResponse(String.valueOf(category.getId()), category.getName());
   }
 
 }

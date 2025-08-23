@@ -47,7 +47,7 @@ class StaffCallApi implements StaffCallApiSpecification {
     StaffCall staffCall =
         staffCallManager.create(device.getStoreId(), device.getTableNo(), createRequest);
 
-    return ResponseEntity.created(URI.create(staffCall.getNonNullId().toString())).build();
+    return ResponseEntity.created(URI.create(String.valueOf(staffCall.getId()))).build();
   }
 
   @Override

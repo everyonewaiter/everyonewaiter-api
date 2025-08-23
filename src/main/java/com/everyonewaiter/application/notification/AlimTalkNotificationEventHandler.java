@@ -55,7 +55,7 @@ class AlimTalkNotificationEventHandler {
     Store store = waiting.getStore();
 
     LOGGER.info("[웨이팅 등록 이벤트] storeId: {}, storeName: {}",
-        store.getNonNullId(), store.getDetail().getName());
+        store.getId(), store.getDetail().getName());
 
     AlimTalkMessage message = new AlimTalkMessage(
         WAITING_REGISTRATION,
@@ -67,9 +67,9 @@ class AlimTalkNotificationEventHandler {
         store.getDetail().getLandline(),
         store.getDetail().getName()
     );
-    message.addButton(WAITING_CANCEL, store.getNonNullId(), waiting.getAccessKey());
-    message.addButton(CHECK_MY_TURN, store.getNonNullId(), waiting.getAccessKey());
-    message.addButton(MENU_PREVIEW, store.getNonNullId());
+    message.addButton(WAITING_CANCEL, store.getId(), waiting.getAccessKey());
+    message.addButton(CHECK_MY_TURN, store.getId(), waiting.getAccessKey());
+    message.addButton(MENU_PREVIEW, store.getId());
 
     notificationSender.sendAlimTalkOneToOne(message);
   }
@@ -81,7 +81,7 @@ class AlimTalkNotificationEventHandler {
     Store store = waiting.getStore();
 
     LOGGER.info("[웨이팅 손님 호출 이벤트] storeId: {}, storeName: {}",
-        store.getNonNullId(), store.getDetail().getName());
+        store.getId(), store.getDetail().getName());
 
     AlimTalkMessage message = new AlimTalkMessage(
         WAITING_CUSTOMER_CALL,
@@ -89,7 +89,7 @@ class AlimTalkNotificationEventHandler {
         store.getDetail().getName(),
         waiting.getNumber()
     );
-    message.addButton(WAITING_CANCEL, store.getNonNullId(), waiting.getAccessKey());
+    message.addButton(WAITING_CANCEL, store.getId(), waiting.getAccessKey());
 
     notificationSender.sendAlimTalkOneToOne(message);
   }
@@ -101,7 +101,7 @@ class AlimTalkNotificationEventHandler {
     Store store = waiting.getStore();
 
     LOGGER.info("[웨이팅 취소 (손님) 이벤트] storeId: {}, storeName: {}",
-        store.getNonNullId(), store.getDetail().getName());
+        store.getId(), store.getDetail().getName());
 
     AlimTalkMessage message = new AlimTalkMessage(
         WAITING_CUSTOMER_CANCEL,
@@ -120,7 +120,7 @@ class AlimTalkNotificationEventHandler {
     Store store = waiting.getStore();
 
     LOGGER.info("[웨이팅 취소 (매장) 이벤트] storeId: {}, storeName: {}",
-        store.getNonNullId(), store.getDetail().getName());
+        store.getId(), store.getDetail().getName());
 
     AlimTalkMessage message = new AlimTalkMessage(
         WAITING_STORE_CANCEL,

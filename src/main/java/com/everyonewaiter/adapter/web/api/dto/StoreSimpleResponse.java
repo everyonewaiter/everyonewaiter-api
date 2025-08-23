@@ -13,7 +13,7 @@ public record StoreSimpleResponse(
 ) {
 
   public static StoreSimpleResponse from(Store store) {
-    return new StoreSimpleResponse(store.getNonNullId().toString(), store.getDetail().getName());
+    return new StoreSimpleResponse(String.valueOf(store.getId()), store.getDetail().getName());
   }
 
 }

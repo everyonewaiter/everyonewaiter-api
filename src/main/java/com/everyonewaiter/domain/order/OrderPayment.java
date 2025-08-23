@@ -89,8 +89,8 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
 
     payment.posTableActivity.addPayment(payment);
 
-    payment.registerEvent(new SseEvent(payment.store.getNonNullId(), ORDER, UPDATE));
-    payment.registerEvent(new SseEvent(payment.store.getNonNullId(), POS, UPDATE));
+    payment.registerEvent(new SseEvent(payment.store.getId(), ORDER, UPDATE));
+    payment.registerEvent(new SseEvent(payment.store.getId(), POS, UPDATE));
 
     return payment;
   }
@@ -129,8 +129,8 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
 
     approvePayment.cancellable = false;
 
-    payment.registerEvent(new SseEvent(payment.getStore().getNonNullId(), ORDER, UPDATE));
-    payment.registerEvent(new SseEvent(payment.getStore().getNonNullId(), POS, UPDATE));
+    payment.registerEvent(new SseEvent(payment.getStore().getId(), ORDER, UPDATE));
+    payment.registerEvent(new SseEvent(payment.getStore().getId(), POS, UPDATE));
 
     return payment;
   }

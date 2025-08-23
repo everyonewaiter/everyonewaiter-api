@@ -73,7 +73,7 @@ public class Menu extends AggregateRootEntity<Menu> {
 
     validateMenuOptionPrice(menu);
 
-    menu.registerEvent(new SseEvent(menu.getStore().getNonNullId(), MENU, CREATE));
+    menu.registerEvent(new SseEvent(menu.getStore().getId(), MENU, CREATE));
 
     return menu;
   }
@@ -104,7 +104,7 @@ public class Menu extends AggregateRootEntity<Menu> {
 
     validateMenuOptionPrice(this);
 
-    registerEvent(new SseEvent(store.getNonNullId(), MENU, UPDATE, getNonNullId()));
+    registerEvent(new SseEvent(store.getId(), MENU, UPDATE, getId()));
   }
 
   public void update(MenuUpdateRequest updateRequest, String image) {
@@ -119,7 +119,7 @@ public class Menu extends AggregateRootEntity<Menu> {
     boolean isMoved = this.position.move(other.position, movePositionRequest.where());
 
     if (isMoved) {
-      registerEvent(new SseEvent(store.getNonNullId(), MENU, UPDATE));
+      registerEvent(new SseEvent(store.getId(), MENU, UPDATE));
     }
 
     return isMoved;
@@ -131,13 +131,15 @@ public class Menu extends AggregateRootEntity<Menu> {
 
   public void delete() {
     registerEvent(new MenuImageDeleteEvent(image));
-    registerEvent(new SseEvent(store.getNonNullId(), MENU, DELETE, getNonNullId()));
+    registerEvent(new SseEvent(store.getId(), MENU, DELETE, getId()));
   }
 
   public MenuOptionGroup getMenuOptionGroup(Long menuOptionGroupId) {
     return getMenuOptionGroups()
         .stream()
-        .filter(menuOptionGroup -> menuOptionGroup.getNonNullId().equals(menuOptionGroupId))
+        .filter(
+            menuOptionGroup -> requireNonNull(menuOptionGroup.getId()).equals(menuOptionGroupId)
+        )
         .findFirst()
         .orElseThrow(MenuOptionGroupNotFoundException::new);
   }

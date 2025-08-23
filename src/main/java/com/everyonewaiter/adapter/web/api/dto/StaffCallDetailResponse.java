@@ -28,7 +28,7 @@ public record StaffCallDetailResponse(
 
   public static StaffCallDetailResponse from(StaffCall staffCall) {
     return new StaffCallDetailResponse(
-        staffCall.getNonNullId().toString(),
+        String.valueOf(staffCall.getId()),
         staffCall.getTableNo(),
         staffCall.getName(),
         staffCall.getState(),

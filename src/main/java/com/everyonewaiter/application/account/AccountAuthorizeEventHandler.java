@@ -21,7 +21,7 @@ class AccountAuthorizeEventHandler {
 
   @TransactionalEventListener(phase = BEFORE_COMMIT)
   public void handle(RegistrationApproveEvent event) {
-    Long accountId = event.account().getNonNullId();
+    Long accountId = event.account().getId();
     String storeName = event.businessDetail().getName();
 
     LOGGER.info("[사장님 권한 부여 이벤트] accountId: {}, storeName: {}", accountId, storeName);

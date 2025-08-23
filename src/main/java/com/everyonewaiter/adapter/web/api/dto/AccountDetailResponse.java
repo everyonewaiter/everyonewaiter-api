@@ -35,7 +35,7 @@ public record AccountDetailResponse(
 
   public static AccountDetailResponse from(Account account) {
     return new AccountDetailResponse(
-        account.getNonNullId().toString(),
+        String.valueOf(account.getId()),
         account.getEmail().address(),
         account.getPhoneNumber().value(),
         account.getState(),

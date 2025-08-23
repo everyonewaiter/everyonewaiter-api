@@ -78,7 +78,7 @@ class MenuManagementApi implements MenuManagementApiSpecification {
   ) {
     Menu menu = menuManager.create(categoryId, storeId, request, file);
 
-    return ResponseEntity.created(URI.create(menu.getNonNullId().toString())).build();
+    return ResponseEntity.created(URI.create(String.valueOf(menu.getId()))).build();
   }
 
   @Override

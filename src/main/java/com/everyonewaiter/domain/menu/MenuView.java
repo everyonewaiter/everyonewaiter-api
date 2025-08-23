@@ -47,8 +47,8 @@ public class MenuView {
 
     public static MenuDetail from(Menu menu) {
       return new MenuDetail(
-          menu.getNonNullId().toString(),
-          menu.getCategory().getNonNullId().toString(),
+          String.valueOf(menu.getId()),
+          String.valueOf(menu.getCategory().getId()),
           menu.getName(),
           menu.getDescription(),
           menu.getPrice(),
@@ -86,7 +86,7 @@ public class MenuView {
 
     public static MenuOptionGroupDetail from(MenuOptionGroup menuOptionGroup) {
       return new MenuOptionGroupDetail(
-          menuOptionGroup.getNonNullId().toString(),
+          String.valueOf(menuOptionGroup.getId()),
           menuOptionGroup.getName(),
           menuOptionGroup.getType(),
           menuOptionGroup.isPrintEnabled(),

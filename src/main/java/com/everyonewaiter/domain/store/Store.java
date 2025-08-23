@@ -48,7 +48,7 @@ public class Store extends AggregateRootEntity<Store> {
     this.detail.update(updateRequest);
     this.setting.update(updateRequest.setting());
 
-    registerEvent(new SseEvent(getNonNullId(), STORE, UPDATE));
+    registerEvent(new SseEvent(getId(), STORE, UPDATE));
   }
 
   public void open() {
@@ -59,8 +59,8 @@ public class Store extends AggregateRootEntity<Store> {
     this.status = StoreStatus.OPEN;
     this.lastOpenedAt = Instant.now();
 
-    registerEvent(new StoreOpenEvent(getNonNullId()));
-    registerEvent(new SseEvent(getNonNullId(), STORE, UPDATE, status.name()));
+    registerEvent(new StoreOpenEvent(getId()));
+    registerEvent(new SseEvent(getId(), STORE, UPDATE, status.name()));
   }
 
   public void close() {
@@ -71,8 +71,8 @@ public class Store extends AggregateRootEntity<Store> {
     this.status = StoreStatus.CLOSE;
     this.lastClosedAt = Instant.now();
 
-    registerEvent(new StoreCloseEvent(getNonNullId()));
-    registerEvent(new SseEvent(getNonNullId(), STORE, UPDATE, status.name()));
+    registerEvent(new StoreCloseEvent(getId()));
+    registerEvent(new SseEvent(getId(), STORE, UPDATE, status.name()));
   }
 
   public boolean isOpen() {

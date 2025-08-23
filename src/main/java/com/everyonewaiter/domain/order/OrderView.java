@@ -57,8 +57,8 @@ public class OrderView {
 
     public static OrderDetail from(Order order) {
       return new OrderDetail(
-          order.getNonNullId().toString(),
-          order.getStore().getNonNullId().toString(),
+          String.valueOf(order.getId()),
+          String.valueOf(order.getStore().getId()),
           order.getCategory(),
           order.getType(),
           order.getState(),
@@ -108,7 +108,7 @@ public class OrderView {
 
     public static OrderMenuDetail from(OrderMenu orderMenu) {
       return new OrderMenuDetail(
-          orderMenu.getNonNullId().toString(),
+          String.valueOf(orderMenu.getId()),
           orderMenu.getName(),
           orderMenu.getPrice(),
           orderMenu.getQuantity(),
@@ -141,7 +141,7 @@ public class OrderView {
 
     public static OrderOptionGroupDetail from(OrderOptionGroup orderOptionGroup) {
       return new OrderOptionGroupDetail(
-          orderOptionGroup.getNonNullId().toString(),
+          String.valueOf(orderOptionGroup.getId()),
           orderOptionGroup.getName(),
           orderOptionGroup.isPrintEnabled(),
           orderOptionGroup.getOrderOptions()

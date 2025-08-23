@@ -13,7 +13,7 @@ public record DeviceCreateResponse(
 ) {
 
   public static DeviceCreateResponse from(Device device) {
-    return new DeviceCreateResponse(device.getNonNullId().toString(), device.getSecretKey());
+    return new DeviceCreateResponse(String.valueOf(device.getId()), device.getSecretKey());
   }
 
 }

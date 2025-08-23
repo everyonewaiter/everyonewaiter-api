@@ -87,7 +87,7 @@ class MenuRepositoryImpl implements MenuRepository {
         .set(menu.position.value, menu.position.value.add(1))
         .where(
             menu.id.ne(source.getId()),
-            menu.store.id.eq(source.getStore().getNonNullId()),
+            menu.store.id.eq(source.getStore().getId()),
             menu.position.value.goe(source.getPosition().getValue())
         )
         .execute();

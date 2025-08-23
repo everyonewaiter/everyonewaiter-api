@@ -25,7 +25,7 @@ public class RefreshToken extends AggregateRootEntity<RefreshToken> {
     RefreshToken refreshToken = new RefreshToken();
 
     refreshToken.accountId = requireNonNull(accountId);
-    refreshToken.currentTokenId = refreshToken.getNonNullId();
+    refreshToken.currentTokenId = refreshToken.getId();
 
     return refreshToken;
   }

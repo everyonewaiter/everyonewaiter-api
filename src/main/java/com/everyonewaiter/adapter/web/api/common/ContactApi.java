@@ -24,7 +24,7 @@ class ContactApi implements ContactApiSpecification {
   public ResponseEntity<Void> create(@RequestBody @Valid ContactCreateRequest request) {
     Contact contact = contactProcessor.create(request);
 
-    return ResponseEntity.created(URI.create(contact.getNonNullId().toString())).build();
+    return ResponseEntity.created(URI.create(String.valueOf(contact.getId()))).build();
   }
 
 }

@@ -76,9 +76,9 @@ public class OrderPaymentView {
 
     public static OrderPaymentDetail from(OrderPayment orderPayment) {
       return new OrderPaymentDetail(
-          orderPayment.getNonNullId().toString(),
-          orderPayment.getPosTableActivity().getNonNullId().toString(),
-          orderPayment.getStore().getNonNullId().toString(),
+          String.valueOf(orderPayment.getId()),
+          String.valueOf(orderPayment.getPosTableActivity().getId()),
+          String.valueOf(orderPayment.getStore().getId()),
           orderPayment.getState(),
           orderPayment.getMethod(),
           orderPayment.getAmount(),

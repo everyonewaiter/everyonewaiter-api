@@ -37,8 +37,8 @@ public record MenuSimpleResponse(
 
   public static MenuSimpleResponse from(Menu menu) {
     return new MenuSimpleResponse(
-        menu.getNonNullId().toString(),
-        menu.getCategory().getNonNullId().toString(),
+        String.valueOf(menu.getId()),
+        String.valueOf(menu.getCategory().getId()),
         menu.getName(),
         menu.getDescription(),
         menu.getPrice(),

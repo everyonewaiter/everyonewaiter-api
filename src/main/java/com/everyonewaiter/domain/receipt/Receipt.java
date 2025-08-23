@@ -37,7 +37,7 @@ public record Receipt(String memo, int printNo, List<ReceiptMenu> receiptMenus) 
   public static Receipt diff(List<Order> orders, OrderUpdateRequests updateRequests, int printNo) {
     Map<Long, OrderMenu> beforeOrderMenus = orders.stream()
         .flatMap(order -> order.getPrintEnabledOrderMenus().stream())
-        .collect(Collectors.toMap(OrderMenu::getNonNullId, orderMenu -> orderMenu));
+        .collect(Collectors.toMap(OrderMenu::getId, orderMenu -> orderMenu));
 
     List<OrderMenuQuantityUpdateRequest> afterOrderMenus = updateRequests.orders()
         .stream()

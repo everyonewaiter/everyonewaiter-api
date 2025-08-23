@@ -73,8 +73,8 @@ public class PosTable extends AggregateRootEntity<PosTable> {
 
     targetActivity.merge(sourceActivity);
 
-    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE));
-    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE));
+    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE));
+    registerEvent(new SseEvent(store.getId(), POS, UPDATE));
   }
 
   public void move(PosTable target) {
@@ -82,8 +82,8 @@ public class PosTable extends AggregateRootEntity<PosTable> {
 
     sourceActivity.moveTable(target);
 
-    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE));
-    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE));
+    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE));
+    registerEvent(new SseEvent(store.getId(), POS, UPDATE));
   }
 
   public void discount(PosTableDiscountRequest discountRequest) {
@@ -91,7 +91,7 @@ public class PosTable extends AggregateRootEntity<PosTable> {
 
     activeActivity.discount(discountRequest.discountPrice());
 
-    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getId(), POS, UPDATE, getTableNo()));
   }
 
   public void completeActiveActivity() {
@@ -99,8 +99,8 @@ public class PosTable extends AggregateRootEntity<PosTable> {
 
     activeActivity.complete();
 
-    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getTableNo()));
-    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getId(), POS, UPDATE, getTableNo()));
   }
 
   public void cancelOrder(Long orderId) {
@@ -108,8 +108,8 @@ public class PosTable extends AggregateRootEntity<PosTable> {
 
     activeActivity.cancelOrder(orderId);
 
-    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getTableNo()));
-    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getId(), POS, UPDATE, getTableNo()));
   }
 
   public void updateOrder(OrderUpdateRequests updateRequests, Receipt diff) {
@@ -119,9 +119,9 @@ public class PosTable extends AggregateRootEntity<PosTable> {
       posTableActivity.updateOrder(updateRequest);
     }
 
-    registerEvent(new OrderUpdateEvent(store.getNonNullId(), tableNo, diff));
-    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getTableNo()));
-    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
+    registerEvent(new OrderUpdateEvent(store.getId(), tableNo, diff));
+    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getId(), POS, UPDATE, getTableNo()));
   }
 
   public void updateOrder(Long orderId, OrderMemoUpdateRequest updateRequest) {
@@ -129,16 +129,16 @@ public class PosTable extends AggregateRootEntity<PosTable> {
 
     activeActivity.updateOrder(orderId, updateRequest);
 
-    registerEvent(new SseEvent(store.getNonNullId(), ORDER, UPDATE, getTableNo()));
-    registerEvent(new SseEvent(store.getNonNullId(), POS, UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getTableNo()));
+    registerEvent(new SseEvent(store.getId(), POS, UPDATE, getTableNo()));
   }
 
   public void resendReceipt() {
     List<Long> orderIds = getOrderedOrders().stream()
-        .map(Order::getNonNullId)
+        .map(Order::getId)
         .toList();
 
-    registerEvent(new ReceiptResendEvent(store.getNonNullId(), orderIds));
+    registerEvent(new ReceiptResendEvent(store.getId(), orderIds));
   }
 
   public boolean hasActiveActivity() {

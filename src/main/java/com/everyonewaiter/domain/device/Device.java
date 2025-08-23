@@ -82,7 +82,7 @@ public class Device extends AggregateRootEntity<Device> {
     device.paymentType = requireNonNull(paymentType);
     device.secretKey = Tsid.nextString();
 
-    device.registerEvent(new SseEvent(store.getNonNullId(), DEVICE, CREATE));
+    device.registerEvent(new SseEvent(store.getId(), DEVICE, CREATE));
 
     return device;
   }
@@ -136,15 +136,15 @@ public class Device extends AggregateRootEntity<Device> {
     this.tableNo = tableNo;
     this.paymentType = requireNonNull(paymentType);
 
-    registerEvent(new SseEvent(store.getNonNullId(), DEVICE, UPDATE, getNonNullId()));
+    registerEvent(new SseEvent(store.getId(), DEVICE, UPDATE, getId()));
   }
 
   public void delete() {
-    registerEvent(new SseEvent(store.getNonNullId(), DEVICE, DELETE, getNonNullId()));
+    registerEvent(new SseEvent(store.getId(), DEVICE, DELETE, getId()));
   }
 
   public Long getStoreId() {
-    return store.getNonNullId();
+    return store.getId();
   }
 
 }

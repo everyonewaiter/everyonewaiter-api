@@ -22,7 +22,7 @@ class StoreCreateEventHandler {
   @TransactionalEventListener(phase = BEFORE_COMMIT)
   public void handle(RegistrationApproveEvent event) {
     LOGGER.info("[매장 생성 이벤트] accountId: {}, storeName: {}",
-        event.account().getNonNullId(), event.businessDetail().getName());
+        event.account().getId(), event.businessDetail().getName());
 
     Store store = Store.create(event.account(), event.businessDetail());
 

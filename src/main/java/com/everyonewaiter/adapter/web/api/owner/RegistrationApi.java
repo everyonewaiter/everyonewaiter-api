@@ -63,7 +63,7 @@ class RegistrationApi implements RegistrationApiSpecification {
   ) {
     Registration registration = registrationApplier.apply(account, applyRequest);
 
-    return ResponseEntity.created(URI.create(registration.getNonNullId().toString())).build();
+    return ResponseEntity.created(URI.create(String.valueOf(registration.getId()))).build();
   }
 
   @Override

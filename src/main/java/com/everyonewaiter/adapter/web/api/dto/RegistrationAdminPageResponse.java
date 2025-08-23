@@ -31,8 +31,8 @@ public record RegistrationAdminPageResponse(
 
   public static RegistrationAdminPageResponse from(Registration registration) {
     return new RegistrationAdminPageResponse(
-        registration.getNonNullId().toString(),
-        registration.getAccount().getNonNullId().toString(),
+        String.valueOf(registration.getId()),
+        String.valueOf(registration.getAccount().getId()),
         registration.getAccount().getEmail().address(),
         registration.getDetail().getName(),
         registration.getStatus(),

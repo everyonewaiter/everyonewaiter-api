@@ -69,7 +69,7 @@ class WaitingApi implements WaitingApiSpecification {
   ) {
     Waiting waiting = waitingCustomer.register(device.getStoreId(), registerRequest);
 
-    return ResponseEntity.created(URI.create(waiting.getNonNullId().toString())).build();
+    return ResponseEntity.created(URI.create(String.valueOf(waiting.getId()))).build();
   }
 
   @Override

@@ -82,7 +82,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
         .set(category.position.value, category.position.value.add(1))
         .where(
             category.id.ne(source.getId()),
-            category.store.id.eq(source.getStore().getNonNullId()),
+            category.store.id.eq(source.getStore().getId()),
             category.position.value.goe(source.getPosition().getValue())
         )
         .execute();

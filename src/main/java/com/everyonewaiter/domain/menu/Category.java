@@ -44,7 +44,7 @@ public class Category extends AggregateRootEntity<Category> {
     category.name = requireNonNull(createRequest.name());
     category.position = Position.next(lastPosition);
 
-    category.registerEvent(new SseEvent(store.getNonNullId(), CATEGORY, CREATE));
+    category.registerEvent(new SseEvent(store.getId(), CATEGORY, CREATE));
 
     return category;
   }
@@ -52,14 +52,14 @@ public class Category extends AggregateRootEntity<Category> {
   public void update(CategoryUpdateRequest updateRequest) {
     this.name = requireNonNull(updateRequest.name());
 
-    registerEvent(new SseEvent(store.getNonNullId(), CATEGORY, UPDATE, getNonNullId()));
+    registerEvent(new SseEvent(store.getId(), CATEGORY, UPDATE, getId()));
   }
 
   public boolean movePosition(Category other, CategoryMovePositionRequest movePositionRequest) {
     boolean isMoved = this.position.move(other.position, movePositionRequest.where());
 
     if (isMoved) {
-      registerEvent(new SseEvent(store.getNonNullId(), CATEGORY, UPDATE));
+      registerEvent(new SseEvent(store.getId(), CATEGORY, UPDATE));
     }
 
     return isMoved;
@@ -68,11 +68,13 @@ public class Category extends AggregateRootEntity<Category> {
   public void delete() {
     registerEvent(
         new CategoryDeleteEvent(
-            getNonNullId(),
-            getMenus().stream().map(Menu::getImage).toList()
+            getId(),
+            getMenus().stream()
+                .map(Menu::getImage)
+                .toList()
         )
     );
-    registerEvent(new SseEvent(store.getNonNullId(), CATEGORY, DELETE, getNonNullId()));
+    registerEvent(new SseEvent(store.getId(), CATEGORY, DELETE, getId()));
   }
 
   public List<Menu> getMenus() {

@@ -40,7 +40,7 @@ public class StaffCall extends AggregateRootEntity<StaffCall> {
     staffCall.state = StaffCallState.INCOMPLETE;
     staffCall.completeTime = Instant.ofEpochMilli(0L);
 
-    staffCall.registerEvent(new SseEvent(store.getNonNullId(), STAFF_CALL, CREATE));
+    staffCall.registerEvent(new SseEvent(store.getId(), STAFF_CALL, CREATE));
 
     return staffCall;
   }
@@ -53,7 +53,7 @@ public class StaffCall extends AggregateRootEntity<StaffCall> {
     this.state = StaffCallState.COMPLETE;
     this.completeTime = Instant.now();
 
-    registerEvent(new SseEvent(store.getNonNullId(), STAFF_CALL, UPDATE));
+    registerEvent(new SseEvent(store.getId(), STAFF_CALL, UPDATE));
   }
 
 }

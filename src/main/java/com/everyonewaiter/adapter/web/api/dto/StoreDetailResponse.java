@@ -52,8 +52,8 @@ public record StoreDetailResponse(
 
   public static StoreDetailResponse from(Store store) {
     return new StoreDetailResponse(
-        store.getNonNullId().toString(),
-        store.getAccount().getNonNullId().toString(),
+        String.valueOf(store.getId()),
+        String.valueOf(store.getAccount().getId()),
         store.getDetail().getName(),
         store.getDetail().getCeoName(),
         store.getDetail().getAddress(),

@@ -104,8 +104,8 @@ public class PosView {
 
     public static PosTableDetail from(PosTable posTable) {
       return new PosTableDetail(
-          posTable.getNonNullId().toString(),
-          posTable.getStore().getNonNullId().toString(),
+          String.valueOf(posTable.getId()),
+          String.valueOf(posTable.getStore().getId()),
           posTable.getName(),
           posTable.getTableNo(),
           posTable.hasOrder(),
@@ -164,9 +164,9 @@ public class PosView {
 
     public static PosTableActivityDetail from(PosTableActivity posTableActivity) {
       return new PosTableActivityDetail(
-          posTableActivity.getNonNullId().toString(),
-          posTableActivity.getStore().getNonNullId().toString(),
-          posTableActivity.getPosTable().getNonNullId().toString(),
+          String.valueOf(posTableActivity.getId()),
+          String.valueOf(posTableActivity.getStore().getId()),
+          String.valueOf(posTableActivity.getPosTable().getId()),
           posTableActivity.getPosTable().getName(),
           posTableActivity.getPosTable().getTableNo(),
           posTableActivity.getTablePaymentType(),

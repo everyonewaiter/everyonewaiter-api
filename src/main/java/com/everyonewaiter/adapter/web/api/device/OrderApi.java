@@ -64,7 +64,7 @@ class OrderApi implements OrderApiSpecification {
 
     Order order = orderServer.create(device.getStoreId(), orderType, createRequest);
 
-    return ResponseEntity.created(URI.create(order.getNonNullId().toString())).build();
+    return ResponseEntity.created(URI.create(String.valueOf(order.getId()))).build();
   }
 
   @Override

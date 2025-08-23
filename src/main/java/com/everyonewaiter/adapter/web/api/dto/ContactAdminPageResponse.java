@@ -31,7 +31,7 @@ public record ContactAdminPageResponse(
 
   public static ContactAdminPageResponse from(Contact contact) {
     return new ContactAdminPageResponse(
-        contact.getNonNullId().toString(),
+        String.valueOf(contact.getId()),
         contact.getStoreName(),
         contact.getPhoneNumber().value(),
         contact.getLicense().value(),

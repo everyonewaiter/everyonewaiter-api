@@ -37,7 +37,7 @@ public record WaitingDetailResponse(
 
   public static WaitingDetailResponse from(Waiting waiting) {
     return new WaitingDetailResponse(
-        waiting.getNonNullId().toString(),
+        String.valueOf(waiting.getId()),
         waiting.getPhoneNumber().value(),
         waiting.getAdult(),
         waiting.getInfant(),

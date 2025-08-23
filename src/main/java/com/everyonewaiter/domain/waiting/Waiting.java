@@ -59,7 +59,7 @@ public class Waiting extends AggregateRootEntity<Waiting> {
     waiting.state = WaitingState.REGISTRATION;
 
     waiting.registerEvent(new WaitingRegistrationEvent(waiting));
-    waiting.registerEvent(new SseEvent(store.getNonNullId(), WAITING, CREATE));
+    waiting.registerEvent(new SseEvent(store.getId(), WAITING, CREATE));
 
     return waiting;
   }
@@ -76,7 +76,7 @@ public class Waiting extends AggregateRootEntity<Waiting> {
     this.customerCall.call();
 
     registerEvent(new WaitingCustomerCallEvent(this));
-    registerEvent(new SseEvent(store.getNonNullId(), WAITING, UPDATE, getNonNullId()));
+    registerEvent(new SseEvent(store.getId(), WAITING, UPDATE, getId()));
   }
 
   public void complete() {
@@ -86,7 +86,7 @@ public class Waiting extends AggregateRootEntity<Waiting> {
 
     this.state = WaitingState.COMPLETE;
 
-    registerEvent(new SseEvent(store.getNonNullId(), WAITING, UPDATE, getNonNullId()));
+    registerEvent(new SseEvent(store.getId(), WAITING, UPDATE, getId()));
   }
 
   public void cancel(boolean isCustomerFlag) {
@@ -102,7 +102,7 @@ public class Waiting extends AggregateRootEntity<Waiting> {
       registerEvent(new WaitingCancelByStoreEvent(this));
     }
 
-    registerEvent(new SseEvent(store.getNonNullId(), WAITING, UPDATE, getNonNullId()));
+    registerEvent(new SseEvent(store.getId(), WAITING, UPDATE, getId()));
   }
 
 }

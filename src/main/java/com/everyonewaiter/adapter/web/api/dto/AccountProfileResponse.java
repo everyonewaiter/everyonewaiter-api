@@ -18,7 +18,7 @@ public record AccountProfileResponse(
 
   public static AccountProfileResponse from(Account account) {
     return new AccountProfileResponse(
-        account.getNonNullId().toString(),
+        String.valueOf(account.getId()),
         account.getEmail().address(),
         account.getPermission()
     );
