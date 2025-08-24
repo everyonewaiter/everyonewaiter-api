@@ -5,7 +5,6 @@ import static com.everyonewaiter.domain.order.OrderPaymentMethod.CASH;
 import static com.everyonewaiter.domain.order.OrderPaymentState.APPROVE;
 import static com.everyonewaiter.domain.order.OrderPaymentState.CANCEL;
 
-import com.everyonewaiter.application.pos.provided.PosTableActivityCreator;
 import com.everyonewaiter.application.pos.provided.PosTableActivityFinder;
 import com.everyonewaiter.application.pos.required.PosTableActivityRepository;
 import com.everyonewaiter.application.support.ReadOnlyTransactional;
@@ -13,6 +12,7 @@ import com.everyonewaiter.domain.order.OrderState;
 import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.pos.PosView;
 import java.time.Instant;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 class PosTableActivityQueryService implements PosTableActivityFinder {
 
-  private final PosTableActivityCreator posTableActivityCreator;
   private final PosTableActivityRepository posTableActivityRepository;
 
   @Override
@@ -39,10 +38,9 @@ class PosTableActivityQueryService implements PosTableActivityFinder {
   }
 
   @Override
-  @Transactional
-  public PosTableActivity findActiveOrCreate(Long storeId, int tableNo) {
-    return posTableActivityRepository.findActive(storeId, tableNo)
-        .orElseGet(() -> posTableActivityCreator.create(storeId, tableNo));
+  @ReadOnlyTransactional
+  public Optional<PosTableActivity> findActive(Long storeId, int tableNo) {
+    return posTableActivityRepository.findActive(storeId, tableNo);
   }
 
   @Override

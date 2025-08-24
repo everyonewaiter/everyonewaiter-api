@@ -4,6 +4,7 @@ import com.everyonewaiter.application.menu.provided.MenuFinder;
 import com.everyonewaiter.application.order.provided.OrderFinder;
 import com.everyonewaiter.application.order.provided.OrderServer;
 import com.everyonewaiter.application.order.required.OrderRepository;
+import com.everyonewaiter.application.pos.provided.PosTableActivityCreator;
 import com.everyonewaiter.application.pos.provided.PosTableActivityFinder;
 import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.menu.Menu;
@@ -29,6 +30,7 @@ import org.springframework.validation.annotation.Validated;
 class OrderModifyService implements OrderServer {
 
   private final PosTableActivityFinder activityFinder;
+  private final PosTableActivityCreator activityCreator;
   private final MenuFinder menuFinder;
   private final OrderFinder orderFinder;
   private final OrderRepository orderRepository;
@@ -37,7 +39,9 @@ class OrderModifyService implements OrderServer {
   @DistributedLock(key = "#storeId + '-' + #tableNo")
   public Order create(Long storeId, OrderType orderType, OrderCreateRequest createRequest) {
     Map<Long, Menu> menus = findMenus(storeId, createRequest);
-    PosTableActivity activity = activityFinder.findActiveOrCreate(storeId, createRequest.tableNo());
+
+    PosTableActivity activity = activityFinder.findActive(storeId, createRequest.tableNo())
+        .orElseGet(() -> activityCreator.create(storeId, createRequest.tableNo()));
 
     Order order = Order.create(menus, activity, orderType, createRequest);
 
