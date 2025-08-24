@@ -27,10 +27,12 @@ class CategoryQueryService implements CategoryFinder {
   @Override
   @Transactional(readOnly = true)
   @Cacheable(cacheNames = CacheName.STORE_MENU, key = "#storeId", condition = "#storeId != null")
-  public List<CategoryView.CategoryDetail> findAllView(Long storeId) {
-    return categoryRepository.findAll(storeId).stream()
-        .map(CategoryView.CategoryDetail::from)
-        .toList();
+  public CategoryView.CategoryDetails findAllView(Long storeId) {
+    return CategoryView.CategoryDetails.from(
+        categoryRepository.findAll(storeId).stream()
+            .map(CategoryView.CategoryDetail::from)
+            .toList()
+    );
   }
 
   @Override

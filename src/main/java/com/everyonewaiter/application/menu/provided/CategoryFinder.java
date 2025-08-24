@@ -8,7 +8,7 @@ public interface CategoryFinder {
 
   List<Category> findAll(Long storeId);
 
-  List<CategoryView.CategoryDetail> findAllView(Long storeId);
+  CategoryView.CategoryDetails findAllView(Long storeId);
 
   Category findOrThrow(Long categoryId, Long storeId);
 

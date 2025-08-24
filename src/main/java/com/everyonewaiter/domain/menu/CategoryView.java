@@ -9,6 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PRIVATE)
 public class CategoryView {
 
+  @Schema(name = "CategoryDetails")
+  public record CategoryDetails(List<CategoryView.CategoryDetail> categories) {
+
+    public static CategoryDetails from(List<CategoryView.CategoryDetail> categories) {
+      return new CategoryDetails(categories);
+    }
+
+  }
+
   @Schema(name = "CategoryView.CategoryDetail")
   public record CategoryDetail(
       @Schema(description = "카테고리 ID", example = "\"694865267482835533\"")

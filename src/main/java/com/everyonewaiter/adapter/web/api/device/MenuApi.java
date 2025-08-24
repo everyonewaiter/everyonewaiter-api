@@ -1,10 +1,8 @@
 package com.everyonewaiter.adapter.web.api.device;
 
-import com.everyonewaiter.adapter.web.api.dto.CategoryDetailResponses;
 import com.everyonewaiter.application.menu.provided.CategoryFinder;
 import com.everyonewaiter.domain.menu.CategoryView;
 import com.everyonewaiter.domain.store.StoreExist;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +20,8 @@ class MenuApi implements MenuApiSpecification {
   @Override
   @StoreExist
   @GetMapping("/stores/{storeId}/menus")
-  public ResponseEntity<CategoryDetailResponses> getStoreMenus(@PathVariable Long storeId) {
-    List<CategoryView.CategoryDetail> categories = categoryFinder.findAllView(storeId);
-
-    return ResponseEntity.ok(CategoryDetailResponses.from(categories));
+  public ResponseEntity<CategoryView.CategoryDetails> getStoreMenus(@PathVariable Long storeId) {
+    return ResponseEntity.ok(categoryFinder.findAllView(storeId));
   }
 
 }

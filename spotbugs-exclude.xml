@@ -16,6 +16,7 @@
   <Match>
     <Or>
       <Class name="~.*View"/>
+      <Class name="com.everyonewaiter.domain.menu.CategoryView$CategoryDetails"/>
       <Class name="com.everyonewaiter.domain.menu.CategoryView$CategoryDetail"/>
       <Class name="com.everyonewaiter.domain.menu.MenuView$MenuDetail"/>
       <Class name="com.everyonewaiter.domain.menu.MenuView$MenuOptionGroupDetail"/>
@@ -40,6 +41,7 @@
   <Match>
     <Or>
       <Class name="~.*View"/>
+      <Class name="com.everyonewaiter.domain.menu.CategoryView$CategoryDetails"/>
       <Class name="com.everyonewaiter.domain.menu.CategoryView$CategoryDetail"/>
       <Class name="com.everyonewaiter.domain.menu.MenuView$MenuDetail"/>
       <Class name="com.everyonewaiter.domain.menu.MenuView$MenuOptionGroupDetail"/>
