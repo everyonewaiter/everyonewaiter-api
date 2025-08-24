@@ -65,7 +65,9 @@ public class Order extends AggregateRootEntity<Order> {
     order.state = OrderState.ORDER;
     order.memo = requireNonNull(request.memo());
     order.serving = new Serving();
+
     order.orderMenus.addAll(createOrderMenus(menus, order, request.orderMenus()));
+    order.price = order.calculateTotalPrice();
 
     order.posTableActivity.addOrder(order);
 
