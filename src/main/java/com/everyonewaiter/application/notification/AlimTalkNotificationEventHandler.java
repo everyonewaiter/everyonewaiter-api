@@ -67,7 +67,7 @@ class AlimTalkNotificationEventHandler {
         store.getDetail().getLandline(),
         store.getDetail().getName()
     );
-    message.addButton(WAITING_CANCEL, store.getId(), waiting.getAccessKey());
+    message.addButton(WAITING_CANCEL, store.getId(), waiting.getAccessKey(), waiting.getNumber());
     message.addButton(CHECK_MY_TURN, store.getId(), waiting.getAccessKey());
     message.addButton(MENU_PREVIEW, store.getId());
 
@@ -89,7 +89,7 @@ class AlimTalkNotificationEventHandler {
         store.getDetail().getName(),
         waiting.getNumber()
     );
-    message.addButton(WAITING_CANCEL, store.getId(), waiting.getAccessKey());
+    message.addButton(WAITING_CANCEL, store.getId(), waiting.getAccessKey(), waiting.getNumber());
 
     notificationSender.sendAlimTalkOneToOne(message);
   }
