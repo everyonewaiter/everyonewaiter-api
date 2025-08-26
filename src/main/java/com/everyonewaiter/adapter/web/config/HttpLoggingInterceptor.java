@@ -37,8 +37,10 @@ class HttpLoggingInterceptor implements HandlerInterceptor {
     String requestMethod = MDC.get("requestMethod");
     String requestUri = MDC.get("requestUri");
 
-    LOGGER.info("[RESPONSE {}] [{} {}] [{}] [{}] [{} ms]",
-        response.getStatus(), requestMethod, requestUri, requestId, handler, endTime);
+    if (!requestUri.startsWith("/v1/health")) {
+      LOGGER.info("[RESPONSE {}] [{} {}] [{}] [{}] [{} ms]",
+          response.getStatus(), requestMethod, requestUri, requestId, handler, endTime);
+    }
 
     MDC.clear();
 
