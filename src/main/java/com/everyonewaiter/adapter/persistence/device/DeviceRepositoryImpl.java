@@ -106,6 +106,19 @@ class DeviceRepositoryImpl implements DeviceRepository {
   }
 
   @Override
+  public Device findOrThrow(Long deviceId) {
+    return Optional.ofNullable(
+            queryFactory
+                .select(device)
+                .from(device)
+                .innerJoin(device.store, store).fetchJoin()
+                .where(device.id.eq(deviceId))
+                .fetchOne()
+        )
+        .orElseThrow(DeviceNotFoundException::new);
+  }
+
+  @Override
   public Device findOrThrow(Long deviceId, Long storeId) {
     return Optional.ofNullable(
             queryFactory

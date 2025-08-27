@@ -13,6 +13,15 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "기기")
 interface DeviceApiSpecification {
 
+  @Operation(summary = "기기 상세 조회", description = "기기 상세 조회 API")
+  @ApiResponse(responseCode = "200", description = "기기 상세 조회 성공")
+  @ApiErrorResponse(
+      summary = "기기 상세 조회 실패",
+      code = ErrorCode.DEVICE_NOT_FOUND,
+      exampleName = "기기를 찾을 수 없는 경우"
+  )
+  ResponseEntity<DeviceDetailResponse> getDevice(Long deviceId);
+
   @Operation(summary = "[ALL] 기기 상세 조회", description = "기기 상세 조회 API")
   @ApiResponse(responseCode = "200", description = "기기 상세 조회 성공")
   @ApiErrorResponse(

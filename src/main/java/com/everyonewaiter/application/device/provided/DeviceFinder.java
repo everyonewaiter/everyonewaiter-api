@@ -17,6 +17,8 @@ public interface DeviceFinder {
 
   Optional<Device> find(Long deviceId);
 
+  Device findOrThrow(Long deviceId);
+
   Device findOrThrow(Long deviceId, Long storeId);
 
 }
