@@ -38,11 +38,6 @@ class DeviceQueryService implements DeviceFinder {
   }
 
   @Override
-  public Device findOrThrow(Long deviceId) {
-    return deviceRepository.findOrThrow(deviceId);
-  }
-
-  @Override
   public Device findOrThrow(Long deviceId, Long storeId) {
     return deviceRepository.findOrThrow(deviceId, storeId);
   }

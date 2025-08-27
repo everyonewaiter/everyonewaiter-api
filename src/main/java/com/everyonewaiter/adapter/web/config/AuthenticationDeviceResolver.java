@@ -110,18 +110,11 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
     public String plainText(Device device) {
       return """
           %s %s%n\
-          %s %s %s%n\
+          %s%n\
           %s\
           """
           .trim()
-          .formatted(
-              method.name(),
-              requestUri,
-              device.getId(),
-              device.getPurpose(),
-              device.getName(),
-              timestamp
-          );
+          .formatted(method.name(), requestUri, device.getId(), timestamp);
     }
 
   }
