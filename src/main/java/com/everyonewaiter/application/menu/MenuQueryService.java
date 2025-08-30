@@ -36,7 +36,7 @@ class MenuQueryService implements MenuFinder {
 
   @Override
   @ReadOnlyTransactional
-  public Menu findOrThrow(Long categoryId, Long menuId, Long storeId) {
+  public Menu findOrThrow(Long menuId, Long storeId, Long categoryId) {
     return menuRepository.findOrThrow(menuId, storeId, categoryId);
   }
 

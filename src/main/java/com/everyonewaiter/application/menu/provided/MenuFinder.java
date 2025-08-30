@@ -12,7 +12,7 @@ public interface MenuFinder {
 
   Menu findOrThrow(Long menuId, Long storeId);
 
-  Menu findOrThrow(Long categoryId, Long menuId, Long storeId);
+  Menu findOrThrow(Long menuId, Long storeId, Long categoryId);
 
   MenuView.MenuDetail findViewOrThrow(Long menuId, Long storeId, Long categoryId);
 
