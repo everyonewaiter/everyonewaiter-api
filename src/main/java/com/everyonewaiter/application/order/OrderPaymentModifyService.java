@@ -3,6 +3,7 @@ package com.everyonewaiter.application.order;
 import com.everyonewaiter.application.order.provided.OrderPaymentCreator;
 import com.everyonewaiter.application.order.provided.OrderPaymentFinder;
 import com.everyonewaiter.application.order.required.OrderPaymentRepository;
+import com.everyonewaiter.application.pos.provided.PosTableActivityCreator;
 import com.everyonewaiter.application.pos.provided.PosTableActivityFinder;
 import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.order.OrderPayment;
@@ -21,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 class OrderPaymentModifyService implements OrderPaymentCreator {
 
   private final PosTableActivityFinder activityFinder;
+  private final PosTableActivityCreator activityCreator;
   private final OrderPaymentFinder orderPaymentFinder;
   private final OrderPaymentRepository orderPaymentRepository;
 
@@ -31,7 +33,8 @@ class OrderPaymentModifyService implements OrderPaymentCreator {
       int tableNo,
       OrderPaymentApproveRequest approveRequest
   ) {
-    PosTableActivity posTableActivity = activityFinder.findActiveOrThrow(storeId, tableNo);
+    PosTableActivity posTableActivity = activityFinder.findActive(storeId, tableNo)
+        .orElseGet(() -> activityCreator.create(storeId, tableNo));
 
     OrderPayment orderPayment = OrderPayment.approve(posTableActivity, approveRequest);
 
