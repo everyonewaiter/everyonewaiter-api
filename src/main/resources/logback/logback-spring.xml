@@ -24,7 +24,7 @@
     <include resource="logback/logback-discord.xml"/>
     <include resource="logback/logback-file.xml"/>
 
-    <logger name="com.everyonewaiter.infrastructure.notification" level="DEBUG">
+    <logger name="com.everyonewaiter.adapter.integration.notification" level="DEBUG">
       <appender-ref ref="FILE_DEBUG"/>
     </logger>
 
@@ -39,7 +39,7 @@
     <include resource="logback/logback-discord.xml"/>
     <include resource="logback/logback-file.xml"/>
 
-    <logger name="com.everyonewaiter.infrastructure.notification" level="DEBUG">
+    <logger name="com.everyonewaiter.adapter.integration.notification" level="DEBUG">
       <appender-ref ref="FILE_DEBUG"/>
     </logger>
 
