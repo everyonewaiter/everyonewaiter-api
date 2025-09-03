@@ -51,7 +51,7 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
   private DiscordEmbeds createEmbeds(ILoggingEvent iLoggingEvent) {
     Map<String, String> mdc = iLoggingEvent.getMDCPropertyMap();
     String throwable = ThrowableProxyUtil.asString(iLoggingEvent.getThrowableProxy());
-    String stackTrace = throwable.length() > 600 ? throwable.substring(0, 600) : throwable;
+    String stackTrace = throwable.length() > 450 ? throwable.substring(0, 450) : throwable;
 
     DiscordEmbed errorInfoEmbed = new DiscordEmbed(
         DiscordColor.RED,
@@ -59,7 +59,7 @@ public class DiscordLogbackAppender extends UnsynchronizedAppenderBase<ILoggingE
         iLoggingEvent.getFormattedMessage()
     );
     errorInfoEmbed.addField(new DiscordField("Timestamp", SERIALIZE.format(LocalDateTime.now())));
-    errorInfoEmbed.addField(new DiscordField("Request URI", mdc.get("requestURI")));
+    errorInfoEmbed.addField(new DiscordField("Request URI", mdc.get("requestUri")));
     errorInfoEmbed.addField(new DiscordField("Request Parameters", mdc.get("requestParameters")));
     errorInfoEmbed.addField(new DiscordField("Request Headers", mdc.get("requestHeaders")));
     errorInfoEmbed.addField(new DiscordField("Request Cookies", mdc.get("requestCookies")));

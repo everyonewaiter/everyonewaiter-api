@@ -36,7 +36,11 @@ class MDCLoggingFilter extends OncePerRequestFilter {
     MDC.put("requestHeaders", parseHeaders(request));
     MDC.put("requestCookies", objectMapper.writeValueAsString(request.getCookies()));
 
-    filterChain.doFilter(request, response);
+    try {
+      filterChain.doFilter(request, response);
+    } finally {
+      MDC.clear();
+    }
   }
 
 }
