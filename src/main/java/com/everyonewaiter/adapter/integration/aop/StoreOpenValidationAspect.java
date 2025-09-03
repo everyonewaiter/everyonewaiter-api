@@ -18,7 +18,7 @@ class StoreOpenValidationAspect {
 
   private final StoreValidator storeValidator;
 
-  @Pointcut("execution(* com.everyonewaiter.adapter.web.api.*.*(..)) && @annotation(org.springframework.web.bind.annotation.RestController)")
+  @Pointcut("execution(* com.everyonewaiter.adapter.web.api..*.*(..))")
   public void controller() {
     // Pointcut for all controllers
   }
@@ -29,7 +29,7 @@ class StoreOpenValidationAspect {
   }
 
   @Before("controller() && storeOpen()")
-  public void validateStoreOwner(JoinPoint joinPoint) {
+  public void validateStoreOpen(JoinPoint joinPoint) {
     Object[] args = joinPoint.getArgs();
 
     for (Object arg : args) {

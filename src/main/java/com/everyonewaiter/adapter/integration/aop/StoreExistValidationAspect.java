@@ -8,7 +8,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Order(2)
+@Order(1)
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -16,7 +16,7 @@ class StoreExistValidationAspect {
 
   private final StoreValidator storeValidator;
 
-  @Pointcut("execution(* com.everyonewaiter.adapter.web.api.*.*(..)) && @annotation(org.springframework.web.bind.annotation.RestController)")
+  @Pointcut("execution(* com.everyonewaiter.adapter.web.api..*.*(..))")
   public void controller() {
     // Pointcut for all controllers
   }

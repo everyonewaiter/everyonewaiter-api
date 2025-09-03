@@ -18,7 +18,7 @@ class StoreOwnerValidationAspect {
 
   private final StoreValidator storeValidator;
 
-  @Pointcut("execution(* com.everyonewaiter.adapter.web.api.*.*(..)) && @annotation(org.springframework.web.bind.annotation.RestController)")
+  @Pointcut("execution(* com.everyonewaiter.adapter.web.api..*.*(..))")
   public void controller() {
     // Pointcut for all controllers
   }
