@@ -9,10 +9,10 @@ public record ReceiptMenu(String name, int quantity, List<String> options) {
     return of(orderMenu, orderMenu.getQuantity());
   }
 
-  public static ReceiptMenu of(OrderMenu orderMenu, int updatedQuantity) {
+  public static ReceiptMenu of(OrderMenu orderMenu, int quantity) {
     return new ReceiptMenu(
         orderMenu.getName(),
-        updatedQuantity,
+        quantity,
         orderMenu.getPrintEnabledOrderOptionGroups()
             .stream()
             .flatMap(orderOptionGroup -> orderOptionGroup.getFormattedOrderOptions().stream())
