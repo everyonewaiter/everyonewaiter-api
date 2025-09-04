@@ -1,13 +1,13 @@
 package com.everyonewaiter.application.staffcall.provided;
 
 import com.everyonewaiter.domain.staffcall.StaffCall;
-import com.everyonewaiter.domain.staffcall.StaffCallCreateRequest;
+import com.everyonewaiter.domain.staffcall.StaffCallRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 
 public interface StaffCallManager {
 
-  StaffCall create(Long storeId, int tableNo, @Valid StaffCallCreateRequest createRequest);
+  StaffCall call(Long storeId, int tableNo, @Valid StaffCallRequest callRequest);
 
   StaffCall complete(Long storeId, Long staffCallId);
 

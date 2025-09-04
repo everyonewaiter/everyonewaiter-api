@@ -6,7 +6,7 @@ import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
 import com.everyonewaiter.domain.staffcall.StaffCall;
-import com.everyonewaiter.domain.staffcall.StaffCallCreateRequest;
+import com.everyonewaiter.domain.staffcall.StaffCallRequest;
 import com.everyonewaiter.domain.store.StoreOpen;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -40,12 +40,12 @@ class StaffCallApi implements StaffCallApiSpecification {
   @Override
   @StoreOpen
   @PostMapping("/orders/staff-calls")
-  public ResponseEntity<Void> create(
-      @RequestBody @Valid StaffCallCreateRequest createRequest,
+  public ResponseEntity<Void> call(
+      @RequestBody @Valid StaffCallRequest callRequest,
       @AuthenticationDevice(purpose = DevicePurpose.TABLE) Device device
   ) {
     StaffCall staffCall =
-        staffCallManager.create(device.getStoreId(), device.getTableNo(), createRequest);
+        staffCallManager.call(device.getStoreId(), device.getTableNo(), callRequest);
 
     return ResponseEntity.created(URI.create(String.valueOf(staffCall.getId()))).build();
   }

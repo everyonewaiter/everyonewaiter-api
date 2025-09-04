@@ -5,7 +5,7 @@ import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.shared.ErrorCode;
-import com.everyonewaiter.domain.staffcall.StaffCallCreateRequest;
+import com.everyonewaiter.domain.staffcall.StaffCallRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -62,8 +62,8 @@ interface StaffCallApiSpecification {
           ),
       }
   )
-  ResponseEntity<Void> create(
-      @RequestBody StaffCallCreateRequest createRequest,
+  ResponseEntity<Void> call(
+      @RequestBody StaffCallRequest callRequest,
       @Parameter(hidden = true) Device device
   );
 

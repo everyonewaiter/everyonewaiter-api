@@ -31,12 +31,12 @@ public class StaffCall extends AggregateRootEntity<StaffCall> {
 
   private Instant completeTime;
 
-  public static StaffCall create(Store store, int tableNo, StaffCallCreateRequest createRequest) {
+  public static StaffCall call(Store store, int tableNo, StaffCallRequest callRequest) {
     StaffCall staffCall = new StaffCall();
 
     staffCall.store = requireNonNull(store);
     staffCall.tableNo = tableNo;
-    staffCall.name = requireNonNull(createRequest.optionName());
+    staffCall.name = requireNonNull(callRequest.optionName());
     staffCall.state = StaffCallState.INCOMPLETE;
     staffCall.completeTime = Instant.ofEpochMilli(0L);
 

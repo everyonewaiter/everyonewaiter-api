@@ -5,8 +5,8 @@ import com.everyonewaiter.application.staffcall.required.StaffCallRepository;
 import com.everyonewaiter.application.store.provided.StoreFinder;
 import com.everyonewaiter.application.support.ReadOnlyTransactional;
 import com.everyonewaiter.domain.staffcall.StaffCall;
-import com.everyonewaiter.domain.staffcall.StaffCallCreateRequest;
 import com.everyonewaiter.domain.staffcall.StaffCallOptionNotFoundException;
+import com.everyonewaiter.domain.staffcall.StaffCallRequest;
 import com.everyonewaiter.domain.staffcall.StaffCallState;
 import com.everyonewaiter.domain.store.Store;
 import java.util.List;
@@ -25,18 +25,18 @@ class StaffCallManagementService implements StaffCallManager {
 
   @Override
   @Transactional
-  public StaffCall create(Long storeId, int tableNo, StaffCallCreateRequest createRequest) {
+  public StaffCall call(Long storeId, int tableNo, StaffCallRequest callRequest) {
     Store store = storeFinder.findOrThrow(storeId);
 
-    validateStaffCallCreate(store, createRequest);
+    validateStaffCall(store, callRequest);
 
-    StaffCall staffCall = StaffCall.create(store, tableNo, createRequest);
+    StaffCall staffCall = StaffCall.call(store, tableNo, callRequest);
 
     return staffCallRepository.save(staffCall);
   }
 
-  private void validateStaffCallCreate(Store store, StaffCallCreateRequest createRequest) {
-    if (!store.hasStaffCallOption(createRequest.optionName())) {
+  private void validateStaffCall(Store store, StaffCallRequest callRequest) {
+    if (!store.hasStaffCallOption(callRequest.optionName())) {
       throw new StaffCallOptionNotFoundException();
     }
   }
