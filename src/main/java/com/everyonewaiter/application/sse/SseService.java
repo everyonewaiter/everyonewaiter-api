@@ -64,7 +64,7 @@ class SseService implements SseConnector, SseSender {
       sseEmitter.complete();
     });
     sseEmitter.onError(throwable -> {
-      LOGGER.warn("[SSE] Emitter error. key: {}", emitterKey, throwable);
+      LOGGER.warn("[SSE] Emitter error. key: {}, message={}", emitterKey, throwable.getMessage());
       sseEmitter.complete();
     });
 
