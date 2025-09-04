@@ -59,10 +59,6 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
     this.orders.add(order);
   }
 
-  public void removeOrder(Order order) {
-    this.orders.remove(order);
-  }
-
   public void addPayment(OrderPayment orderPayment) {
     this.payments.add(orderPayment);
 
@@ -71,16 +67,14 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
     }
   }
 
-  public void removePayment(OrderPayment orderPayment) {
-    this.payments.remove(orderPayment);
-  }
-
   public void merge(PosTableActivity sourceActivity) {
-    this.tableNo = sourceActivity.tableNo;
     this.discount += sourceActivity.discount;
 
     sourceActivity.orders.forEach(sourceOrder -> sourceOrder.moveTable(this));
+    sourceActivity.orders.clear();
+
     sourceActivity.payments.forEach(sourcePayment -> sourcePayment.moveTable(this));
+    sourceActivity.payments.clear();
 
     sourceActivity.discount = 0;
     sourceActivity.active = false;

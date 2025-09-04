@@ -78,8 +78,6 @@ public class Order extends AggregateRootEntity<Order> {
   }
 
   public void moveTable(PosTableActivity posTableActivity) {
-    this.posTableActivity.removeOrder(this);
-
     this.posTableActivity = requireNonNull(posTableActivity);
 
     this.posTableActivity.addOrder(this);
