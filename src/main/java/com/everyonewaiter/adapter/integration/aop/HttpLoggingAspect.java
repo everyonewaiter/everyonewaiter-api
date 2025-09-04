@@ -1,5 +1,6 @@
 package com.everyonewaiter.adapter.integration.aop;
 
+import static java.util.Objects.requireNonNullElse;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Arrays;
@@ -41,14 +42,15 @@ class HttpLoggingAspect {
     String handler = getHandlerName(joinPoint);
     String parameters = getParameters(joinPoint);
 
-    String requestId = MDC.get("requestId");
-    String requestMethod = MDC.get("requestMethod");
-    String requestUri = MDC.get("requestUri");
-    String requestHeaders = MDC.get("requestHeaders").replace("\n", ",");
+    String requestId = requireNonNullElse(MDC.get("requestId"), "NULL");
+    String requestMethod = requireNonNullElse(MDC.get("requestMethod"), "NULL");
+    String requestUri = requireNonNullElse(MDC.get("requestUri"), "NULL");
+    String requestHeaders = requireNonNullElse(MDC.get("requestHeaders"), "NULL");
+    String formattedHeaders = requestHeaders.replace("\n", ",");
 
     LOGGER.info("[REQUEST] [{} {}] [{}] [{}]", requestMethod, requestUri, requestId, handler);
     LOGGER.info("[REQUEST PARAMETERS] [{}] {}", requestId, parameters);
-    LOGGER.info("[REQUEST HEADERS] [{}] {}", requestId, requestHeaders);
+    LOGGER.info("[REQUEST HEADERS] [{}] {}", requestId, formattedHeaders);
 
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
