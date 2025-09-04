@@ -27,7 +27,7 @@ class RegistrationApplyService implements RegistrationApplier {
   public Registration apply(Account account, RegistrationApplyRequest applyRequest) {
     String licenseImage = imageManager.upload("license", applyRequest.file());
 
-    Registration registration = Registration.create(account, applyRequest, licenseImage);
+    Registration registration = Registration.apply(account, applyRequest, licenseImage);
 
     return registrationRepository.save(registration);
   }

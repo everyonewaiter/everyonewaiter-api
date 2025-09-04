@@ -24,7 +24,7 @@ public class Registration extends AggregateRootEntity<Registration> {
 
   private String rejectReason;
 
-  public static Registration create(
+  public static Registration apply(
       Account account,
       RegistrationApplyRequest applyRequest,
       String licenseImage
