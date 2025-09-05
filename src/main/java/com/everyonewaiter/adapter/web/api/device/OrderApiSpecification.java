@@ -1,6 +1,7 @@
 package com.everyonewaiter.adapter.web.api.device;
 
 import com.everyonewaiter.adapter.web.api.dto.OrderDetailResponses;
+import com.everyonewaiter.adapter.web.api.dto.OrderHallResponses;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.domain.device.Device;
@@ -50,10 +51,7 @@ interface OrderApiSpecification {
           ),
       }
   )
-  ResponseEntity<OrderDetailResponses> getOrdersByHall(
-      boolean served,
-      @Parameter(hidden = true) Device device
-  );
+  ResponseEntity<OrderHallResponses> getOrdersByHall(@Parameter(hidden = true) Device device);
 
   @Operation(summary = "[TABLE, POS] 주문 생성", description = "주문 생성 API")
   @ApiResponse(responseCode = "201", description = "주문 생성 성공")

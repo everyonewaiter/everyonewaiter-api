@@ -1,6 +1,7 @@
 package com.everyonewaiter.adapter.web.api.device;
 
 import com.everyonewaiter.adapter.web.api.dto.OrderDetailResponses;
+import com.everyonewaiter.adapter.web.api.dto.OrderHallResponses;
 import com.everyonewaiter.application.order.provided.OrderFinder;
 import com.everyonewaiter.application.order.provided.OrderServer;
 import com.everyonewaiter.domain.auth.AuthenticationDevice;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -44,13 +44,13 @@ class OrderApi implements OrderApiSpecification {
 
   @Override
   @GetMapping("/hall")
-  public ResponseEntity<OrderDetailResponses> getOrdersByHall(
-      @RequestParam boolean served,
+  public ResponseEntity<OrderHallResponses> getOrdersByHall(
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    List<OrderView.OrderDetail> orders = orderFinder.findAll(device.getStoreId(), served);
+    List<OrderView.OrderDetail> served = orderFinder.findAll(device.getStoreId(), true);
+    List<OrderView.OrderDetail> unserved = orderFinder.findAll(device.getStoreId(), false);
 
-    return ResponseEntity.ok(OrderDetailResponses.from(orders));
+    return ResponseEntity.ok(OrderHallResponses.of(served, unserved));
   }
 
   @Override
