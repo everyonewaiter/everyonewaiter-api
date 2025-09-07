@@ -138,7 +138,7 @@ public class PosTable extends AggregateRootEntity<PosTable> {
         .map(Order::getId)
         .toList();
 
-    registerEvent(new ReceiptResendEvent(store.getId(), orderIds));
+    registerEvent(new ReceiptResendEvent(store.getId(), tableNo, orderIds));
   }
 
   public boolean hasActiveActivity() {

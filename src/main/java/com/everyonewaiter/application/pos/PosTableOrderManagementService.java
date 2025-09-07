@@ -39,7 +39,12 @@ class PosTableOrderManagementService implements PosTableOrderManager {
   public PosTable update(Long storeId, int tableNo, OrderUpdateRequests updateRequests) {
     PosTable posTable = posTableFinder.findActiveOrThrow(storeId, tableNo);
 
-    Receipt diff = receiptCreator.createDiff(storeId, posTable.getOrderedOrders(), updateRequests);
+    Receipt diff = receiptCreator.createDiff(
+        storeId,
+        tableNo,
+        posTable.getOrderedOrders(),
+        updateRequests
+    );
 
     posTable.updateOrder(updateRequests, diff);
 

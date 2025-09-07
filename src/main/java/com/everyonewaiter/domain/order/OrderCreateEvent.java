@@ -1,5 +1,5 @@
 package com.everyonewaiter.domain.order;
 
-public record OrderCreateEvent(Long orderId, Long storeId) {
+public record OrderCreateEvent(Long orderId, Long storeId, int tableNo) {
 
 }

@@ -10,7 +10,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 @Service
 @RequiredArgsConstructor
 class ReceiptCreateService implements ReceiptCreator {
@@ -20,28 +22,33 @@ class ReceiptCreateService implements ReceiptCreator {
 
   @Override
   @Transactional(readOnly = true)
-  public Receipt create(Long storeId, Long orderId) {
+  public Receipt create(Long storeId, int tableNo, Long orderId) {
     Order order = orderFinder.findOrThrow(orderId);
 
     receiptRepository.increment(storeId);
 
-    return Receipt.of(order, receiptRepository.get(storeId));
+    return Receipt.of(tableNo, order, receiptRepository.get(storeId));
   }
 
   @Override
   @Transactional(readOnly = true)
-  public Receipt create(Long storeId, List<Long> orderIds) {
+  public Receipt create(Long storeId, int tableNo, List<Long> orderIds) {
     List<Order> orders = orderFinder.findAll(orderIds);
 
     receiptRepository.increment(storeId);
 
-    return Receipt.of(orders, receiptRepository.get(storeId));
+    return Receipt.of(tableNo, orders, receiptRepository.get(storeId));
   }
 
   @Override
   @Transactional(readOnly = true)
-  public Receipt createDiff(Long storeId, List<Order> orders, OrderUpdateRequests updateRequests) {
-    return Receipt.diff(orders, updateRequests, receiptRepository.get(storeId));
+  public Receipt createDiff(
+      Long storeId,
+      int tableNo,
+      List<Order> orders,
+      OrderUpdateRequests updateRequests
+  ) {
+    return Receipt.diff(tableNo, orders, updateRequests, receiptRepository.get(storeId));
   }
 
 }

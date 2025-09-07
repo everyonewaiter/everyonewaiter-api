@@ -10,10 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public record Receipt(String memo, int printNo, List<ReceiptMenu> receiptMenus) {
+public record Receipt(int tableNo, String memo, int printNo, List<ReceiptMenu> receiptMenus) {
 
-  public static Receipt of(Order order, int printNo) {
+  public static Receipt of(int tableNo, Order order, int printNo) {
     return new Receipt(
+        tableNo,
         order.getMemo(),
         printNo,
         order.getPrintEnabledOrderMenus()
@@ -23,8 +24,9 @@ public record Receipt(String memo, int printNo, List<ReceiptMenu> receiptMenus) 
     );
   }
 
-  public static Receipt of(List<Order> orders, int printNo) {
+  public static Receipt of(int tableNo, List<Order> orders, int printNo) {
     return new Receipt(
+        tableNo,
         "",
         printNo,
         orders.stream()
@@ -34,7 +36,12 @@ public record Receipt(String memo, int printNo, List<ReceiptMenu> receiptMenus) 
     );
   }
 
-  public static Receipt diff(List<Order> orders, OrderUpdateRequests updateRequests, int printNo) {
+  public static Receipt diff(
+      int tableNo,
+      List<Order> orders,
+      OrderUpdateRequests updateRequests,
+      int printNo
+  ) {
     Map<Long, OrderMenu> beforeOrderMenus = orders.stream()
         .flatMap(order -> order.getPrintEnabledOrderMenus().stream())
         .collect(Collectors.toMap(OrderMenu::getId, orderMenu -> orderMenu));
@@ -61,7 +68,7 @@ public record Receipt(String memo, int printNo, List<ReceiptMenu> receiptMenus) 
       }
     }
 
-    return new Receipt("", printNo, receiptMenus);
+    return new Receipt(tableNo, "", printNo, receiptMenus);
   }
 
 }

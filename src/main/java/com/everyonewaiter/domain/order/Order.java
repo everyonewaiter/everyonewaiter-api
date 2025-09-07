@@ -71,7 +71,9 @@ public class Order extends AggregateRootEntity<Order> {
 
     order.posTableActivity.addOrder(order);
 
-    order.registerEvent(new OrderCreateEvent(order.getId(), order.store.getId()));
+    order.registerEvent(
+        new OrderCreateEvent(order.getId(), order.store.getId(), activity.getTableNo())
+    );
     order.registerEvent(new SseEvent(order.store.getId(), ORDER, CREATE));
 
     return order;
