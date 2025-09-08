@@ -100,7 +100,7 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
 
       long currentTime = System.currentTimeMillis();
       long maxTime = currentTime + Duration.ofMinutes(5).toMillis();
-      long minTime = maxTime - Duration.ofMinutes(5).toMillis();
+      long minTime = currentTime - Duration.ofMinutes(5).toMillis();
 
       if (timestamp < minTime || timestamp > maxTime) {
         throw new AuthenticationException();
