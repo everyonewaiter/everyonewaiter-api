@@ -11,6 +11,7 @@ import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.store.Store;
+import com.everyonewaiter.domain.support.DateFormatter;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -77,7 +78,9 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
     payment.issuerName = payment.isCard() ? requireNonNull(approveRequest.issuerName()) : "";
     payment.purchaseName = payment.isCard() ? requireNonNull(approveRequest.purchaseName()) : "";
     payment.merchantNo = payment.isCard() ? requireNonNull(approveRequest.merchantNo()) : "";
-    payment.tradeTime = payment.isCard() ? requireNonNull(approveRequest.tradeTime()) : "";
+    payment.tradeTime = payment.isCard()
+        ? requireNonNull(approveRequest.tradeTime())
+        : DateFormatter.formatCurrentKstTime();
     payment.tradeUniqueNo = payment.isCard() ? requireNonNull(approveRequest.tradeUniqueNo()) : "";
     payment.vat = approveRequest.vat();
     payment.supplyAmount = approveRequest.supplyAmount();
