@@ -48,7 +48,7 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
 
   private String merchantNo; // 카드사/포인트사 가맹점 번호
 
-  private String tradeTime; // 거래일시 YYMMDDHHmmss
+  private String tradeTime; // 거래일시 yyMMddHHmmss
 
   private String tradeUniqueNo; // 거래 고유 번호
 
@@ -120,7 +120,9 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
     payment.issuerName = requireNonNull(approvePayment.issuerName);
     payment.purchaseName = requireNonNull(approvePayment.purchaseName);
     payment.merchantNo = requireNonNull(approvePayment.merchantNo);
-    payment.tradeTime = approvePayment.isCard() ? requireNonNull(cancelRequest.tradeTime()) : "";
+    payment.tradeTime = approvePayment.isCard()
+        ? requireNonNull(cancelRequest.tradeTime())
+        : DateFormatter.formatCurrentKstTime();
     payment.tradeUniqueNo =
         approvePayment.isCard() ? requireNonNull(cancelRequest.tradeUniqueNo()) : "";
     payment.vat = approvePayment.vat;

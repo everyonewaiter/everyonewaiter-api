@@ -14,7 +14,7 @@ public final class DateFormatter {
   public static final DateTimeFormatter YEAR_MONTH = DateTimeFormatter.ofPattern("yyyyMM");
   public static final DateTimeFormatter YEAR_MONTH_DAY = DateTimeFormatter.ofPattern("yyyyMMdd");
   public static final DateTimeFormatter YEAR_MONTH_DAY_HOUR_MINUTE_SECOND =
-      DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+      DateTimeFormatter.ofPattern("yyMMddHHmmss");
 
   public static String formatCurrentKstTime() {
     LocalDateTime now = LocalDateTime.now(TimeZone.ASIA_SEOUL.zoneId());
