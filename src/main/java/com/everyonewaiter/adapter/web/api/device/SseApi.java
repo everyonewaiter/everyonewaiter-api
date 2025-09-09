@@ -2,6 +2,7 @@ package com.everyonewaiter.adapter.web.api.device;
 
 import static org.springframework.http.HttpHeaders.CACHE_CONTROL;
 import static org.springframework.http.HttpHeaders.CONNECTION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
 import com.everyonewaiter.application.sse.provided.SseConnector;
@@ -30,13 +31,18 @@ class SseApi implements SseApiSpecification {
       @AuthenticationDevice Device device,
       HttpServletResponse response
   ) {
-    response.setHeader(CONNECTION, "keep-alive");
-    response.setHeader(CACHE_CONTROL, "no-cache");
-    response.setHeader("X-Accel-Buffering", "no");
+    configureSseResponseHeader(response);
 
     SseEmitter sseEmitter = sseConnector.connect(device.getStoreId().toString(), lastEventId);
 
     return ResponseEntity.ok(sseEmitter);
+  }
+
+  private void configureSseResponseHeader(HttpServletResponse response) {
+    response.setHeader(CONTENT_TYPE, "text/event-stream");
+    response.setHeader(CONNECTION, "keep-alive");
+    response.setHeader(CACHE_CONTROL, "no-cache");
+    response.setHeader("X-Accel-Buffering", "no");
   }
 
 }

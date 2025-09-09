@@ -212,9 +212,7 @@ class WebApiControllerAdvice {
   public ResponseEntity<Object> handleException(HttpServletRequest request, Exception exception) {
     ErrorCode errorCode = ErrorCode.REQUEST_TIMEOUT;
 
-    if (DisconnectedClientHelper.isClientDisconnectedException(exception)) {
-      WebApiExceptionLogger.warn(request, errorCode, exception);
-    } else {
+    if (!DisconnectedClientHelper.isClientDisconnectedException(exception)) {
       WebApiExceptionLogger.error(request, errorCode, exception);
     }
 

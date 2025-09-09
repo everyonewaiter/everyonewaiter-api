@@ -64,7 +64,7 @@ class SseService implements SseConnector, SseSender {
       sseEmitter.complete();
     });
     sseEmitter.onError(throwable -> {
-      LOGGER.warn("[SSE] Emitter error. key: {}, message={}", emitterKey, throwable.getMessage());
+      LOGGER.debug("[SSE] Emitter error. key: {}, message={}", emitterKey, throwable.getMessage());
       sseEmitter.complete();
     });
 
@@ -99,8 +99,8 @@ class SseService implements SseConnector, SseSender {
               .name("sse")
               .data(event)
       );
-    } catch (IOException exception) {
-      LOGGER.warn("[SSE] Failed to send event. key: {}", key);
+    } catch (IOException | IllegalStateException exception) {
+      sseEmitterRepository.deleteByKey(key);
     }
   }
 
