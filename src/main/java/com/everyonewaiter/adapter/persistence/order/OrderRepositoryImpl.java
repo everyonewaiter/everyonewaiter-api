@@ -9,6 +9,7 @@ import static com.everyonewaiter.domain.store.QStore.store;
 import com.everyonewaiter.application.order.required.OrderRepository;
 import com.everyonewaiter.domain.order.Order;
 import com.everyonewaiter.domain.order.OrderNotFoundException;
+import com.everyonewaiter.domain.order.OrderState;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,7 @@ class OrderRepositoryImpl implements OrderRepository {
         .where(
             order.store.id.eq(storeId),
             order.serving.served.eq(served),
+            order.state.eq(OrderState.ORDER),
             order.createdAt.gt(store.lastOpenedAt)
         )
         .fetch();
