@@ -136,7 +136,7 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
   }
 
   private void tryInactivate() {
-    if (!hasOrder() && !hasOrderedOrder()) {
+    if (!hasOrderedOrder()) {
       this.active = false;
     }
   }
