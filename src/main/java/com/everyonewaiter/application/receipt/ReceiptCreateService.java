@@ -51,4 +51,14 @@ class ReceiptCreateService implements ReceiptCreator {
     return Receipt.diff(tableNo, orders, updateRequests, receiptRepository.get(storeId));
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public Receipt createCancel(Long storeId, int tableNo, Long orderId) {
+    Order order = orderFinder.findOrThrow(orderId);
+
+    receiptRepository.increment(storeId);
+
+    return Receipt.cancel(tableNo, order, receiptRepository.get(storeId));
+  }
+
 }
