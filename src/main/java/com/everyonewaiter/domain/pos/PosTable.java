@@ -8,6 +8,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.order.Order;
+import com.everyonewaiter.domain.order.OrderCancelEvent;
 import com.everyonewaiter.domain.order.OrderMemoUpdateRequest;
 import com.everyonewaiter.domain.order.OrderType;
 import com.everyonewaiter.domain.order.OrderUpdateEvent;
@@ -108,6 +109,7 @@ public class PosTable extends AggregateRootEntity<PosTable> {
 
     activeActivity.cancelOrder(orderId);
 
+    registerEvent(new OrderCancelEvent(orderId, store.getId(), tableNo));
     registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getTableNo()));
     registerEvent(new SseEvent(store.getId(), POS, UPDATE, getTableNo()));
   }

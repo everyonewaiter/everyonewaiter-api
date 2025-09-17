@@ -20,4 +20,8 @@ public record ReceiptMenu(String name, int quantity, List<String> options) {
     );
   }
 
+  public static ReceiptMenu cancel(OrderMenu orderMenu) {
+    return of(orderMenu, orderMenu.getQuantity() * -1);
+  }
+
 }

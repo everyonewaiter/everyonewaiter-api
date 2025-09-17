@@ -19,4 +19,6 @@ public interface ReceiptCreator {
       @Valid OrderUpdateRequests updateRequests
   );
 
+  Receipt createCancel(Long storeId, int tableNo, Long orderId);
+
 }

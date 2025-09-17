@@ -6,6 +6,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 
 import com.everyonewaiter.application.receipt.provided.ReceiptCreator;
+import com.everyonewaiter.domain.order.OrderCancelEvent;
 import com.everyonewaiter.domain.order.OrderCreateEvent;
 import com.everyonewaiter.domain.order.OrderUpdateEvent;
 import com.everyonewaiter.domain.receipt.Receipt;
@@ -47,6 +48,18 @@ class ReceiptSendEventHandler {
     LOGGER.info("[주문 수정 빌지 전송 이벤트] 매장 ID: {}, 테이블 번호: {}", event.storeId(), event.tableNo());
 
     publishSseEvent(event.storeId(), event.receipt());
+  }
+
+  @Async("eventTaskExecutor")
+  @Transactional(propagation = REQUIRES_NEW)
+  @TransactionalEventListener
+  public void handle(OrderCancelEvent event) {
+    LOGGER.info("[주문 취소 빌지 전송 이벤트] 매장 ID: {}, 주문 ID: {}, 테이블 번호: {}",
+        event.storeId(), event.orderId(), event.tableNo());
+
+    Receipt cancel = receiptCreator.createCancel(event.storeId(), event.tableNo(), event.orderId());
+
+    publishSseEvent(event.storeId(), cancel);
   }
 
   @Async("eventTaskExecutor")

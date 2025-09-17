@@ -71,4 +71,16 @@ public record Receipt(int tableNo, String memo, int printNo, List<ReceiptMenu> r
     return new Receipt(tableNo, "", printNo, receiptMenus);
   }
 
+  public static Receipt cancel(int tableNo, Order order, int printNo) {
+    return new Receipt(
+        tableNo,
+        "",
+        printNo,
+        order.getPrintEnabledOrderMenus()
+            .stream()
+            .map(ReceiptMenu::cancel)
+            .toList()
+    );
+  }
+
 }
