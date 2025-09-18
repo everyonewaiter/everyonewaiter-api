@@ -37,10 +37,11 @@ $  ./gradlew clean build
 $  java -jar ./build/libs/everyonewaiter-api-<version>.jar
 ```
 
-### Getting Help
+## Getting Help
 
+- [API 명세](https://api.everyonewaiter.com/documents)
 - [개발 가이드](https://github.com/everyonewaiter/documentation/tree/main/backend)
 
-### Coding Convention
+## Coding Convention
 
 - intellij-formatter: [google-intellij-formatter.xml](./google-intellij-formatter.xml)
