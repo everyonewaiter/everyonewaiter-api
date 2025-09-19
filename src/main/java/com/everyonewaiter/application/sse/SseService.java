@@ -38,7 +38,7 @@ class SseService implements SseConnector, SseSender {
     sseEmitterRepository.save(emitterKey, sseEmitter);
 
     // 최초 연결 성공 메시지 전송 (503 에러 방지)
-    send(sseEmitter, prefix, CONNECT_EVENT);
+    send(sseEmitter, EVENT.createKey(prefix), CONNECT_EVENT);
 
     // 재연결인 경우 수신하지 못한 이벤트가 있는지 검색 후 전송
     if (StringUtils.hasText(lastEventId)) {
