@@ -71,9 +71,6 @@ public class PosView {
       @Schema(description = "매장 ID", example = "\"694865267482835533\"")
       String storeId,
 
-      @Schema(description = "테이블명", example = "T-1")
-      String name,
-
       @Schema(description = "테이블 번호", example = "1")
       int tableNo,
 
@@ -106,7 +103,6 @@ public class PosView {
       return new PosTableDetail(
           String.valueOf(posTable.getId()),
           String.valueOf(posTable.getStore().getId()),
-          posTable.getName(),
           posTable.getTableNo(),
           posTable.hasOrder(),
           posTable.getTablePaymentType().orElse(null),
@@ -130,9 +126,6 @@ public class PosView {
 
       @Schema(description = "POS 테이블 ID", example = "\"694865267482835533\"")
       String posTableId,
-
-      @Schema(description = "테이블명", example = "T-1")
-      String name,
 
       @Schema(description = "테이블 번호", example = "1")
       int tableNo,
@@ -167,8 +160,7 @@ public class PosView {
           String.valueOf(posTableActivity.getId()),
           String.valueOf(posTableActivity.getStore().getId()),
           String.valueOf(posTableActivity.getPosTable().getId()),
-          posTableActivity.getPosTable().getName(),
-          posTableActivity.getPosTable().getTableNo(),
+          posTableActivity.getTableNo(),
           posTableActivity.getTablePaymentType(),
           posTableActivity.getTotalOrderPrice(),
           posTableActivity.getTotalPaymentPrice(),

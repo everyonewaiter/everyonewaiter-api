@@ -43,11 +43,11 @@ class PosTableCreateEventHandler {
     for (Device device : devices) {
       int tableNo = device.getTableNo();
 
-      tables.computeIfAbsent(tableNo, tn -> PosTable.create(store, "T", tn));
+      tables.computeIfAbsent(tableNo, tn -> PosTable.create(store, tn));
     }
 
     for (int i = 1; i <= store.getSetting().getExtraTableCount(); i++) {
-      PosTable table = PosTable.create(store, "추가", String.valueOf(i), 10000 + i);
+      PosTable table = PosTable.create(store, 10000 + i);
 
       tables.put(table.getTableNo(), table);
     }

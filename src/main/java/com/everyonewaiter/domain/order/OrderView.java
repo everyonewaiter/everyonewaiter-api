@@ -27,9 +27,6 @@ public class OrderView {
       @Schema(description = "주문 상태", example = "ORDER")
       OrderState state,
 
-      @Schema(description = "테이블 이름", example = "T-1")
-      String tableName,
-
       @Schema(description = "테이블 번호", example = "1")
       int tableNo,
 
@@ -62,8 +59,7 @@ public class OrderView {
           order.getCategory(),
           order.getType(),
           order.getState(),
-          order.getPosTableActivity().getPosTable().getName(),
-          order.getPosTableActivity().getPosTable().getTableNo(),
+          order.getPosTableActivity().getTableNo(),
           order.getPrice(),
           order.getMemo(),
           order.getServing().isServed(),

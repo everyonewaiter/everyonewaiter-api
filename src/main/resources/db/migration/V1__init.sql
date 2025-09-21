@@ -200,7 +200,6 @@ create table pos_table
 (
     id         bigint primary key,
     store_id   bigint      not null,
-    name       varchar(20) not null,
     table_no   int         not null,
     active     boolean     not null,
     created_at datetime(6) not null,
