@@ -581,9 +581,6 @@
     </table>
 
     <attributes>
-      <basic name="name">
-        <column name="name" nullable="false" length="20"/>
-      </basic>
       <basic name="tableNo">
         <column name="table_no" nullable="false"/>
       </basic>

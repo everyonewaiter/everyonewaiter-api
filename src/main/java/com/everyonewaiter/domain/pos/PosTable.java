@@ -37,23 +37,16 @@ public class PosTable extends AggregateRootEntity<PosTable> {
 
   private Store store;
 
-  private String name;
-
   private int tableNo;
 
   private boolean active;
 
   private List<PosTableActivity> activities = new ArrayList<>();
 
-  public static PosTable create(Store store, String prefix, int tableNo) {
-    return create(store, prefix, String.valueOf(tableNo), tableNo);
-  }
-
-  public static PosTable create(Store store, String prefix, String suffix, int tableNo) {
+  public static PosTable create(Store store, int tableNo) {
     PosTable posTable = new PosTable();
 
     posTable.store = requireNonNull(store);
-    posTable.name = requireNonNull(prefix) + "-" + requireNonNull(suffix);
     posTable.tableNo = tableNo;
     posTable.active = true;
 
