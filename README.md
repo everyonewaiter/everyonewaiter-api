@@ -38,6 +38,10 @@ $  ./gradlew clean build
 $  docker compose up --build -d
 ```
 
+### 접속
+
+http://localhost:8081/documents
+
 ### 종료
 
 ```

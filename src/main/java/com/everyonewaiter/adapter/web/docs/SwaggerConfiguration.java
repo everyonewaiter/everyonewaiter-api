@@ -164,7 +164,7 @@ class SwaggerConfiguration {
 
   private List<Server> servers() {
     return List.of(
-        new Server().url("http://localhost:8080").description("Local")
+        new Server().url("http://localhost:8081").description("Local")
     );
   }
 
