@@ -91,6 +91,7 @@ class WaitingRepositoryImpl implements WaitingRepository {
             waiting.state.eq(state),
             waiting.createdAt.gt(store.lastOpenedAt)
         )
+        .orderBy(waiting.id.asc())
         .fetch();
   }
 
