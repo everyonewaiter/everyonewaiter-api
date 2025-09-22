@@ -1,0 +1,40 @@
+package com.everyonewaiter.adapter.integration.image;
+
+import com.everyonewaiter.application.image.required.PDFToImageConverter;
+import com.everyonewaiter.domain.image.FailedConvertPdfToImageException;
+import com.everyonewaiter.domain.image.ImageFormat;
+import com.everyonewaiter.domain.image.ImageMultipartFile;
+import com.sksamuel.scrimage.ImmutableImage;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.io.RandomAccessReadBuffer;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+@Component
+class PDFToImageConverterImpl implements PDFToImageConverter {
+
+  @Override
+  public MultipartFile convertFirstPage(MultipartFile file, String prefix) {
+    return convertFirstPage(file, prefix, ImageFormat.WEBP);
+  }
+
+  @Override
+  public MultipartFile convertFirstPage(MultipartFile file, String prefix, ImageFormat format) {
+    try (PDDocument document = Loader.loadPDF(new RandomAccessReadBuffer(file.getInputStream()))) {
+      PDFRenderer pdfRenderer = new PDFRenderer(document);
+
+      BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
+      byte[] content = ImmutableImage.fromAwt(bufferedImage).bytes(format.getWriter());
+
+      return new ImageMultipartFile(prefix, format, content);
+    } catch (IOException exception) {
+      throw new FailedConvertPdfToImageException();
+    }
+  }
+
+}
