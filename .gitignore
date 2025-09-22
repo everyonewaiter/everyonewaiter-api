@@ -48,3 +48,6 @@ application*.properties
 
 ### LOGGING ###
 *.log
+
+### Docker Volumes ###
+docker/mysql

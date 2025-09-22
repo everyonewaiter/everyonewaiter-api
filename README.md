@@ -9,6 +9,7 @@
 - JDK 21
 - MySQL 8.4.3
 - Redis 7.4.1
+- Docker & Docker Compose
 
 ### 프로젝트 설정
 
@@ -34,12 +35,17 @@ $  ./gradlew clean build
 ### 실행
 
 ```
-$  java -jar ./build/libs/everyonewaiter-api-<version>.jar
+$  docker compose up --build -d
+```
+
+### 종료
+
+```
+$  docker compose down
 ```
 
 ## Getting Help
 
-- [API 명세](https://api.everyonewaiter.com/documents)
 - [개발 가이드](https://github.com/everyonewaiter/documentation/tree/main/backend)
 
 ## Coding Convention

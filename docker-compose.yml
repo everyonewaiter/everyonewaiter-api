@@ -1,0 +1,41 @@
+services:
+  everyonewaiter-api:
+    container_name: everyonewaiter-api
+    build: .
+    image: everyonewaiter-api:1.0.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:8.4.3
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: everyonewaiter
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/mysql:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping" ]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7.4.1
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      retries: 10
