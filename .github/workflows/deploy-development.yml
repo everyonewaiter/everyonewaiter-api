@@ -1,9 +1,9 @@
-name: Deploy Production
+name: Deploy Development
 
 on:
   push:
     branches:
-      - main
+      - development
 
 jobs:
   Deploy:
@@ -26,7 +26,7 @@ jobs:
 
       - name: Setup application.properties
         run: |
-          echo "${{ secrets.PROD_APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
+          echo "${{ secrets.DEV_APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
 
       - name: Gradle Build
         run: ./gradlew build
@@ -35,7 +35,7 @@ jobs:
         uses: oracle-actions/get-ocir-repository@v1.3.0
         id: get-ocir-repository
         with:
-          name: backend-production
+          name: backend-development
           compartment: ${{ secrets.OCI_COMPARTMENT_OCID }}
 
       - name: Log into OCIR
@@ -78,8 +78,8 @@ jobs:
           proxy_port: '22'
           script: |
             echo "${{ secrets.OCI_AUTH_TOKEN }}" | docker login ${{ secrets.OCIR_REGION_KEY }} -u ${{ secrets.OCIR_DOCKER_USERNAME }} --password-stdin
-            sudo docker stop everyonewaiter-api-prod || true
-            sudo docker rm everyonewaiter-api-prod || true
+            sudo docker stop everyonewaiter-api-dev || true
+            sudo docker rm everyonewaiter-api-dev || true
             sudo docker image ls --filter=reference="${{ steps.get-ocir-repository.outputs.repo_path }}*" --format "{{.ID}}" | xargs sudo docker rmi || true
             sudo docker pull ${{ steps.get-ocir-repository.outputs.repo_path }}:${{ github.sha }}
-            sudo docker run -d -p 8081:8081 --name everyonewaiter-api-prod -v /home/opc/.oci:/root/.oci -v /home/opc/logs/prod-logs:/logs --network everyonewaiter-network ${{ steps.get-ocir-repository.outputs.repo_path }}:${{ github.sha }}
+            sudo docker run -d -p 8080:8080 --name everyonewaiter-api-dev -v /home/opc/.oci:/root/.oci -v /home/opc/logs/dev-logs:/logs --network everyonewaiter-network ${{ steps.get-ocir-repository.outputs.repo_path }}:${{ github.sha }}
