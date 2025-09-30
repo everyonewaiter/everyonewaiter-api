@@ -25,6 +25,8 @@ public class Setting extends AggregateEntity {
 
   private boolean showOrderTotalPrice;
 
+  private boolean showOrderMenuImage;
+
   private List<CountryOfOrigin> countryOfOrigins = new ArrayList<>();
 
   private List<StaffCallOption> staffCallOptions = new ArrayList<>();
@@ -35,6 +37,7 @@ public class Setting extends AggregateEntity {
     this.printerLocation = PrinterLocation.POS;
     this.showMenuPopup = true;
     this.showOrderTotalPrice = true;
+    this.showOrderMenuImage = true;
   }
 
   public void update(StoreSettingUpdateRequest updateRequest) {
@@ -43,6 +46,7 @@ public class Setting extends AggregateEntity {
     this.printerLocation = requireNonNull(updateRequest.printerLocation());
     this.showMenuPopup = requireNonNull(updateRequest.showMenuPopup());
     this.showOrderTotalPrice = requireNonNull(updateRequest.showOrderTotalPrice());
+    this.showOrderMenuImage = requireNonNull(updateRequest.showOrderMenuImage());
 
     this.countryOfOrigins.clear();
     this.countryOfOrigins.addAll(updateRequest.countryOfOrigins());

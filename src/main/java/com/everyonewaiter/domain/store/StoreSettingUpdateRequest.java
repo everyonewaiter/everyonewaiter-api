@@ -35,6 +35,10 @@ public record StoreSettingUpdateRequest(
     @NotNull(message = "손님 테이블 총 주문 금액 표시 여부가 누락되었습니다.")
     Boolean showOrderTotalPrice,
 
+    @Schema(description = "홀 관리 주문 메뉴 이미지 표시 여부", example = "true", requiredMode = REQUIRED)
+    @NotNull(message = "홀 관리 주문 메뉴 이미지 표시 여부가 누락되었습니다.")
+    Boolean showOrderMenuImage,
+
     @Schema(description = "원산지 정보", requiredMode = REQUIRED)
     @NotNull(message = "원산지 정보가 누락되었습니다.")
     @Size(max = 20, message = "원산지 정보는 최대 20개까지 등록할 수 있어요.")

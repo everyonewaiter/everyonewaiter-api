@@ -176,6 +176,9 @@
       <basic name="showOrderTotalPrice">
         <column name="show_order_total_price" nullable="false"/>
       </basic>
+      <basic name="showOrderMenuImage">
+        <column name="show_order_menu_image" nullable="false"/>
+      </basic>
       <basic name="countryOfOrigins">
         <column name="country_of_origins" nullable="false" length="500"/>
         <convert
@@ -447,6 +450,9 @@
       </basic>
       <basic name="quantity">
         <column name="quantity" nullable="false"/>
+      </basic>
+      <basic name="image">
+        <column name="image" nullable="false" length="30"/>
       </basic>
       <basic name="printEnabled">
         <column name="print_enabled" nullable="false"/>

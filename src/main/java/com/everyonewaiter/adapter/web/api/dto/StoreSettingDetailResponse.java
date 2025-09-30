@@ -24,6 +24,9 @@ public record StoreSettingDetailResponse(
     @Schema(description = "손님 테이블 총 주문 금액 표시 여부", example = "true")
     boolean showOrderTotalPrice,
 
+    @Schema(description = "홀 관리 주문 메뉴 이미지 표시 여부", example = "true")
+    boolean showOrderMenuImage,
+
     @Schema(description = "원산지 정보")
     List<CountryOfOrigin> countryOfOrigins,
 
@@ -38,6 +41,7 @@ public record StoreSettingDetailResponse(
         setting.getPrinterLocation(),
         setting.isShowMenuPopup(),
         setting.isShowOrderTotalPrice(),
+        setting.isShowOrderMenuImage(),
         setting.getCountryOfOrigins(),
         setting.getStaffCallOptions().stream().map(StaffCallOption::optionName).toList()
     );

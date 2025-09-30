@@ -31,7 +31,7 @@ public record MenuSimpleResponse(
     @Schema(description = "메뉴 라벨", example = "BEST")
     MenuLabel label,
 
-    @Schema(description = "메뉴 이미지명", example = "license/202504/0KA652ZFZ26DG.webp")
+    @Schema(description = "메뉴 이미지명", example = "menu/202504/0KA652ZFZ26DG.webp")
     String image
 ) {
 

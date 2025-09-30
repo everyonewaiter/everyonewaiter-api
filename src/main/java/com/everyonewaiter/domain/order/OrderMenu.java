@@ -30,6 +30,8 @@ public class OrderMenu extends AggregateEntity {
 
   private int quantity;
 
+  private String image;
+
   private Serving serving;
 
   private boolean printEnabled;
@@ -51,6 +53,7 @@ public class OrderMenu extends AggregateEntity {
     orderMenu.name = requireNonNull(menu.getName());
     orderMenu.price = menu.getPrice();
     orderMenu.quantity = requireNonNull(request.quantity());
+    orderMenu.image = menu.getImage();
     orderMenu.serving = new Serving();
     orderMenu.printEnabled = menu.isPrintEnabled();
     orderMenu.orderOptionGroups.addAll(

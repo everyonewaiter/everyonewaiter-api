@@ -89,6 +89,9 @@ public class OrderView {
       @Schema(description = "주문 메뉴 수량", example = "1")
       int quantity,
 
+      @Schema(description = "주문 메뉴 이미지명", example = "menu/202504/0KA652ZFZ26DG.webp")
+      String image,
+
       @Schema(description = "주문 메뉴 서빙 여부", example = "false")
       boolean served,
 
@@ -108,6 +111,7 @@ public class OrderView {
           orderMenu.getName(),
           orderMenu.getPrice(),
           orderMenu.getQuantity(),
+          orderMenu.getImage(),
           orderMenu.getServing().isServed(),
           orderMenu.getServing().getServedTime(),
           orderMenu.isPrintEnabled(),
