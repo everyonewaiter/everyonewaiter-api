@@ -13,7 +13,11 @@ import org.springframework.http.ResponseEntity;
 interface MenuApiSpecification {
 
   @SecurityRequirements
-  @Operation(summary = "매장 메뉴 카테고리 및 메뉴 목록 조회", description = "매장 메뉴 카테고리 및 메뉴 목록 조회 API")
+  @Operation(
+      summary = "매장 메뉴 카테고리 및 메뉴 목록 조회",
+      description = "매장 메뉴 카테고리 및 메뉴 목록 조회 API<br/><br/>" +
+          "숨김(HIDE) 상태의 메뉴는 조회되지 않습니다."
+  )
   @ApiResponse(responseCode = "200", description = "매장 메뉴 카테고리 및 메뉴 목록 조회 성공")
   @ApiErrorResponse(
       summary = "매장 메뉴 카테고리 및 메뉴 목록 조회 실패",

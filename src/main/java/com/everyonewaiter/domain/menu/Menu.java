@@ -125,6 +125,10 @@ public class Menu extends AggregateRootEntity<Menu> {
     return isMoved;
   }
 
+  public boolean isVisible() {
+    return this.state != MenuState.HIDE;
+  }
+
   public boolean canOrder() {
     return this.state == MenuState.DEFAULT;
   }
