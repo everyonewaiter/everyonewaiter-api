@@ -10,7 +10,9 @@ import jakarta.persistence.Entity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -47,6 +49,8 @@ public class MenuOptionGroup extends AggregateEntity {
     menuOptionGroup.position = Position.next(lastPosition);
     menuOptionGroup.menuOptions.addAll(createMenuOptions(request.menuOptions()));
 
+    validateDuplicateMenuOptionName(menuOptionGroup);
+
     return menuOptionGroup;
   }
 
@@ -59,6 +63,18 @@ public class MenuOptionGroup extends AggregateEntity {
     return requests.stream()
         .map(request -> create(menu, request, menuOptionGroupPosition.getAndIncrement()))
         .toList();
+  }
+
+  private static void validateDuplicateMenuOptionName(MenuOptionGroup menuOptionGroup) {
+    List<MenuOption> menuOptions = menuOptionGroup.getMenuOptions();
+
+    Set<String> distinctOptions = menuOptions.stream()
+        .map(MenuOption::getName)
+        .collect(Collectors.toSet());
+
+    if (distinctOptions.size() != menuOptions.size()) {
+      throw new DuplicateMenuOptionNameException();
+    }
   }
 
   public boolean isMandatory() {

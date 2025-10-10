@@ -77,6 +77,12 @@ public class Category extends AggregateRootEntity<Category> {
     registerEvent(new SseEvent(store.getId(), CATEGORY, DELETE, getId()));
   }
 
+  public List<Menu> getVisibleMenus() {
+    return getMenus().stream()
+        .filter(Menu::isVisible)
+        .toList();
+  }
+
   public List<Menu> getMenus() {
     return Collections.unmodifiableList(menus);
   }

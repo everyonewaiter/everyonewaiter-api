@@ -75,6 +75,7 @@ public enum ErrorCode {
   CATEGORY_NOT_FOUND(NOT_FOUND, "카테고리를 찾을 수 없어요."),
 
   // MENU
+  DUPLICATE_MENU_OPTION_NAME(BAD_REQUEST, "메뉴 옵션 그룹에 중복된 메뉴 옵션 이름이 있어요."),
   EXCEED_MAXIMUM_MENU_COUNT(BAD_REQUEST, "메뉴는 카테고리당 최대 50개까지 등록할 수 있어요."),
   INVALID_DISCOUNT_OPTION_PRICE(BAD_REQUEST, "할인 옵션의 가격은 메뉴 가격보다 작아야 해요."),
   MENU_NOT_FOUND(NOT_FOUND, "메뉴를 찾을 수 없어요."),

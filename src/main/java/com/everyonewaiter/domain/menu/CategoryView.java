@@ -34,7 +34,7 @@ public class CategoryView {
       return new CategoryDetail(
           String.valueOf(category.getId()),
           category.getName(),
-          category.getMenus()
+          category.getVisibleMenus()
               .stream()
               .map(MenuView.MenuDetail::from)
               .toList()
