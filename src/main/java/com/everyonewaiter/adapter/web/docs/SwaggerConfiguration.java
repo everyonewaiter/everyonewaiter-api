@@ -164,6 +164,7 @@ class SwaggerConfiguration {
 
   private List<Server> servers() {
     return List.of(
+        new Server().url("https://devapi.everyonewaiter.com").description("Development"),
         new Server().url("http://localhost:8081").description("Local")
     );
   }
