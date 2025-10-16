@@ -3,7 +3,7 @@ package com.everyonewaiter.domain.sse;
 import jakarta.annotation.Nullable;
 
 public record SseEvent(
-    Long storeId,
+    String storeId,
     SseCategory category,
     ServerAction action,
     boolean hasData,
@@ -15,7 +15,7 @@ public record SseEvent(
   }
 
   public SseEvent(Long storeId, SseCategory category, ServerAction action, @Nullable Object data) {
-    this(storeId, category, action, data != null, data);
+    this(String.valueOf(storeId), category, action, data != null, data);
   }
 
 }

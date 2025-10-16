@@ -47,6 +47,10 @@ public abstract class AggregateRootEntity<T extends AbstractAggregateRoot<T>>
     this.isNew = false;
   }
 
+  protected String getStringId() {
+    return String.valueOf(getId());
+  }
+
   @Override
   @SuppressWarnings("java:S2097") // Add a type test to this method.
   public final boolean equals(Object o) {

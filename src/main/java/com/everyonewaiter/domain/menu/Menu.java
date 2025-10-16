@@ -104,7 +104,7 @@ public class Menu extends AggregateRootEntity<Menu> {
 
     validateMenuOptionPrice(this);
 
-    registerEvent(new SseEvent(store.getId(), MENU, UPDATE, getId()));
+    registerEvent(new SseEvent(store.getId(), MENU, UPDATE, getStringId()));
   }
 
   public void update(MenuUpdateRequest updateRequest, String image) {
@@ -135,7 +135,7 @@ public class Menu extends AggregateRootEntity<Menu> {
 
   public void delete() {
     registerEvent(new MenuImageDeleteEvent(image));
-    registerEvent(new SseEvent(store.getId(), MENU, DELETE, getId()));
+    registerEvent(new SseEvent(store.getId(), MENU, DELETE, getStringId()));
   }
 
   public MenuOptionGroup getMenuOptionGroup(Long menuOptionGroupId) {

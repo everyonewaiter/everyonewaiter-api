@@ -93,7 +93,7 @@ public class Order extends AggregateRootEntity<Order> {
     getOrderMenus().forEach(OrderMenu::serving);
     this.serving.complete();
 
-    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getId()));
+    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getStringId()));
   }
 
   public void serving(Long orderMenuId) {
@@ -103,7 +103,7 @@ public class Order extends AggregateRootEntity<Order> {
 
     getOrderMenu(orderMenuId).toggleServing();
 
-    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getId()));
+    registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getStringId()));
   }
 
   public void cancel() {
