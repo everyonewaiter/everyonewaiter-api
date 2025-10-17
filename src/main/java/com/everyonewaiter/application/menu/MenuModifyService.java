@@ -141,7 +141,7 @@ class MenuModifyService implements MenuManager {
       menuRepository.deleteAll(menus);
 
       var event1 = new MenuImageDeleteEvent(menus.stream().map(Menu::getImage).toList());
-      var event2 = new SseEvent(storeId, MENU, DELETE, deleteRequest.menuIds());
+      var event2 = new SseEvent(storeId, MENU, DELETE, deleteRequest.getStringMenuIds());
 
       applicationEventPublisher.publishEvent(event1);
       applicationEventPublisher.publishEvent(event2);

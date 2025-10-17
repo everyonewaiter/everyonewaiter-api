@@ -41,7 +41,7 @@ class SignInTokenService implements SignInTokenProvider {
   }
 
   @Override
-  @DistributedLock(key = "#refreshToken")
+  @DistributedLock(key = "#signInTokenRenewRequest.refreshToken")
   public Optional<SignInToken> renewToken(SignInTokenRenewRequest signInTokenRenewRequest) {
     JwtPayload payload = jwtProvider.decode(signInTokenRenewRequest.refreshToken())
         .orElseThrow(AuthenticationException::new);

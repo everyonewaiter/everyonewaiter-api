@@ -136,11 +136,11 @@ public class Device extends AggregateRootEntity<Device> {
     this.tableNo = tableNo;
     this.paymentType = requireNonNull(paymentType);
 
-    registerEvent(new SseEvent(store.getId(), DEVICE, UPDATE, getId()));
+    registerEvent(new SseEvent(getStoreId(), DEVICE, UPDATE, getStringId()));
   }
 
   public void delete() {
-    registerEvent(new SseEvent(store.getId(), DEVICE, DELETE, getId()));
+    registerEvent(new SseEvent(getStoreId(), DEVICE, DELETE, getStringId()));
   }
 
   public Long getStoreId() {

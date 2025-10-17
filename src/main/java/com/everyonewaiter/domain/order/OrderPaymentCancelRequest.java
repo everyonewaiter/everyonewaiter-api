@@ -2,6 +2,7 @@ package com.everyonewaiter.domain.order;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
+import com.everyonewaiter.domain.support.DateFormatter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
@@ -19,5 +20,17 @@ public record OrderPaymentCancelRequest(
     @NotNull(message = "카드 거래 고유 번호가 누락되었습니다.")
     String tradeUniqueNo
 ) {
+
+  public String approvalNo(boolean isPureCash) {
+    return isPureCash ? "" : approvalNo;
+  }
+
+  public String tradeTime(boolean isPureCash) {
+    return isPureCash ? DateFormatter.formatCurrentKstTime() : tradeTime;
+  }
+
+  public String tradeUniqueNo(boolean isPureCash) {
+    return isPureCash ? "" : tradeUniqueNo;
+  }
 
 }

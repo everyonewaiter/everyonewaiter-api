@@ -1,6 +1,5 @@
 package com.everyonewaiter.domain.order;
 
-import static com.everyonewaiter.domain.order.CashReceiptType.NONE;
 import static com.everyonewaiter.domain.sse.ServerAction.UPDATE;
 import static com.everyonewaiter.domain.sse.SseCategory.ORDER;
 import static com.everyonewaiter.domain.sse.SseCategory.POS;
@@ -11,7 +10,6 @@ import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.store.Store;
-import com.everyonewaiter.domain.support.DateFormatter;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -72,23 +70,18 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
     payment.state = OrderPaymentState.APPROVE;
     payment.amount = approveRequest.amount();
     payment.cancellable = true;
-    payment.approvalNo = payment.isCard() ? requireNonNull(approveRequest.approvalNo()) : "";
-    payment.installment = payment.isCard() ? requireNonNull(approveRequest.installment()) : "";
-    payment.cardNo = payment.isCard() ? requireNonNull(approveRequest.cardNo()) : "";
-    payment.issuerName = payment.isCard() ? requireNonNull(approveRequest.issuerName()) : "";
-    payment.purchaseName = payment.isCard() ? requireNonNull(approveRequest.purchaseName()) : "";
-    payment.merchantNo = payment.isCard() ? requireNonNull(approveRequest.merchantNo()) : "";
-    payment.tradeTime = payment.isCard()
-        ? requireNonNull(approveRequest.tradeTime())
-        : DateFormatter.formatCurrentKstTime();
-    payment.tradeUniqueNo = payment.isCard() ? requireNonNull(approveRequest.tradeUniqueNo()) : "";
+    payment.approvalNo = requireNonNull(approveRequest.approvalNo());
+    payment.installment = requireNonNull(approveRequest.installment());
+    payment.cardNo = requireNonNull(approveRequest.cardNo());
+    payment.issuerName = requireNonNull(approveRequest.issuerName());
+    payment.purchaseName = requireNonNull(approveRequest.purchaseName());
+    payment.merchantNo = requireNonNull(approveRequest.merchantNo());
+    payment.tradeTime = requireNonNull(approveRequest.tradeTime());
+    payment.tradeUniqueNo = requireNonNull(approveRequest.tradeUniqueNo());
     payment.vat = approveRequest.vat();
     payment.supplyAmount = approveRequest.supplyAmount();
-    payment.cashReceiptType =
-        payment.isCard() ? NONE : requireNonNull(approveRequest.cashReceiptType());
-    payment.cashReceiptNo = (payment.isCard() || payment.cashReceiptType == NONE)
-        ? ""
-        : requireNonNull(approveRequest.cashReceiptNo());
+    payment.cashReceiptType = requireNonNull(approveRequest.cashReceiptType());
+    payment.cashReceiptNo = requireNonNull(approveRequest.cashReceiptNo());
 
     payment.posTableActivity.addPayment(payment);
 
@@ -114,17 +107,15 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
     payment.state = OrderPaymentState.CANCEL;
     payment.amount = approvePayment.amount;
     payment.cancellable = false;
-    payment.approvalNo = approvePayment.isCard() ? requireNonNull(cancelRequest.approvalNo()) : "";
+    payment.approvalNo = requireNonNull(cancelRequest.approvalNo(approvePayment.isPureCash()));
     payment.installment = requireNonNull(approvePayment.installment);
     payment.cardNo = requireNonNull(approvePayment.cardNo);
     payment.issuerName = requireNonNull(approvePayment.issuerName);
     payment.purchaseName = requireNonNull(approvePayment.purchaseName);
     payment.merchantNo = requireNonNull(approvePayment.merchantNo);
-    payment.tradeTime = approvePayment.isCard()
-        ? requireNonNull(cancelRequest.tradeTime())
-        : DateFormatter.formatCurrentKstTime();
-    payment.tradeUniqueNo =
-        approvePayment.isCard() ? requireNonNull(cancelRequest.tradeUniqueNo()) : "";
+    payment.tradeTime = requireNonNull(cancelRequest.tradeTime(approvePayment.isPureCash()));
+    payment.tradeUniqueNo = requireNonNull(
+        cancelRequest.tradeUniqueNo(approvePayment.isPureCash()));
     payment.vat = approvePayment.vat;
     payment.supplyAmount = approvePayment.supplyAmount;
     payment.cashReceiptNo = requireNonNull(approvePayment.cashReceiptNo);
@@ -146,8 +137,8 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
     this.posTableActivity.addPayment(this);
   }
 
-  public boolean isCard() {
-    return this.method == OrderPaymentMethod.CARD;
+  public boolean isPureCash() {
+    return this.method == OrderPaymentMethod.CASH && this.cashReceiptType == CashReceiptType.NONE;
   }
 
   public boolean isApproved() {

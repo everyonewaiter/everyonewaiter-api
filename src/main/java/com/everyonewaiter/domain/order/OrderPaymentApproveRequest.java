@@ -2,6 +2,7 @@ package com.everyonewaiter.domain.order;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
+import com.everyonewaiter.domain.support.DateFormatter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -69,5 +70,67 @@ public record OrderPaymentApproveRequest(
     @NotNull(message = "현금 영수증 타입이 누락되었거나 올바르지 않습니다.")
     CashReceiptType cashReceiptType
 ) {
+
+  public boolean isCard() {
+    return method == OrderPaymentMethod.CARD;
+  }
+
+  public boolean isCash() {
+    return method == OrderPaymentMethod.CASH;
+  }
+
+  public boolean isPureCash() {
+    return isCash() && cashReceiptType == CashReceiptType.NONE;
+  }
+
+  @Override
+  public String approvalNo() {
+    return isPureCash() ? "" : approvalNo;
+  }
+
+  @Override
+  public String installment() {
+    return isCard() ? installment : "00";
+  }
+
+  @Override
+  public String cardNo() {
+    return isCard() ? cardNo : "";
+  }
+
+  @Override
+  public String issuerName() {
+    return isCard() ? issuerName : "";
+  }
+
+  @Override
+  public String purchaseName() {
+    return isCard() ? purchaseName : "";
+  }
+
+  @Override
+  public String merchantNo() {
+    return isCard() ? merchantNo : "";
+  }
+
+  @Override
+  public String tradeTime() {
+    return isPureCash() ? DateFormatter.formatCurrentKstTime() : tradeTime;
+  }
+
+  @Override
+  public String tradeUniqueNo() {
+    return isPureCash() ? "" : tradeUniqueNo;
+  }
+
+  @Override
+  public CashReceiptType cashReceiptType() {
+    return isCard() ? CashReceiptType.NONE : cashReceiptType;
+  }
+
+  @Override
+  public String cashReceiptNo() {
+    return (!isCard() && !isPureCash()) ? cashReceiptNo : "";
+  }
 
 }

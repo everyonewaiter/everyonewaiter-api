@@ -15,4 +15,8 @@ public record MenuDeleteRequest(
     List<Long> menuIds
 ) {
 
+  public List<String> getStringMenuIds() {
+    return menuIds.stream().map(String::valueOf).toList();
+  }
+
 }

@@ -3,6 +3,7 @@ package com.everyonewaiter.adapter.web.config;
 import static com.everyonewaiter.adapter.web.HttpRequestParser.parseRequestUri;
 import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import com.everyonewaiter.application.auth.required.SignatureEncoder;
 import com.everyonewaiter.application.device.provided.DeviceFinder;
@@ -12,9 +13,11 @@ import com.everyonewaiter.domain.shared.AccessDeniedException;
 import com.everyonewaiter.domain.shared.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
+import java.util.Arrays;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -26,6 +29,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 @RequiredArgsConstructor
 class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
+
+  private static final Logger LOGGER = getLogger(AuthenticationDeviceResolver.class);
 
   private static final String ACCESS_KEY = "x-ew-access-key";
   private static final String SIGNATURE = "x-ew-signature";
@@ -61,6 +66,8 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
           );
 
           if (!device.isActive() || stream(annotation.purpose()).noneMatch(device::hasPurpose)) {
+            LOGGER.debug("Device not have require purpose. have: {}, required: {}",
+                device.getPurpose(), Arrays.toString(annotation.purpose()));
             throw new AccessDeniedException();
           }
 
@@ -74,6 +81,7 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
     String plainText = requestSignature.plainText(device);
 
     if (!signatureEncoder.matches(signature, plainText, device.getSecretKey())) {
+      LOGGER.debug("Device signature not match. plain: {}, signature: {}", plainText, signature);
       throw new AuthenticationException();
     }
   }
@@ -98,11 +106,14 @@ class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
         throw new AuthenticationException();
       }
 
+      long validDuration = Duration.ofMinutes(5).toMillis();
       long currentTime = System.currentTimeMillis();
-      long maxTime = currentTime + Duration.ofMinutes(5).toMillis();
-      long minTime = currentTime - Duration.ofMinutes(5).toMillis();
+      long maxTime = currentTime + validDuration;
+      long minTime = currentTime - validDuration;
 
       if (timestamp < minTime || timestamp > maxTime) {
+        LOGGER.debug("Device timestamp duration is invalid. timestamp: {}, max: {}, min: {}",
+            timestamp, maxTime, minTime);
         throw new AuthenticationException();
       }
     }

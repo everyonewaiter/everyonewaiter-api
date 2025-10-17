@@ -52,7 +52,7 @@ public class Category extends AggregateRootEntity<Category> {
   public void update(CategoryUpdateRequest updateRequest) {
     this.name = requireNonNull(updateRequest.name());
 
-    registerEvent(new SseEvent(store.getId(), CATEGORY, UPDATE, getId()));
+    registerEvent(new SseEvent(store.getId(), CATEGORY, UPDATE, getStringId()));
   }
 
   public boolean movePosition(Category other, CategoryMovePositionRequest movePositionRequest) {
@@ -74,7 +74,13 @@ public class Category extends AggregateRootEntity<Category> {
                 .toList()
         )
     );
-    registerEvent(new SseEvent(store.getId(), CATEGORY, DELETE, getId()));
+    registerEvent(new SseEvent(store.getId(), CATEGORY, DELETE, getStringId()));
+  }
+
+  public List<Menu> getVisibleMenus() {
+    return getMenus().stream()
+        .filter(Menu::isVisible)
+        .toList();
   }
 
   public List<Menu> getMenus() {
