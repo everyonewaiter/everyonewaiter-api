@@ -16,7 +16,7 @@ class SseSendEventHandler {
   @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void handle(SseEvent event) {
-    sseSender.send(event.storeId().toString(), event);
+    sseSender.send(event.storeId(), event);
   }
 
 }
