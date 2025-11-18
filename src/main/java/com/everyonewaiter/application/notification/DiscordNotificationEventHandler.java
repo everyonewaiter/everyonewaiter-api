@@ -4,7 +4,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import com.everyonewaiter.application.notification.provided.NotificationSender;
 import com.everyonewaiter.domain.account.AccountCreateEvent;
-import com.everyonewaiter.domain.contact.ContactCreateEvent;
 import com.everyonewaiter.domain.notification.DiscordColor;
 import com.everyonewaiter.domain.notification.DiscordEmbed;
 import com.everyonewaiter.domain.notification.DiscordEmbeds;
@@ -24,22 +23,6 @@ class DiscordNotificationEventHandler {
   private static final Logger LOGGER = getLogger(DiscordNotificationEventHandler.class);
 
   private final NotificationSender notificationSender;
-
-  @Async("eventTaskExecutor")
-  @TransactionalEventListener
-  public void handle(ContactCreateEvent event) {
-    LOGGER.info("[서비스 도입 문의 이벤트] storeName: {}", event.storeName());
-
-    DiscordEmbed embed = new DiscordEmbed(
-        DiscordColor.GREEN,
-        "서비스 도입 문의 이벤트",
-        event.storeName() + " 사장님께서 서비스 도입을 문의하셨습니다!"
-    );
-    embed.addField(new DiscordField("사업자 등록 번호", event.license().value()));
-    embed.addField(new DiscordField("휴대폰 번호", event.phoneNumber().value()));
-
-    notificationSender.sendDiscord(new DiscordEmbeds(embed));
-  }
 
   @Async("eventTaskExecutor")
   @TransactionalEventListener

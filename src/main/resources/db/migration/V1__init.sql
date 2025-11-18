@@ -9,21 +9,6 @@ create table apk_version
     updated_at        datetime(6)  not null
 );
 
-create table contact
-(
-    id           bigint primary key,
-    store_name   varchar(30)                                not null,
-    license      char(12)                                   not null,
-    phone_number char(11)                                   not null,
-    state        enum ('PENDING', 'PROCESSING', 'COMPLETE') not null,
-    created_at   datetime(6)                                not null,
-    updated_at   datetime(6)                                not null
-);
-create index idx_contact_name_license_phone_number on contact (store_name, license, phone_number);
-create index idx_contact_name_phone_number on contact (store_name, phone_number);
-create index idx_contact_license_phone_number on contact (license, phone_number);
-create index idx_contact_phone_number on contact (phone_number);
-
 create table refresh_token
 (
     id               bigint primary key,
