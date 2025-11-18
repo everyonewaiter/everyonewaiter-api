@@ -7,28 +7,52 @@ import static org.springframework.util.Assert.state;
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.PhoneNumber;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
+@Table(
+    name = "account",
+    indexes = {
+        @Index(name = "idx_account_phone_number", columnList = "phone_number"),
+        @Index(name = "idx_account_state", columnList = "state"),
+        @Index(name = "idx_account_permission_state", columnList = "permission, state"),
+        @Index(name = "idx_account_email_state", columnList = "email, state"),
+        @Index(name = "idx_account_email_permission_state", columnList = "email, permission, state"),
+    }
+)
 @Getter
 @ToString(exclude = "password", callSuper = true)
 @NoArgsConstructor(access = PROTECTED)
 public class Account extends AggregateRootEntity<Account> {
 
+  @Embedded
   private Email email;
 
+  @Column(name = "password", nullable = false, length = 60)
   private String password;
 
+  @Embedded
   private PhoneNumber phoneNumber;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "state", nullable = false)
   private AccountState state;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "permission", nullable = false)
   private AccountPermission permission;
 
+  @Column(name = "last_sign_in", nullable = false)
   private Instant lastSignIn;
 
   public static Account create(

@@ -12,7 +12,15 @@ import com.everyonewaiter.domain.order.OrderPayment;
 import com.everyonewaiter.domain.order.OrderType;
 import com.everyonewaiter.domain.order.OrderUpdateRequest;
 import com.everyonewaiter.domain.store.Store;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,23 +31,41 @@ import lombok.ToString;
 
 
 @Entity
+@Table(
+    name = "pos_table_activity",
+    indexes = {
+        @Index(name = "idx_pos_table_activity_store_id_active_table_no", columnList = "store_id, active, table_no"),
+        @Index(name = "idx_pos_table_activity_store_id_active_created_at", columnList = "store_id, active, created_at desc")
+    }
+)
 @Getter
 @ToString(exclude = {"store", "posTable", "orders", "payments"}, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
 
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "store_id", nullable = false, updatable = false)
   private Store store;
 
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "pos_table_id", nullable = false)
   private PosTable posTable;
 
+  @Column(name = "table_no", nullable = false)
   private int tableNo;
 
+  @Column(name = "discount", nullable = false)
   private long discount;
 
+  @Column(name = "active", nullable = false)
   private boolean active;
 
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "posTableActivity")
+  @OrderBy("id asc")
   private List<Order> orders = new ArrayList<>();
 
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "posTableActivity")
+  @OrderBy("id asc")
   private List<OrderPayment> payments = new ArrayList<>();
 
   public static PosTableActivity create(PosTable posTable) {

@@ -6,22 +6,29 @@ import static lombok.AccessLevel.PROTECTED;
 import com.everyonewaiter.domain.menu.MenuOption;
 import com.everyonewaiter.domain.menu.MenuOptionGroup;
 import com.everyonewaiter.domain.shared.Position;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Embeddable
 @Getter
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor(access = PROTECTED)
 public class OrderOption {
 
+  @Column(name = "name", nullable = false, length = 30)
   private String name;
 
+  @Column(name = "price", nullable = false)
   private long price;
 
+  @Embedded
   private Position position;
 
   public static OrderOption create(

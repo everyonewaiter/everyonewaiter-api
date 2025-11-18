@@ -26,10 +26,8 @@ public enum ErrorCode {
   REQUEST_TIMEOUT(HttpStatus.REQUEST_TIMEOUT, "Request Timeout"),
   INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 오류가 발생했어요. 관리자에게 문의를 남겨주세요."),
 
-  // HEALTH & CONTACT
-  ALREADY_EXISTS_CONTACT(BAD_REQUEST, "이미 문의가 완료된 매장입니다. 상담원이 최대한 빠른 시일 내 연락을 드릴거에요."),
+  // HEALTH
   APK_VERSION_NOT_FOUND(NOT_FOUND, "앱 버전 정보를 찾지 못했어요."),
-  CONTACT_NOT_FOUND(NOT_FOUND, "문의 내역을 찾을 수 없어요."),
 
   // FILE
   ALLOW_IMAGE_AND_PDF_FILE(BAD_REQUEST, "이미지 또는 PDF 파일만 업로드할 수 있어요."),

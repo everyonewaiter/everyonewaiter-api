@@ -18,7 +18,15 @@ import com.everyonewaiter.domain.receipt.Receipt;
 import com.everyonewaiter.domain.receipt.ReceiptResendEvent;
 import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.store.Store;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,17 +38,29 @@ import lombok.ToString;
 
 
 @Entity
+@Table(
+    name = "pos_table",
+    indexes = {
+        @Index(name = "idx_pos_table_store_id_active_table_no", columnList = "store_id, active, table_no")
+    }
+)
 @Getter
 @ToString(exclude = {"store", "activities"}, callSuper = true)
 @NoArgsConstructor(access = PROTECTED)
 public class PosTable extends AggregateRootEntity<PosTable> {
 
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "store_id", nullable = false, updatable = false)
   private Store store;
 
+  @Column(name = "table_no", nullable = false)
   private int tableNo;
 
+  @Column(name = "active", nullable = false)
   private boolean active;
 
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "posTable")
+  @OrderBy("id desc")
   private List<PosTableActivity> activities = new ArrayList<>();
 
   public static PosTable create(Store store, int tableNo) {

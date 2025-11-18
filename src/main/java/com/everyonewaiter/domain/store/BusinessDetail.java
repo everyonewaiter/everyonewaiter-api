@@ -4,7 +4,9 @@ import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.shared.BusinessLicense;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,16 +19,22 @@ import lombok.ToString;
 @NoArgsConstructor(access = PROTECTED)
 public class BusinessDetail {
 
+  @Column(name = "name", nullable = false, length = 30)
   private String name;
 
+  @Column(name = "ceo_name", nullable = false, length = 20)
   private String ceoName;
 
+  @Column(name = "address", nullable = false, length = 50)
   private String address;
 
+  @Column(name = "landline", nullable = false, length = 13)
   private String landline;
 
+  @Embedded
   private BusinessLicense license;
 
+  @Column(name = "license_image", nullable = false, length = 33)
   private String licenseImage;
 
   public static BusinessDetail create(RegistrationApplyRequest applyRequest, String licenseImage) {

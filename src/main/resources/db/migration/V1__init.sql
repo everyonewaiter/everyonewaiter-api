@@ -9,21 +9,6 @@ create table apk_version
     updated_at        datetime(6)  not null
 );
 
-create table contact
-(
-    id           bigint primary key,
-    store_name   varchar(30)                                not null,
-    license      char(12)                                   not null,
-    phone_number char(11)                                   not null,
-    state        enum ('PENDING', 'PROCESSING', 'COMPLETE') not null,
-    created_at   datetime(6)                                not null,
-    updated_at   datetime(6)                                not null
-);
-create index idx_contact_name_license_phone_number on contact (store_name, license, phone_number);
-create index idx_contact_name_phone_number on contact (store_name, phone_number);
-create index idx_contact_license_phone_number on contact (license, phone_number);
-create index idx_contact_phone_number on contact (phone_number);
-
 create table refresh_token
 (
     id               bigint primary key,
@@ -78,6 +63,7 @@ create table store_setting
     printer_location       enum ('POS', 'HALL') not null,
     show_menu_popup        boolean              not null,
     show_order_total_price boolean              not null,
+    show_order_menu_image  boolean              not null,
     country_of_origins     varchar(500)         not null,
     staff_call_options     varchar(255)         not null
 );
@@ -233,7 +219,7 @@ create table orders
     type                  enum ('PREPAID', 'POSTPAID')   not null,
     state                 enum ('ORDER', 'CANCEL')       not null,
     price                 bigint                         not null,
-    memo                  varchar(30)                    not null,
+    memo                  varchar(10)                    not null,
     served                boolean                        not null,
     served_time           datetime(6)                    not null,
     created_at            datetime(6)                    not null,
@@ -250,6 +236,7 @@ create table orders_menu
     name          varchar(30) not null,
     price         bigint      not null,
     quantity      int         not null,
+    image         char(30)    not null default 'menu/preparation.png',
     served        boolean     not null,
     served_time   datetime(6) not null,
     print_enabled boolean     not null,

@@ -6,7 +6,17 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateEntity;
 import com.everyonewaiter.domain.menu.Menu;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,25 +27,41 @@ import lombok.ToString;
 
 
 @Entity
+@Table(name = "orders_menu")
 @Getter
 @ToString(exclude = {"order", "orderOptionGroups"}, callSuper = true)
 @NoArgsConstructor(access = PROTECTED)
 public class OrderMenu extends AggregateEntity {
 
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(
+      name = "orders_id",
+      foreignKey = @ForeignKey(name = "fk_orders_menu_orders_id", foreignKeyDefinition = "ON DELETE CASCADE"),
+      nullable = false,
+      updatable = false
+  )
   private Order order;
 
+  @Column(name = "name", nullable = false, length = 30)
   private String name;
 
+  @Column(name = "price", nullable = false)
   private long price;
 
+  @Column(name = "quantity", nullable = false)
   private int quantity;
 
+  @Column(name = "image", nullable = false, length = 30)
   private String image;
 
+  @Embedded
   private Serving serving;
 
+  @Column(name = "print_enabled", nullable = false)
   private boolean printEnabled;
 
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "orderMenu", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderBy("id asc")
   private List<OrderOptionGroup> orderOptionGroups = new ArrayList<>();
 
   public static OrderMenu create(

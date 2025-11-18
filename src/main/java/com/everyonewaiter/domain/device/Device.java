@@ -18,29 +18,58 @@ import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.store.Store;
 import com.everyonewaiter.domain.support.Tsid;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
+@Table(
+    name = "device",
+    uniqueConstraints = {
+        @UniqueConstraint(name = "uk_device_store_id_name", columnNames = {"store_id", "name"})
+    },
+    indexes = {
+        @Index(name = "idx_device_store_id_purpose_state", columnList = "store_id, purpose, state")
+    }
+)
 @Getter
 @ToString(exclude = "store", callSuper = true)
 @NoArgsConstructor(access = PROTECTED)
 public class Device extends AggregateRootEntity<Device> {
 
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "store_id", nullable = false, updatable = false)
   private Store store;
 
+  @Column(name = "name", nullable = false, length = 20)
   private String name;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "purpose", nullable = false)
   private DevicePurpose purpose;
 
+  @Column(name = "table_no", nullable = false)
   private int tableNo;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "state", nullable = false)
   private DeviceState state;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "payment_type", nullable = false)
   private DevicePaymentType paymentType;
 
+  @Column(name = "secret_key", nullable = false, updatable = false, length = 30)
   private String secretKey;
 
   public static Device createPos(Store store, DeviceCreateRequest request) {

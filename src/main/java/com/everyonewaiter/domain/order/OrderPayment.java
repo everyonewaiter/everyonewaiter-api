@@ -10,52 +10,89 @@ import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.pos.PosTableActivity;
 import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.store.Store;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
 @Entity
+@Table(
+    name = "orders_payment",
+    indexes = {
+        @Index(name = "idx_orders_payment_store_id_created_at", columnList = "store_id, created_at desc"),
+    }
+)
 @Getter
 @ToString(exclude = {"store", "posTableActivity"}, callSuper = true)
 @NoArgsConstructor(access = PROTECTED)
 public class OrderPayment extends AggregateRootEntity<OrderPayment> {
 
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "store_id", nullable = false, updatable = false)
   private Store store;
 
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "pos_table_activity_id", nullable = false)
   private PosTableActivity posTableActivity;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "method", nullable = false)
   private OrderPaymentMethod method;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "state", nullable = false)
   private OrderPaymentState state;
 
+  @Column(name = "amount", nullable = false)
   private long amount; // 승인 금액
 
+  @Column(name = "cancellable", nullable = false)
   private boolean cancellable; // 취소 가능 여부
 
+  @Column(name = "approval_no", nullable = false, length = 30)
   private String approvalNo; // 승인 번호
 
+  @Column(name = "installment", nullable = false, length = 10)
   private String installment; // 할부 개월
 
+  @Column(name = "card_no", nullable = false, length = 30)
   private String cardNo; // 카드 번호
 
+  @Column(name = "issuer_name", nullable = false, length = 30)
   private String issuerName; // 카드 발급사명
 
+  @Column(name = "purchase_name", nullable = false, length = 30)
   private String purchaseName; // 카드 매입사명
 
+  @Column(name = "merchant_no", nullable = false, length = 30)
   private String merchantNo; // 카드사/포인트사 가맹점 번호
 
+  @Column(name = "trade_time", nullable = false, length = 20)
   private String tradeTime; // 거래일시 yyMMddHHmmss
 
+  @Column(name = "trade_unique_no", nullable = false, length = 30)
   private String tradeUniqueNo; // 거래 고유 번호
 
+  @Column(name = "vat", nullable = false)
   private long vat; // 부가세
 
+  @Column(name = "supply_amount", nullable = false)
   private long supplyAmount; // 공급가액
 
+  @Column(name = "cash_receipt_no", nullable = true, length = 30)
   private String cashReceiptNo; // 현금 영수증 번호
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "cash_receipt_type", nullable = false)
   private CashReceiptType cashReceiptType; // 현금 영수증 타입
 
   public static OrderPayment approve(
