@@ -78,6 +78,7 @@ create table store_setting
     printer_location       enum ('POS', 'HALL') not null,
     show_menu_popup        boolean              not null,
     show_order_total_price boolean              not null,
+    show_order_menu_image  boolean              not null,
     country_of_origins     varchar(500)         not null,
     staff_call_options     varchar(255)         not null
 );
@@ -233,7 +234,7 @@ create table orders
     type                  enum ('PREPAID', 'POSTPAID')   not null,
     state                 enum ('ORDER', 'CANCEL')       not null,
     price                 bigint                         not null,
-    memo                  varchar(30)                    not null,
+    memo                  varchar(10)                    not null,
     served                boolean                        not null,
     served_time           datetime(6)                    not null,
     created_at            datetime(6)                    not null,
@@ -250,6 +251,7 @@ create table orders_menu
     name          varchar(30) not null,
     price         bigint      not null,
     quantity      int         not null,
+    image         char(30)    not null default 'menu/preparation.png',
     served        boolean     not null,
     served_time   datetime(6) not null,
     print_enabled boolean     not null,

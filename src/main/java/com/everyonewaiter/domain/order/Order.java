@@ -73,7 +73,7 @@ public class Order extends AggregateRootEntity<Order> {
   @Column(name = "price", nullable = false)
   private long price;
 
-  @Column(name = "memo", nullable = false, length = 30)
+  @Column(name = "memo", nullable = false, length = 10)
   private String memo;
 
   @Embedded
