@@ -2,6 +2,7 @@ package com.everyonewaiter.domain.shared;
 
 import static lombok.AccessLevel.PROTECTED;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = PROTECTED)
 public class Position {
 
+  @Column(name = "position", nullable = false)
   private int value;
 
   public static Position next(int lastPosition) {

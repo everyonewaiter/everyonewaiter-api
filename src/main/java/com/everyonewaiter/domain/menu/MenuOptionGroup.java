@@ -6,7 +6,19 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateEntity;
 import com.everyonewaiter.domain.shared.Position;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,21 +30,41 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
+@Table(name = "menu_option_group")
 @Getter
 @ToString(exclude = {"menu", "menuOptions"}, callSuper = true)
 @NoArgsConstructor(access = PROTECTED)
 public class MenuOptionGroup extends AggregateEntity {
 
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(
+      name = "menu_id",
+      foreignKey = @ForeignKey(name = "fk_menu_option_group_menu_id", foreignKeyDefinition = "ON DELETE CASCADE"),
+      nullable = false,
+      updatable = false
+  )
   private Menu menu;
 
+  @Column(name = "name", nullable = false, length = 30)
   private String name;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "type", nullable = false)
   private MenuOptionGroupType type;
 
+  @Column(name = "print_enabled", nullable = false)
   private boolean printEnabled;
 
+  @Embedded
   private Position position;
 
+  @ElementCollection
+  @CollectionTable(
+      name = "menu_option",
+      foreignKey = @ForeignKey(name = "fk_menu_option_menu_option_group_id", foreignKeyDefinition = "ON DELETE CASCADE"),
+      joinColumns = @JoinColumn(name = "menu_option_group_id", nullable = false)
+  )
+  @OrderBy("position asc")
   private List<MenuOption> menuOptions = new ArrayList<>();
 
   public static MenuOptionGroup create(

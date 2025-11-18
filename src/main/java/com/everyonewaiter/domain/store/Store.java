@@ -7,28 +7,48 @@ import static lombok.AccessLevel.PROTECTED;
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.sse.SseEvent;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
+@Table(name = "store")
 @Getter
 @ToString(exclude = {"account", "setting"}, callSuper = true)
 @NoArgsConstructor(access = PROTECTED)
 public class Store extends AggregateRootEntity<Store> {
 
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "account_id", nullable = false, updatable = false)
   private Account account;
 
+  @Embedded
   private BusinessDetail detail;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false)
   private StoreStatus status;
 
+  @Column(name = "last_opened_at", nullable = false)
   private Instant lastOpenedAt;
 
+  @Column(name = "last_closed_at", nullable = false)
   private Instant lastClosedAt;
 
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+  @JoinColumn(name = "setting_id", nullable = false, updatable = false)
   private Setting setting;
 
   public static Store create(Account account, BusinessDetail detail) {

@@ -7,23 +7,43 @@ import static org.springframework.util.Assert.state;
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.shared.BusinessLicense;
 import com.everyonewaiter.domain.shared.PhoneNumber;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
+@Table(
+    name = "contact",
+    indexes = {
+        @Index(name = "idx_contact_phone_number", columnList = "phone_number"),
+        @Index(name = "idx_contact_license_phone_number", columnList = "license, phone_number"),
+        @Index(name = "idx_contact_store_name_phone_number", columnList = "store_name, phone_number"),
+        @Index(name = "idx_contact_store_name_license_phone_number", columnList = "store_name, license, phone_number")
+    }
+)
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = PROTECTED)
 public class Contact extends AggregateRootEntity<Contact> {
 
+  @Column(name = "store_name", nullable = false, length = 30)
   private String storeName;
 
+  @Embedded
   private BusinessLicense license;
 
+  @Embedded
   private PhoneNumber phoneNumber;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "state", nullable = false)
   private ContactState state;
 
   public static Contact create(ContactCreateRequest createRequest) {

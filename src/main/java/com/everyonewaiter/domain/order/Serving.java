@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.order;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.time.Instant;
 import lombok.EqualsAndHashCode;
@@ -12,8 +13,10 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Serving {
 
+  @Column(name = "served", nullable = false)
   private boolean served;
 
+  @Column(name = "served_time", nullable = false)
   private Instant servedTime;
 
   protected Serving() {

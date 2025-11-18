@@ -5,23 +5,45 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.everyonewaiter.domain.AggregateRootEntity;
 import com.everyonewaiter.domain.account.Account;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
+@Table(
+    name = "store_registration",
+    indexes = {
+        @Index(name = "idx_store_registration_account_id_name_status", columnList = "account_id, name, status"),
+        @Index(name = "idx_store_registration_account_id_status_name", columnList = "account_id, status, name")
+    }
+)
 @Getter
 @ToString(exclude = "account", callSuper = true)
 @NoArgsConstructor(access = PROTECTED)
 public class Registration extends AggregateRootEntity<Registration> {
 
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "account_id", nullable = false, updatable = false)
   private Account account;
 
+  @Embedded
   private BusinessDetail detail;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false)
   private RegistrationStatus status;
 
+  @Column(name = "reject_reason", nullable = false, length = 30)
   private String rejectReason;
 
   public static Registration apply(
