@@ -44,8 +44,9 @@ public record OrderPaymentApproveRequest(
     @NotNull(message = "카드사/포인트사 가맹점 번호이 누락되었습니다.")
     String merchantNo,
 
-    @Schema(description = "카드 거래일시 YYMMDDHHmmss", example = "250101120000", requiredMode = REQUIRED)
+    @Schema(description = "카드 거래일시 yyMMdd", example = "250101", requiredMode = REQUIRED)
     @NotNull(message = "카드 거래일시가 누락되었습니다.")
+    @Size(max = 6, message = "카드 거래일시는 최대 6자 이하로 입력해 주세요.")
     String tradeTime,
 
     @Schema(description = "카드 거래 고유 번호", example = "1234567890", requiredMode = REQUIRED)
@@ -71,15 +72,15 @@ public record OrderPaymentApproveRequest(
     CashReceiptType cashReceiptType
 ) {
 
-  public boolean isCard() {
+  private boolean isCard() {
     return method == OrderPaymentMethod.CARD;
   }
 
-  public boolean isCash() {
+  private boolean isCash() {
     return method == OrderPaymentMethod.CASH;
   }
 
-  public boolean isPureCash() {
+  private boolean isPureCash() {
     return isCash() && cashReceiptType == CashReceiptType.NONE;
   }
 
@@ -115,7 +116,7 @@ public record OrderPaymentApproveRequest(
 
   @Override
   public String tradeTime() {
-    return isPureCash() ? DateFormatter.formatCurrentKstTime() : tradeTime;
+    return isPureCash() ? DateFormatter.getSimpleKstDate() : tradeTime;
   }
 
   @Override
