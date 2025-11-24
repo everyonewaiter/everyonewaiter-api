@@ -11,15 +11,15 @@ public final class DateFormatter {
 
   public static final DateTimeFormatter SERIALIZE =
       DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+  public static final DateTimeFormatter SIMPLE_YEAR_MONTH_DAY =
+      DateTimeFormatter.ofPattern("yyMMdd");
   public static final DateTimeFormatter YEAR_MONTH = DateTimeFormatter.ofPattern("yyyyMM");
   public static final DateTimeFormatter YEAR_MONTH_DAY = DateTimeFormatter.ofPattern("yyyyMMdd");
-  public static final DateTimeFormatter YEAR_MONTH_DAY_HOUR_MINUTE_SECOND =
-      DateTimeFormatter.ofPattern("yyMMddHHmmss");
 
-  public static String formatCurrentKstTime() {
+  public static String getSimpleKstDate() {
     LocalDateTime now = LocalDateTime.now(TimeZone.ASIA_SEOUL.zoneId());
 
-    return now.format(YEAR_MONTH_DAY_HOUR_MINUTE_SECOND);
+    return now.format(SIMPLE_YEAR_MONTH_DAY);
   }
 
 }

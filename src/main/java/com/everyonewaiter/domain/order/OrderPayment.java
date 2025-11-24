@@ -77,7 +77,7 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
   private String merchantNo; // 카드사/포인트사 가맹점 번호
 
   @Column(name = "trade_time", nullable = false, length = 20)
-  private String tradeTime; // 거래일시 yyMMddHHmmss
+  private String tradeTime; // 거래일시 yyMMdd
 
   @Column(name = "trade_unique_no", nullable = false, length = 30)
   private String tradeUniqueNo; // 거래 고유 번호
@@ -88,7 +88,7 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
   @Column(name = "supply_amount", nullable = false)
   private long supplyAmount; // 공급가액
 
-  @Column(name = "cash_receipt_no", nullable = true, length = 30)
+  @Column(name = "cash_receipt_no", nullable = false, length = 30)
   private String cashReceiptNo; // 현금 영수증 번호
 
   @Enumerated(EnumType.STRING)
