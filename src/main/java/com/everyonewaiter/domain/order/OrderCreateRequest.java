@@ -20,7 +20,7 @@ public record OrderCreateRequest(
 
     @Schema(description = "주문 메모", example = "13시 포장", requiredMode = REQUIRED)
     @NotNull(message = "주문 메모 정보가 누락되었습니다.")
-    @Size(max = 30, message = "주문 메모는 30자 이하로 입력해 주세요.")
+    @Size(max = 10, message = "주문 메모는 10자 이하로 입력해 주세요.")
     String memo,
 
     @Schema(description = "주문 메뉴", requiredMode = REQUIRED)
