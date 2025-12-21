@@ -7,6 +7,7 @@ import static com.everyonewaiter.domain.order.OrderState.CANCEL;
 import static com.everyonewaiter.domain.sse.ServerAction.CREATE;
 import static com.everyonewaiter.domain.sse.ServerAction.UPDATE;
 import static com.everyonewaiter.domain.sse.SseCategory.ORDER;
+import static com.everyonewaiter.domain.sse.SseCategory.POS;
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -107,7 +108,8 @@ public class Order extends AggregateRootEntity<Order> {
     order.registerEvent(
         new OrderCreateEvent(order.getId(), order.store.getId(), activity.getTableNo())
     );
-    order.registerEvent(new SseEvent(order.store.getId(), ORDER, CREATE));
+    order.registerEvent(new SseEvent(order.store.getId(), ORDER, CREATE, activity.getTableNo()));
+    order.registerEvent(new SseEvent(order.store.getId(), POS, UPDATE, activity.getTableNo()));
 
     return order;
   }

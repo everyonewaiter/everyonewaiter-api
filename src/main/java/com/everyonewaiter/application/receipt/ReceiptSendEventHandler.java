@@ -66,7 +66,7 @@ class ReceiptSendEventHandler {
   @Transactional(propagation = REQUIRES_NEW)
   @TransactionalEventListener
   public void handle(ReceiptResendEvent event) {
-    LOGGER.info("[주방 빌지 재전송 이벤트] 매장 ID: {}, 주문 ID: {}", event.storeId(), event.orderIds());
+    LOGGER.info("[주문 빌지 주방 재전송 이벤트] 매장 ID: {}, 주문 ID: {}", event.storeId(), event.orderIds());
 
     Receipt receipt = receiptCreator.create(event.storeId(), event.tableNo(), event.orderIds());
 
