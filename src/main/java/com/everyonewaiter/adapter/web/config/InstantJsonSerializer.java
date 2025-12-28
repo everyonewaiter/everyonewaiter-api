@@ -8,9 +8,9 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import java.time.Instant;
-import org.springframework.boot.jackson.JsonComponent;
+import org.springframework.boot.jackson.JacksonComponent;
 
-@JsonComponent
+@JacksonComponent
 class InstantJsonSerializer extends JsonSerializer<Instant> {
 
   @Override

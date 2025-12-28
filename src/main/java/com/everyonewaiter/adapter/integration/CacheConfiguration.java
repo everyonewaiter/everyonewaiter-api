@@ -8,9 +8,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import tools.jackson.databind.json.JsonMapper;
 
 @Configuration
 @EnableCaching
@@ -28,7 +29,7 @@ class CacheConfiguration {
   }
 
   @Bean
-  public RedisCacheConfiguration redisCacheConfiguration() {
+  public RedisCacheConfiguration redisCacheConfiguration(JsonMapper jsonMapper) {
     return RedisCacheConfiguration.defaultCacheConfig()
         .disableCachingNullValues()
         .serializeKeysWith(
@@ -37,7 +38,7 @@ class CacheConfiguration {
         )
         .serializeValuesWith(
             RedisSerializationContext.SerializationPair
-                .fromSerializer(new GenericJackson2JsonRedisSerializer())
+                .fromSerializer(new GenericJacksonJsonRedisSerializer(jsonMapper))
         )
         .entryTtl(Duration.ofHours(3));
   }
