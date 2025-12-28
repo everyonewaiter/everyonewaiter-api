@@ -92,6 +92,10 @@ interface AccountApiSpecification {
               code = ErrorCode.FAILED_SIGN_IN,
               exampleName = "이메일 및 비밀번호가 일치하지 않는 경우"
           ),
+          @ApiErrorResponse(
+              code = ErrorCode.NOT_COMPLETE_EMAIL_VERIFICATION,
+              exampleName = "이메일 인증이 완료되지 않은 경우"
+          ),
       }
   )
   ResponseEntity<SignInToken> signIn(@RequestBody AccountSignInRequest signInRequest);

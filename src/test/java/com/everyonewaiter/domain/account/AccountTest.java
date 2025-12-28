@@ -128,6 +128,8 @@ class AccountTest {
     Account account = Account.create(createAccountCreateRequest(), passwordEncoder);
 
     assertThatThrownBy(() -> account.signIn(createAccountSignInRequest(), passwordEncoder))
+        .isInstanceOf(NotCompleteEmailVerificationException.class);
+    assertThatThrownBy(() -> account.signIn(createAccountSignInRequest("invalid"), passwordEncoder))
         .isInstanceOf(FailedSignInException.class);
 
     account.activate();

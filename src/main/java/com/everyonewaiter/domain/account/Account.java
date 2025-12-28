@@ -110,8 +110,14 @@ public class Account extends AggregateRootEntity<Account> {
   }
 
   public void signIn(AccountSignInRequest signInRequest, PasswordEncoder passwordEncoder) {
-    if (isActive() && passwordEncoder.matches(signInRequest.password(), password)) {
+    boolean isMatched = passwordEncoder.matches(signInRequest.password(), password);
+    if (isActive() && isMatched) {
       this.lastSignIn = Instant.now();
+      return;
+    }
+
+    if (isInactive() && isMatched) {
+      throw new NotCompleteEmailVerificationException();
     } else {
       throw new FailedSignInException();
     }
