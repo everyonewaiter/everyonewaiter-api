@@ -18,32 +18,7 @@ java {
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom(configurations.annotationProcessor.get())
-    }
-
-    configureEach {
-        exclude(group = "commons-logging", module = "commons-logging")
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
-springBoot {
-    buildInfo()
-}
-
 val springCloud: String by project
-
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloud")
-    }
-}
-
 val jjwt: String by project
 val mockito: String by project
 val oci: String by project
@@ -54,8 +29,17 @@ val redisson: String by project
 val scrimage: String by project
 val springdoc: String by project
 val tsid: String by project
+val mockitoAgent: Configuration? = configurations.create("mockitoAgent")
 
-val mockitoAgent = configurations.create("mockitoAgent")
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloud")
+    }
+}
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -103,7 +87,7 @@ dependencies {
     testImplementation("org.junit-pioneer:junit-pioneer:$pioneer")
     testImplementation("org.testcontainers:mysql")
     testImplementation("org.mockito:mockito-core:$mockito")
-    mockitoAgent("org.mockito:mockito-core:$mockito") { isTransitive = false }
+    mockitoAgent?.let { it("org.mockito:mockito-core:$mockito") { isTransitive = false } }
 
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
@@ -112,9 +96,13 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-    jvmArgs("-javaagent:${mockitoAgent.asPath}", "-Xshare:off")
+    mockitoAgent?.let { jvmArgs("-javaagent:${it.asPath}", "-Xshare:off") }
 }
 
 spotbugs {
     excludeFilter.set(file("${projectDir}/spotbugs-exclude.xml"))
+}
+
+springBoot {
+    buildInfo()
 }
