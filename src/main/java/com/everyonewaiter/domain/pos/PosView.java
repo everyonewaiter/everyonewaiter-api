@@ -40,7 +40,6 @@ public class PosView {
 
     public static Revenue from(
         long totalOrderedOrderPrice,
-        long totalCanceledOrderPrice,
         long totalDiscountPrice,
         long cashPaymentApprovePrice,
         long cardPaymentApprovePrice,
@@ -51,7 +50,7 @@ public class PosView {
       long totalPaymentCancelPrice = cashPaymentCancelPrice + cardPaymentCancelPrice;
 
       return new Revenue(
-          totalOrderedOrderPrice - totalCanceledOrderPrice,
+          totalOrderedOrderPrice,
           totalDiscountPrice,
           totalPaymentApprovePrice - totalPaymentCancelPrice,
           cashPaymentApprovePrice,

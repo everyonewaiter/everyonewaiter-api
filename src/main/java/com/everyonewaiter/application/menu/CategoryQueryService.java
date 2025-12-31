@@ -2,13 +2,11 @@ package com.everyonewaiter.application.menu;
 
 import com.everyonewaiter.application.menu.provided.CategoryFinder;
 import com.everyonewaiter.application.menu.required.CategoryRepository;
-import com.everyonewaiter.application.support.CacheName;
 import com.everyonewaiter.application.support.ReadOnlyTransactional;
 import com.everyonewaiter.domain.menu.Category;
 import com.everyonewaiter.domain.menu.CategoryView;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +24,6 @@ class CategoryQueryService implements CategoryFinder {
 
   @Override
   @Transactional(readOnly = true)
-  @Cacheable(cacheNames = CacheName.STORE_MENU, key = "#storeId", condition = "#storeId != null")
   public CategoryView.CategoryDetails findAllView(Long storeId) {
     return CategoryView.CategoryDetails.from(
         categoryRepository.findAll(storeId).stream()

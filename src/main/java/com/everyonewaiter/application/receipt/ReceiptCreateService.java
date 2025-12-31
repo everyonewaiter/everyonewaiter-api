@@ -6,6 +6,7 @@ import com.everyonewaiter.application.receipt.required.ReceiptPrintNoRepository;
 import com.everyonewaiter.domain.order.Order;
 import com.everyonewaiter.domain.order.OrderUpdateRequests;
 import com.everyonewaiter.domain.receipt.Receipt;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ class ReceiptCreateService implements ReceiptCreator {
 
   @Override
   @Transactional(readOnly = true)
-  public Receipt createDiff(
+  public @Nullable Receipt createDiff(
       Long storeId,
       int tableNo,
       List<Order> orders,

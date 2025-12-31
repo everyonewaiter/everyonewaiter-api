@@ -8,7 +8,6 @@ import com.everyonewaiter.application.menu.provided.CategoryFinder;
 import com.everyonewaiter.application.menu.provided.MenuFinder;
 import com.everyonewaiter.application.menu.provided.MenuManager;
 import com.everyonewaiter.application.menu.required.MenuRepository;
-import com.everyonewaiter.application.support.CacheName;
 import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.menu.Category;
 import com.everyonewaiter.domain.menu.ExceedMaxMenuCountException;
@@ -22,7 +21,6 @@ import com.everyonewaiter.domain.menu.MenuUpdateRequest;
 import com.everyonewaiter.domain.sse.SseEvent;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +41,6 @@ class MenuModifyService implements MenuManager {
 
   @Override
   @DistributedLock(key = "#storeId + '-menu'")
-  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Menu create(
       Long categoryId,
       Long storeId,
@@ -75,7 +72,6 @@ class MenuModifyService implements MenuManager {
 
   @Override
   @DistributedLock(key = "#storeId + '-menu'")
-  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Menu update(Long menuId, Long storeId, MenuUpdateRequest updateRequest) {
     Menu menu = menuFinder.findOrThrow(menuId, storeId);
 
@@ -86,7 +82,6 @@ class MenuModifyService implements MenuManager {
 
   @Override
   @DistributedLock(key = "#storeId + '-menu'")
-  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Menu update(
       Long menuId,
       Long storeId,
@@ -102,7 +97,6 @@ class MenuModifyService implements MenuManager {
 
   @Override
   @DistributedLock(key = "#storeId + '-menu'")
-  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Menu movePosition(
       Long sourceId,
       Long targetId,
@@ -122,7 +116,6 @@ class MenuModifyService implements MenuManager {
 
   @Override
   @DistributedLock(key = "#storeId + '-menu'")
-  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void delete(Long menuId, Long storeId, Long categoryId) {
     Menu menu = menuFinder.findOrThrow(menuId, storeId, categoryId);
 
@@ -133,7 +126,6 @@ class MenuModifyService implements MenuManager {
 
   @Override
   @DistributedLock(key = "#storeId + '-menu'")
-  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void deleteAll(Long storeId, MenuDeleteRequest deleteRequest) {
     List<Menu> menus = menuFinder.findAll(storeId, deleteRequest.menuIds());
 

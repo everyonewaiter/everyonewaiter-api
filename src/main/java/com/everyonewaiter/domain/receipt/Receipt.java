@@ -2,9 +2,9 @@ package com.everyonewaiter.domain.receipt;
 
 import com.everyonewaiter.domain.order.Order;
 import com.everyonewaiter.domain.order.OrderMenu;
-import com.everyonewaiter.domain.order.OrderMenuNotFoundException;
 import com.everyonewaiter.domain.order.OrderMenuQuantityUpdateRequest;
 import com.everyonewaiter.domain.order.OrderUpdateRequests;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +36,7 @@ public record Receipt(int tableNo, String memo, int printNo, List<ReceiptMenu> r
     );
   }
 
-  public static Receipt diff(
+  public static @Nullable Receipt diff(
       int tableNo,
       List<Order> orders,
       OrderUpdateRequests updateRequests,
@@ -54,7 +54,7 @@ public record Receipt(int tableNo, String memo, int printNo, List<ReceiptMenu> r
     List<ReceiptMenu> receiptMenus = new ArrayList<>();
     for (OrderMenuQuantityUpdateRequest afterOrderMenu : afterOrderMenus) {
       if (!beforeOrderMenus.containsKey(afterOrderMenu.orderMenuId())) {
-        throw new OrderMenuNotFoundException();
+        continue;
       }
 
       OrderMenu orderMenu = beforeOrderMenus.get(afterOrderMenu.orderMenuId());
@@ -68,7 +68,7 @@ public record Receipt(int tableNo, String memo, int printNo, List<ReceiptMenu> r
       }
     }
 
-    return new Receipt(tableNo, "", printNo, receiptMenus);
+    return receiptMenus.isEmpty() ? null : new Receipt(tableNo, "", printNo, receiptMenus);
   }
 
   public static Receipt cancel(int tableNo, Order order, int printNo) {

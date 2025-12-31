@@ -28,7 +28,6 @@ class PosTableActivityQueryService implements PosTableActivityFinder {
   public PosView.Revenue getRevenue(Long storeId, Instant start, Instant end) {
     return PosView.Revenue.from(
         posTableActivityRepository.getOrderRevenue(storeId, start, end, OrderState.ORDER),
-        posTableActivityRepository.getOrderRevenue(storeId, start, end, OrderState.CANCEL),
         posTableActivityRepository.getDiscountRevenue(storeId, start, end),
         posTableActivityRepository.getPaymentRevenue(storeId, start, end, CASH, APPROVE),
         posTableActivityRepository.getPaymentRevenue(storeId, start, end, CARD, APPROVE),

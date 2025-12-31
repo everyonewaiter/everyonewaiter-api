@@ -4,7 +4,6 @@ import com.everyonewaiter.application.menu.provided.CategoryFinder;
 import com.everyonewaiter.application.menu.provided.CategoryManager;
 import com.everyonewaiter.application.menu.required.CategoryRepository;
 import com.everyonewaiter.application.store.provided.StoreFinder;
-import com.everyonewaiter.application.support.CacheName;
 import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.menu.AlreadyUseCategoryNameException;
 import com.everyonewaiter.domain.menu.Category;
@@ -14,7 +13,6 @@ import com.everyonewaiter.domain.menu.CategoryUpdateRequest;
 import com.everyonewaiter.domain.menu.ExceedMaxCategoryCountException;
 import com.everyonewaiter.domain.store.Store;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -31,7 +29,6 @@ class CategoryModifyService implements CategoryManager {
 
   @Override
   @DistributedLock(key = "#storeId + '-menu'")
-  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Category create(Long storeId, CategoryCreateRequest createRequest) {
     validateCategoryCreate(storeId, createRequest);
 
@@ -57,7 +54,6 @@ class CategoryModifyService implements CategoryManager {
 
   @Override
   @DistributedLock(key = "#storeId + '-menu'")
-  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Category update(Long categoryId, Long storeId, CategoryUpdateRequest updateRequest) {
     validateCategoryUpdate(categoryId, storeId, updateRequest);
 
@@ -80,7 +76,6 @@ class CategoryModifyService implements CategoryManager {
 
   @Override
   @DistributedLock(key = "#storeId + '-menu'")
-  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public Category movePosition(
       Long sourceId,
       Long targetId,
@@ -100,7 +95,6 @@ class CategoryModifyService implements CategoryManager {
 
   @Override
   @DistributedLock(key = "#storeId + '-menu'")
-  @CacheEvict(cacheNames = CacheName.STORE_MENU, key = "#storeId")
   public void delete(Long categoryId, Long storeId) {
     Category category = categoryFinder.findOrThrow(categoryId, storeId);
 

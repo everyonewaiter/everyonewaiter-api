@@ -9,7 +9,6 @@ import com.everyonewaiter.application.sse.provided.SseSender;
 import com.everyonewaiter.application.sse.required.SseEmitterRepository;
 import com.everyonewaiter.application.sse.required.SseEventRepository;
 import com.everyonewaiter.domain.sse.SseEvent;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +16,8 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +27,7 @@ class SseService implements SseConnector, SseSender {
 
   private static final String CONNECT_EVENT = "CONNECTED!";
 
-  private final ObjectMapper objectMapper;
+  private final JsonMapper jsonMapper;
   private final SseEmitterRepository sseEmitterRepository;
   private final SseEventRepository sseEventRepository;
 
@@ -80,13 +81,13 @@ class SseService implements SseConnector, SseSender {
     String eventKey = EVENT.createKey(prefix);
 
     try {
-      String event = objectMapper.writeValueAsString(sseEvent);
+      String event = jsonMapper.writeValueAsString(sseEvent);
       sseEventRepository.save(eventKey, event);
 
       sseEmitterRepository.findAllByScanKey(EMITTER.createScanKey(prefix))
           .values()
           .forEach(sseEmitter -> send(sseEmitter, eventKey, event));
-    } catch (IOException exception) {
+    } catch (JacksonException exception) {
       LOGGER.warn("[SSE] Failed to serialize event. eventKey: {}", eventKey);
     }
   }

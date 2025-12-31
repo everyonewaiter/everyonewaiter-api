@@ -35,7 +35,7 @@ class SecurityConfiguration {
   }
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) {
     return http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .csrf(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)
