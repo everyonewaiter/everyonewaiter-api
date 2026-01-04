@@ -7,7 +7,6 @@ plugins {
     id("io.spring.dependency-management")
     id("com.gorylenko.gradle-git-properties")
     id("com.github.spotbugs")
-    id("com.ncorti.ktfmt.gradle")
 }
 
 val appGroup: String by project
@@ -32,10 +31,6 @@ kotlin {
 
 spotbugs {
     excludeFilter.set(file("${projectDir}/spotbugs-exclude.xml"))
-}
-
-ktfmt {
-    googleStyle()
 }
 
 springBoot {

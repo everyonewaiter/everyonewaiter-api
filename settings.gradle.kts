@@ -6,7 +6,6 @@ pluginManagement {
     val springDependencyManagement: String by settings
     val gitProperties: String by settings
     val spotBugs: String by settings
-    val ktfmt: String by settings
 
     resolutionStrategy {
         eachPlugin {
@@ -18,7 +17,6 @@ pluginManagement {
                 "io.spring.dependency-management" -> useVersion(springDependencyManagement)
                 "com.gorylenko.gradle-git-properties" -> useVersion(gitProperties)
                 "com.github.spotbugs" -> useVersion(spotBugs)
-                "com.ncorti.ktfmt.gradle" -> useVersion(ktfmt)
             }
         }
     }
