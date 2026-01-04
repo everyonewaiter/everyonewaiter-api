@@ -104,9 +104,7 @@ public class Account extends AggregateRootEntity<Account> {
       throw new DisabledAccountException();
     }
 
-    if (!hasPermission(permission)) {
-      this.permission = permission;
-    }
+    this.permission = permission;
   }
 
   public void signIn(AccountSignInRequest signInRequest, PasswordEncoder passwordEncoder) {
@@ -118,9 +116,9 @@ public class Account extends AggregateRootEntity<Account> {
 
     if (isInactive() && isMatched) {
       throw new NotCompleteEmailVerificationException();
-    } else {
-      throw new FailedSignInException();
     }
+
+    throw new FailedSignInException();
   }
 
   public void update(Account userAccount, AccountAdminUpdateRequest updateRequest) {

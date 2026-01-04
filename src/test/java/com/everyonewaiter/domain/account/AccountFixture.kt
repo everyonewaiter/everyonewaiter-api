@@ -1,48 +1,51 @@
-package com.everyonewaiter.domain.account;
+package com.everyonewaiter.domain.account
 
-import static lombok.AccessLevel.PRIVATE;
+import org.springframework.test.util.ReflectionTestUtils
 
-import lombok.NoArgsConstructor;
+fun createPasswordEncoder(): PasswordEncoder {
+  return object : PasswordEncoder {
+    override fun encode(rawPassword: String): String {
+      return "(encoded) $rawPassword"
+    }
 
-@NoArgsConstructor(access = PRIVATE)
-public class AccountFixture {
-
-  public static PasswordEncoder createPasswordEncoder() {
-    return new PasswordEncoder() {
-      @Override
-      public String encode(String rawPassword) {
-        return "(encoded) " + rawPassword;
-      }
-
-      @Override
-      public boolean matches(String rawPassword, String encodedPassword) {
-        return encode(rawPassword).equals(encodedPassword);
-      }
-    };
+    override fun matches(rawPassword: String, encodedPassword: String): Boolean {
+      return encode(rawPassword) == encodedPassword
+    }
   }
+}
 
-  public static AccountCreateRequest createAccountCreateRequest() {
-    return createAccountCreateRequest("admin@everyonewaiter.com");
-  }
+fun createAccount(
+  createRequest: AccountCreateRequest = createAccountCreateRequest(),
+  passwordEncoder: PasswordEncoder = createPasswordEncoder(),
+): Account {
+  return Account.create(createRequest, passwordEncoder)
+}
 
-  public static AccountCreateRequest createAccountCreateRequest(String email) {
-    return createAccountCreateRequest(email, "01012345678");
-  }
+fun createActiveAccount(permission: AccountPermission = AccountPermission.USER): Account {
+  val account = createAccount()
+  account.activate()
+  ReflectionTestUtils.setField(account, "permission", permission)
+  return account
+}
 
-  public static AccountCreateRequest createAccountCreateRequest(String email, String phoneNumber) {
-    return new AccountCreateRequest(email, "@password1", phoneNumber);
-  }
+fun createAccountCreateRequest(
+  email: String = "admin@everyonewaiter.com",
+  password: String = "@password1",
+  phoneNumber: String = "01012345678",
+): AccountCreateRequest {
+  return AccountCreateRequest(email, password, phoneNumber)
+}
 
-  public static AccountSignInRequest createAccountSignInRequest() {
-    return createAccountSignInRequest("@password1");
-  }
+fun createAccountSignInRequest(
+  email: String = "admin@everyonewaiter.com",
+  password: String = "@password1",
+): AccountSignInRequest {
+  return AccountSignInRequest(email, password)
+}
 
-  public static AccountSignInRequest createAccountSignInRequest(String password) {
-    return new AccountSignInRequest("admin@everyonewaiter.com", password);
-  }
-
-  public static AccountAdminUpdateRequest createAccountAdminUpdateRequest() {
-    return new AccountAdminUpdateRequest(AccountState.ACTIVE, AccountPermission.OWNER);
-  }
-
+fun createAccountAdminUpdateRequest(
+  state: AccountState = AccountState.ACTIVE,
+  permission: AccountPermission = AccountPermission.OWNER,
+): AccountAdminUpdateRequest {
+  return AccountAdminUpdateRequest(state, permission)
 }

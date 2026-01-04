@@ -1,174 +1,189 @@
-package com.everyonewaiter.domain.account;
+package com.everyonewaiter.domain.account
 
-import static com.everyonewaiter.domain.account.AccountFixture.createAccountAdminUpdateRequest;
-import static com.everyonewaiter.domain.account.AccountFixture.createAccountCreateRequest;
-import static com.everyonewaiter.domain.account.AccountFixture.createAccountSignInRequest;
-import static com.everyonewaiter.domain.account.AccountFixture.createPasswordEncoder;
-import static com.everyonewaiter.domain.account.AccountPermission.ADMIN;
-import static com.everyonewaiter.domain.account.AccountPermission.OWNER;
-import static com.everyonewaiter.domain.account.AccountPermission.USER;
-import static com.everyonewaiter.domain.account.AccountState.ACTIVE;
-import static com.everyonewaiter.domain.account.AccountState.INACTIVE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
-import java.time.Instant;
-import java.util.List;
-import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
+import org.springframework.test.util.ReflectionTestUtils
+import java.time.Instant
 
 class AccountTest {
 
   @Test
-  void create() {
-    Account account = Account.create(createAccountCreateRequest(), createPasswordEncoder());
+  fun `계정 생성`() {
+    val account = createAccount()
 
-    assertThat(account.getState()).isEqualTo(INACTIVE);
-    assertThat(account.getPermission()).isEqualTo(USER);
-    assertThat(account.getLastSignIn()).isEqualTo(Instant.ofEpochMilli(0));
+    assertThat(account.state).isEqualTo(AccountState.INACTIVE)
+    assertThat(account.permission).isEqualTo(AccountPermission.USER)
+    assertThat(account.lastSignIn).isEqualTo(Instant.ofEpochMilli(0))
 
-    Object domainEvents = ReflectionTestUtils.invokeGetterMethod(account, "domainEvents");
-    assertThat(domainEvents).isInstanceOf(List.class);
-    assertThat((List<?>) domainEvents).hasSize(1);
+    val domainEvents = ReflectionTestUtils.invokeGetterMethod(account, "domainEvents")
+    assertThat(domainEvents as MutableList<*>).hasSize(1)
+    assertThat(domainEvents[0]).isInstanceOf(AccountCreateEvent::class.java)
   }
 
   @Test
-  void isInactive() {
-    Account account = Account.create(createAccountCreateRequest(), createPasswordEncoder());
+  fun `계정이 비활성 상태인지 여부 반환`() {
+    val account = createAccount()
 
-    assertThat(account.isInactive()).isTrue();
+    assertThat(account.isInactive).isTrue
 
-    ReflectionTestUtils.setField(account, "state", ACTIVE);
+    ReflectionTestUtils.setField(account, "state", AccountState.ACTIVE)
 
-    assertThat(account.isInactive()).isFalse();
+    assertThat(account.isInactive).isFalse
   }
 
   @Test
-  void isActive() {
-    Account account = Account.create(createAccountCreateRequest(), createPasswordEncoder());
+  fun `계정이 활성 상태인지 여부 반환`() {
+    val account = createAccount()
 
-    assertThat(account.isActive()).isFalse();
+    assertThat(account.isActive).isFalse
 
-    ReflectionTestUtils.setField(account, "state", ACTIVE);
+    ReflectionTestUtils.setField(account, "state", AccountState.ACTIVE)
 
-    assertThat(account.isActive()).isTrue();
+    assertThat(account.isActive).isTrue
   }
 
   @Test
-  void hasPermission() {
-    Account account = Account.create(createAccountCreateRequest(), createPasswordEncoder());
+  fun `계정이 계층형 권한을 가지고 있는지 여부 반환`() {
+    val account = createAccount()
 
-    assertThat(account.hasPermission(USER)).isTrue();
-    assertThat(account.hasPermission(OWNER)).isFalse();
-    assertThat(account.hasPermission(ADMIN)).isFalse();
+    assertThat(account.hasPermission(AccountPermission.USER)).isTrue
+    assertThat(account.hasPermission(AccountPermission.OWNER)).isFalse
+    assertThat(account.hasPermission(AccountPermission.ADMIN)).isFalse
 
-    ReflectionTestUtils.setField(account, "permission", OWNER);
+    ReflectionTestUtils.setField(account, "permission", AccountPermission.OWNER)
 
-    assertThat(account.hasPermission(USER)).isTrue();
-    assertThat(account.hasPermission(OWNER)).isTrue();
-    assertThat(account.hasPermission(ADMIN)).isFalse();
+    assertThat(account.hasPermission(AccountPermission.USER)).isTrue
+    assertThat(account.hasPermission(AccountPermission.OWNER)).isTrue
+    assertThat(account.hasPermission(AccountPermission.ADMIN)).isFalse
 
-    ReflectionTestUtils.setField(account, "permission", ADMIN);
+    ReflectionTestUtils.setField(account, "permission", AccountPermission.ADMIN)
 
-    assertThat(account.hasPermission(USER)).isTrue();
-    assertThat(account.hasPermission(OWNER)).isTrue();
-    assertThat(account.hasPermission(ADMIN)).isTrue();
+    assertThat(account.hasPermission(AccountPermission.USER)).isTrue
+    assertThat(account.hasPermission(AccountPermission.OWNER)).isTrue
+    assertThat(account.hasPermission(AccountPermission.ADMIN)).isTrue
   }
 
   @Test
-  void activate() {
-    Account account = Account.create(createAccountCreateRequest(), createPasswordEncoder());
+  fun `계정 활성화`() {
+    val account = createAccount()
 
-    assertThat(account.getState()).isEqualTo(INACTIVE);
+    assertThat(account.state).isEqualTo(AccountState.INACTIVE)
 
-    account.activate();
+    account.activate()
 
-    assertThat(account.getState()).isEqualTo(ACTIVE);
+    assertThat(account.state).isEqualTo(AccountState.ACTIVE)
 
-    assertThatThrownBy(account::activate).isInstanceOf(AlreadyVerifiedEmailException.class);
+    assertThatThrownBy { account.activate() }
+      .isInstanceOf(AlreadyVerifiedEmailException::class.java)
   }
 
   @Test
-  void authorize() {
-    Account account = Account.create(createAccountCreateRequest(), createPasswordEncoder());
+  fun `계정 권한 부여`() {
+    val account = createActiveAccount()
 
-    account.activate();
-    account.authorize(OWNER);
+    assertThat(account.permission).isEqualTo(AccountPermission.USER)
 
-    assertThat(account.getPermission()).isEqualTo(OWNER);
+    account.authorize(AccountPermission.OWNER)
+
+    assertThat(account.permission).isEqualTo(AccountPermission.OWNER)
   }
 
   @Test
-  void authorizeFail() {
-    Account account = Account.create(createAccountCreateRequest(), createPasswordEncoder());
+  fun `계정이 활성 상태가 아닌 경우 권한 부여 실패`() {
+    val account = createAccount()
 
-    assertThatThrownBy(() -> account.authorize(OWNER)).isInstanceOf(DisabledAccountException.class);
-
-    account.activate();
-
-    assertThatThrownBy(() -> account.authorize(ADMIN)).isInstanceOf(IllegalStateException.class);
+    AccountState.entries
+      .filter { it != AccountState.ACTIVE }
+      .forEach {
+        ReflectionTestUtils.setField(account, "state", it)
+        assertThatThrownBy { account.authorize(AccountPermission.OWNER) }
+          .isInstanceOf(DisabledAccountException::class.java)
+      }
   }
 
   @Test
-  void signIn() {
-    PasswordEncoder passwordEncoder = createPasswordEncoder();
+  fun `계정에 관리자 권한을 부여하려는 경우 권한 부여 실패`() {
+    val account = createActiveAccount()
 
-    Account account = Account.create(createAccountCreateRequest(), passwordEncoder);
-
-    account.activate();
-    account.signIn(createAccountSignInRequest(), passwordEncoder);
-
-    assertThat(account.getLastSignIn()).isNotEqualTo(Instant.ofEpochMilli(0));
+    assertThatThrownBy { account.authorize(AccountPermission.ADMIN) }
+      .isInstanceOf(IllegalStateException::class.java)
   }
 
   @Test
-  void signInFail() {
-    PasswordEncoder passwordEncoder = createPasswordEncoder();
+  fun `계정 로그인`() {
+    val account = createActiveAccount()
 
-    Account account = Account.create(createAccountCreateRequest(), passwordEncoder);
+    assertThat(account.lastSignIn).isEqualTo(Instant.ofEpochMilli(0))
 
-    assertThatThrownBy(() -> account.signIn(createAccountSignInRequest(), passwordEncoder))
-        .isInstanceOf(NotCompleteEmailVerificationException.class);
-    assertThatThrownBy(() -> account.signIn(createAccountSignInRequest("invalid"), passwordEncoder))
-        .isInstanceOf(FailedSignInException.class);
+    account.signIn(createAccountSignInRequest(), createPasswordEncoder())
 
-    account.activate();
-
-    assertThatThrownBy(() -> account.signIn(createAccountSignInRequest("invalid"), passwordEncoder))
-        .isInstanceOf(FailedSignInException.class);
+    assertThat(account.lastSignIn).isNotEqualTo(Instant.ofEpochMilli(0))
   }
 
   @Test
-  void update() {
-    Account adminAccount = Account.create(createAccountCreateRequest(), createPasswordEncoder());
+  fun `이메일 인증이 완료되지 않은 경우 로그인 실패`() {
+    val account = createAccount()
 
-    ReflectionTestUtils.setField(adminAccount, "state", ACTIVE);
-    ReflectionTestUtils.setField(adminAccount, "permission", ADMIN);
-
-    Account userAccount = Account.create(createAccountCreateRequest(), createPasswordEncoder());
-
-    adminAccount.update(userAccount, createAccountAdminUpdateRequest());
-
-    assertThat(userAccount.getState()).isEqualTo(ACTIVE);
-    assertThat(userAccount.getPermission()).isEqualTo(OWNER);
+    assertThatThrownBy { account.signIn(createAccountSignInRequest(), createPasswordEncoder()) }
+      .isInstanceOf(NotCompleteEmailVerificationException::class.java)
   }
 
   @Test
-  void updateFail() {
-    Account adminAccount = Account.create(createAccountCreateRequest(), createPasswordEncoder());
-    Account userAccount = Account.create(createAccountCreateRequest(), createPasswordEncoder());
+  fun `비밀번호가 일치하지 않는 경우 로그인 실패`() {
+    val account1 = createAccount()
+    val account2 = createActiveAccount()
 
-    ReflectionTestUtils.setField(adminAccount, "state", INACTIVE);
-    ReflectionTestUtils.setField(adminAccount, "permission", ADMIN);
+    assertThatThrownBy {
+      account1.signIn(
+        createAccountSignInRequest(password = "invalid"),
+        createPasswordEncoder()
+      )
+    }.isInstanceOf(FailedSignInException::class.java)
 
-    assertThatThrownBy(() -> adminAccount.update(userAccount, createAccountAdminUpdateRequest()))
-        .isInstanceOf(IllegalStateException.class);
-
-    ReflectionTestUtils.setField(adminAccount, "state", ACTIVE);
-    ReflectionTestUtils.setField(adminAccount, "permission", OWNER);
-
-    assertThatThrownBy(() -> adminAccount.update(userAccount, createAccountAdminUpdateRequest()))
-        .isInstanceOf(IllegalStateException.class);
+    assertThatThrownBy {
+      account2.signIn(
+        createAccountSignInRequest(password = "invalid"),
+        createPasswordEncoder()
+      )
+    }.isInstanceOf(FailedSignInException::class.java)
   }
 
+  @Test
+  fun `관리자가 사용자 계정 업데이트`() {
+    val adminAccount = createActiveAccount(permission = AccountPermission.ADMIN)
+    val userAccount = createAccount()
+
+    assertThat(userAccount.state).isEqualTo(AccountState.INACTIVE)
+    assertThat(userAccount.permission).isEqualTo(AccountPermission.USER)
+
+    adminAccount.update(userAccount, createAccountAdminUpdateRequest())
+
+    assertThat(userAccount.state).isEqualTo(AccountState.ACTIVE)
+    assertThat(userAccount.permission).isEqualTo(AccountPermission.OWNER)
+  }
+
+  @Test
+  fun `관리자 계정이 활성 상태가 아니라면 사용자 계정 업데이트 실패`() {
+    val adminAccount = createActiveAccount(permission = AccountPermission.ADMIN)
+    val userAccount = createAccount()
+
+    ReflectionTestUtils.setField(adminAccount, "state", AccountState.INACTIVE)
+
+    assertThatThrownBy { adminAccount.update(userAccount, createAccountAdminUpdateRequest()) }
+      .isInstanceOf(IllegalStateException::class.java)
+  }
+
+  @Test
+  fun `관리자 권한이 없는 계정이라면 사용자 계정 업데이트 실패`() {
+    val fakeAdminAccount = createActiveAccount(permission = AccountPermission.OWNER)
+    val userAccount = createAccount()
+
+    assertThatThrownBy {
+      fakeAdminAccount.update(
+        userAccount,
+        createAccountAdminUpdateRequest()
+      )
+    }.isInstanceOf(IllegalStateException::class.java)
+  }
 }
