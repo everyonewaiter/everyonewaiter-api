@@ -1,9 +1,13 @@
 plugins {
     java
+    kotlin("jvm")
+    kotlin("plugin.spring")
+    kotlin("plugin.jpa")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
     id("com.gorylenko.gradle-git-properties")
     id("com.github.spotbugs")
+    id("com.ncorti.ktfmt.gradle")
 }
 
 val appGroup: String by project
@@ -18,6 +22,24 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
+    }
+}
+
+spotbugs {
+    excludeFilter.set(file("${projectDir}/spotbugs-exclude.xml"))
+}
+
+ktfmt {
+    googleStyle()
+}
+
+springBoot {
+    buildInfo()
 }
 
 val springCloud: String by project
@@ -43,6 +65,8 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-aspectj")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -82,6 +106,7 @@ dependencies {
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.boot:spring-boot-starter-data-redis-test")
@@ -102,12 +127,4 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
     mockitoAgent?.let { jvmArgs("-javaagent:${it.asPath}", "-Xshare:off") }
-}
-
-spotbugs {
-    excludeFilter.set(file("${projectDir}/spotbugs-exclude.xml"))
-}
-
-springBoot {
-    buildInfo()
 }
