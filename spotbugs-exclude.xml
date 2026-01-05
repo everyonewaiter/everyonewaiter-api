@@ -5,15 +5,16 @@
   </Match>
 
   <Match>
-    <Method name="equals"/>
     <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    <Method name="equals"/>
   </Match>
   <Match>
-    <Method name="hashCode"/>
     <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    <Method name="hashCode"/>
   </Match>
 
   <Match>
+    <Bug pattern="EI_EXPOSE_REP"/>
     <Or>
       <Class name="~.*View"/>
       <Class name="com.everyonewaiter.domain.menu.CategoryView$CategoryDetails"/>
@@ -32,13 +33,16 @@
       <Class name="com.everyonewaiter.domain.notification.DiscordEmbeds"/>
       <Class name="~.*Request"/>
       <Class name="~.*Requests"/>
+      <Class name="com.everyonewaiter.domain.shared.GithubRelease"/>
+      <Class name="com.everyonewaiter.domain.shared.GithubAuthor"/>
+      <Class name="com.everyonewaiter.domain.shared.GithubAsset"/>
       <Package name="com.everyonewaiter.domain.receipt"/>
       <Package name="com.everyonewaiter.adapter.web.api.dto"/>
     </Or>
-    <Bug pattern="EI_EXPOSE_REP"/>
   </Match>
 
   <Match>
+    <Bug pattern="EI_EXPOSE_REP2"/>
     <Or>
       <Class name="~.*View"/>
       <Class name="com.everyonewaiter.domain.menu.CategoryView$CategoryDetails"/>
@@ -57,10 +61,12 @@
       <Class name="com.everyonewaiter.domain.notification.DiscordEmbeds"/>
       <Class name="~.*Request"/>
       <Class name="~.*Requests"/>
+      <Class name="com.everyonewaiter.domain.shared.GithubRelease"/>
+      <Class name="com.everyonewaiter.domain.shared.GithubAuthor"/>
+      <Class name="com.everyonewaiter.domain.shared.GithubAsset"/>
       <Method name="moveTable"/>
       <Package name="com.everyonewaiter.domain.receipt"/>
       <Package name="com.everyonewaiter.adapter.web.api.dto"/>
     </Or>
-    <Bug pattern="EI_EXPOSE_REP2"/>
   </Match>
 </FindBugsFilter>

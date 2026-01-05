@@ -23,6 +23,16 @@ class HealthCheckAdminApi implements HealthCheckAdminApiSpecification {
   private final HealthCheckCreator healthCheckCreator;
 
   @Override
+  @PostMapping("/auto")
+  public ResponseEntity<Void> createApkVersion(
+      @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
+  ) {
+    ApkVersion apkVersion = healthCheckCreator.createApkVersion();
+
+    return ResponseEntity.created(URI.create(String.valueOf(apkVersion.getId()))).build();
+  }
+
+  @Override
   @PostMapping
   public ResponseEntity<Void> createApkVersion(
       @RequestBody @Valid ApkVersionCreateRequest request,

@@ -31,6 +31,25 @@ interface HealthCheckAdminApiSpecification {
       }
   )
   ResponseEntity<Void> createApkVersion(
+      @Parameter(hidden = true) Account account
+  );
+
+  @Operation(summary = "APK 버전 생성", description = "APK 버전 생성 API")
+  @ApiResponse(responseCode = "201", description = "APK 버전 생성 성공")
+  @ApiErrorResponses(
+      summary = "APK 버전 생성 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "관리자 권한이 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> createApkVersion(
       @RequestBody ApkVersionCreateRequest request,
       @Parameter(hidden = true) Account account
   );

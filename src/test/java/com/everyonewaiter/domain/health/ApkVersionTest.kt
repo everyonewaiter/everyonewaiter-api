@@ -1,22 +1,19 @@
-package com.everyonewaiter.domain.health;
+package com.everyonewaiter.domain.health
 
-import static com.everyonewaiter.domain.health.ApkVersionFixture.createApkVersionCreateRequest;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.Test
 
 class ApkVersionTest {
 
   @Test
-  void create() {
-    ApkVersionCreateRequest createRequest = createApkVersionCreateRequest();
+  fun `APK 버전 생성`() {
+    val createRequest = createApkVersionCreateRequest()
 
-    ApkVersion apkVersion = ApkVersion.create(createRequest);
+    val apkVersion = ApkVersion.create(createRequest)
 
-    assertThat(apkVersion.getMajorVersion()).isEqualTo(createRequest.majorVersion());
-    assertThat(apkVersion.getMinorVersion()).isEqualTo(createRequest.minorVersion());
-    assertThat(apkVersion.getPatchVersion()).isEqualTo(createRequest.patchVersion());
-    assertThat(apkVersion.getDownloadUri()).isEqualTo(createRequest.downloadUri());
+    Assertions.assertThat(apkVersion.majorVersion).isEqualTo(createRequest.majorVersion)
+    Assertions.assertThat(apkVersion.minorVersion).isEqualTo(createRequest.minorVersion)
+    Assertions.assertThat(apkVersion.patchVersion).isEqualTo(createRequest.patchVersion)
+    Assertions.assertThat(apkVersion.downloadUri).isEqualTo(createRequest.downloadUri)
   }
-
 }
