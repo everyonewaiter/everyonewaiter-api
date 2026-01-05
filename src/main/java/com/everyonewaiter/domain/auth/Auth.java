@@ -4,10 +4,12 @@ import java.time.Duration;
 
 public interface Auth {
 
+  Duration expiration();
+
   String key();
 
-  int value();
-
-  Duration expiration();
+  default int value() {
+    return -2;
+  }
 
 }

@@ -24,9 +24,4 @@ public record AuthAttempt(
     return KEY_PREFIX + purpose.getLowerCaseName() + ":" + phoneNumber.value();
   }
 
-  @Override
-  public int value() {
-    return -2;
-  }
-
 }
