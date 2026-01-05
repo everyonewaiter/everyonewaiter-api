@@ -1,38 +1,29 @@
-package com.everyonewaiter.domain.auth;
+package com.everyonewaiter.domain.auth
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 class JwtPayloadTest {
 
   @Test
-  void constructor() {
-    JwtPayload payload1 = new JwtPayload(1L, "1");
-    JwtPayload payload2 = new JwtPayload(2L, 2L);
-
-    assertThat(payload1.id()).isEqualTo(1L);
-    assertThat(payload1.subject()).isEqualTo("1");
-    assertThat(payload2.id()).isEqualTo(2L);
-    assertThat(payload2.subject()).isEqualTo("2");
+  fun `JWT 페이로드의 제목은 숫자 또는 문자열로 생성 가능`() {
+    assertThatCode { JwtPayload(1L, "subject") }.doesNotThrowAnyException()
+    assertThatCode { JwtPayload(2L, 123456) }.doesNotThrowAnyException()
   }
 
   @Test
-  void parseLongSubject() {
-    JwtPayload payload = new JwtPayload(1L, "1");
+  fun `JWT 페이로드의 제목이 숫자인 경우 파싱`() {
+    val payload1 = JwtPayload(1L, "1")
+    val payload2 = JwtPayload(2L, 2)
 
-    Long subject = payload.parseLongSubject();
-
-    assertThat(subject).isEqualTo(1L);
+    assertThat(payload1.parseLongSubject()).isEqualTo(1)
+    assertThat(payload2.parseLongSubject()).isEqualTo(2)
   }
 
   @Test
-  void parseLongSubjectFail() {
-    JwtPayload payload = new JwtPayload(1L, "string");
+  fun `JWT 페이로드의 제목이 숫자가 아닌 경우 파싱 실패`() {
+    val payload = JwtPayload(1L, "subject")
 
-    assertThatThrownBy(payload::parseLongSubject)
-        .isInstanceOf(NumberFormatException.class);
+    assertThatThrownBy { payload.parseLongSubject() }.isInstanceOf(NumberFormatException::class.java)
   }
-
 }

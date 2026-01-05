@@ -1,51 +1,50 @@
-package com.everyonewaiter.domain.auth;
+package com.everyonewaiter.domain.auth
 
-import static com.everyonewaiter.domain.auth.AuthFixture.createAuthCode;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
-import java.time.Duration;
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.*
+import org.junit.jupiter.api.Test
+import java.time.Duration
 
 class AuthCodeTest {
 
   @Test
-  void verify() {
-    AuthCode authCode = createAuthCode();
+  fun `인증 코드 검증`() {
+    val code = createAuthCode()
 
-    assertThatCode(() -> authCode.verify(123456)).doesNotThrowAnyException();
+    assertThatCode { code.verify(code.code()) }.doesNotThrowAnyException()
   }
 
   @Test
-  void verifyFail() {
-    AuthCode authCode = createAuthCode();
+  fun `인증 코드가 만료된 경우 검증 실패`() {
+    val code = createAuthCode()
 
-    assertThatThrownBy(() -> authCode.verify(0))
-        .isInstanceOf(ExpiredVerificationCodeException.class);
-    assertThatThrownBy(() -> authCode.verify(999999))
-        .isInstanceOf(UnmatchedVerificationCodeException.class);
+    assertThatThrownBy { code.verify(0) }.isInstanceOf(ExpiredVerificationCodeException::class.java)
   }
 
   @Test
-  void key() {
-    AuthCode authCode = createAuthCode();
+  fun `인증 코드가 일치하지 않는 경우 검증 실패`() {
+    val code = createAuthCode()
 
-    assertThat(authCode.key()).isEqualTo("auth:code:01012345678");
+    assertThatThrownBy { code.verify(999999) }.isInstanceOf(UnmatchedVerificationCodeException::class.java)
   }
 
   @Test
-  void value() {
-    AuthCode authCode = createAuthCode();
+  fun `인증 코드 저장용 키`() {
+    val code = createAuthCode()
 
-    assertThat(authCode.value()).isEqualTo(123456);
+    assertThat(code.key()).isEqualTo("auth:code:${code.phoneNumber.value}")
   }
 
   @Test
-  void expiration() {
-    AuthCode authCode = createAuthCode();
+  fun `인증 코드 저장용 값`() {
+    val code = createAuthCode()
 
-    assertThat(authCode.expiration()).isEqualTo(Duration.ofMinutes(5));
+    assertThat(code.value()).isEqualTo(code.code())
   }
 
+  @Test
+  fun `인증 코드의 유효기간은 5분`() {
+    val code = createAuthCode()
+
+    assertThat(code.expiration).isEqualTo(Duration.ofMinutes(5))
+  }
 }

@@ -1,33 +1,29 @@
-package com.everyonewaiter.domain.auth;
+package com.everyonewaiter.domain.auth
 
-import static com.everyonewaiter.domain.auth.AuthFixture.createAuthSuccess;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
 class AuthSuccessTest {
 
   @Test
-  void key() {
-    AuthSuccess authSuccess = createAuthSuccess();
+  fun `인증 성공 저장용 키`() {
+    val success = createAuthSuccess()
 
-    assertThat(authSuccess.key()).isEqualTo("auth:success:01012345678");
+    assertThat(success.key()).isEqualTo("auth:success:${success.phoneNumber.value}")
   }
 
   @Test
-  void value() {
-    AuthSuccess authSuccess = createAuthSuccess();
+  fun `인증 성공 저장용 값은 사용하지 않음`() {
+    val success = createAuthSuccess()
 
-    assertThat(authSuccess.value()).isEqualTo(-2);
+    assertThat(success.value()).isEqualTo(-2)
   }
 
   @Test
-  void expiration() {
-    AuthSuccess authSuccess1 = createAuthSuccess(AuthPurpose.SIGN_UP);
-    AuthSuccess authSuccess2 = createAuthSuccess(AuthPurpose.CREATE_DEVICE);
-
-    assertThat(authSuccess1.expiration()).isEqualTo(AuthPurpose.SIGN_UP.getExpiration());
-    assertThat(authSuccess2.expiration()).isEqualTo(AuthPurpose.CREATE_DEVICE.getExpiration());
+  fun `인증 성공의 유효기간은 인증 목적 마다 다름`() {
+    AuthPurpose.entries.forEach {
+      val success = createAuthSuccess(purpose = it)
+      assertThat(success.expiration).isEqualTo(it.expiration)
+    }
   }
-
 }
