@@ -14,6 +14,7 @@ import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
 import com.everyonewaiter.domain.auth.SendAuthMailRequest;
 import com.everyonewaiter.domain.auth.VerifyAuthCodeRequest;
+import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -56,6 +57,11 @@ class AccountApi implements AccountApiSpecification {
   @Override
   @PostMapping
   public ResponseEntity<Void> signUp(@RequestBody @Valid AccountCreateRequest createRequest) {
+    authenticator.checkAuthSuccess(
+        AuthPurpose.SIGN_UP,
+        new PhoneNumber(createRequest.phoneNumber())
+    );
+
     Account account = accountRegister.register(createRequest);
 
     return ResponseEntity.created(URI.create(String.valueOf(account.getId()))).build();
@@ -104,7 +110,9 @@ class AccountApi implements AccountApiSpecification {
   @Override
   @PostMapping("/verify-auth-mail")
   public ResponseEntity<Void> verifyEmail(@RequestParam String token) {
-    accountRegister.activate(token);
+    Email email = authenticator.verifyAuthMail(token);
+
+    accountRegister.activate(email);
 
     return ResponseEntity.noContent().build();
   }

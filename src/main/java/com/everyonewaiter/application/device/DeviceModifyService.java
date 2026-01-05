@@ -1,12 +1,10 @@
 package com.everyonewaiter.application.device;
 
-import com.everyonewaiter.application.auth.provided.Authenticator;
 import com.everyonewaiter.application.device.provided.DeviceFinder;
 import com.everyonewaiter.application.device.provided.DeviceManager;
+import com.everyonewaiter.application.device.provided.DeviceValidator;
 import com.everyonewaiter.application.device.required.DeviceRepository;
 import com.everyonewaiter.application.store.provided.StoreFinder;
-import com.everyonewaiter.domain.auth.AuthPurpose;
-import com.everyonewaiter.domain.device.AlreadyUseDeviceNameException;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DeviceCreateRequest;
 import com.everyonewaiter.domain.device.DeviceUpdateRequest;
@@ -23,14 +21,14 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 class DeviceModifyService implements DeviceManager {
 
-  private final Authenticator authenticator;
   private final StoreFinder storeFinder;
   private final DeviceFinder deviceFinder;
+  private final DeviceValidator deviceValidator;
   private final DeviceRepository deviceRepository;
 
   @Override
   public Device create(Long storeId, DeviceCreateRequest createRequest) {
-    validateDeviceCreate(storeId, createRequest);
+    deviceValidator.checkDuplicateName(storeId, createRequest.name());
 
     Store store = storeFinder.findOrThrow(storeId, new PhoneNumber(createRequest.phoneNumber()));
 
@@ -44,19 +42,9 @@ class DeviceModifyService implements DeviceManager {
     return deviceRepository.save(device);
   }
 
-  private void validateDeviceCreate(Long storeId, DeviceCreateRequest createRequest) {
-    PhoneNumber phoneNumber = new PhoneNumber(createRequest.phoneNumber());
-
-    authenticator.checkAuthSuccess(AuthPurpose.CREATE_DEVICE, phoneNumber);
-
-    if (deviceRepository.exists(storeId, createRequest.name())) {
-      throw new AlreadyUseDeviceNameException();
-    }
-  }
-
   @Override
   public Device update(Long deviceId, Long storeId, DeviceUpdateRequest updateRequest) {
-    validateDeviceUpdate(deviceId, storeId, updateRequest);
+    deviceValidator.checkDuplicateNameExcludeId(deviceId, storeId, updateRequest.name());
 
     Device device = deviceFinder.findOrThrow(deviceId, storeId);
 
@@ -68,16 +56,6 @@ class DeviceModifyService implements DeviceManager {
     }
 
     return deviceRepository.save(device);
-  }
-
-  private void validateDeviceUpdate(
-      Long deviceId,
-      Long storeId,
-      DeviceUpdateRequest updateRequest
-  ) {
-    if (deviceRepository.existsExcludeId(deviceId, storeId, updateRequest.name())) {
-      throw new AlreadyUseDeviceNameException();
-    }
   }
 
   @Override

@@ -79,6 +79,11 @@ class DeviceManagementApi implements DeviceManagementApiSpecification {
       @PathVariable Long storeId,
       @RequestBody @Valid DeviceCreateRequest createRequest
   ) {
+    authenticator.checkAuthSuccess(
+        AuthPurpose.CREATE_DEVICE,
+        new PhoneNumber(createRequest.phoneNumber())
+    );
+
     Device device = deviceManager.create(storeId, createRequest);
 
     return ResponseEntity.created(URI.create(String.valueOf(device.getId())))
