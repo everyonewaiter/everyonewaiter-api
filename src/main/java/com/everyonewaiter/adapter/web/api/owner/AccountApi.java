@@ -8,12 +8,11 @@ import com.everyonewaiter.application.auth.provided.Authenticator;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountCreateRequest;
 import com.everyonewaiter.domain.account.AccountSignInRequest;
+import com.everyonewaiter.domain.account.SignInToken;
 import com.everyonewaiter.domain.auth.AuthPurpose;
 import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
 import com.everyonewaiter.domain.auth.SendAuthMailRequest;
-import com.everyonewaiter.domain.auth.SignInToken;
-import com.everyonewaiter.domain.auth.SignInTokenRenewRequest;
 import com.everyonewaiter.domain.auth.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import jakarta.validation.Valid;
@@ -108,14 +107,6 @@ class AccountApi implements AccountApiSpecification {
     accountRegister.activate(token);
 
     return ResponseEntity.noContent().build();
-  }
-
-  @Override
-  @PostMapping("/renew-token")
-  public ResponseEntity<SignInToken> renewToken(
-      @RequestBody @Valid SignInTokenRenewRequest signInTokenRenewRequest
-  ) {
-    return ResponseEntity.ok(accountSignInHandler.renew(signInTokenRenewRequest));
   }
 
 }

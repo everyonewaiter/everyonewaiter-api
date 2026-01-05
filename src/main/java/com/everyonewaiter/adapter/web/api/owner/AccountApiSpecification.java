@@ -6,10 +6,9 @@ import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountCreateRequest;
 import com.everyonewaiter.domain.account.AccountSignInRequest;
+import com.everyonewaiter.domain.account.SignInToken;
 import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
 import com.everyonewaiter.domain.auth.SendAuthMailRequest;
-import com.everyonewaiter.domain.auth.SignInToken;
-import com.everyonewaiter.domain.auth.SignInTokenRenewRequest;
 import com.everyonewaiter.domain.auth.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -194,25 +193,5 @@ interface AccountApiSpecification {
       }
   )
   ResponseEntity<Void> verifyEmail(String token);
-
-  @SecurityRequirements
-  @Operation(summary = "토큰 갱신", description = "토큰 갱신 API")
-  @ApiResponse(responseCode = "200", description = "토큰 갱신 성공")
-  @ApiErrorResponses(
-      summary = "토큰 갱신 실패",
-      value = {
-          @ApiErrorResponse(
-              code = ErrorCode.UNAUTHORIZED,
-              exampleName = "리프레시 토큰이 유효하지 않은 경우"
-          ),
-          @ApiErrorResponse(
-              code = ErrorCode.FORBIDDEN,
-              exampleName = "토큰이 탈취된것으로 의심되는 경우"
-          ),
-      }
-  )
-  ResponseEntity<SignInToken> renewToken(
-      @RequestBody SignInTokenRenewRequest signInTokenRenewRequest
-  );
 
 }
