@@ -94,6 +94,7 @@ class AccountTest {
     val account = createAccount()
 
     AccountState.entries
+      .stream()
       .filter { it != AccountState.ACTIVE }
       .forEach {
         ReflectionTestUtils.setField(account, "state", it)
