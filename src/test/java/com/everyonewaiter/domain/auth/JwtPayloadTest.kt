@@ -1,29 +1,24 @@
 package com.everyonewaiter.domain.auth
 
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
 class JwtPayloadTest {
 
   @Test
-  fun `JWT 페이로드의 제목은 숫자 또는 문자열로 생성 가능`() {
-    assertThatCode { JwtPayload(1L, "subject") }.doesNotThrowAnyException()
-    assertThatCode { JwtPayload(2L, 123456) }.doesNotThrowAnyException()
+  fun `JWT 페이로드의 ID가 숫자인 경우 파싱`() {
+    val payload1 = JwtPayload("1", "subject")
+    val payload2 = JwtPayload(2L, "subject")
+
+    assertThat(payload1.longId).isEqualTo(1)
+    assertThat(payload2.longId).isEqualTo(2)
   }
 
   @Test
-  fun `JWT 페이로드의 제목이 숫자인 경우 파싱`() {
-    val payload1 = JwtPayload(1L, "1")
-    val payload2 = JwtPayload(2L, 2)
+  fun `JWT 페이로드의 ID가 숫자가 아닌 경우 파싱 실패`() {
+    val payload = JwtPayload("id", "subject")
 
-    assertThat(payload1.parseLongSubject()).isEqualTo(1)
-    assertThat(payload2.parseLongSubject()).isEqualTo(2)
-  }
-
-  @Test
-  fun `JWT 페이로드의 제목이 숫자가 아닌 경우 파싱 실패`() {
-    val payload = JwtPayload(1L, "subject")
-
-    assertThatThrownBy { payload.parseLongSubject() }.isInstanceOf(NumberFormatException::class.java)
+    assertThatThrownBy { payload.longId }.isInstanceOf(NumberFormatException::class.java)
   }
 }

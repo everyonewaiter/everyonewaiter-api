@@ -47,19 +47,22 @@ class AuthenticationAccountResolver implements HandlerMethodArgumentResolver {
     String accessToken = extractToken(webRequest);
     JwtPayload payload = jwtProvider.decode(accessToken).orElseThrow(AuthenticationException::new);
 
-    return accountFinder.find(payload.id())
-        .map(account -> {
-          AuthenticationAccount annotation = requireNonNull(
-              parameter.getParameterAnnotation(AuthenticationAccount.class)
-          );
+    try {
+      Account account = accountFinder.find(payload.getLongId())
+          .orElseThrow(AuthenticationException::new);
 
-          if (!account.isActive() || !account.hasPermission(annotation.permission())) {
-            throw new AccessDeniedException();
-          }
+      AuthenticationAccount annotation = requireNonNull(
+          parameter.getParameterAnnotation(AuthenticationAccount.class)
+      );
 
-          return account;
-        })
-        .orElseThrow(AuthenticationException::new);
+      if (!account.isActive() || !account.hasPermission(annotation.permission())) {
+        throw new AccessDeniedException();
+      }
+
+      return account;
+    } catch (NumberFormatException exception) {
+      throw new AuthenticationException();
+    }
   }
 
   private String extractToken(NativeWebRequest request) {
