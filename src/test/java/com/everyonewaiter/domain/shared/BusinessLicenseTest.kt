@@ -1,25 +1,24 @@
-package com.everyonewaiter.domain.shared;
+package com.everyonewaiter.domain.shared
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
 
 class BusinessLicenseTest {
 
   @Test
-  void constructor() {
-    String value = "443-60-00875";
+  fun `사업자 등록 번호 생성`() {
+    val value = "443-60-00875"
 
-    BusinessLicense businessLicense = new BusinessLicense(value);
+    val businessLicense = BusinessLicense(value)
 
-    assertThat(businessLicense.value()).isEqualTo(value);
+    assertThat(businessLicense.value).isEqualTo(value)
   }
 
   @Test
-  void constructorFail() {
-    assertThatThrownBy(() -> new BusinessLicense("4436000875"))
-        .isInstanceOf(IllegalArgumentException.class);
-  }
+  fun `사업자 등록 번호의 형식이 옳바르지 않은 경우 생성 실패`() {
+    val value = "4436000875"
 
+    assertThatThrownBy { BusinessLicense(value) }.isInstanceOf(IllegalArgumentException::class.java)
+  }
 }

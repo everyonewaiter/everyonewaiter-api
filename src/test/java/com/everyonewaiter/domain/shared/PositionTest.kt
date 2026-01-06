@@ -1,58 +1,66 @@
-package com.everyonewaiter.domain.shared;
+package com.everyonewaiter.domain.shared
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
 class PositionTest {
 
   @Test
-  void next() {
-    Position nextPosition = Position.next(0);
+  fun `n 다음 포지션 생성`() {
+    val n = 10
 
-    assertThat(nextPosition.getValue()).isEqualTo(1);
+    val position = Position.next(n)
+
+    assertThat(position.value).isEqualTo(n + 1)
   }
 
   @Test
-  void copy() {
-    Position position = new Position(); // 0
+  fun `포지션 복사`() {
+    val position = createPosition(10)
 
-    Position copiedPosition = Position.copy(position);
+    val copied = Position.copy(position)
 
-    assertThat(copiedPosition).isEqualTo(position);
+    assertThat(copied).isEqualTo(position)
   }
 
   @Test
-  void moveNext() {
-    Position position1 = new Position(); // 0
-    Position position2 = Position.next(5);// 6
+  fun `포지션 이동(NEXT)`() {
+    val position1 = createPosition(10)
+    val position2 = createPosition(20)
 
-    boolean isMoved = position1.move(position2, PositionMove.NEXT);
+    val isMoved = position1.move(position2, PositionMove.NEXT)
 
-    assertThat(isMoved).isTrue();
-    assertThat(position1.getValue()).isEqualTo(7);
+    assertThat(isMoved).isTrue
+    assertThat(position1.value).isEqualTo(position2.value + 1)
   }
 
   @Test
-  void movePrev() {
-    Position position1 = new Position(); // 0
-    Position position2 = Position.next(5);// 6
+  fun `포지션 이동(PREV)`() {
+    val position1 = createPosition(10)
+    val position2 = createPosition(20)
 
-    boolean isMoved = position1.move(position2, PositionMove.PREV);
+    val isMoved = position1.move(position2, PositionMove.PREV)
 
-    assertThat(isMoved).isTrue();
-    assertThat(position1.getValue()).isEqualTo(6);
+    assertThat(isMoved).isTrue
+    assertThat(position1.value).isEqualTo(position2.value)
   }
 
   @Test
-  void notMove() {
-    Position position1 = new Position(); // 0
-    Position position2 = new Position(); // 0
+  fun `이동한 포지션이 기존과 같은 경우 이동 여부 false`() {
+    val position1 = createPosition(10)
+    val position2 = createPosition(9)
 
-    boolean isMoved = position1.move(position2, PositionMove.PREV);
+    val isMoved1 = position1.move(position2, PositionMove.NEXT)
 
-    assertThat(isMoved).isFalse();
-    assertThat(position1.getValue()).isZero();
+    assertThat(isMoved1).isFalse
+    assertThat(position1.value).isEqualTo(10)
+
+    val position3 = createPosition(10)
+    val position4 = createPosition(10)
+
+    val isMoved2 = position3.move(position4, PositionMove.PREV)
+
+    assertThat(isMoved2).isFalse
+    assertThat(position3.value).isEqualTo(10)
   }
-
 }

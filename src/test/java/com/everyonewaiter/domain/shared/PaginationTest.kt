@@ -1,38 +1,36 @@
-package com.everyonewaiter.domain.shared;
+package com.everyonewaiter.domain.shared
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
 class PaginationTest {
 
   @Test
-  void countLimit() {
-    Pagination pagination1 = new Pagination(1, 20, 5);
-    Pagination pagination2 = new Pagination(2, 20, 10);
+  fun `빠른 페이지 이동 계산을 위해 조회해야 할 데이터 수`() {
+    val pagination1 = Pagination(1, 20, 5)
+    val pagination2 = Pagination(5, 20, 10)
 
-    assertThat(pagination1.countLimit()).isEqualTo(101);
-    assertThat(pagination2.countLimit()).isEqualTo(221);
+    assertThat(pagination1.countLimit()).isEqualTo(101)
+    assertThat(pagination2.countLimit()).isEqualTo(281)
   }
 
   @Test
-  void limit() {
-    Pagination pagination1 = new Pagination(1, 10);
-    Pagination pagination2 = new Pagination(1, 20);
+  fun `실제로 조회할 데이터 수`() {
+    val pagination1 = Pagination(1, 10)
+    val pagination2 = Pagination(1, 20)
 
-    assertThat(pagination1.limit()).isEqualTo(10);
-    assertThat(pagination2.limit()).isEqualTo(20);
+    assertThat(pagination1.limit()).isEqualTo(pagination1.size)
+    assertThat(pagination2.limit()).isEqualTo(pagination2.size)
   }
 
   @Test
-  void offset() {
-    Pagination pagination1 = new Pagination(1, 10);
-    Pagination pagination2 = new Pagination(2, 10);
-    Pagination pagination3 = new Pagination(5, 20);
+  fun `데이터 조회 시 건너뛸 행 수`() {
+    val pagination1 = Pagination(1, 10)
+    val pagination2 = Pagination(5, 20)
+    val pagination3 = Pagination(10, 100)
 
-    assertThat(pagination1.offset()).isZero();
-    assertThat(pagination2.offset()).isEqualTo(10);
-    assertThat(pagination3.offset()).isEqualTo(80);
+    assertThat(pagination1.offset()).isEqualTo(0)
+    assertThat(pagination2.offset()).isEqualTo(80)
+    assertThat(pagination3.offset()).isEqualTo(900)
   }
-
 }

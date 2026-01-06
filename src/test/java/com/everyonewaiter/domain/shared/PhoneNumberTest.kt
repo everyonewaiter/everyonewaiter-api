@@ -1,25 +1,24 @@
-package com.everyonewaiter.domain.shared;
+package com.everyonewaiter.domain.shared
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
 
 class PhoneNumberTest {
 
   @Test
-  void constructor() {
-    String value = "01012345678";
+  fun `휴대폰 번호 생성`() {
+    val value = "01012345678"
 
-    PhoneNumber phoneNumber = new PhoneNumber(value);
+    val phoneNumber = PhoneNumber(value)
 
-    assertThat(phoneNumber.value()).isEqualTo(value);
+    assertThat(phoneNumber.value).isEqualTo(value)
   }
 
   @Test
-  void constructorFail() {
-    assertThatThrownBy(() -> new PhoneNumber("010-1234-5678"))
-        .isInstanceOf(IllegalArgumentException.class);
-  }
+  fun `휴대폰 번호 형식이 옳바르지 않은 경우 생성 실패`() {
+    val value = "010-1234-5678"
 
+    assertThatThrownBy { PhoneNumber(value) }.isInstanceOf(IllegalArgumentException::class.java)
+  }
 }

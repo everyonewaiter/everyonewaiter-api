@@ -1,23 +1,25 @@
-package com.everyonewaiter.domain.shared;
+package com.everyonewaiter.domain.shared
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
 class PositionMoveTest {
 
   @Test
-  void moveNext() {
-    int movedPosition = PositionMove.NEXT.move(1);
+  fun `포지션을 n 다음으로 이동`() {
+    val n = 10
 
-    assertThat(movedPosition).isEqualTo(2);
+    val movedPosition = PositionMove.NEXT.move(n)
+
+    assertThat(movedPosition).isEqualTo(n + 1)
   }
 
   @Test
-  void movePrev() {
-    int movedPosition = PositionMove.PREV.move(1);
+  fun `포지션을 n 으로 이동`() {
+    val n = 10
 
-    assertThat(movedPosition).isEqualTo(1);
+    val movedPosition = PositionMove.PREV.move(n)
+
+    assertThat(movedPosition).isEqualTo(n)
   }
-
 }

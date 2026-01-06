@@ -1,134 +1,123 @@
-package com.everyonewaiter.domain.shared;
+package com.everyonewaiter.domain.shared
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
 class PagingTest {
 
-  Pagination firstPage = new Pagination(1, 10);
-  Pagination secondPage = new Pagination(2, 10);
-  Pagination tenthPage = new Pagination(10, 10);
-
   @Test
-  void hasNextShouldBeTrue() {
-    List<Integer> content = createDummyContent(0, 11);
+  fun `이전, 다음 페이지 여부`() {
+    // 현재 페이지 1, 페이지에 보여줄 컨텐츠 사이즈 3
+    val pagination1 = Pagination(1, 3)
 
-    Paging<Integer> paging = new Paging<>(content, content.size(), firstPage);
+    val paging1 = createPaging(pagination1)
 
-    assertThat(paging.hasNext()).isTrue();
+    assertThat(paging1.hasPrevious()).isFalse
+    assertThat(paging1.hasNext()).isTrue
+
+    // 현재 페이지 1, 페이지에 보여줄 컨텐츠 사이즈 10
+    val pagination2 = Pagination(1, 10)
+
+    val paging2 = createPaging(pagination2)
+
+    assertThat(paging2.hasPrevious()).isFalse
+    assertThat(paging2.hasNext()).isFalse
+
+    // 현재 페이지 2, 페이지에 보여줄 컨텐츠 사이즈 3
+    val pagination3 = Pagination(2, 3)
+
+    val paging3 = createPaging(pagination3)
+
+    assertThat(paging3.hasPrevious()).isTrue
+    assertThat(paging3.hasNext()).isTrue
+
+    // 현재 페이지 4, 페이지에 보여줄 컨텐츠 사이즈 3
+    val pagination4 = Pagination(4, 3)
+
+    val paging4 = createPaging(pagination4)
+
+    assertThat(paging4.hasPrevious()).isTrue
+    assertThat(paging4.hasNext()).isFalse
   }
 
   @Test
-  void hasNextShouldBeFalse() {
-    List<Integer> content = createDummyContent(0, 10);
+  fun `첫번째, 마지막 페이지 여부`() {
+    // 현재 페이지 1, 페이지에 보여줄 컨텐츠 사이즈 3
+    val pagination1 = Pagination(1, 3)
 
-    Paging<Integer> paging = new Paging<>(content, content.size(), firstPage);
+    val paging1 = createPaging(pagination1)
 
-    assertThat(paging.hasNext()).isFalse();
+    assertThat(paging1.isFirst).isTrue
+    assertThat(paging1.isLast).isFalse
+
+    // 현재 페이지 1, 페이지에 보여줄 컨텐츠 사이즈 10
+    val pagination2 = Pagination(1, 10)
+
+    val paging2 = createPaging(pagination2)
+
+    assertThat(paging2.isFirst).isTrue
+    assertThat(paging2.isLast).isTrue
+
+    // 현재 페이지 2, 페이지에 보여줄 컨텐츠 사이즈 3
+    val pagination3 = Pagination(2, 3)
+
+    val paging3 = createPaging(pagination3)
+
+    assertThat(paging3.isFirst).isFalse
+    assertThat(paging3.isLast).isFalse
+
+    // 현재 페이지 4, 페이지에 보여줄 컨텐츠 사이즈 3
+    val pagination4 = Pagination(4, 3)
+
+    val paging4 = createPaging(pagination4)
+
+    assertThat(paging4.isFirst).isFalse
+    assertThat(paging4.isLast).isTrue
   }
 
   @Test
-  void hasPreviousShouldBeTrue() {
-    List<Integer> content = createDummyContent(0, 11);
+  fun `이전, 다음 빠른 이동 페이지 번호`() {
+    // 현재 페이지 1, 페이지에 보여줄 컨텐츠 사이즈 1, 빠른 이동 시 이동할 페이지 단위 3
+    val pagination1 = Pagination(1, 1, 3)
 
-    Paging<Integer> paging = new Paging<>(content, content.size(), secondPage);
+    val paging1 = createPaging(pagination1)
 
-    assertThat(paging.hasPrevious()).isTrue();
+    assertThat(paging1.fastBackwardPage).isEqualTo(1)
+    assertThat(paging1.fastForwardPage).isEqualTo(4)
+
+    // 현재 페이지 4, 페이지에 보여줄 컨텐츠 사이즈 1, 빠른 이동 시 이동할 페이지 단위 3
+    val pagination2 = Pagination(4, 1, 3)
+
+    val paging2 = createPaging(pagination2)
+
+    assertThat(paging2.fastBackwardPage).isEqualTo(1)
+    assertThat(paging2.fastForwardPage).isEqualTo(7)
+
+    // 현재 페이지 5, 페이지에 보여줄 컨텐츠 사이즈 1, 빠른 이동 시 이동할 페이지 단위 3
+    val pagination3 = Pagination(5, 1, 3)
+
+    val paging3 = createPaging(pagination3)
+
+    assertThat(paging3.fastBackwardPage).isEqualTo(2)
+    assertThat(paging3.fastForwardPage).isEqualTo(8)
+
+    // 현재 페이지 8, 페이지에 보여줄 컨텐츠 사이즈 1, 빠른 이동 시 이동할 페이지 단위 3
+    val pagination4 = Pagination(8, 1, 3)
+
+    val paging4 = createPaging(pagination4)
+
+    assertThat(paging4.fastBackwardPage).isEqualTo(5)
+    assertThat(paging4.fastForwardPage).isEqualTo(10)
   }
 
   @Test
-  void hasPreviousShouldBeFalse() {
-    List<Integer> content = createDummyContent(0, 10);
+  fun `컨텐츠 타입 변환`() {
+    val paging = createPaging(Pagination(1, 5))
 
-    Paging<Integer> paging = new Paging<>(content, content.size(), firstPage);
+    val converted = paging.map { it.subject }
 
-    assertThat(paging.hasPrevious()).isFalse();
-  }
-
-  @Test
-  void isFirstShouldBeTrue() {
-    List<Integer> content = createDummyContent(0, 10);
-
-    Paging<Integer> paging = new Paging<>(content, content.size(), firstPage);
-
-    assertThat(paging.isFirst()).isTrue();
-  }
-
-  @Test
-  void isFirstShouldBeFalse() {
-    List<Integer> content = createDummyContent(0, 11);
-
-    Paging<Integer> paging = new Paging<>(content, content.size(), secondPage);
-
-    assertThat(paging.isFirst()).isFalse();
-  }
-
-  @Test
-  void isLastShouldBeTrue() {
-    List<Integer> content = createDummyContent(0, 10);
-
-    Paging<Integer> paging = new Paging<>(content, content.size(), firstPage);
-
-    assertThat(paging.isLast()).isTrue();
-  }
-
-  @Test
-  void isLastShouldBeFalse() {
-    List<Integer> content = createDummyContent(0, 11);
-
-    Paging<Integer> paging = new Paging<>(content, content.size(), firstPage);
-
-    assertThat(paging.isLast()).isFalse();
-  }
-
-  @Test
-  void fastForwardPage() {
-    List<Integer> content1 = createDummyContent(0, 30);
-    List<Integer> content2 = createDummyContent(0, 100);
-
-    Paging<Integer> paging1 = new Paging<>(content1, content1.size(), firstPage);
-    Paging<Integer> paging2 = new Paging<>(content2, content2.size(), secondPage);
-
-    assertThat(paging1.getFastForwardPage()).isEqualTo(3);
-    assertThat(paging2.getFastForwardPage()).isEqualTo(7);
-  }
-
-  @Test
-  void fastBackwardPage() {
-    List<Integer> content1 = createDummyContent(0, 10);
-    List<Integer> content2 = createDummyContent(0, 100);
-
-    Paging<Integer> paging1 = new Paging<>(content1, content1.size(), firstPage);
-    Paging<Integer> paging2 = new Paging<>(content2, content2.size(), tenthPage);
-
-    assertThat(paging1.getFastBackwardPage()).isEqualTo(1);
-    assertThat(paging2.getFastBackwardPage()).isEqualTo(5);
-  }
-
-  @Test
-  void map() {
-    List<String> content = createDummyContent("1", 10);
-    Paging<String> paging = new Paging<>(content, content.size(), firstPage);
-
-    Paging<Integer> mappedPaging = paging.map(Integer::parseInt);
-
-    for (Integer i : mappedPaging.getContent()) {
-      assertThat(i).isEqualTo(1);
+    for ((index, subject) in converted.content.withIndex()) {
+      assertThat(subject).isEqualTo("제목$index")
     }
   }
-
-  private <T> List<T> createDummyContent(T content, long size) {
-    List<T> contents = new ArrayList<>();
-
-    for (int i = 0; i < size; i++) {
-      contents.add(content);
-    }
-
-    return Collections.unmodifiableList(contents);
-  }
-
 }

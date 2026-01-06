@@ -1,25 +1,24 @@
-package com.everyonewaiter.domain.shared;
+package com.everyonewaiter.domain.shared
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
 
 class EmailTest {
 
   @Test
-  void constructor() {
-    String address = "admin@everyonewaiter.com";
+  fun `이메일 생성`() {
+    val address = "admin@everyonewaiter.com"
 
-    Email email = new Email(address);
+    val email = Email(address)
 
-    assertThat(email.address()).isEqualTo(address);
+    assertThat(email.address).isEqualTo(address)
   }
 
   @Test
-  void constructorFail() {
-    assertThatThrownBy(() -> new Email("admin-everyonewaiter.com"))
-        .isInstanceOf(IllegalArgumentException.class);
-  }
+  fun `이메일 형식이 옳바르지 않은 경우 생성 실패`() {
+    val address = "admin-everyonewaiter.com"
 
+    assertThatThrownBy { Email(address) }.isInstanceOf(IllegalArgumentException::class.java)
+  }
 }
