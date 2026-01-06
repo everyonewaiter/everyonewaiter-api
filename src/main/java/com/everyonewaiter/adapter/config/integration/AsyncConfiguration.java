@@ -1,4 +1,4 @@
-package com.everyonewaiter;
+package com.everyonewaiter.adapter.config.integration;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @Configuration
 @EnableAsync
-class EveryonewaiterApiConfiguration {
+class AsyncConfiguration {
 
   @Bean(name = "eventTaskExecutor")
   public TaskExecutor eventTaskExecutor() {
