@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.auth
 
+import com.everyonewaiter.domain.shared.PhoneNumber
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -7,10 +8,17 @@ import java.time.Duration
 class AuthCodeTest {
 
   @Test
+  fun `인증 번호 생성`() {
+    val code = AuthCode(PhoneNumber("01012345678"))
+
+    assertThat(code.code.toString().length).isEqualTo(6)
+  }
+
+  @Test
   fun `인증 코드 검증`() {
     val code = createAuthCode()
 
-    assertThatCode { code.verify(code.code()) }.doesNotThrowAnyException()
+    assertThatCode { code.verify(code.code) }.doesNotThrowAnyException()
   }
 
   @Test
@@ -38,7 +46,7 @@ class AuthCodeTest {
   fun `인증 코드 저장용 값`() {
     val code = createAuthCode()
 
-    assertThat(code.value()).isEqualTo(code.code())
+    assertThat(code.value()).isEqualTo(code.code)
   }
 
   @Test
