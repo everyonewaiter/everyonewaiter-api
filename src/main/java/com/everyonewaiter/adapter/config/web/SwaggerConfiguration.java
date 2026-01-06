@@ -1,6 +1,8 @@
-package com.everyonewaiter.adapter.web.docs;
+package com.everyonewaiter.adapter.config.web;
 
 import com.everyonewaiter.adapter.web.api.ErrorResponse;
+import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
+import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

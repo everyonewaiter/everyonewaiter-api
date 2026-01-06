@@ -1,4 +1,4 @@
-package com.everyonewaiter.adapter.integration;
+package com.everyonewaiter.adapter.config.integration;
 
 import feign.Logger;
 import org.springframework.cloud.openfeign.EnableFeignClients;

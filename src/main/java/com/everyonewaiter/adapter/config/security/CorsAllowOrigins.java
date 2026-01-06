@@ -1,4 +1,4 @@
-package com.everyonewaiter.adapter.security;
+package com.everyonewaiter.adapter.config.security;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.everyonewaiter.adapter.web.config;
+package com.everyonewaiter.adapter.web.utils;
 
 import lombok.NonNull;
 import org.jspecify.annotations.Nullable;

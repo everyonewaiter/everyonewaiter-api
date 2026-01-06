@@ -1,9 +1,9 @@
-package com.everyonewaiter.adapter.web.config;
+package com.everyonewaiter.adapter.web.utils;
 
-import static com.everyonewaiter.adapter.web.HttpRequestParser.parseHeaders;
-import static com.everyonewaiter.adapter.web.HttpRequestParser.parseParameters;
-import static com.everyonewaiter.adapter.web.HttpRequestParser.parseRequestUri;
-import static com.everyonewaiter.adapter.web.HttpRequestParser.parseXRequestId;
+import static com.everyonewaiter.adapter.web.utils.HttpRequestParser.parseHeaders;
+import static com.everyonewaiter.adapter.web.utils.HttpRequestParser.parseParameters;
+import static com.everyonewaiter.adapter.web.utils.HttpRequestParser.parseRequestUri;
+import static com.everyonewaiter.adapter.web.utils.HttpRequestParser.parseXRequestId;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

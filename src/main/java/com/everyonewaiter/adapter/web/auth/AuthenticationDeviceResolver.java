@@ -1,6 +1,6 @@
-package com.everyonewaiter.adapter.web.config;
+package com.everyonewaiter.adapter.web.auth;
 
-import static com.everyonewaiter.adapter.web.HttpRequestParser.parseRequestUri;
+import static com.everyonewaiter.adapter.web.utils.HttpRequestParser.parseRequestUri;
 import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -28,7 +28,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 @RequiredArgsConstructor
-class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
+public class AuthenticationDeviceResolver implements HandlerMethodArgumentResolver {
 
   private static final Logger LOGGER = getLogger(AuthenticationDeviceResolver.class);
 

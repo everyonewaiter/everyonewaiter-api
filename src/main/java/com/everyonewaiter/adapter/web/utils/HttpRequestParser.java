@@ -1,4 +1,4 @@
-package com.everyonewaiter.adapter.web;
+package com.everyonewaiter.adapter.web.utils;
 
 import static java.util.Objects.requireNonNullElse;
 import static lombok.AccessLevel.PRIVATE;

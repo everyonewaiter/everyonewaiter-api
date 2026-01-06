@@ -1,5 +1,7 @@
-package com.everyonewaiter.adapter.web.config;
+package com.everyonewaiter.adapter.config.web;
 
+import com.everyonewaiter.adapter.web.auth.AuthenticationAccountResolver;
+import com.everyonewaiter.adapter.web.auth.AuthenticationDeviceResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

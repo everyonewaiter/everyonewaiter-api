@@ -1,4 +1,4 @@
-package com.everyonewaiter.adapter.web.config;
+package com.everyonewaiter.adapter.web.auth;
 
 import static java.util.Objects.requireNonNull;
 
@@ -22,7 +22,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 @RequiredArgsConstructor
-class AuthenticationAccountResolver implements HandlerMethodArgumentResolver {
+public class AuthenticationAccountResolver implements HandlerMethodArgumentResolver {
 
   private static final String BEARER_PREFIX = "Bearer ";
 

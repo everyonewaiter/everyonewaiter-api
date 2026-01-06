@@ -1,4 +1,4 @@
-package com.everyonewaiter.adapter.web.config;
+package com.everyonewaiter.adapter.config.web;
 
 import static com.everyonewaiter.domain.support.TimeZone.ASIA_SEOUL;
 import static lombok.AccessLevel.PRIVATE;

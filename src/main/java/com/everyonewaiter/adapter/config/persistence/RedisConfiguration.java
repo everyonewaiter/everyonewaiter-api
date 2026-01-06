@@ -1,4 +1,4 @@
-package com.everyonewaiter.adapter.persistence;
+package com.everyonewaiter.adapter.config.persistence;
 
 import lombok.RequiredArgsConstructor;
 import org.redisson.Redisson;
