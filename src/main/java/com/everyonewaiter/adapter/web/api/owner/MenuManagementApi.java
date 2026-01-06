@@ -1,11 +1,11 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
 import com.everyonewaiter.adapter.web.api.dto.MenuSimpleResponses;
+import com.everyonewaiter.adapter.web.auth.AuthenticationAccount;
 import com.everyonewaiter.application.menu.provided.MenuFinder;
 import com.everyonewaiter.application.menu.provided.MenuManager;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
-import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.menu.Menu;
 import com.everyonewaiter.domain.menu.MenuCreateRequest;
 import com.everyonewaiter.domain.menu.MenuDeleteRequest;

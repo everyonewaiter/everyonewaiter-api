@@ -1,9 +1,9 @@
 package com.everyonewaiter.adapter.web.api.admin;
 
+import com.everyonewaiter.adapter.web.auth.AuthenticationAccount;
 import com.everyonewaiter.application.health.provided.HealthCheckCreator;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
-import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.health.ApkVersion;
 import com.everyonewaiter.domain.health.ApkVersionCreateRequest;
 import jakarta.validation.Valid;

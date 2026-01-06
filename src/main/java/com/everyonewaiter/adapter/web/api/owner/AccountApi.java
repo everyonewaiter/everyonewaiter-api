@@ -1,6 +1,7 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
 import com.everyonewaiter.adapter.web.api.dto.AccountProfileResponse;
+import com.everyonewaiter.adapter.web.auth.AuthenticationAccount;
 import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.account.provided.AccountRegister;
 import com.everyonewaiter.application.account.provided.AccountSignInHandler;
@@ -10,7 +11,6 @@ import com.everyonewaiter.domain.account.AccountCreateRequest;
 import com.everyonewaiter.domain.account.AccountSignInRequest;
 import com.everyonewaiter.domain.account.SignInToken;
 import com.everyonewaiter.domain.auth.AuthPurpose;
-import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
 import com.everyonewaiter.domain.auth.SendAuthMailRequest;
 import com.everyonewaiter.domain.auth.VerifyAuthCodeRequest;

@@ -7,7 +7,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import com.everyonewaiter.application.auth.required.SignatureEncoder;
 import com.everyonewaiter.application.device.provided.DeviceFinder;
-import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.shared.AccessDeniedException;
 import com.everyonewaiter.domain.shared.AuthenticationException;

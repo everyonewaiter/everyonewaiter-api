@@ -2,9 +2,9 @@ package com.everyonewaiter.adapter.web.api.device;
 
 import com.everyonewaiter.adapter.web.api.dto.WaitingCountResponse;
 import com.everyonewaiter.adapter.web.api.dto.WaitingDetailResponses;
+import com.everyonewaiter.adapter.web.auth.AuthenticationDevice;
 import com.everyonewaiter.application.waiting.provided.WaitingAdministrator;
 import com.everyonewaiter.application.waiting.provided.WaitingCustomer;
-import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
 import com.everyonewaiter.domain.store.StoreOpen;

@@ -1,4 +1,4 @@
-package com.everyonewaiter.domain.auth;
+package com.everyonewaiter.adapter.web.auth;
 
 import com.everyonewaiter.domain.account.AccountPermission;
 import java.lang.annotation.ElementType;

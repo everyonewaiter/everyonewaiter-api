@@ -1,11 +1,11 @@
 package com.everyonewaiter.adapter.web.api.device;
 
 import com.everyonewaiter.adapter.web.api.dto.PosTableDetailResponses;
+import com.everyonewaiter.adapter.web.auth.AuthenticationDevice;
 import com.everyonewaiter.application.pos.provided.PosTableActivityFinder;
 import com.everyonewaiter.application.pos.provided.PosTableFinder;
 import com.everyonewaiter.application.pos.provided.PosTableManager;
 import com.everyonewaiter.application.pos.provided.PosTableOrderManager;
-import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
 import com.everyonewaiter.domain.order.OrderMemoUpdateRequest;

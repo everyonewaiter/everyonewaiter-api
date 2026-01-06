@@ -5,7 +5,6 @@ import static java.util.Objects.requireNonNull;
 import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.auth.required.JwtProvider;
 import com.everyonewaiter.domain.account.Account;
-import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.auth.JwtPayload;
 import com.everyonewaiter.domain.shared.AccessDeniedException;
 import com.everyonewaiter.domain.shared.AuthenticationException;
