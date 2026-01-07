@@ -1,26 +1,33 @@
-package com.everyonewaiter.domain.notification;
+package com.everyonewaiter.domain.notification
 
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
-import org.junit.jupiter.api.Test;
+import com.everyonewaiter.domain.support.WordCounter
+import org.assertj.core.api.Assertions.assertThatCode
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
 
 class AlimTalkTemplateTest {
 
   @Test
-  void createContent() {
-    AlimTalkTemplate template = AlimTalkTemplate.AUTHENTICATION_CODE; // 필요 변수 1개
-
-    assertThatCode(() -> template.createContent("value"))
-        .doesNotThrowAnyException();
+  fun `알림톡 컨텐츠 생성`() {
+    AlimTalkTemplate.entries.forEach {
+      val parameterCount = WordCounter.count("%s", it.templateContent)
+      if (parameterCount > 0) {
+        assertThatCode {
+          it.createContent(*Array(parameterCount) { "parameter" })
+        }.doesNotThrowAnyException()
+      } else {
+        assertThatCode { it.createContent() }.doesNotThrowAnyException()
+      }
+    }
   }
 
   @Test
-  void createContentFail() {
-    AlimTalkTemplate template = AlimTalkTemplate.AUTHENTICATION_CODE; // 필요 변수 1개
-
-    assertThatThrownBy(() -> template.createContent("value1", "value2"))
-        .isInstanceOf(IllegalArgumentException.class);
+  fun `매개변수 개수가 옳바르지 않은 경우 알림톡 컨텐츠 생성 실패`() {
+    AlimTalkTemplate.entries.forEach {
+      val parameterCount = WordCounter.count("%s", it.templateContent)
+      assertThatThrownBy {
+        it.createContent(*Array(parameterCount + 1) { "parameter" })
+      }.isInstanceOf(IllegalArgumentException::class.java)
+    }
   }
-
 }

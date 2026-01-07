@@ -1,35 +1,30 @@
-package com.everyonewaiter.domain.notification;
+package com.everyonewaiter.domain.notification
 
-import static com.everyonewaiter.domain.notification.NotificationFixture.createEmailTemplateReader;
-import static com.everyonewaiter.domain.notification.NotificationFixture.createTemplateEmail;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
 class TemplateEmailTest {
 
   @Test
-  void addTemplateVariable() {
-    TemplateEmail templateEmail = createTemplateEmail(); // 템플릿 변수 1개
+  fun `이메일 템플릿 변수 추가`() {
+    val templateEmail = createTemplateEmail(variables = mutableMapOf())
 
-    templateEmail.addTemplateVariable("key", "value");
+    templateEmail.addTemplateVariable("key", "value")
 
-    assertThat(templateEmail.getTemplateVariables()).hasSize(2);
+    assertThat(templateEmail.templateVariables).hasSize(1)
   }
 
   @Test
-  void toSimpleEmail() {
-    TemplateEmail templateEmail = createTemplateEmail();
+  fun `심플 이메일로 변환`() {
+    val templateEmail = createTemplateEmail()
 
-    SimpleEmail simpleEmail = templateEmail.toSimpleEmail(createEmailTemplateReader());
+    val simpleEmail = templateEmail.toSimpleEmail(createEmailTemplateReader())
 
-    assertThat(simpleEmail.from()).isEqualTo(templateEmail.getFrom().address());
-    assertThat(simpleEmail.to()).isEqualTo(templateEmail.getTo().address());
-    assertThat(simpleEmail.subject()).isEqualTo(templateEmail.getSubject());
-
-    for (Object variable : templateEmail.getTemplateVariables().values()) {
-      assertThat(simpleEmail.content()).contains(variable.toString());
+    assertThat(simpleEmail.subject).isEqualTo(templateEmail.subject)
+    assertThat(simpleEmail.from).isEqualTo(templateEmail.from.address)
+    assertThat(simpleEmail.to).isEqualTo(templateEmail.to.address)
+    templateEmail.templateVariables.forEach { (_, value) ->
+      assertThat(simpleEmail.content).contains(value.toString())
     }
   }
-
 }

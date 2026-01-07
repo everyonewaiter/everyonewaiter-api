@@ -3,8 +3,10 @@ package com.everyonewaiter.domain.notification;
 import static org.springframework.util.Assert.isTrue;
 
 import java.util.Map;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum EmailTemplate {
 

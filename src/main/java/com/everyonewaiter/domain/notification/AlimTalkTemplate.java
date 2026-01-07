@@ -6,6 +6,7 @@ import static org.springframework.util.Assert.isTrue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum AlimTalkTemplate {
 
@@ -67,7 +68,6 @@ public enum AlimTalkTemplate {
   ),
   ;
 
-  @Getter
   private final String templateCode;
   private final String templateContent;
 

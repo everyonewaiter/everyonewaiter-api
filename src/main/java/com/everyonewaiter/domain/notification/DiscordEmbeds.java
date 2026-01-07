@@ -17,6 +17,7 @@ public record DiscordEmbeds(List<DiscordEmbed> embeds) {
   }
 
   @Override
+  @SuppressWarnings("unused")
   public List<DiscordEmbed> embeds() {
     return Collections.unmodifiableList(embeds);
   }

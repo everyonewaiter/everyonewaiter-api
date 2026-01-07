@@ -1,35 +1,40 @@
-package com.everyonewaiter.domain.notification;
+package com.everyonewaiter.domain.notification
 
-import static com.everyonewaiter.domain.notification.NotificationFixture.createEmailTemplateReader;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
-import java.util.HashMap;
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.assertThatCode
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
 
 class EmailTemplateTest {
 
   @Test
-  void createContent() {
-    EmailTemplate template = EmailTemplate.EMAIL_AUTHENTICATION; // 필요 변수 1개
+  fun `이메일 컨텐츠 생성`() {
+    val templateReader = createEmailTemplateReader()
 
-    HashMap<String, Object> variables = new HashMap<>();
-    variables.put("key", "value");
+    EmailTemplate.entries.forEach {
+      val variables = mutableMapOf<String, Any>()
+      for (i in 1..it.variableCount) {
+        variables["key-$i"] = "value-$i"
+      }
 
-    assertThatCode(() -> template.createContent(createEmailTemplateReader(), variables))
-        .doesNotThrowAnyException();
+      assertThatCode {
+        it.createContent(templateReader, variables)
+      }.doesNotThrowAnyException()
+    }
   }
 
   @Test
-  void createContentFail() {
-    EmailTemplate template = EmailTemplate.EMAIL_AUTHENTICATION; // 필요 변수 1개
+  fun `매개변수 개수가 옳바르지 않은 경우 이메일 컨텐츠 생성 실패`() {
+    val templateReader = createEmailTemplateReader()
 
-    HashMap<String, Object> variables = new HashMap<>();
-    variables.put("key1", "value1");
-    variables.put("key2", "value2");
+    EmailTemplate.entries.forEach {
+      val variables = mutableMapOf<String, Any>()
+      for (i in 1..it.variableCount + 1) {
+        variables["key-$i"] = "value-$i"
+      }
 
-    assertThatThrownBy(() -> template.createContent(createEmailTemplateReader(), variables))
-        .isInstanceOf(IllegalArgumentException.class);
+      assertThatThrownBy {
+        it.createContent(templateReader, variables)
+      }.isInstanceOf(IllegalArgumentException::class.java)
+    }
   }
-
 }

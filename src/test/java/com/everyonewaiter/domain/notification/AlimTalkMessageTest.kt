@@ -1,20 +1,16 @@
-package com.everyonewaiter.domain.notification;
+package com.everyonewaiter.domain.notification
 
-import static com.everyonewaiter.domain.notification.AlimTalkWeblinkButtonTemplate.MENU_PREVIEW;
-import static com.everyonewaiter.domain.notification.NotificationFixture.createAlimTalkMessage;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
 class AlimTalkMessageTest {
 
   @Test
-  void addButton() {
-    AlimTalkMessage alimTalkMessage = createAlimTalkMessage();
+  fun `알림톡 버튼 추가`() {
+    val message = createAlimTalkMessage()
 
-    alimTalkMessage.addButton(MENU_PREVIEW, 1L);
+    message.addButton(AlimTalkWeblinkButtonTemplate.MENU_PREVIEW, 1L)
 
-    assertThat(alimTalkMessage.getButtons()).hasSize(1);
+    assertThat(message.buttons).hasSize(1)
   }
-
 }
