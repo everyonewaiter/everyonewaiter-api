@@ -1,18 +1,16 @@
-package com.everyonewaiter.domain.support;
+package com.everyonewaiter.domain.support
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
 class WordCounterTest {
 
   @Test
-  void count() {
-    String content = "%s/menus/preview?storeId=%s";
+  fun `단어 개수 찾기`() {
+    val content = "%s/menus/preview?storeId=%s"
 
-    int count = WordCounter.count("%s", content);
+    val count = WordCounter.count("%s", content)
 
-    assertThat(count).isEqualTo(2);
+    assertThat(count).isEqualTo(2)
   }
-
 }

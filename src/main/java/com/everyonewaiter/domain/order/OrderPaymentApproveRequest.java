@@ -3,10 +3,12 @@ package com.everyonewaiter.domain.order;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.everyonewaiter.domain.support.DateFormatter;
+import com.everyonewaiter.domain.support.TimeZone;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Schema(name = "OrderPaymentApproveRequest")
 public record OrderPaymentApproveRequest(
@@ -116,7 +118,10 @@ public record OrderPaymentApproveRequest(
 
   @Override
   public String tradeTime() {
-    return isPureCash() ? DateFormatter.getSimpleKstDate() : tradeTime;
+    return isPureCash()
+        ? LocalDateTime.now(TimeZone.ASIA_SEOUL.zoneId())
+        .format(DateFormatter.SIMPLE_YEAR_MONTH_DAY)
+        : tradeTime;
   }
 
   @Override

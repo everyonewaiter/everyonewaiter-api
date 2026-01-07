@@ -1,73 +1,67 @@
-package com.everyonewaiter.domain.support;
+package com.everyonewaiter.domain.support
 
-import static com.everyonewaiter.domain.support.TimeZone.ASIA_SEOUL;
-import static com.everyonewaiter.domain.support.TimeZone.UTC;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
-import com.everyonewaiter.domain.shared.BusinessException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import org.junit.jupiter.api.Test;
+import com.everyonewaiter.domain.shared.BusinessException
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalTime
 
 class DateConverterTest {
 
   @Test
-  void convertToUtcStartInstant() {
-    String kstDate = "20250101";
+  fun `문자열 날짜를 UTC 시작 시간으로 변환`() {
+    val instant = DateConverter.convertToUtcStartInstant(TimeZone.ASIA_SEOUL, "20250101")
 
-    Instant utcInstant = DateConverter.convertToUtcStartInstant(ASIA_SEOUL, kstDate);
-
-    assertThat(utcInstant).isEqualTo(Instant.parse("2024-12-31T15:00:00Z"));
+    assertThat(instant).isEqualTo(Instant.parse("2024-12-31T15:00:00Z"))
   }
 
   @Test
-  void convertToUtcStartInstantInputNull() {
-    Instant utcInstant = DateConverter.convertToUtcStartInstant(ASIA_SEOUL, null);
+  fun `문자열 날짜가 NULL이라면 오늘 날짜를 UTC 시작 시간으로 변환`() {
+    val instant = DateConverter.convertToUtcStartInstant(TimeZone.ASIA_SEOUL, null)
 
-    assertThat(utcInstant)
-        .isEqualTo(
-            LocalDate.now(ASIA_SEOUL.zoneId())
-                .atStartOfDay(ASIA_SEOUL.zoneId())
-                .withZoneSameInstant(UTC.zoneId())
-                .toInstant()
-        );
+    assertThat(instant).isEqualTo(
+      LocalDate.now(TimeZone.ASIA_SEOUL.zoneId())
+        .atStartOfDay(TimeZone.ASIA_SEOUL.zoneId())
+        .withZoneSameInstant(TimeZone.UTC.zoneId())
+        .toInstant()
+    )
   }
 
   @Test
-  void convertToUtcEndInstant() {
-    String kstDate = "20250101";
-
-    Instant utcInstant = DateConverter.convertToUtcEndInstant(ASIA_SEOUL, kstDate);
-
-    assertThat(utcInstant)
-        .isAfter(Instant.parse("2025-01-01T14:59:59Z"))
-        .isBefore(Instant.parse("2025-01-01T15:00:00Z"));
+  fun `문자열 날짜의 형식이 옳바르지 않은 경우 UTC 시작 시간으로 변환 실패`() {
+    assertThatThrownBy {
+      DateConverter.convertToUtcStartInstant(TimeZone.ASIA_SEOUL, "2025-01-01")
+    }.isInstanceOf(BusinessException::class.java)
   }
 
   @Test
-  void convertToUtcEndInstantInputNull() {
-    Instant utcInstant = DateConverter.convertToUtcEndInstant(ASIA_SEOUL, null);
+  fun `문자열 날짜를 UTC 마지막 시간으로 변환`() {
+    val instant = DateConverter.convertToUtcEndInstant(TimeZone.ASIA_SEOUL, "20250101")
 
-    assertThat(utcInstant)
-        .isEqualTo(
-            LocalDate.now(ASIA_SEOUL.zoneId())
-                .atTime(LocalTime.MAX)
-                .atZone(ASIA_SEOUL.zoneId())
-                .withZoneSameInstant(UTC.zoneId())
-                .toInstant()
-        );
+    assertThat(instant)
+      .isAfter(Instant.parse("2025-01-01T14:59:59Z"))
+      .isBefore(Instant.parse("2025-01-01T15:00:00Z"))
   }
 
   @Test
-  void invalidDateFormat() {
-    String kstDate = "2025-01-01";
+  fun `문자열 날짜가 NULL이라면 오늘 날짜를 UTC 마지막 시간으로 변환`() {
+    val instant = DateConverter.convertToUtcEndInstant(TimeZone.ASIA_SEOUL, null)
 
-    assertThatThrownBy(() -> DateConverter.convertToUtcStartInstant(ASIA_SEOUL, kstDate))
-        .isInstanceOf(BusinessException.class);
-    assertThatThrownBy(() -> DateConverter.convertToUtcEndInstant(ASIA_SEOUL, kstDate))
-        .isInstanceOf(BusinessException.class);
+    assertThat(instant).isEqualTo(
+      LocalDate.now(TimeZone.ASIA_SEOUL.zoneId())
+        .atTime(LocalTime.MAX)
+        .atZone(TimeZone.ASIA_SEOUL.zoneId())
+        .withZoneSameInstant(TimeZone.UTC.zoneId())
+        .toInstant()
+    )
   }
 
+  @Test
+  fun `문자열 날짜의 형식이 옳바르지 않은 경우 UTC 마지막 시간으로 변환 실패`() {
+    assertThatThrownBy {
+      DateConverter.convertToUtcEndInstant(TimeZone.ASIA_SEOUL, "2025-01-01")
+    }.isInstanceOf(BusinessException::class.java)
+  }
 }
