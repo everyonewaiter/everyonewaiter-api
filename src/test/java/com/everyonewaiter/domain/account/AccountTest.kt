@@ -162,6 +162,31 @@ class AccountTest {
   }
 
   @Test
+  fun `비밀번호 변경`() {
+    val passwordEncoder = createPasswordEncoder()
+    val account = createAccount()
+
+    assertThat(passwordEncoder.matches("@password1", account.password)).isTrue
+
+    account.changePassword(createAccountPasswordChangeRequest(), passwordEncoder)
+
+    assertThat(passwordEncoder.matches("@password2", account.password)).isTrue
+  }
+
+  @Test
+  fun `현재 비밀번호가 일치하지 않는 경우 비밀번호 변경 실패`() {
+    val passwordEncoder = createPasswordEncoder()
+    val account = createAccount()
+
+    assertThatThrownBy {
+      account.changePassword(
+        createAccountPasswordChangeRequest(currentPassword = "@invalid123"),
+        passwordEncoder
+      )
+    }.isInstanceOf(MismatchedCurrentPasswordException::class.java)
+  }
+
+  @Test
   fun `관리자가 사용자 계정 업데이트`() {
     val adminAccount = createActiveAccount(permission = AccountPermission.ADMIN)
     val userAccount = createAccount()

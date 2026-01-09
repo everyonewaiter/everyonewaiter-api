@@ -123,6 +123,17 @@ public class Account extends AggregateRootEntity<Account> {
     throw new FailedSignInException();
   }
 
+  public void changePassword(
+      AccountPasswordChangeRequest changeRequest,
+      PasswordEncoder passwordEncoder
+  ) {
+    boolean isMatched = passwordEncoder.matches(changeRequest.currentPassword(), password);
+    if (!isMatched) {
+      throw new MismatchedCurrentPasswordException();
+    }
+    this.password = requireNonNull(passwordEncoder.encode(changeRequest.newPassword()));
+  }
+
   public void update(Account userAccount, AccountAdminUpdateRequest updateRequest) {
     state(this.isActive() && this.hasPermission(AccountPermission.ADMIN), "관리자 권한이 없습니다.");
 

@@ -5,6 +5,7 @@ import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountCreateRequest;
+import com.everyonewaiter.domain.account.AccountPasswordChangeRequest;
 import com.everyonewaiter.domain.account.AccountSignInRequest;
 import com.everyonewaiter.domain.account.SignInToken;
 import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
@@ -193,5 +194,25 @@ interface AccountApiSpecification {
       }
   )
   ResponseEntity<Void> verifyEmail(String token);
+
+  @Operation(summary = "비밀번호 변경", description = "비밀번호 변경 API")
+  @ApiResponse(responseCode = "204", description = "비밀번호 변경 성공")
+  @ApiErrorResponses(
+      summary = "비밀번호 변경 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.MISMATCHED_CURRENT_PASSWORD,
+              exampleName = "현재 비밀번호가 일치하지 않는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> changePassword(
+      @RequestBody AccountPasswordChangeRequest changeRequest,
+      @Parameter(hidden = true) Account account
+  );
 
 }

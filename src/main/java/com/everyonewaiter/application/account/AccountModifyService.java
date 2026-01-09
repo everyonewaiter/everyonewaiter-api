@@ -8,6 +8,7 @@ import com.everyonewaiter.application.account.required.AccountRepository;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountAdminUpdateRequest;
 import com.everyonewaiter.domain.account.AccountCreateRequest;
+import com.everyonewaiter.domain.account.AccountPasswordChangeRequest;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.account.PasswordEncoder;
 import com.everyonewaiter.domain.shared.Email;
@@ -59,6 +60,15 @@ class AccountModifyService implements AccountRegister, AccountUpdater {
     Account account = accountFinder.findOrThrow(accountId);
 
     account.authorize(permission);
+
+    return accountRepository.save(account);
+  }
+
+  @Override
+  public Account changePassword(Long accountId, AccountPasswordChangeRequest request) {
+    Account account = accountFinder.findOrThrow(accountId);
+
+    account.changePassword(request, passwordEncoder);
 
     return accountRepository.save(account);
   }

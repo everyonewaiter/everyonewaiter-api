@@ -5,9 +5,11 @@ import com.everyonewaiter.adapter.web.auth.AuthenticationAccount;
 import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.account.provided.AccountRegister;
 import com.everyonewaiter.application.account.provided.AccountSignInHandler;
+import com.everyonewaiter.application.account.provided.AccountUpdater;
 import com.everyonewaiter.application.auth.provided.Authenticator;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountCreateRequest;
+import com.everyonewaiter.domain.account.AccountPasswordChangeRequest;
 import com.everyonewaiter.domain.account.AccountSignInRequest;
 import com.everyonewaiter.domain.account.SignInToken;
 import com.everyonewaiter.domain.auth.AuthPurpose;
@@ -23,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +40,7 @@ class AccountApi implements AccountApiSpecification {
   private final AccountFinder accountFinder;
   private final AccountRegister accountRegister;
   private final AccountSignInHandler accountSignInHandler;
+  private final AccountUpdater accountUpdater;
 
   @Override
   @GetMapping("/me")
@@ -113,6 +117,17 @@ class AccountApi implements AccountApiSpecification {
     Email email = authenticator.verifyAuthMail(token);
 
     accountRegister.activate(email);
+
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @PutMapping("/change-password")
+  public ResponseEntity<Void> changePassword(
+      @RequestBody @Valid AccountPasswordChangeRequest changeRequest,
+      @AuthenticationAccount Account account
+  ) {
+    accountUpdater.changePassword(account.getId(), changeRequest);
 
     return ResponseEntity.noContent().build();
   }

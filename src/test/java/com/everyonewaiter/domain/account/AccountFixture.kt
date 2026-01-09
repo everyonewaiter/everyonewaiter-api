@@ -43,6 +43,13 @@ fun createAccountSignInRequest(
   return AccountSignInRequest(email, password)
 }
 
+fun createAccountPasswordChangeRequest(
+  currentPassword: String = "@password1",
+  newPassword: String = "@password2",
+): AccountPasswordChangeRequest {
+  return AccountPasswordChangeRequest(currentPassword, newPassword)
+}
+
 fun createAccountAdminUpdateRequest(
   state: AccountState = AccountState.ACTIVE,
   permission: AccountPermission = AccountPermission.OWNER,
