@@ -32,12 +32,7 @@ class DeviceModifyService implements DeviceManager {
 
     Store store = storeFinder.findOrThrow(storeId, new PhoneNumber(createRequest.phoneNumber()));
 
-    Device device = switch (createRequest.purpose()) {
-      case POS -> Device.createPos(store, createRequest);
-      case HALL -> Device.createHall(store, createRequest);
-      case TABLE -> Device.createTable(store, createRequest);
-      case WAITING -> Device.createWaiting(store, createRequest);
-    };
+    Device device = Device.create(store, createRequest);
 
     return deviceRepository.save(device);
   }
@@ -48,12 +43,7 @@ class DeviceModifyService implements DeviceManager {
 
     Device device = deviceFinder.findOrThrow(deviceId, storeId);
 
-    switch (updateRequest.purpose()) {
-      case POS -> device.updatePos(updateRequest);
-      case HALL -> device.updateHall(updateRequest);
-      case TABLE -> device.updateTable(updateRequest);
-      case WAITING -> device.updateWaiting(updateRequest);
-    }
+    device.update(updateRequest);
 
     return deviceRepository.save(device);
   }

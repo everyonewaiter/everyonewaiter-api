@@ -104,7 +104,9 @@ public class Account extends AggregateRootEntity<Account> {
       throw new DisabledAccountException();
     }
 
-    this.permission = permission;
+    if (!hasPermission(permission)) {
+      this.permission = permission;
+    }
   }
 
   public void signIn(AccountSignInRequest signInRequest, PasswordEncoder passwordEncoder) {

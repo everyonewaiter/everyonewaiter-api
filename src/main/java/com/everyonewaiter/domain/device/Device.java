@@ -72,22 +72,13 @@ public class Device extends AggregateRootEntity<Device> {
   @Column(name = "secret_key", nullable = false, updatable = false, length = 30)
   private String secretKey;
 
-  public static Device createPos(Store store, DeviceCreateRequest request) {
-    return create(store, request.name(), POS);
-  }
-
-  public static Device createHall(Store store, DeviceCreateRequest request) {
-    return create(store, request.name(), HALL);
-  }
-
-  public static Device createTable(Store store, DeviceCreateRequest request) {
-    validateTableNo(request.tableNo());
-
-    return create(store, request.name(), TABLE, request.tableNo(), request.paymentType());
-  }
-
-  public static Device createWaiting(Store store, DeviceCreateRequest request) {
-    return create(store, request.name(), WAITING);
+  public static Device create(Store store, DeviceCreateRequest request) {
+    return switch (request.purpose()) {
+      case POS -> createPos(store, request);
+      case HALL -> createHall(store, request);
+      case TABLE -> createTable(store, request);
+      case WAITING -> createWaiting(store, request);
+    };
   }
 
   private static Device create(Store store, String name, DevicePurpose purpose) {
@@ -116,6 +107,24 @@ public class Device extends AggregateRootEntity<Device> {
     return device;
   }
 
+  private static Device createPos(Store store, DeviceCreateRequest request) {
+    return create(store, request.name(), POS);
+  }
+
+  private static Device createHall(Store store, DeviceCreateRequest request) {
+    return create(store, request.name(), HALL);
+  }
+
+  private static Device createTable(Store store, DeviceCreateRequest request) {
+    validateTableNo(request.tableNo());
+
+    return create(store, request.name(), TABLE, request.tableNo(), request.paymentType());
+  }
+
+  private static Device createWaiting(Store store, DeviceCreateRequest request) {
+    return create(store, request.name(), WAITING);
+  }
+
   private static void validateTableNo(int tableNo) {
     isTrue(tableNo >= 1 && tableNo <= 100, "테이블 번호는 1이상 100이하이어야 합니다.");
   }
@@ -132,22 +141,13 @@ public class Device extends AggregateRootEntity<Device> {
     return this.purpose == purpose;
   }
 
-  public void updatePos(DeviceUpdateRequest request) {
-    update(request.name(), POS);
-  }
-
-  public void updateHall(DeviceUpdateRequest request) {
-    update(request.name(), HALL);
-  }
-
-  public void updateTable(DeviceUpdateRequest request) {
-    validateTableNo(request.tableNo());
-
-    update(request.name(), TABLE, request.tableNo(), request.paymentType());
-  }
-
-  public void updateWaiting(DeviceUpdateRequest request) {
-    update(request.name(), WAITING);
+  public void update(DeviceUpdateRequest request) {
+    switch (request.purpose()) {
+      case POS -> this.updatePos(request);
+      case HALL -> this.updateHall(request);
+      case TABLE -> this.updateTable(request);
+      case WAITING -> this.updateWaiting(request);
+    }
   }
 
   private void update(String name, DevicePurpose purpose) {
@@ -166,6 +166,24 @@ public class Device extends AggregateRootEntity<Device> {
     this.paymentType = requireNonNull(paymentType);
 
     registerEvent(new SseEvent(getStoreId(), DEVICE, UPDATE, getStringId()));
+  }
+
+  private void updatePos(DeviceUpdateRequest request) {
+    update(request.name(), POS);
+  }
+
+  private void updateHall(DeviceUpdateRequest request) {
+    update(request.name(), HALL);
+  }
+
+  private void updateTable(DeviceUpdateRequest request) {
+    validateTableNo(request.tableNo());
+
+    update(request.name(), TABLE, request.tableNo(), request.paymentType());
+  }
+
+  private void updateWaiting(DeviceUpdateRequest request) {
+    update(request.name(), WAITING);
   }
 
   public void delete() {

@@ -18,15 +18,19 @@ class ApkVersionRepositoryImpl implements ApkVersionRepository {
   private final ApkVersionJpaRepository apkVersionJpaRepository;
 
   @Override
-  public ApkVersion findLatest() {
+  public Optional<ApkVersion> findLatest() {
     return Optional.ofNullable(
-            queryFactory
-                .select(apkVersion)
-                .from(apkVersion)
-                .orderBy(apkVersion.id.desc())
-                .fetchFirst()
-        )
-        .orElseThrow(ApkVersionNotFoundException::new);
+        queryFactory
+            .select(apkVersion)
+            .from(apkVersion)
+            .orderBy(apkVersion.id.desc())
+            .fetchFirst()
+    );
+  }
+
+  @Override
+  public ApkVersion findLatestOrThrow() {
+    return findLatest().orElseThrow(ApkVersionNotFoundException::new);
   }
 
   @Override

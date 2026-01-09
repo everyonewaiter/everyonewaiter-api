@@ -90,6 +90,17 @@ class AccountTest {
   }
 
   @Test
+  fun `계정이 이미 해당 권한을 가지고 있다면 권한 부여 X`() {
+    val account = createActiveAccount(permission = AccountPermission.ADMIN)
+
+    assertThat(account.permission).isEqualTo(AccountPermission.ADMIN)
+
+    account.authorize(AccountPermission.OWNER)
+
+    assertThat(account.permission).isEqualTo(AccountPermission.ADMIN)
+  }
+
+  @Test
   fun `계정이 활성 상태가 아닌 경우 권한 부여 실패`() {
     val account = createAccount()
 
