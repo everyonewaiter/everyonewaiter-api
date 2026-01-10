@@ -1,5 +1,8 @@
 package com.everyonewaiter.domain.account
 
+import com.everyonewaiter.domain.ADMIN_EMAIL
+import com.everyonewaiter.domain.ADMIN_PASSWORD
+import com.everyonewaiter.domain.ADMIN_PHONE_NUMBER
 import org.springframework.test.util.ReflectionTestUtils
 
 fun createPasswordEncoder(): PasswordEncoder {
@@ -29,22 +32,22 @@ fun createActiveAccount(permission: AccountPermission = AccountPermission.USER):
 }
 
 fun createAccountCreateRequest(
-  email: String = "admin@everyonewaiter.com",
-  password: String = "@password1",
-  phoneNumber: String = "01012345678",
+  email: String = ADMIN_EMAIL,
+  password: String = ADMIN_PASSWORD,
+  phoneNumber: String = ADMIN_PHONE_NUMBER,
 ): AccountCreateRequest {
   return AccountCreateRequest(email, password, phoneNumber)
 }
 
 fun createAccountSignInRequest(
-  email: String = "admin@everyonewaiter.com",
-  password: String = "@password1",
+  email: String = ADMIN_EMAIL,
+  password: String = ADMIN_PASSWORD,
 ): AccountSignInRequest {
   return AccountSignInRequest(email, password)
 }
 
 fun createAccountPasswordChangeRequest(
-  currentPassword: String = "@password1",
+  currentPassword: String = ADMIN_PASSWORD,
   newPassword: String = "@password2",
 ): AccountPasswordChangeRequest {
   return AccountPasswordChangeRequest(currentPassword, newPassword)

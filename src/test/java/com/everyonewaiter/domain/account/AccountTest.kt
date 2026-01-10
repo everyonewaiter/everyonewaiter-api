@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.account
 
+import com.everyonewaiter.domain.ADMIN_PASSWORD
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -166,7 +167,7 @@ class AccountTest {
     val passwordEncoder = createPasswordEncoder()
     val account = createAccount()
 
-    assertThat(passwordEncoder.matches("@password1", account.password)).isTrue
+    assertThat(passwordEncoder.matches(ADMIN_PASSWORD, account.password)).isTrue
 
     account.changePassword(createAccountPasswordChangeRequest(), passwordEncoder)
 

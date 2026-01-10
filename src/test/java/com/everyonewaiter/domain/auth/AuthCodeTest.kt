@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.auth
 
+import com.everyonewaiter.domain.ADMIN_PHONE_NUMBER
 import com.everyonewaiter.domain.shared.PhoneNumber
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -9,7 +10,7 @@ class AuthCodeTest {
 
   @Test
   fun `인증 번호 생성`() {
-    val code = AuthCode(PhoneNumber("01012345678"))
+    val code = AuthCode(PhoneNumber(ADMIN_PHONE_NUMBER))
 
     assertThat(code.code.toString().length).isEqualTo(6)
   }

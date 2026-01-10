@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.notification
 
+import com.everyonewaiter.domain.ADMIN_EMAIL
 import com.everyonewaiter.domain.shared.Email
 
 fun createEmailTemplateReader(): EmailTemplateReader {
@@ -11,7 +12,7 @@ fun createEmailTemplateReader(): EmailTemplateReader {
 
 fun createTemplateEmail(
   template: EmailTemplate = EmailTemplate.EMAIL_AUTHENTICATION,
-  email: String = "admin@everyonewaiter.com",
+  email: String = ADMIN_EMAIL,
   subject: String = "제목",
   variables: Map<String, Any> = mutableMapOf("authenticationUrl" to "https://auth.everyonewaiter.com")
 ): TemplateEmail {

@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.shared
 
+import com.everyonewaiter.domain.ADMIN_EMAIL
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -8,7 +9,7 @@ class EmailTest {
 
   @Test
   fun `이메일 생성`() {
-    val address = "admin@everyonewaiter.com"
+    val address = ADMIN_EMAIL
 
     val email = Email(address)
 

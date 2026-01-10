@@ -1,5 +1,6 @@
 package com.everyonewaiter.domain.shared
 
+import com.everyonewaiter.domain.ADMIN_PHONE_NUMBER
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -8,7 +9,7 @@ class PhoneNumberTest {
 
   @Test
   fun `휴대폰 번호 생성`() {
-    val value = "01012345678"
+    val value = ADMIN_PHONE_NUMBER
 
     val phoneNumber = PhoneNumber(value)
 
