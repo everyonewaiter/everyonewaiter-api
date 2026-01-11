@@ -47,14 +47,8 @@ class ReceiptSendEventHandler {
   public void handle(OrderUpdateEvent event) {
     LOGGER.info("[주문 수정 빌지 전송 이벤트] 매장 ID: {}, 테이블 번호: {}", event.storeId(), event.tableNo());
 
-    Receipt diff = receiptCreator.createDiff(
-        event.storeId(),
-        event.tableNo(),
-        event.orderIds(),
-        event.updateRequests()
-    );
-
-    if (diff != null) {
+    if (event.diff() != null) {
+      Receipt diff = receiptCreator.copyWithIncrementPrintNo(event.storeId(), event.diff());
       publishSseEvent(event.storeId(), diff);
     }
   }

@@ -39,8 +39,7 @@ public record Receipt(int tableNo, String memo, int printNo, List<ReceiptMenu> r
   public static @Nullable Receipt diff(
       int tableNo,
       List<Order> orders,
-      OrderUpdateRequests updateRequests,
-      int printNo
+      OrderUpdateRequests updateRequests
   ) {
     Map<Long, OrderMenu> beforeOrderMenus = orders.stream()
         .flatMap(order -> order.getPrintEnabledOrderMenus().stream())
@@ -68,7 +67,7 @@ public record Receipt(int tableNo, String memo, int printNo, List<ReceiptMenu> r
       }
     }
 
-    return receiptMenus.isEmpty() ? null : new Receipt(tableNo, "", printNo, receiptMenus);
+    return receiptMenus.isEmpty() ? null : new Receipt(tableNo, "", 0, receiptMenus);
   }
 
   public static Receipt cancel(int tableNo, Order order, int printNo) {
@@ -84,12 +83,7 @@ public record Receipt(int tableNo, String memo, int printNo, List<ReceiptMenu> r
   }
 
   public Receipt copy(int printNo) {
-    return new Receipt(
-        this.tableNo,
-        this.memo,
-        printNo,
-        this.receiptMenus
-    );
+    return new Receipt(this.tableNo, this.memo, printNo, this.receiptMenus);
   }
 
 }
