@@ -2,14 +2,14 @@ package com.everyonewaiter.domain.auth;
 
 import static java.util.Objects.requireNonNull;
 
-public record JwtPayload(Long id, String subject) {
+public record JwtPayload(String id, String subject) {
 
-  public JwtPayload(Long id, Long subject) {
-    this(id, requireNonNull(subject).toString());
+  public JwtPayload(Long id, String subject) {
+    this(requireNonNull(id).toString(), subject);
   }
 
-  public Long parseLongSubject() throws NumberFormatException {
-    return Long.parseLong(subject());
+  public Long getLongId() throws NumberFormatException {
+    return Long.parseLong(id);
   }
 
 }

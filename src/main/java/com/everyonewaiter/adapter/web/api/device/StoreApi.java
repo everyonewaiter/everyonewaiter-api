@@ -1,7 +1,7 @@
 package com.everyonewaiter.adapter.web.api.device;
 
+import com.everyonewaiter.adapter.web.auth.AuthenticationDevice;
 import com.everyonewaiter.application.store.provided.StoreManager;
-import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
 import lombok.RequiredArgsConstructor;

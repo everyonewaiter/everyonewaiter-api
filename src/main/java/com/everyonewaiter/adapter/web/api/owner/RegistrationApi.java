@@ -1,10 +1,10 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
 import com.everyonewaiter.adapter.web.api.dto.RegistrationDetailResponse;
+import com.everyonewaiter.adapter.web.auth.AuthenticationAccount;
 import com.everyonewaiter.application.store.provided.RegistrationApplier;
 import com.everyonewaiter.application.store.provided.RegistrationFinder;
 import com.everyonewaiter.domain.account.Account;
-import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.store.Registration;
 import com.everyonewaiter.domain.store.RegistrationApplyRequest;

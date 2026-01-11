@@ -24,7 +24,7 @@ class HealthCheckQueryService implements HealthCheckFinder {
 
   @Override
   public ApkVersion findLatestApkVersion() {
-    return apkVersionRepository.findLatest();
+    return apkVersionRepository.findLatestOrThrow();
   }
 
 }

@@ -5,8 +5,8 @@ import static org.springframework.http.HttpHeaders.CONNECTION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
+import com.everyonewaiter.adapter.web.auth.AuthenticationDevice;
 import com.everyonewaiter.application.sse.provided.SseConnector;
-import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

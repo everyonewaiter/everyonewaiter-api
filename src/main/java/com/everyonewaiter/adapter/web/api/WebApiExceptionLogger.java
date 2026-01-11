@@ -1,6 +1,6 @@
 package com.everyonewaiter.adapter.web.api;
 
-import static com.everyonewaiter.adapter.web.HttpRequestParser.parseXRequestId;
+import static com.everyonewaiter.adapter.web.utils.HttpRequestParser.parseXRequestId;
 import static lombok.AccessLevel.PRIVATE;
 import static org.slf4j.LoggerFactory.getLogger;
 

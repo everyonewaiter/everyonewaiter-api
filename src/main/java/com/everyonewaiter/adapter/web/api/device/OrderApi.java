@@ -2,9 +2,9 @@ package com.everyonewaiter.adapter.web.api.device;
 
 import com.everyonewaiter.adapter.web.api.dto.OrderDetailResponses;
 import com.everyonewaiter.adapter.web.api.dto.OrderHallResponses;
+import com.everyonewaiter.adapter.web.auth.AuthenticationDevice;
 import com.everyonewaiter.application.order.provided.OrderFinder;
 import com.everyonewaiter.application.order.provided.OrderServer;
-import com.everyonewaiter.domain.auth.AuthenticationDevice;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
 import com.everyonewaiter.domain.order.Order;

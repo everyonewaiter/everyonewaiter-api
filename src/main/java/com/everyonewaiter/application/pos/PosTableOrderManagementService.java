@@ -3,12 +3,10 @@ package com.everyonewaiter.application.pos;
 import com.everyonewaiter.application.pos.provided.PosTableFinder;
 import com.everyonewaiter.application.pos.provided.PosTableOrderManager;
 import com.everyonewaiter.application.pos.required.PosTableRepository;
-import com.everyonewaiter.application.receipt.provided.ReceiptCreator;
 import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.domain.order.OrderMemoUpdateRequest;
 import com.everyonewaiter.domain.order.OrderUpdateRequests;
 import com.everyonewaiter.domain.pos.PosTable;
-import com.everyonewaiter.domain.receipt.Receipt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 class PosTableOrderManagementService implements PosTableOrderManager {
 
-  private final ReceiptCreator receiptCreator;
   private final PosTableFinder posTableFinder;
   private final PosTableRepository posTableRepository;
 
@@ -39,14 +36,7 @@ class PosTableOrderManagementService implements PosTableOrderManager {
   public PosTable update(Long storeId, int tableNo, OrderUpdateRequests updateRequests) {
     PosTable posTable = posTableFinder.findActiveOrThrow(storeId, tableNo);
 
-    Receipt diff = receiptCreator.createDiff(
-        storeId,
-        tableNo,
-        posTable.getOrderedOrders(),
-        updateRequests
-    );
-
-    posTable.updateOrder(updateRequests, diff);
+    posTable.updateOrder(updateRequests);
 
     return posTableRepository.save(posTable);
   }

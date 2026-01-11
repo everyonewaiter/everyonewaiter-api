@@ -5,13 +5,12 @@ import com.everyonewaiter.application.account.provided.AccountRegister;
 import com.everyonewaiter.application.account.provided.AccountUpdater;
 import com.everyonewaiter.application.account.provided.AccountValidator;
 import com.everyonewaiter.application.account.required.AccountRepository;
-import com.everyonewaiter.application.auth.provided.Authenticator;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountAdminUpdateRequest;
 import com.everyonewaiter.domain.account.AccountCreateRequest;
+import com.everyonewaiter.domain.account.AccountPasswordChangeRequest;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.account.PasswordEncoder;
-import com.everyonewaiter.domain.auth.AuthPurpose;
 import com.everyonewaiter.domain.shared.Email;
 import com.everyonewaiter.domain.shared.PhoneNumber;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 class AccountModifyService implements AccountRegister, AccountUpdater {
 
-  private final Authenticator authenticator;
   private final AccountFinder accountFinder;
   private final AccountValidator accountValidator;
   private final AccountRepository accountRepository;
@@ -44,15 +42,12 @@ class AccountModifyService implements AccountRegister, AccountUpdater {
     Email email = new Email(createRequest.email());
     PhoneNumber phoneNumber = new PhoneNumber(createRequest.phoneNumber());
 
-    authenticator.checkAuthSuccess(AuthPurpose.SIGN_UP, phoneNumber);
     accountValidator.checkDuplicateEmail(email);
     accountValidator.checkDuplicatePhone(phoneNumber);
   }
 
   @Override
-  public Account activate(String authMailToken) {
-    Email email = authenticator.verifyAuthMail(authMailToken);
-
+  public Account activate(Email email) {
     Account account = accountFinder.findOrThrow(email);
 
     account.activate();
@@ -65,6 +60,15 @@ class AccountModifyService implements AccountRegister, AccountUpdater {
     Account account = accountFinder.findOrThrow(accountId);
 
     account.authorize(permission);
+
+    return accountRepository.save(account);
+  }
+
+  @Override
+  public Account changePassword(Long accountId, AccountPasswordChangeRequest request) {
+    Account account = accountFinder.findOrThrow(accountId);
+
+    account.changePassword(request, passwordEncoder);
 
     return accountRepository.save(account);
   }

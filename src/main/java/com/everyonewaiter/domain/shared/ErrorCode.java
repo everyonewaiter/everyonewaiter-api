@@ -39,6 +39,7 @@ public enum ErrorCode {
   // ACCOUNT
   ALREADY_USE_EMAIL(BAD_REQUEST, "입력하신 이메일은 이미 사용 중이에요. 다른 이메일을 입력해 주세요."),
   ALREADY_USE_PHONE_NUMBER(BAD_REQUEST, "입력하신 휴대폰 번호는 이미 사용 중이에요. 다른 휴대폰 번호를 입력해 주세요."),
+  MISMATCHED_CURRENT_PASSWORD(BAD_REQUEST, "현재 비밀번호가 일치하지 않아요. 입력하신 비밀번호를 확인해 주세요."),
   DISABLED_ACCOUNT(BAD_REQUEST, "해당 계정은 비활성 또는 탈퇴된 계정이에요."),
   ACCOUNT_NOT_FOUND(NOT_FOUND, "계정을 찾지 못했어요."),
 

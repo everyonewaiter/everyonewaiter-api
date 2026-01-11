@@ -107,7 +107,7 @@ class AuthService implements Authenticator {
     JwtPayload payload = jwtProvider.decode(authMailToken)
         .orElseThrow(ExpiredVerificationEmailException::new);
 
-    if (!JwtFixedId.VERIFICATION_EMAIL_ID.equals(payload.id())) {
+    if (!JwtFixedId.VERIFICATION_EMAIL.equals(payload.id())) {
       throw new ExpiredVerificationEmailException();
     }
 

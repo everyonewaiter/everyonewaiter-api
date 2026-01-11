@@ -5,8 +5,10 @@ import static com.everyonewaiter.domain.support.WordCounter.count;
 import static org.springframework.util.Assert.isTrue;
 
 import com.everyonewaiter.domain.support.ClientUri;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum AlimTalkWeblinkButtonTemplate implements AlimTalkButtonTemplate {
 
@@ -20,13 +22,9 @@ public enum AlimTalkWeblinkButtonTemplate implements AlimTalkButtonTemplate {
 
   @Override
   public AlimTalkButton createButton(Object... arguments) {
-    return new AlimTalkWeblinkButton(name, getUri(arguments));
-  }
-
-  private String getUri(Object... arguments) {
     isTrue(arguments.length == count("%s", uri), "알림톡 버튼 템플릿 링크 설정이 옳바르지 않습니다.");
 
-    return BASE_URL + uri.formatted(arguments);
+    return new AlimTalkWeblinkButton(name, BASE_URL + uri.formatted(arguments));
   }
 
 }

@@ -2,12 +2,15 @@ package com.everyonewaiter.application.account.provided;
 
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountAdminUpdateRequest;
+import com.everyonewaiter.domain.account.AccountPasswordChangeRequest;
 import com.everyonewaiter.domain.account.AccountPermission;
 import jakarta.validation.Valid;
 
 public interface AccountUpdater {
 
   Account authorize(Long accountId, AccountPermission permission);
+
+  Account changePassword(Long accountId, @Valid AccountPasswordChangeRequest request);
 
   Account updateByAdmin(
       Account adminAccount,

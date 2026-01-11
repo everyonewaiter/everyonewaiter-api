@@ -20,9 +20,4 @@ public record AuthSuccess(
     return KEY_PREFIX + phoneNumber.value();
   }
 
-  @Override
-  public int value() {
-    return -2;
-  }
-
 }
