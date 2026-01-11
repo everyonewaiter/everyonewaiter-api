@@ -47,7 +47,16 @@ class ReceiptSendEventHandler {
   public void handle(OrderUpdateEvent event) {
     LOGGER.info("[주문 수정 빌지 전송 이벤트] 매장 ID: {}, 테이블 번호: {}", event.storeId(), event.tableNo());
 
-    publishSseEvent(event.storeId(), event.receipt());
+    Receipt diff = receiptCreator.createDiff(
+        event.storeId(),
+        event.tableNo(),
+        event.orders(),
+        event.updateRequests()
+    );
+
+    if (diff != null) {
+      publishSseEvent(event.storeId(), diff);
+    }
   }
 
   @Async("eventTaskExecutor")
