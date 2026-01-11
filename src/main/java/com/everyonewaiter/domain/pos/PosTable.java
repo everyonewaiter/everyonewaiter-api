@@ -14,6 +14,7 @@ import com.everyonewaiter.domain.order.OrderType;
 import com.everyonewaiter.domain.order.OrderUpdateEvent;
 import com.everyonewaiter.domain.order.OrderUpdateRequest;
 import com.everyonewaiter.domain.order.OrderUpdateRequests;
+import com.everyonewaiter.domain.receipt.Receipt;
 import com.everyonewaiter.domain.receipt.ReceiptResendEvent;
 import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.store.Store;
@@ -129,11 +130,13 @@ public class PosTable extends AggregateRootEntity<PosTable> {
   public void updateOrder(OrderUpdateRequests updateRequests) {
     PosTableActivity posTableActivity = getActiveActivityOrThrow();
 
+    Receipt diff = Receipt.diff(getTableNo(), getOrderedOrders(), updateRequests);
+
     for (OrderUpdateRequest updateRequest : updateRequests.orders()) {
       posTableActivity.updateOrder(updateRequest);
     }
 
-    registerEvent(new OrderUpdateEvent(store.getId(), tableNo, getOrderedOrders(), updateRequests));
+    registerEvent(new OrderUpdateEvent(store.getId(), tableNo, diff));
     registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getTableNo()));
     registerEvent(new SseEvent(store.getId(), POS, UPDATE, getTableNo()));
   }
