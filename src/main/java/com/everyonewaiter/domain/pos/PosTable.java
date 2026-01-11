@@ -14,11 +14,9 @@ import com.everyonewaiter.domain.order.OrderType;
 import com.everyonewaiter.domain.order.OrderUpdateEvent;
 import com.everyonewaiter.domain.order.OrderUpdateRequest;
 import com.everyonewaiter.domain.order.OrderUpdateRequests;
-import com.everyonewaiter.domain.receipt.Receipt;
 import com.everyonewaiter.domain.receipt.ReceiptResendEvent;
 import com.everyonewaiter.domain.sse.SseEvent;
 import com.everyonewaiter.domain.store.Store;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -128,16 +126,14 @@ public class PosTable extends AggregateRootEntity<PosTable> {
     registerEvent(new SseEvent(store.getId(), POS, UPDATE, getTableNo()));
   }
 
-  public void updateOrder(OrderUpdateRequests updateRequests, @Nullable Receipt diff) {
+  public void updateOrder(OrderUpdateRequests updateRequests) {
     PosTableActivity posTableActivity = getActiveActivityOrThrow();
 
     for (OrderUpdateRequest updateRequest : updateRequests.orders()) {
       posTableActivity.updateOrder(updateRequest);
     }
 
-    if (diff != null) {
-      registerEvent(new OrderUpdateEvent(store.getId(), tableNo, diff));
-    }
+    registerEvent(new OrderUpdateEvent(store.getId(), tableNo, getOrderedOrders(), updateRequests));
     registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getTableNo()));
     registerEvent(new SseEvent(store.getId(), POS, UPDATE, getTableNo()));
   }

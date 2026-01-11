@@ -1,9 +1,12 @@
 plugins {
-    java
-    id("org.springframework.boot")
-    id("io.spring.dependency-management")
-    id("com.gorylenko.gradle-git-properties")
-    id("com.github.spotbugs")
+  java
+  kotlin("jvm")
+  kotlin("plugin.spring")
+  kotlin("plugin.jpa")
+  id("org.springframework.boot")
+  id("io.spring.dependency-management")
+  id("com.gorylenko.gradle-git-properties")
+  id("com.github.spotbugs")
 }
 
 val appGroup: String by project
@@ -15,9 +18,23 @@ version = appVersion
 description = appDescription
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
+kotlin {
+  compilerOptions {
+    freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
+  }
+}
+
+spotbugs {
+  excludeFilter.set(file("${projectDir}/spotbugs-exclude.xml"))
+}
+
+springBoot {
+  buildInfo()
 }
 
 val springCloud: String by project
@@ -33,81 +50,76 @@ val tsid: String by project
 val mockitoAgent: Configuration? = configurations.create("mockitoAgent")
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 dependencyManagement {
-    imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloud")
-    }
+  imports {
+    mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloud")
+  }
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-aspectj")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation("org.springframework.boot:spring-boot-starter-flyway")
-    implementation("org.springframework.boot:spring-boot-starter-mail")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-webmvc")
-    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-    implementation("org.flywaydb:flyway-mysql")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdoc") {
-        exclude(group = "org.webjars", module = "swagger-ui")
-    }
-    implementation("org.redisson:redisson-spring-boot-starter:$redisson")
-    implementation("com.github.f4b6a3:tsid-creator:$tsid")
-    implementation("io.jsonwebtoken:jjwt-api:$jjwt")
-    implementation("io.github.openfeign.querydsl:querydsl-core:$queryDSL")
-    implementation("io.github.openfeign.querydsl:querydsl-jpa:$queryDSL")
-    implementation("org.apache.pdfbox:pdfbox:$pdfbox")
-    implementation("com.sksamuel.scrimage:scrimage-core:$scrimage")
-    implementation("com.sksamuel.scrimage:scrimage-webp:$scrimage")
-    implementation("com.oracle.oci.sdk:oci-java-sdk-common:$oci")
-    implementation("com.oracle.oci.sdk:oci-java-sdk-objectstorage:$oci")
-    implementation("com.oracle.oci.sdk:oci-java-sdk-common-httpclient-jersey3:$oci")
+  implementation("org.jetbrains.kotlin:kotlin-reflect")
+  implementation("tools.jackson.module:jackson-module-kotlin")
+  implementation("org.springframework.boot:spring-boot-starter-actuator")
+  implementation("org.springframework.boot:spring-boot-starter-aspectj")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+  implementation("org.springframework.boot:spring-boot-starter-data-redis")
+  implementation("org.springframework.boot:spring-boot-starter-flyway")
+  implementation("org.springframework.boot:spring-boot-starter-mail")
+  implementation("org.springframework.boot:spring-boot-starter-security")
+  implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+  implementation("org.springframework.boot:spring-boot-starter-validation")
+  implementation("org.springframework.boot:spring-boot-starter-webmvc")
+  implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+  implementation("org.flywaydb:flyway-mysql")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdoc") {
+    exclude(group = "org.webjars", module = "swagger-ui")
+  }
+  implementation("org.redisson:redisson-spring-boot-starter:$redisson")
+  implementation("com.github.f4b6a3:tsid-creator:$tsid")
+  implementation("io.jsonwebtoken:jjwt-api:$jjwt")
+  implementation("io.github.openfeign.querydsl:querydsl-core:$queryDSL")
+  implementation("io.github.openfeign.querydsl:querydsl-jpa:$queryDSL")
+  implementation("org.apache.pdfbox:pdfbox:$pdfbox")
+  implementation("com.sksamuel.scrimage:scrimage-core:$scrimage")
+  implementation("com.sksamuel.scrimage:scrimage-webp:$scrimage")
+  implementation("com.oracle.oci.sdk:oci-java-sdk-common:$oci")
+  implementation("com.oracle.oci.sdk:oci-java-sdk-objectstorage:$oci")
+  implementation("com.oracle.oci.sdk:oci-java-sdk-common-httpclient-jersey3:$oci")
 
-    compileOnly("org.projectlombok:lombok")
+  compileOnly("org.projectlombok:lombok")
 
-    runtimeOnly("com.mysql:mysql-connector-j")
-    runtimeOnly("io.micrometer:micrometer-registry-prometheus")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwt")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwt")
+  runtimeOnly("com.mysql:mysql-connector-j")
+  runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+  runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwt")
+  runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwt")
 
-    annotationProcessor("org.projectlombok:lombok")
-    annotationProcessor("io.github.openfeign.querydsl:querydsl-apt:$queryDSL:jpa")
-    annotationProcessor("jakarta.annotation:jakarta.annotation-api")
-    annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+  annotationProcessor("org.projectlombok:lombok")
+  annotationProcessor("io.github.openfeign.querydsl:querydsl-apt:$queryDSL:jpa")
+  annotationProcessor("jakarta.annotation:jakarta.annotation-api")
+  annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-data-redis-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-flyway-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-mail-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-security-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-thymeleaf-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-    testImplementation("org.mockito:mockito-core:$mockito")
-    mockitoAgent?.let { it("org.mockito:mockito-core:$mockito") { isTransitive = false } }
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+  testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-data-redis-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-flyway-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-mail-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-security-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-thymeleaf-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+  testImplementation("org.mockito:mockito-core:$mockito")
+  mockitoAgent?.let { it("org.mockito:mockito-core:$mockito") { isTransitive = false } }
 
-    testCompileOnly("org.projectlombok:lombok")
-    testAnnotationProcessor("org.projectlombok:lombok")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+  testCompileOnly("org.projectlombok:lombok")
+  testAnnotationProcessor("org.projectlombok:lombok")
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.withType<Test> {
-    useJUnitPlatform()
-    mockitoAgent?.let { jvmArgs("-javaagent:${it.asPath}", "-Xshare:off") }
-}
-
-spotbugs {
-    excludeFilter.set(file("${projectDir}/spotbugs-exclude.xml"))
-}
-
-springBoot {
-    buildInfo()
+  useJUnitPlatform()
+  mockitoAgent?.let { jvmArgs("-javaagent:${it.asPath}", "-Xshare:off") }
 }

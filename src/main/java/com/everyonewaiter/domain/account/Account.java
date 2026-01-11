@@ -118,9 +118,20 @@ public class Account extends AggregateRootEntity<Account> {
 
     if (isInactive() && isMatched) {
       throw new NotCompleteEmailVerificationException();
-    } else {
-      throw new FailedSignInException();
     }
+
+    throw new FailedSignInException();
+  }
+
+  public void changePassword(
+      AccountPasswordChangeRequest changeRequest,
+      PasswordEncoder passwordEncoder
+  ) {
+    boolean isMatched = passwordEncoder.matches(changeRequest.currentPassword(), password);
+    if (!isMatched) {
+      throw new MismatchedCurrentPasswordException();
+    }
+    this.password = requireNonNull(passwordEncoder.encode(changeRequest.newPassword()));
   }
 
   public void update(Account userAccount, AccountAdminUpdateRequest updateRequest) {

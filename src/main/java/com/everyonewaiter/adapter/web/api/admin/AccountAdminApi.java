@@ -2,13 +2,13 @@ package com.everyonewaiter.adapter.web.api.admin;
 
 import com.everyonewaiter.adapter.web.api.dto.AccountAdminPageResponse;
 import com.everyonewaiter.adapter.web.api.dto.AccountDetailResponse;
+import com.everyonewaiter.adapter.web.auth.AuthenticationAccount;
 import com.everyonewaiter.application.account.provided.AccountFinder;
 import com.everyonewaiter.application.account.provided.AccountUpdater;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountAdminPageRequest;
 import com.everyonewaiter.domain.account.AccountAdminUpdateRequest;
 import com.everyonewaiter.domain.account.AccountPermission;
-import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.shared.Paging;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

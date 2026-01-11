@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 
 public interface HealthCheckCreator {
 
+  ApkVersion createApkVersion();
+
   ApkVersion createApkVersion(@Valid ApkVersionCreateRequest createRequest);
 
 }

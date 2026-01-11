@@ -2,10 +2,10 @@ package com.everyonewaiter.adapter.web.api.owner;
 
 import com.everyonewaiter.adapter.web.api.dto.StoreDetailResponse;
 import com.everyonewaiter.adapter.web.api.dto.StoreSimpleResponses;
+import com.everyonewaiter.adapter.web.auth.AuthenticationAccount;
 import com.everyonewaiter.application.store.provided.StoreFinder;
 import com.everyonewaiter.application.store.provided.StoreManager;
 import com.everyonewaiter.domain.account.Account;
-import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.store.Store;
 import com.everyonewaiter.domain.store.StoreUpdateRequest;
 import jakarta.validation.Valid;

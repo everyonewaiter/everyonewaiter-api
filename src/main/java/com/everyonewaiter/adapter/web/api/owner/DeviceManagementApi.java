@@ -4,6 +4,7 @@ import com.everyonewaiter.adapter.web.api.dto.DeviceCreateResponse;
 import com.everyonewaiter.adapter.web.api.dto.DeviceDetailResponse;
 import com.everyonewaiter.adapter.web.api.dto.DevicePageResponse;
 import com.everyonewaiter.adapter.web.api.dto.StoreSimpleResponses;
+import com.everyonewaiter.adapter.web.auth.AuthenticationAccount;
 import com.everyonewaiter.application.auth.provided.Authenticator;
 import com.everyonewaiter.application.device.provided.DeviceFinder;
 import com.everyonewaiter.application.device.provided.DeviceManager;
@@ -11,7 +12,6 @@ import com.everyonewaiter.application.store.provided.StoreFinder;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.auth.AuthPurpose;
-import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
 import com.everyonewaiter.domain.auth.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.device.Device;
@@ -79,6 +79,11 @@ class DeviceManagementApi implements DeviceManagementApiSpecification {
       @PathVariable Long storeId,
       @RequestBody @Valid DeviceCreateRequest createRequest
   ) {
+    authenticator.checkAuthSuccess(
+        AuthPurpose.CREATE_DEVICE,
+        new PhoneNumber(createRequest.phoneNumber())
+    );
+
     Device device = deviceManager.create(storeId, createRequest);
 
     return ResponseEntity.created(URI.create(String.valueOf(device.getId())))

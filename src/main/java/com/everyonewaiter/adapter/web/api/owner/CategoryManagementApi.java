@@ -1,11 +1,11 @@
 package com.everyonewaiter.adapter.web.api.owner;
 
 import com.everyonewaiter.adapter.web.api.dto.CategorySimpleResponses;
+import com.everyonewaiter.adapter.web.auth.AuthenticationAccount;
 import com.everyonewaiter.application.menu.provided.CategoryFinder;
 import com.everyonewaiter.application.menu.provided.CategoryManager;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
-import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.menu.Category;
 import com.everyonewaiter.domain.menu.CategoryCreateRequest;
 import com.everyonewaiter.domain.menu.CategoryMovePositionRequest;

@@ -53,7 +53,7 @@ class EmailNotificationEventHandler {
   private void sendAuthMail(Email email) {
     LOGGER.info("[이메일 인증 메일 전송 이벤트] email: {}", email.address());
 
-    JwtPayload payload = new JwtPayload(JwtFixedId.VERIFICATION_EMAIL_ID, email.address());
+    JwtPayload payload = new JwtPayload(JwtFixedId.VERIFICATION_EMAIL, email.address());
     String authToken = jwtProvider.encode(payload, Duration.ofDays(1));
     String authUri = BASE_URL + AUTH_EMAIL.formatted(email.address(), authToken);
 

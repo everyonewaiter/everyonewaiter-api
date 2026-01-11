@@ -37,7 +37,7 @@ class JwtProviderImpl implements InitializingBean, JwtProvider {
     Date now = new Date();
 
     return Jwts.builder()
-        .id(payload.id().toString())
+        .id(payload.id())
         .subject(payload.subject())
         .issuedAt(now)
         .expiration(new Date(now.getTime() + expiration.toMillis()))
@@ -55,7 +55,7 @@ class JwtProviderImpl implements InitializingBean, JwtProvider {
           .parseSignedClaims(token)
           .getPayload();
 
-      return Optional.of(new JwtPayload(Long.parseLong(payload.getId()), payload.getSubject()));
+      return Optional.of(new JwtPayload(payload.getId(), payload.getSubject()));
     } catch (Exception exception) {
       return Optional.empty();
     }

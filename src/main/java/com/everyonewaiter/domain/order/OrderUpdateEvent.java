@@ -1,7 +1,12 @@
 package com.everyonewaiter.domain.order;
 
-import com.everyonewaiter.domain.receipt.Receipt;
+import java.util.List;
 
-public record OrderUpdateEvent(Long storeId, int tableNo, Receipt receipt) {
+public record OrderUpdateEvent(
+    Long storeId,
+    int tableNo,
+    List<Order> orders,
+    OrderUpdateRequests updateRequests
+) {
 
 }

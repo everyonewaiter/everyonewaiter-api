@@ -1,9 +1,9 @@
 package com.everyonewaiter.adapter.web.api.admin;
 
+import com.everyonewaiter.adapter.web.auth.AuthenticationAccount;
 import com.everyonewaiter.application.health.provided.HealthCheckCreator;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
-import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.health.ApkVersion;
 import com.everyonewaiter.domain.health.ApkVersionCreateRequest;
 import jakarta.validation.Valid;
@@ -21,6 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 class HealthCheckAdminApi implements HealthCheckAdminApiSpecification {
 
   private final HealthCheckCreator healthCheckCreator;
+
+  @Override
+  @PostMapping("/auto")
+  public ResponseEntity<Void> createApkVersion(
+      @AuthenticationAccount(permission = AccountPermission.ADMIN) Account account
+  ) {
+    ApkVersion apkVersion = healthCheckCreator.createApkVersion();
+
+    return ResponseEntity.created(URI.create(String.valueOf(apkVersion.getId()))).build();
+  }
 
   @Override
   @PostMapping

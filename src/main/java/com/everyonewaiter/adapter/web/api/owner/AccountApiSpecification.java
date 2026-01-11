@@ -5,11 +5,11 @@ import com.everyonewaiter.adapter.web.docs.ApiErrorResponse;
 import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountCreateRequest;
+import com.everyonewaiter.domain.account.AccountPasswordChangeRequest;
 import com.everyonewaiter.domain.account.AccountSignInRequest;
+import com.everyonewaiter.domain.account.SignInToken;
 import com.everyonewaiter.domain.auth.SendAuthCodeRequest;
 import com.everyonewaiter.domain.auth.SendAuthMailRequest;
-import com.everyonewaiter.domain.auth.SignInToken;
-import com.everyonewaiter.domain.auth.SignInTokenRenewRequest;
 import com.everyonewaiter.domain.auth.VerifyAuthCodeRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -195,24 +195,24 @@ interface AccountApiSpecification {
   )
   ResponseEntity<Void> verifyEmail(String token);
 
-  @SecurityRequirements
-  @Operation(summary = "토큰 갱신", description = "토큰 갱신 API")
-  @ApiResponse(responseCode = "200", description = "토큰 갱신 성공")
+  @Operation(summary = "비밀번호 변경", description = "비밀번호 변경 API")
+  @ApiResponse(responseCode = "204", description = "비밀번호 변경 성공")
   @ApiErrorResponses(
-      summary = "토큰 갱신 실패",
+      summary = "비밀번호 변경 실패",
       value = {
           @ApiErrorResponse(
               code = ErrorCode.UNAUTHORIZED,
-              exampleName = "리프레시 토큰이 유효하지 않은 경우"
+              exampleName = "액세스 토큰이 유효하지 않은 경우"
           ),
           @ApiErrorResponse(
-              code = ErrorCode.FORBIDDEN,
-              exampleName = "토큰이 탈취된것으로 의심되는 경우"
+              code = ErrorCode.MISMATCHED_CURRENT_PASSWORD,
+              exampleName = "현재 비밀번호가 일치하지 않는 경우"
           ),
       }
   )
-  ResponseEntity<SignInToken> renewToken(
-      @RequestBody SignInTokenRenewRequest signInTokenRenewRequest
+  ResponseEntity<Void> changePassword(
+      @RequestBody AccountPasswordChangeRequest changeRequest,
+      @Parameter(hidden = true) Account account
   );
 
 }

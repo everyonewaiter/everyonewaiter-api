@@ -2,11 +2,11 @@ package com.everyonewaiter.adapter.web.api.admin;
 
 import com.everyonewaiter.adapter.web.api.dto.RegistrationAdminDetailResponse;
 import com.everyonewaiter.adapter.web.api.dto.RegistrationAdminPageResponse;
+import com.everyonewaiter.adapter.web.auth.AuthenticationAccount;
 import com.everyonewaiter.application.store.provided.RegistrationAdministrator;
 import com.everyonewaiter.application.store.provided.RegistrationFinder;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountPermission;
-import com.everyonewaiter.domain.auth.AuthenticationAccount;
 import com.everyonewaiter.domain.shared.Paging;
 import com.everyonewaiter.domain.store.Registration;
 import com.everyonewaiter.domain.store.RegistrationAdminPageRequest;

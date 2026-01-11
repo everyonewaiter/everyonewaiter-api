@@ -49,6 +49,12 @@ class ReceiptCreateService implements ReceiptCreator {
       List<Order> orders,
       OrderUpdateRequests updateRequests
   ) {
+    if (!Receipt.hasDiff(orders, updateRequests)) {
+      return null;
+    }
+
+    receiptRepository.increment(storeId);
+
     return Receipt.diff(tableNo, orders, updateRequests, receiptRepository.get(storeId));
   }
 
