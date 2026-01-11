@@ -51,13 +51,15 @@ class ReceiptCreateService implements ReceiptCreator {
   ) {
     List<Order> orders = orderFinder.findAll(orderIds);
 
-    if (!Receipt.hasDiff(orders, updateRequests)) {
+    Receipt diff = Receipt.diff(tableNo, orders, updateRequests, receiptRepository.get(storeId));
+
+    if (diff == null) {
       return null;
     }
 
     receiptRepository.increment(storeId);
 
-    return Receipt.diff(tableNo, orders, updateRequests, receiptRepository.get(storeId));
+    return diff.copy(receiptRepository.get(storeId));
   }
 
   @Override

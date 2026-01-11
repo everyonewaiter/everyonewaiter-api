@@ -36,33 +36,6 @@ public record Receipt(int tableNo, String memo, int printNo, List<ReceiptMenu> r
     );
   }
 
-  public static boolean hasDiff(List<Order> orders, OrderUpdateRequests updateRequests) {
-    Map<Long, OrderMenu> beforeOrderMenus = orders.stream()
-        .flatMap(order -> order.getPrintEnabledOrderMenus().stream())
-        .collect(Collectors.toMap(OrderMenu::getId, orderMenu -> orderMenu));
-
-    List<OrderMenuQuantityUpdateRequest> afterOrderMenus = updateRequests.orders()
-        .stream()
-        .flatMap(order -> order.orderMenus().stream())
-        .toList();
-
-    for (OrderMenuQuantityUpdateRequest afterOrderMenu : afterOrderMenus) {
-      if (!beforeOrderMenus.containsKey(afterOrderMenu.orderMenuId())) {
-        continue;
-      }
-
-      OrderMenu orderMenu = beforeOrderMenus.get(afterOrderMenu.orderMenuId());
-
-      int updatedQuantity = afterOrderMenu.quantity() - orderMenu.getQuantity();
-
-      if (updatedQuantity != 0) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   public static @Nullable Receipt diff(
       int tableNo,
       List<Order> orders,
@@ -107,6 +80,15 @@ public record Receipt(int tableNo, String memo, int printNo, List<ReceiptMenu> r
             .stream()
             .map(ReceiptMenu::cancel)
             .toList()
+    );
+  }
+
+  public Receipt copy(int printNo) {
+    return new Receipt(
+        this.tableNo,
+        this.memo,
+        printNo,
+        this.receiptMenus
     );
   }
 
