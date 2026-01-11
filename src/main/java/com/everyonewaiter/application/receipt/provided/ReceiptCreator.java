@@ -1,6 +1,5 @@
 package com.everyonewaiter.application.receipt.provided;
 
-import com.everyonewaiter.domain.order.Order;
 import com.everyonewaiter.domain.order.OrderUpdateRequests;
 import com.everyonewaiter.domain.receipt.Receipt;
 import jakarta.annotation.Nullable;
@@ -17,7 +16,7 @@ public interface ReceiptCreator {
   Receipt createDiff(
       Long storeId,
       int tableNo,
-      List<Order> orders,
+      List<Long> orderIds,
       @Valid OrderUpdateRequests updateRequests
   );
 

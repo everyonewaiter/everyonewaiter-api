@@ -46,9 +46,11 @@ class ReceiptCreateService implements ReceiptCreator {
   public @Nullable Receipt createDiff(
       Long storeId,
       int tableNo,
-      List<Order> orders,
+      List<Long> orderIds,
       OrderUpdateRequests updateRequests
   ) {
+    List<Order> orders = orderFinder.findAll(orderIds);
+
     if (!Receipt.hasDiff(orders, updateRequests)) {
       return null;
     }

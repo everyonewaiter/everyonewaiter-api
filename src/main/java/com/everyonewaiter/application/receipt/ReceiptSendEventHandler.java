@@ -50,7 +50,7 @@ class ReceiptSendEventHandler {
     Receipt diff = receiptCreator.createDiff(
         event.storeId(),
         event.tableNo(),
-        event.orders(),
+        event.orderIds(),
         event.updateRequests()
     );
 

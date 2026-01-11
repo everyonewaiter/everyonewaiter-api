@@ -133,7 +133,16 @@ public class PosTable extends AggregateRootEntity<PosTable> {
       posTableActivity.updateOrder(updateRequest);
     }
 
-    registerEvent(new OrderUpdateEvent(store.getId(), tableNo, getOrderedOrders(), updateRequests));
+    registerEvent(
+        new OrderUpdateEvent(
+            store.getId(),
+            tableNo,
+            getOrderedOrders().stream()
+                .map(Order::getId)
+                .toList(),
+            updateRequests
+        )
+    );
     registerEvent(new SseEvent(store.getId(), ORDER, UPDATE, getTableNo()));
     registerEvent(new SseEvent(store.getId(), POS, UPDATE, getTableNo()));
   }

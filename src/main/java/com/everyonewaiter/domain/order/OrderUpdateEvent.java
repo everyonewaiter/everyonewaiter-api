@@ -5,7 +5,7 @@ import java.util.List;
 public record OrderUpdateEvent(
     Long storeId,
     int tableNo,
-    List<Order> orders,
+    List<Long> orderIds,
     OrderUpdateRequests updateRequests
 ) {
 
