@@ -48,10 +48,6 @@ http://localhost:8081/documents
 $  docker compose down
 ```
 
-## Getting Help
-
-- [개발 가이드](https://github.com/everyonewaiter/documentation/tree/main/backend)
-
 ## Coding Convention
 
 - intellij-formatter: [google-intellij-formatter.xml](./google-intellij-formatter.xml)
