@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{/common/header :: fragment-header(~{::title}, ~{::style})}"
+  >
+    <title>모두의 웨이터 - 관리자 로그인</title>
+    <style>
+      .login-card {
+        max-width: 420px;
+        width: 100%;
+        margin: 0 16px;
+      }
+    </style>
+  </head>
+  <body class="bg-light">
+    <div
+      class="d-flex justify-content-center align-items-center"
+      style="min-height: 100vh"
+    >
+      <div class="card shadow-sm login-card">
+        <div class="card-body p-4">
+          <h4 class="card-title mb-3 text-center">관리자 로그인</h4>
+          <form id="form">
+            <div class="mb-3">
+              <label class="form-label" for="email">이메일</label>
+              <input
+                autofocus
+                class="form-control"
+                id="email"
+                placeholder="이메일"
+                required
+                type="email"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="password">비밀번호</label>
+              <input
+                class="form-control"
+                id="password"
+                placeholder="비밀번호"
+                required
+                type="password"
+              />
+            </div>
+            <div class="d-grid">
+              <button class="btn btn-primary" id="submit" type="submit">
+                로그인
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer text-center small text-muted">
+          © 모두의 웨이터
+        </div>
+      </div>
+    </div>
+    <script th:src="@{/js/sign-in.js}" type="module"></script>
+  </body>
+</html>
