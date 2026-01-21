@@ -13,10 +13,12 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.MDC;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import tools.jackson.databind.json.JsonMapper;
 
+@Order
 @Component
 @RequiredArgsConstructor
 class MDCLoggingFilter extends OncePerRequestFilter {
