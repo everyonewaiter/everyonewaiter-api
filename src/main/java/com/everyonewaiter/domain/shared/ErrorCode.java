@@ -96,6 +96,7 @@ public enum ErrorCode {
   ALREADY_CANCELED_ORDER_PAYMENT(BAD_REQUEST, "이미 취소된 주문 결제에요."),
   ALREADY_COMPLETED_SERVING(BAD_REQUEST, "이미 서빙이 완료된 주문이에요."),
   ALREADY_COMPLETED_STAFF_CALL(BAD_REQUEST, "이미 완료된 직원 호출이에요."),
+  FAILED_ISSUE_CASH_RECEIPT(BAD_REQUEST, "취소된 결제이거나, 이미 현금 영수증 발급이 완료된 결제입니다."),
   NOT_EMPTY_ORDER_MENU(BAD_REQUEST, "장바구니에 메뉴를 담아주세요."),
   HAS_REMAINING_PAYMENT_PRICE(BAD_REQUEST, "결제할 금액이 남아있어요. 결제를 완료해 주세요."),
   INCLUDE_SOLD_OUT_MENU(BAD_REQUEST, "주문하려는 메뉴 중 품절된 메뉴가 있어요."),

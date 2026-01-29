@@ -22,6 +22,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.util.Assert;
 
 
 @Entity
@@ -172,6 +173,20 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
     this.posTableActivity = requireNonNull(posTableActivity);
 
     this.posTableActivity.addPayment(this);
+  }
+
+  public void issueCashReceipt(OrderPaymentCashReceiptIssueRequest request) {
+    Assert.isTrue(request.cashReceiptType() != CashReceiptType.NONE, "현금 영수증 타입은 NONE 일 수 없습니다.");
+
+    if (canCancel() && isPureCash()) {
+      this.approvalNo = requireNonNull(request.approvalNo());
+      this.tradeTime = requireNonNull(request.tradeTime());
+      this.tradeUniqueNo = requireNonNull(request.tradeUniqueNo());
+      this.cashReceiptType = requireNonNull(request.cashReceiptType());
+      this.cashReceiptNo = requireNonNull(request.cashReceiptNo());
+    }
+
+    throw new FailedIssueCashReceiptException();
   }
 
   public boolean isPureCash() {

@@ -6,6 +6,7 @@ import com.everyonewaiter.adapter.web.docs.ApiErrorResponses;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.order.OrderPaymentApproveRequest;
 import com.everyonewaiter.domain.order.OrderPaymentCancelRequest;
+import com.everyonewaiter.domain.order.OrderPaymentCashReceiptIssueRequest;
 import com.everyonewaiter.domain.shared.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -120,8 +121,47 @@ interface OrderPaymentApiSpecification {
       }
   )
   ResponseEntity<Void> cancel(
+      int tableNo,
       Long orderPaymentId,
       @RequestBody OrderPaymentCancelRequest cancelRequest,
+      @Parameter(hidden = true) Device device
+  );
+
+  @Operation(summary = "[POS] 현금을 현금 영수증 처리", description = "현금을 현금 영수증 처리 API")
+  @ApiResponse(responseCode = "204", description = "현금을 현금 영수증 처리 성공")
+  @ApiErrorResponses(
+      summary = "현금을 현금 영수증 처리 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.FAILED_ISSUE_CASH_RECEIPT,
+              exampleName = "취소된 결제 또는 카드 결제이거나, 현금 영수증이 이미 발급된 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_IS_CLOSED,
+              exampleName = "매장이 영업중이지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 POS가 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.ORDER_PAYMENT_NOT_FOUND,
+              exampleName = "주문 결제 내역을 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> issueCashReceipt(
+      int tableNo,
+      Long orderPaymentId,
+      @RequestBody OrderPaymentCashReceiptIssueRequest issueRequest,
       @Parameter(hidden = true) Device device
   );
 

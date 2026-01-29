@@ -15,6 +15,7 @@ public interface OrderPaymentCreator {
 
   OrderPayment cancel(
       Long storeId,
+      int tableNo,
       Long orderPaymentId,
       @Valid OrderPaymentCancelRequest cancelRequest
   );

@@ -4,11 +4,13 @@ import com.everyonewaiter.adapter.web.api.dto.OrderPaymentDetailResponses;
 import com.everyonewaiter.adapter.web.auth.AuthenticationDevice;
 import com.everyonewaiter.application.order.provided.OrderPaymentCreator;
 import com.everyonewaiter.application.order.provided.OrderPaymentFinder;
+import com.everyonewaiter.application.order.provided.OrderPaymentUpdater;
 import com.everyonewaiter.domain.device.Device;
 import com.everyonewaiter.domain.device.DevicePurpose;
 import com.everyonewaiter.domain.order.OrderPayment;
 import com.everyonewaiter.domain.order.OrderPaymentApproveRequest;
 import com.everyonewaiter.domain.order.OrderPaymentCancelRequest;
+import com.everyonewaiter.domain.order.OrderPaymentCashReceiptIssueRequest;
 import com.everyonewaiter.domain.store.StoreOpen;
 import com.everyonewaiter.domain.support.DateConverter;
 import com.everyonewaiter.domain.support.TimeZone;
@@ -32,6 +34,7 @@ class OrderPaymentApi implements OrderPaymentApiSpecification {
 
   private final OrderPaymentFinder orderPaymentFinder;
   private final OrderPaymentCreator orderPaymentCreator;
+  private final OrderPaymentUpdater orderPaymentUpdater;
 
   @Override
   @GetMapping
@@ -63,15 +66,36 @@ class OrderPaymentApi implements OrderPaymentApiSpecification {
 
   @Override
   @StoreOpen
-  @PostMapping("/{orderPaymentId}/cancel")
+  @PostMapping("/{tableNo}/{orderPaymentId}/cancel")
   public ResponseEntity<Void> cancel(
+      @PathVariable int tableNo,
       @PathVariable Long orderPaymentId,
       @RequestBody @Valid OrderPaymentCancelRequest cancelRequest,
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
-    var payment = orderPaymentCreator.cancel(device.getStoreId(), orderPaymentId, cancelRequest);
+    var payment =
+        orderPaymentCreator.cancel(device.getStoreId(), tableNo, orderPaymentId, cancelRequest);
 
     return ResponseEntity.created(URI.create(String.valueOf(payment.getId()))).build();
+  }
+
+  @Override
+  @StoreOpen
+  @PostMapping("/{tableNo}/{orderPaymentId}/issue-cash-receipt")
+  public ResponseEntity<Void> issueCashReceipt(
+      @PathVariable int tableNo,
+      @PathVariable Long orderPaymentId,
+      @RequestBody @Valid OrderPaymentCashReceiptIssueRequest issueRequest,
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
+  ) {
+    orderPaymentUpdater.issueCashReceipt(
+        device.getStoreId(),
+        tableNo,
+        orderPaymentId,
+        issueRequest
+    );
+
+    return ResponseEntity.noContent().build();
   }
 
 }

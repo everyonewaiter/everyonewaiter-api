@@ -21,8 +21,8 @@ public record OrderPaymentApproveRequest(
     @Min(value = 0, message = "결제 금액은 0 이상이어야 합니다.")
     long amount,
 
-    @Schema(description = "카드 결제 승인 번호", example = "1234567890", requiredMode = REQUIRED)
-    @NotNull(message = "카드 결제 승인 번호가 누락되었습니다.")
+    @Schema(description = "KSCAT 결제 승인 번호", example = "1234567890", requiredMode = REQUIRED)
+    @NotNull(message = "KSCAT 결제 승인 번호가 누락되었습니다.")
     String approvalNo,
 
     @Schema(description = "카드 할부 개월", example = "00", requiredMode = REQUIRED)
@@ -46,13 +46,13 @@ public record OrderPaymentApproveRequest(
     @NotNull(message = "카드사/포인트사 가맹점 번호이 누락되었습니다.")
     String merchantNo,
 
-    @Schema(description = "카드 거래일시 yyMMdd", example = "250101", requiredMode = REQUIRED)
-    @NotNull(message = "카드 거래일시가 누락되었습니다.")
-    @Size(max = 6, message = "카드 거래일시는 최대 6자 이하로 입력해 주세요.")
+    @Schema(description = "KSCAT 거래일시 yyMMdd", example = "250101", requiredMode = REQUIRED)
+    @NotNull(message = "KSCAT 거래일시가 누락되었습니다.")
+    @Size(max = 6, message = "KSCAT 거래일시는 최대 6자 이하로 입력해 주세요.")
     String tradeTime,
 
-    @Schema(description = "카드 거래 고유 번호", example = "1234567890", requiredMode = REQUIRED)
-    @NotNull(message = "카드 거래 고유 번호가 누락되었습니다.")
+    @Schema(description = "KSCAT 거래 고유 번호", example = "1234567890", requiredMode = REQUIRED)
+    @NotNull(message = "KSCAT 거래 고유 번호가 누락되었습니다.")
     String tradeUniqueNo,
 
     @Schema(description = "부가세", example = "1000", requiredMode = REQUIRED)
