@@ -8,6 +8,9 @@ import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.auth.JwtPayload;
 import com.everyonewaiter.domain.shared.AccessDeniedException;
 import com.everyonewaiter.domain.shared.AuthenticationException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -23,6 +26,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class AuthenticationAccountResolver implements HandlerMethodArgumentResolver {
 
+  private static final int COOKIE = 0;
+  private static final int HEADER = 1;
   private static final String BEARER_PREFIX = "Bearer ";
 
   private final JwtProvider jwtProvider;
@@ -43,7 +48,8 @@ public class AuthenticationAccountResolver implements HandlerMethodArgumentResol
       @NonNull NativeWebRequest webRequest,
       WebDataBinderFactory binderFactory
   ) {
-    String accessToken = extractToken(webRequest);
+    int tokenLocation = hasTokenFromCookie(webRequest) ? COOKIE : HEADER;
+    String accessToken = extractToken(tokenLocation, webRequest);
     JwtPayload payload = jwtProvider.decode(accessToken).orElseThrow(AuthenticationException::new);
 
     try {
@@ -64,14 +70,32 @@ public class AuthenticationAccountResolver implements HandlerMethodArgumentResol
     }
   }
 
-  private String extractToken(NativeWebRequest request) {
-    String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+  private boolean hasTokenFromCookie(NativeWebRequest request) {
+    HttpServletRequest req = (HttpServletRequest) request.getNativeRequest();
+    return Arrays.stream(req.getCookies())
+        .anyMatch(cookie -> cookie.getName().equalsIgnoreCase(HttpHeaders.AUTHORIZATION));
+  }
 
-    if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith(BEARER_PREFIX)) {
-      return authorizationHeader.substring(BEARER_PREFIX.length());
-    }
-
-    throw new AuthenticationException();
+  private String extractToken(int tokenLocation, NativeWebRequest request) {
+    return switch (tokenLocation) {
+      case COOKIE -> {
+        HttpServletRequest req = (HttpServletRequest) request.getNativeRequest();
+        yield Arrays.stream(req.getCookies())
+            .filter(cookie -> cookie.getName().equalsIgnoreCase(HttpHeaders.AUTHORIZATION))
+            .findAny()
+            .map(Cookie::getValue)
+            .orElseThrow(AuthenticationException::new);
+      }
+      case HEADER -> {
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (StringUtils.hasText(header) && header.startsWith(BEARER_PREFIX)) {
+          yield header.substring(BEARER_PREFIX.length());
+        } else {
+          throw new AuthenticationException();
+        }
+      }
+      default -> throw new AuthenticationException();
+    };
   }
 
 }

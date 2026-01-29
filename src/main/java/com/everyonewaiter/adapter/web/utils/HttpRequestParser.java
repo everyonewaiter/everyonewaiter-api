@@ -3,7 +3,10 @@ package com.everyonewaiter.adapter.web.utils;
 import static java.util.Objects.requireNonNullElse;
 import static lombok.AccessLevel.PRIVATE;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
@@ -64,6 +67,27 @@ public final class HttpRequestParser {
     String headers = stringBuilder.toString();
 
     return StringUtils.hasText(headers) ? headers : NULL;
+  }
+
+  public static String parseCookies(HttpServletRequest request) {
+    Cookie[] cookies = request.getCookies();
+
+    if (cookies == null || cookies.length == 0) {
+      return NULL;
+    }
+
+    return Arrays.stream(cookies)
+        .collect(Collectors.toMap(Cookie::getName, Cookie::getValue))
+        .entrySet()
+        .stream()
+        .map(entry -> {
+          if (entry.getKey().equalsIgnoreCase(HttpHeaders.AUTHORIZATION)) {
+            return entry.getKey() + DELIMITER + BLIND;
+          } else {
+            return entry.getKey() + DELIMITER + entry.getValue();
+          }
+        })
+        .collect(Collectors.joining(System.lineSeparator()));
   }
 
 }

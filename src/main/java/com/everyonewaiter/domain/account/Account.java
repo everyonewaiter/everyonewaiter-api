@@ -109,9 +109,13 @@ public class Account extends AggregateRootEntity<Account> {
     }
   }
 
-  public void signIn(AccountSignInRequest signInRequest, PasswordEncoder passwordEncoder) {
+  public void signIn(
+      AccountSignInRequest signInRequest,
+      PasswordEncoder passwordEncoder,
+      AccountPermission permission
+  ) {
     boolean isMatched = passwordEncoder.matches(signInRequest.password(), password);
-    if (isActive() && isMatched) {
+    if (isActive() && isMatched && hasPermission(permission)) {
       this.lastSignIn = Instant.now();
       return;
     }

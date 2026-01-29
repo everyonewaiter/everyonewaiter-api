@@ -2,18 +2,9 @@ import ky, { isHTTPError } from "https://cdn.jsdelivr.net/npm/ky/+esm";
 
 const api = ky.create({
   hooks: {
-    beforeRequest: [
-      (request) => {
-        const token = localStorage.getItem("admin-access-token");
-        if (token) {
-          request.headers.set("Authorization", `Bearer ${token}`);
-        }
-      },
-    ],
     afterResponse: [
       (request, options, response) => {
         if (response.status === 401 || response.status === 403) {
-          localStorage.removeItem("admin-access-token");
           globalThis.location.href = "/admins/sign-in";
         }
       },

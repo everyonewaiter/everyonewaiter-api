@@ -36,19 +36,7 @@ const cleanUp = () => {
 };
 
 const signIn = async (formData) => {
-  const { accessToken } = await api
-    .post("/v1/accounts/sign-in", { json: formData })
-    .json();
-
-  localStorage.setItem("admin-access-token", accessToken);
-};
-
-const checkPermission = async () => {
-  const account = await api.get("/v1/accounts/me").json();
-  if (account.permission !== "ADMIN") {
-    localStorage.removeItem("admin-access-token");
-    throw new Error("이메일 및 비밀번호를 확인해주세요.");
-  }
+  await api.post("/v1/admins/accounts/sign-in", { json: formData }).json();
 };
 
 const handleFormSubmit = async (event) => {
@@ -66,7 +54,6 @@ const handleFormSubmit = async (event) => {
 
   try {
     await signIn(formData);
-    await checkPermission();
     globalThis.location.href = "/admins";
   } catch (error) {
     await handleApiError(error);

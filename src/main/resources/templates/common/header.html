@@ -39,7 +39,13 @@
     ></script>
 
     <th:block th:if="${style}">
-      <style th:replace="${style}"></style>
+      <style th:replace="${style}">
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+      </style>
     </th:block>
   </head>
 </html>

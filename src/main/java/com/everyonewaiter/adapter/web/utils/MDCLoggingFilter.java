@@ -1,5 +1,6 @@
 package com.everyonewaiter.adapter.web.utils;
 
+import static com.everyonewaiter.adapter.web.utils.HttpRequestParser.parseCookies;
 import static com.everyonewaiter.adapter.web.utils.HttpRequestParser.parseHeaders;
 import static com.everyonewaiter.adapter.web.utils.HttpRequestParser.parseParameters;
 import static com.everyonewaiter.adapter.web.utils.HttpRequestParser.parseRequestUri;
@@ -10,20 +11,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.MDC;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import tools.jackson.databind.json.JsonMapper;
 
 @Order
 @Component
-@RequiredArgsConstructor
 class MDCLoggingFilter extends OncePerRequestFilter {
-
-  private final JsonMapper jsonMapper;
 
   @Override
   protected void doFilterInternal(
@@ -36,7 +32,7 @@ class MDCLoggingFilter extends OncePerRequestFilter {
     MDC.put("requestUri", parseRequestUri(request));
     MDC.put("requestParameters", parseParameters(request));
     MDC.put("requestHeaders", parseHeaders(request));
-    MDC.put("requestCookies", jsonMapper.writeValueAsString(request.getCookies()));
+    MDC.put("requestCookies", parseCookies(request));
 
     try {
       filterChain.doFilter(request, response);

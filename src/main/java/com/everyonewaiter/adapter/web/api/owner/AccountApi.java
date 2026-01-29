@@ -10,6 +10,7 @@ import com.everyonewaiter.application.auth.provided.Authenticator;
 import com.everyonewaiter.domain.account.Account;
 import com.everyonewaiter.domain.account.AccountCreateRequest;
 import com.everyonewaiter.domain.account.AccountPasswordChangeRequest;
+import com.everyonewaiter.domain.account.AccountPermission;
 import com.everyonewaiter.domain.account.AccountSignInRequest;
 import com.everyonewaiter.domain.account.SignInToken;
 import com.everyonewaiter.domain.auth.AuthPurpose;
@@ -76,7 +77,7 @@ class AccountApi implements AccountApiSpecification {
   public ResponseEntity<SignInToken> signIn(
       @RequestBody @Valid AccountSignInRequest signInRequest
   ) {
-    SignInToken signInToken = accountSignInHandler.signIn(signInRequest);
+    SignInToken signInToken = accountSignInHandler.signIn(signInRequest, AccountPermission.USER);
 
     return ResponseEntity.ok(signInToken);
   }

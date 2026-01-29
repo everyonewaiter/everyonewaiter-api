@@ -129,7 +129,7 @@ class AccountTest {
 
     assertThat(account.lastSignIn).isEqualTo(Instant.ofEpochMilli(0))
 
-    account.signIn(createAccountSignInRequest(), createPasswordEncoder())
+    account.signIn(createAccountSignInRequest(), createPasswordEncoder(), AccountPermission.USER)
 
     assertThat(account.lastSignIn).isNotEqualTo(Instant.ofEpochMilli(0))
   }
@@ -138,7 +138,13 @@ class AccountTest {
   fun `이메일 인증이 완료되지 않은 경우 로그인 실패`() {
     val account = createAccount()
 
-    assertThatThrownBy { account.signIn(createAccountSignInRequest(), createPasswordEncoder()) }
+    assertThatThrownBy {
+      account.signIn(
+        createAccountSignInRequest(),
+        createPasswordEncoder(),
+        AccountPermission.USER
+      )
+    }
       .isInstanceOf(NotCompleteEmailVerificationException::class.java)
   }
 
@@ -150,14 +156,29 @@ class AccountTest {
     assertThatThrownBy {
       account1.signIn(
         createAccountSignInRequest(password = "invalid"),
-        createPasswordEncoder()
+        createPasswordEncoder(),
+        AccountPermission.USER
       )
     }.isInstanceOf(FailedSignInException::class.java)
 
     assertThatThrownBy {
       account2.signIn(
         createAccountSignInRequest(password = "invalid"),
-        createPasswordEncoder()
+        createPasswordEncoder(),
+        AccountPermission.USER
+      )
+    }.isInstanceOf(FailedSignInException::class.java)
+  }
+
+  @Test
+  fun `로그인에 필요한 권한이 없는 경우 로그인 실패`() {
+    val account = createActiveAccount(permission = AccountPermission.OWNER)
+
+    assertThatThrownBy {
+      account.signIn(
+        createAccountSignInRequest(),
+        createPasswordEncoder(),
+        AccountPermission.ADMIN
       )
     }.isInstanceOf(FailedSignInException::class.java)
   }
