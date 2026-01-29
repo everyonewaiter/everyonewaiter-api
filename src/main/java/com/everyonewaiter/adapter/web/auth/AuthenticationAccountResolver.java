@@ -72,6 +72,11 @@ public class AuthenticationAccountResolver implements HandlerMethodArgumentResol
 
   private boolean hasTokenFromCookie(NativeWebRequest request) {
     HttpServletRequest req = (HttpServletRequest) request.getNativeRequest();
+
+    if (req.getCookies() == null) {
+      return false;
+    }
+
     return Arrays.stream(req.getCookies())
         .anyMatch(cookie -> cookie.getName().equalsIgnoreCase(HttpHeaders.AUTHORIZATION));
   }
