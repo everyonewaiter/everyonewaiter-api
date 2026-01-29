@@ -49,9 +49,15 @@ class PosTableActivityQueryService implements PosTableActivityFinder {
   }
 
   @Override
+  @ReadOnlyTransactional
+  public PosTableActivity findOrThrow(Long storeId, Long posTableActivityId) {
+    return posTableActivityRepository.findOrThrow(posTableActivityId, storeId);
+  }
+
+  @Override
   @Transactional(readOnly = true)
-  public PosView.PosTableActivityDetail findOrThrow(Long storeId, Long posTableActivityId) {
-    PosTableActivity activity = posTableActivityRepository.findOrThrow(posTableActivityId, storeId);
+  public PosView.PosTableActivityDetail findViewOrThrow(Long storeId, Long posTableActivityId) {
+    PosTableActivity activity = findOrThrow(storeId, posTableActivityId);
 
     return PosView.PosTableActivityDetail.from(activity);
   }

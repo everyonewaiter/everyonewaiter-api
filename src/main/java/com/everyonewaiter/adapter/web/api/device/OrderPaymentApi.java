@@ -81,6 +81,22 @@ class OrderPaymentApi implements OrderPaymentApiSpecification {
 
   @Override
   @StoreOpen
+  @PostMapping("/{tableNo}/{posTableActivityId}/repayment")
+  public ResponseEntity<Void> repayment(
+      @PathVariable int tableNo,
+      @PathVariable Long posTableActivityId,
+      @RequestBody @Valid OrderPaymentApproveRequest approveRequest,
+      @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
+  ) {
+    var payment = orderPaymentCreator.repayment(
+        device.getStoreId(), tableNo, posTableActivityId, approveRequest
+    );
+
+    return ResponseEntity.created(URI.create(String.valueOf(payment.getId()))).build();
+  }
+
+  @Override
+  @StoreOpen
   @PostMapping("/{tableNo}/{orderPaymentId}/issue-cash-receipt")
   public ResponseEntity<Void> issueCashReceipt(
       @PathVariable int tableNo,

@@ -71,7 +71,7 @@ class PosApi implements PosApiSpecification {
       @AuthenticationDevice(purpose = DevicePurpose.POS) Device device
   ) {
     return ResponseEntity.ok(
-        posTableActivityFinder.findOrThrow(device.getStoreId(), posTableActivityId)
+        posTableActivityFinder.findViewOrThrow(device.getStoreId(), posTableActivityId)
     );
   }
 

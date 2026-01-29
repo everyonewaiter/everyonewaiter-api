@@ -13,6 +13,8 @@ public interface PosTableActivityFinder {
 
   PosTableActivity findActiveOrThrow(Long storeId, int tableNo);
 
-  PosView.PosTableActivityDetail findOrThrow(Long storeId, Long posTableActivityId);
+  PosTableActivity findOrThrow(Long storeId, Long posTableActivityId);
+
+  PosView.PosTableActivityDetail findViewOrThrow(Long storeId, Long posTableActivityId);
 
 }

@@ -60,6 +60,21 @@ class OrderPaymentModifyService implements OrderPaymentCreator, OrderPaymentUpda
 
   @Override
   @DistributedLock(key = "#storeId + '-' + #tableNo")
+  public OrderPayment repayment(
+      Long storeId,
+      int tableNo,
+      Long posTableActivityId,
+      OrderPaymentApproveRequest approveRequest
+  ) {
+    PosTableActivity posTableActivity = activityFinder.findOrThrow(storeId, posTableActivityId);
+
+    OrderPayment orderPayment = OrderPayment.approve(posTableActivity, approveRequest);
+
+    return orderPaymentRepository.save(orderPayment);
+  }
+
+  @Override
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
   public OrderPayment issueCashReceipt(
       Long storeId,
       int tableNo,

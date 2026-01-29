@@ -20,4 +20,11 @@ public interface OrderPaymentCreator {
       @Valid OrderPaymentCancelRequest cancelRequest
   );
 
+  OrderPayment repayment(
+      Long storeId,
+      int tableNo,
+      Long posTableActivityId,
+      @Valid OrderPaymentApproveRequest approveRequest
+  );
+
 }

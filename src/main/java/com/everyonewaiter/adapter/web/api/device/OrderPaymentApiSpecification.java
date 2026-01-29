@@ -127,6 +127,44 @@ interface OrderPaymentApiSpecification {
       @Parameter(hidden = true) Device device
   );
 
+  @Operation(summary = "[POS] 주문 재결제", description = "주문 재결제 API")
+  @ApiResponse(
+      responseCode = "201",
+      description = "주문 재결제 성공",
+      headers = @Header(name = "Location", description = "생성된 주문 결제 승인 ID", schema = @Schema(implementation = String.class))
+  )
+  @ApiErrorResponses(
+      summary = "주문 재결제 실패",
+      value = {
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_IS_CLOSED,
+              exampleName = "매장이 영업중이지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.UNAUTHORIZED,
+              exampleName = "인증 시그니처가 유효하지 않은 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.FORBIDDEN,
+              exampleName = "기기의 사용 용도가 POS가 아닌 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.STORE_NOT_FOUND,
+              exampleName = "매장을 찾을 수 없는 경우"
+          ),
+          @ApiErrorResponse(
+              code = ErrorCode.POS_TABLE_ACTIVITY_NOT_FOUND,
+              exampleName = "POS 테이블 액티비티를 찾을 수 없는 경우"
+          ),
+      }
+  )
+  ResponseEntity<Void> repayment(
+      int tableNo,
+      Long posTableActivityId,
+      @RequestBody OrderPaymentApproveRequest approveRequest,
+      @Parameter(hidden = true) Device device
+  );
+
   @Operation(summary = "[POS] 현금을 현금 영수증 처리", description = "현금을 현금 영수증 처리 API")
   @ApiResponse(responseCode = "204", description = "현금을 현금 영수증 처리 성공")
   @ApiErrorResponses(
