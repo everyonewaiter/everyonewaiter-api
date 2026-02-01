@@ -2,6 +2,7 @@ package com.everyonewaiter.domain.pos;
 
 import static lombok.AccessLevel.PRIVATE;
 
+import com.everyonewaiter.domain.order.Order;
 import com.everyonewaiter.domain.order.OrderPaymentView;
 import com.everyonewaiter.domain.order.OrderType;
 import com.everyonewaiter.domain.order.OrderView;
@@ -76,6 +77,9 @@ public class PosView {
       @Schema(description = "주문 존재 여부", example = "true")
       boolean hasOrder,
 
+      @Schema(description = "승인 대기 주문 존재 여부", example = "true")
+      boolean hasPendingOrder,
+
       @Nullable
       @Schema(description = "주문 타입", example = "POSTPAID")
       OrderType orderType,
@@ -104,7 +108,8 @@ public class PosView {
           String.valueOf(posTable.getStore().getId()),
           posTable.getTableNo(),
           posTable.hasOrder(),
-          posTable.getTablePaymentType().orElse(null),
+          posTable.hasPendingOrder(),
+          posTable.getTableOrderType().orElse(null),
           posTable.getActivityCreatedAt().orElse(null),
           posTable.getFirstOrderMenuName().orElse(null),
           posTable.getOrderMenuCount(),
@@ -132,6 +137,9 @@ public class PosView {
       @Schema(description = "테이블 결제 타입", example = "POSTPAID")
       OrderType orderType,
 
+      @Schema(description = "승인 대기 주문 존재 여부", example = "true")
+      boolean hasPendingOrder,
+
       @Schema(description = "총 주문 금액", example = "10000")
       long totalOrderPrice,
 
@@ -147,7 +155,7 @@ public class PosView {
       @Schema(description = "POS 테이블 액티비티 활성화 여부", example = "true")
       boolean active,
 
-      @Schema(description = "주문 목록")
+      @Schema(description = "주문 목록 (승인 대기 주문이 존재하는 경우 승인 대기 주문 목록)")
       List<OrderView.OrderDetail> orders,
 
       @Schema(description = "주문 결제 목록")
@@ -155,18 +163,24 @@ public class PosView {
   ) {
 
     public static PosTableActivityDetail from(PosTableActivity posTableActivity) {
+      boolean hasPendingOrder = posTableActivity.hasPendingOrder();
+      List<Order> orders = hasPendingOrder
+          ? posTableActivity.getPendingOrders()
+          : posTableActivity.getOrderedOrders();
+
       return new PosTableActivityDetail(
           String.valueOf(posTableActivity.getId()),
           String.valueOf(posTableActivity.getStore().getId()),
           String.valueOf(posTableActivity.getPosTable().getId()),
           posTableActivity.getTableNo(),
-          posTableActivity.getTablePaymentType(),
+          posTableActivity.getTableOrderType(),
+          hasPendingOrder,
           posTableActivity.getTotalOrderPrice(),
           posTableActivity.getTotalPaymentPrice(),
           posTableActivity.getDiscount(),
           posTableActivity.getRemainingPaymentPriceWithDiscount(),
           posTableActivity.isActive(),
-          posTableActivity.getOrderedOrders().stream()
+          orders.stream()
               .map(OrderView.OrderDetail::from)
               .toList(),
           posTableActivity.getPayments().stream()

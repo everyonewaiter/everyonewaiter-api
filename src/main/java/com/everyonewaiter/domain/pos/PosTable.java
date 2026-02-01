@@ -166,8 +166,12 @@ public class PosTable extends AggregateRootEntity<PosTable> {
     return !getOrderedOrders().isEmpty();
   }
 
-  public Optional<OrderType> getTablePaymentType() {
-    return getActiveActivity().map(PosTableActivity::getTablePaymentType);
+  public boolean hasPendingOrder() {
+    return !getPendingOrders().isEmpty();
+  }
+
+  public Optional<OrderType> getTableOrderType() {
+    return getActiveActivity().map(PosTableActivity::getTableOrderType);
   }
 
   public Optional<Instant> getActivityCreatedAt() {
@@ -213,6 +217,12 @@ public class PosTable extends AggregateRootEntity<PosTable> {
   public List<Order> getOrderedOrders() {
     return getActiveActivity().stream()
         .flatMap(posTableActivity -> posTableActivity.getOrderedOrders().stream())
+        .toList();
+  }
+
+  public List<Order> getPendingOrders() {
+    return getActiveActivity().stream()
+        .flatMap(posTableActivity -> posTableActivity.getPendingOrders().stream())
         .toList();
   }
 

@@ -264,7 +264,7 @@ erDiagram
         bigint pos_table_activity_id FK
         enum category "INITIAL, ADDITIONAL"
         enum type "PREPAID, POSTPAID"
-        enum state "ORDER, CANCEL"
+        enum state "PENDING, REJECT, ORDER, CANCEL"
         bigint price
         varchar(10) memo
         boolean served

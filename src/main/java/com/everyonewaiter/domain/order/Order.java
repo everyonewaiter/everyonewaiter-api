@@ -179,6 +179,10 @@ public class Order extends AggregateRootEntity<Order> {
     return this.type == OrderType.PREPAID;
   }
 
+  public boolean isPending() {
+    return this.state == OrderState.PENDING;
+  }
+
   public boolean isOrdered() {
     return this.state == OrderState.ORDER;
   }

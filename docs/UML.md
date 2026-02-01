@@ -107,6 +107,28 @@ sequenceDiagram
 
 ---
 
+## 주문
+
+### 선결제 테이블 현금 주문
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor C as 손님
+    participant S as 서버
+    participant H as 홀 관리 기기
+    actor M as 직원
+    participant P as POS 기기
+    C ->> S: 선결제 테이블 현금 주문 요청
+    S ->> H: 승인 대기 중인 주문이 있다고 알림
+    H ->> M: 승인 대기 중인 주문 확인
+    M -->> C: 주문 금액만큼 현금 결제
+    M ->> P: 주문 승인
+    P -->> S: 주문 승인 요청
+```
+
+---
+
 ## POS
 
 ### POS 테이블 목록 생성
@@ -165,9 +187,7 @@ sequenceDiagram
 ```mermaid
 flowchart TD
     A((주문 결제 승인 요청)) --> B{POS 테이블 액티비티 조회}
-    B -- 액티비티가 있는 경우 --> C((주문 결제 승인))
-    B -- 액티비티가 없는 경우 --> D[POS 테이블 액티비티 생성]
-    D --> C
+    B --> C((주문 결제 승인))
     C -- 잔여 결제 금액이 있는 경우 --> E((주문 결제 승인 응답))
     C -- 잔여 결제 금액이 없는 경우 --> F[POS 테이블 액티비티 비활성]
     F --> E

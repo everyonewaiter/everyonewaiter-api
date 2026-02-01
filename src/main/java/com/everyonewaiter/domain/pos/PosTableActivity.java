@@ -171,12 +171,16 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
     return !getOrders().isEmpty();
   }
 
+  public boolean hasPendingOrder() {
+    return !getPendingOrders().isEmpty();
+  }
+
   public boolean hasOrderedOrder() {
     return !getOrderedOrders().isEmpty();
   }
 
   public boolean isPostpaidTable() {
-    return getTablePaymentType() == OrderType.POSTPAID;
+    return getTableOrderType() == OrderType.POSTPAID;
   }
 
   public long getRemainingPaymentPrice() {
@@ -199,7 +203,7 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
         .sum();
   }
 
-  public OrderType getTablePaymentType() {
+  public OrderType getTableOrderType() {
     return getOrderedOrders().stream().allMatch(Order::isPrepaid)
         ? OrderType.PREPAID
         : OrderType.POSTPAID;
@@ -222,6 +226,12 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
   public List<Order> getOrderedOrders() {
     return getOrders().stream()
         .filter(Order::isOrdered)
+        .toList();
+  }
+
+  public List<Order> getPendingOrders() {
+    return getOrders().stream()
+        .filter(Order::isPending)
         .toList();
   }
 
