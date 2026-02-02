@@ -46,6 +46,10 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
   private PosTableActivity posTableActivity;
 
   @Enumerated(EnumType.STRING)
+  @Column(name = "type", nullable = false)
+  private OrderPaymentType type;
+
+  @Enumerated(EnumType.STRING)
   @Column(name = "method", nullable = false)
   private OrderPaymentMethod method;
 
@@ -104,6 +108,7 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
 
     payment.posTableActivity = requireNonNull(posTableActivity);
     payment.store = requireNonNull(posTableActivity.getStore());
+    payment.type = OrderPaymentType.ORDERED_ORDER;
     payment.method = requireNonNull(approveRequest.method());
     payment.state = OrderPaymentState.APPROVE;
     payment.amount = approveRequest.amount();
@@ -141,6 +146,7 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
 
     payment.store = requireNonNull(approvePayment.store);
     payment.posTableActivity = requireNonNull(approvePayment.posTableActivity);
+    payment.type = requireNonNull(approvePayment.type);
     payment.method = requireNonNull(approvePayment.method);
     payment.state = OrderPaymentState.CANCEL;
     payment.amount = approvePayment.amount;
@@ -187,6 +193,14 @@ public class OrderPayment extends AggregateRootEntity<OrderPayment> {
     }
 
     throw new FailedIssueCashReceiptException();
+  }
+
+  public boolean isPendingType() {
+    return this.type == OrderPaymentType.PENDING_ORDER;
+  }
+
+  public boolean isOrderedType() {
+    return this.type == OrderPaymentType.ORDERED_ORDER;
   }
 
   public boolean isPureCash() {

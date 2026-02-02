@@ -162,7 +162,7 @@ public class PosTable extends AggregateRootEntity<PosTable> {
     return getActiveActivity().isPresent();
   }
 
-  public boolean hasOrder() {
+  public boolean hasOrderedOrder() {
     return !getOrderedOrders().isEmpty();
   }
 
@@ -179,7 +179,7 @@ public class PosTable extends AggregateRootEntity<PosTable> {
   }
 
   public Optional<String> getFirstOrderMenuName() {
-    List<Order> orders = getOrderedOrders();
+    List<Order> orders = getOrderedOrPendingOrders();
 
     if (orders.isEmpty()) {
       return Optional.empty();
@@ -189,19 +189,23 @@ public class PosTable extends AggregateRootEntity<PosTable> {
   }
 
   public int getOrderMenuCount() {
-    return getOrderedOrders().stream()
+    return getOrderedOrPendingOrders().stream()
         .mapToInt(Order::getOrderMenuCount)
         .sum();
   }
 
   public long getTableTotalOrderPrice() {
-    return getOrderedOrders().stream()
+    return getOrderedOrPendingOrders().stream()
         .mapToLong(Order::getTotalOrderPrice)
         .sum();
   }
 
   public long getDiscountPrice() {
-    return getActiveActivity().map(PosTableActivity::getDiscount).orElse(0L);
+    if (hasPendingOrder()) {
+      return getActiveActivity().map(PosTableActivity::getPendingDiscount).orElse(0L);
+    } else {
+      return getActiveActivity().map(PosTableActivity::getDiscount).orElse(0L);
+    }
   }
 
   public Optional<PosTableActivity> getActiveActivity() {
@@ -212,6 +216,10 @@ public class PosTable extends AggregateRootEntity<PosTable> {
 
   public PosTableActivity getActiveActivityOrThrow() {
     return getActiveActivity().orElseThrow(PosTableActiveActivityNotFoundException::new);
+  }
+
+  public List<Order> getOrderedOrPendingOrders() {
+    return hasPendingOrder() ? getPendingOrders() : getOrderedOrders();
   }
 
   public List<Order> getOrderedOrders() {

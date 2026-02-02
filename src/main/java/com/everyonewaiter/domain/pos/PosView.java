@@ -2,7 +2,6 @@ package com.everyonewaiter.domain.pos;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import com.everyonewaiter.domain.order.Order;
 import com.everyonewaiter.domain.order.OrderPaymentView;
 import com.everyonewaiter.domain.order.OrderType;
 import com.everyonewaiter.domain.order.OrderView;
@@ -107,7 +106,7 @@ public class PosView {
           String.valueOf(posTable.getId()),
           String.valueOf(posTable.getStore().getId()),
           posTable.getTableNo(),
-          posTable.hasOrder(),
+          posTable.hasOrderedOrder(),
           posTable.hasPendingOrder(),
           posTable.getTableOrderType().orElse(null),
           posTable.getActivityCreatedAt().orElse(null),
@@ -163,27 +162,22 @@ public class PosView {
   ) {
 
     public static PosTableActivityDetail from(PosTableActivity posTableActivity) {
-      boolean hasPendingOrder = posTableActivity.hasPendingOrder();
-      List<Order> orders = hasPendingOrder
-          ? posTableActivity.getPendingOrders()
-          : posTableActivity.getOrderedOrders();
-
       return new PosTableActivityDetail(
           String.valueOf(posTableActivity.getId()),
           String.valueOf(posTableActivity.getStore().getId()),
           String.valueOf(posTableActivity.getPosTable().getId()),
           posTableActivity.getTableNo(),
           posTableActivity.getTableOrderType(),
-          hasPendingOrder,
+          posTableActivity.hasPendingOrder(),
           posTableActivity.getTotalOrderPrice(),
           posTableActivity.getTotalPaymentPrice(),
-          posTableActivity.getDiscount(),
+          posTableActivity.getDiscountPrice(),
           posTableActivity.getRemainingPaymentPriceWithDiscount(),
           posTableActivity.isActive(),
-          orders.stream()
+          posTableActivity.getOrderedOrPendingOrders().stream()
               .map(OrderView.OrderDetail::from)
               .toList(),
-          posTableActivity.getPayments().stream()
+          posTableActivity.getOrderedOrPendingTypePayments().stream()
               .map(OrderPaymentView.OrderPaymentDetail::from)
               .toList()
       );

@@ -21,6 +21,9 @@ public class OrderPaymentView {
       @Schema(description = "매장 ID", example = "\"694865267482835533\"")
       String storeId,
 
+      @Schema(description = "어떤 주문에 대한 결제인지에 대한 타입", example = "ORDERED_ORDER")
+      OrderPaymentType type,
+
       @Schema(description = "결제 상태", example = "APPROVE")
       OrderPaymentState state,
 
@@ -79,6 +82,7 @@ public class OrderPaymentView {
           String.valueOf(orderPayment.getId()),
           String.valueOf(orderPayment.getPosTableActivity().getId()),
           String.valueOf(orderPayment.getStore().getId()),
+          orderPayment.getType(),
           orderPayment.getState(),
           orderPayment.getMethod(),
           orderPayment.getAmount(),

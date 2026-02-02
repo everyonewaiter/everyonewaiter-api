@@ -57,6 +57,9 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
   @Column(name = "discount", nullable = false)
   private long discount;
 
+  @Column(name = "pending_discount", nullable = false)
+  private long pendingDiscount;
+
   @Column(name = "active", nullable = false)
   private boolean active;
 
@@ -157,12 +160,8 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
     order.update(updateRequest);
   }
 
-  private void setDiscountPrice(long discountPrice) {
-    this.discount = Math.min(discountPrice, getRemainingPaymentPrice());
-  }
-
   private void tryInactivate() {
-    if (!hasOrderedOrder()) {
+    if (!hasOrderedOrder() && !hasPendingOrder()) {
       this.active = false;
     }
   }
@@ -188,17 +187,17 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
   }
 
   public long getRemainingPaymentPriceWithDiscount() {
-    return getRemainingPaymentPrice() - discount;
+    return getRemainingPaymentPrice() - getDiscountPrice();
   }
 
   public long getTotalOrderPrice() {
-    return getOrderedOrders().stream()
+    return getOrderedOrPendingOrders().stream()
         .mapToLong(Order::getTotalOrderPrice)
         .sum();
   }
 
   public long getTotalPaymentPrice() {
-    return getPayments().stream()
+    return getOrderedOrPendingTypePayments().stream()
         .mapToLong(OrderPayment::getPaymentPrice)
         .sum();
   }
@@ -223,6 +222,14 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
         .orElseThrow(OrderNotFoundException::new);
   }
 
+  public List<Order> getOrderedOrPendingOrders() {
+    return hasPendingOrder() ? getPendingOrders() : getOrderedOrders();
+  }
+
+  public List<OrderPayment> getOrderedOrPendingTypePayments() {
+    return hasPendingOrder() ? getPendingTypePayments() : getOrderedTypePayments();
+  }
+
   public List<Order> getOrderedOrders() {
     return getOrders().stream()
         .filter(Order::isOrdered)
@@ -239,8 +246,33 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
     return Collections.unmodifiableList(orders);
   }
 
+  public List<OrderPayment> getPendingTypePayments() {
+    return getPayments().stream()
+        .filter(OrderPayment::isPendingType)
+        .toList();
+  }
+
+  public List<OrderPayment> getOrderedTypePayments() {
+    return getPayments().stream()
+        .filter(OrderPayment::isOrderedType)
+        .toList();
+  }
+
   public List<OrderPayment> getPayments() {
     return Collections.unmodifiableList(payments);
+  }
+
+  public long getDiscountPrice() {
+    return hasPendingOrder() ? pendingDiscount : discount;
+  }
+
+  private void setDiscountPrice(long discountPrice) {
+    long min = Math.min(discountPrice, getRemainingPaymentPrice());
+    if (hasPendingOrder()) {
+      this.pendingDiscount = min;
+    } else {
+      this.discount = min;
+    }
   }
 
 }
