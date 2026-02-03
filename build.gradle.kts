@@ -1,12 +1,8 @@
 plugins {
   java
-  kotlin("jvm")
-  kotlin("plugin.spring")
-  kotlin("plugin.jpa")
   id("org.springframework.boot")
   id("io.spring.dependency-management")
   id("com.gorylenko.gradle-git-properties")
-  id("com.github.spotbugs")
 }
 
 val appGroup: String by project
@@ -23,21 +19,22 @@ java {
   }
 }
 
-kotlin {
-  compilerOptions {
-    freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
-  }
-}
-
-spotbugs {
-  excludeFilter.set(file("${projectDir}/spotbugs-exclude.xml"))
-}
-
 springBoot {
   buildInfo()
 }
 
+repositories {
+  mavenCentral()
+}
+
 val springCloud: String by project
+
+dependencyManagement {
+  imports {
+    mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloud")
+  }
+}
+
 val jjwt: String by project
 val mockito: String by project
 val oci: String by project
@@ -49,19 +46,7 @@ val springdoc: String by project
 val tsid: String by project
 val mockitoAgent: Configuration? = configurations.create("mockitoAgent")
 
-repositories {
-  mavenCentral()
-}
-
-dependencyManagement {
-  imports {
-    mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloud")
-  }
-}
-
 dependencies {
-  implementation("org.jetbrains.kotlin:kotlin-reflect")
-  implementation("tools.jackson.module:jackson-module-kotlin")
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-aspectj")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -101,7 +86,6 @@ dependencies {
   annotationProcessor("jakarta.annotation:jakarta.annotation-api")
   annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
   testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
   testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
   testImplementation("org.springframework.boot:spring-boot-starter-data-redis-test")
@@ -111,6 +95,9 @@ dependencies {
   testImplementation("org.springframework.boot:spring-boot-starter-thymeleaf-test")
   testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
   testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+  testImplementation("org.springframework.boot:spring-boot-testcontainers")
+  testImplementation("org.testcontainers:testcontainers-junit-jupiter")
+  testImplementation("org.testcontainers:testcontainers-mysql")
   testImplementation("org.mockito:mockito-core:$mockito")
   mockitoAgent?.let { it("org.mockito:mockito-core:$mockito") { isTransitive = false } }
 
