@@ -9,12 +9,13 @@ repository.
 
 ## 기술 스택
 
-- Java 21 + Kotlin (테스트 코드)
-- Spring Boot 4.x (WebMVC, Security, Data JPA, Validation)
+- Java 21
+- Spring Boot 4.0.1 (WebMVC, Security, Data JPA, Validation)
 - MySQL 8.4.3, Redis 7.4.1
 - Flyway (DB 마이그레이션)
-- QueryDSL (동적 쿼리)
-- Redisson (분산 락)
+- QueryDSL 7.1 (동적 쿼리)
+- Redisson 4.0.0 (분산 락)
+- OpenFeign (HTTP 클라이언트)
 
 ## 빌드 및 실행
 
@@ -26,7 +27,7 @@ repository.
 ./gradlew test
 
 # 단일 테스트 실행
-./gradlew test --tests "com.everyonewaiter.domain.account.AccountTest"
+./gradlew test --tests "com.everyonewaiter.EveryonewaiterApiApplicationTest"
 
 # 애플리케이션 실행 (Docker Compose)
 docker compose up --build -d
@@ -70,6 +71,9 @@ com.everyonewaiter
 - **POS**: POS 테이블 (테이블 관리, 액티비티)
 - **Waiting**: 웨이팅 (대기열 관리)
 - **StaffCall**: 직원 호출
+- **Notification**: 알림 (알림톡, 이메일)
+- **Image**: 이미지 (업로드, 변환)
+- **SSE**: Server-Sent Events (실시간 이벤트)
 
 ### AOP 어노테이션
 
@@ -83,8 +87,7 @@ com.everyonewaiter
 ## 코딩 컨벤션
 
 - 포매터: `google-intellij-formatter.xml` 사용
-- 테스트: Kotlin + JUnit 5
-- 정적 분석: SpotBugs (`spotbugs-exclude.xml`)
+- 테스트: Java + JUnit 5 + Testcontainers
 
 ## API 문서
 
