@@ -12,35 +12,33 @@ class TestcontainersConfiguration {
 
   private static final String REDIS_PASSWORD = "1234";
 
-  @Bean
-  MySQLContainer mysqlContainer() {
-    return new MySQLContainer(DockerImageName.parse("mysql:8.4.3"))
+  private static final MySQLContainer MYSQL;
+  private static final GenericContainer<?> REDIS;
+
+  static {
+    MYSQL = new MySQLContainer(DockerImageName.parse("mysql:8.4.3"))
         .withDatabaseName("everyonewaiter")
         .withUsername("root")
         .withPassword("1234")
         .withUrlParam("rewriteBatchedStatements", "true")
         .withUrlParam("characterEncoding", "UTF-8");
-  }
+    MYSQL.start();
 
-  @Bean
-  GenericContainer<?> redisContainer() {
-    return new GenericContainer<>(DockerImageName.parse("redis:7.4.1"))
+    REDIS = new GenericContainer<>(DockerImageName.parse("redis:7.4.1"))
         .withCommand("redis-server", "--requirepass", REDIS_PASSWORD)
         .withExposedPorts(6379);
+    REDIS.start();
   }
 
   @Bean
-  DynamicPropertyRegistrar dynamicPropertyRegistrar(
-      MySQLContainer mysqlContainer,
-      GenericContainer<?> redisContainer
-  ) {
+  DynamicPropertyRegistrar dynamicPropertyRegistrar() {
     return registry -> {
-      registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
-      registry.add("spring.datasource.username", mysqlContainer::getUsername);
-      registry.add("spring.datasource.password", mysqlContainer::getPassword);
+      registry.add("spring.datasource.url", MYSQL::getJdbcUrl);
+      registry.add("spring.datasource.username", MYSQL::getUsername);
+      registry.add("spring.datasource.password", MYSQL::getPassword);
 
-      registry.add("spring.data.redis.host", redisContainer::getHost);
-      registry.add("spring.data.redis.port", redisContainer::getFirstMappedPort);
+      registry.add("spring.data.redis.host", REDIS::getHost);
+      registry.add("spring.data.redis.port", REDIS::getFirstMappedPort);
       registry.add("spring.data.redis.password", () -> REDIS_PASSWORD);
     };
   }
