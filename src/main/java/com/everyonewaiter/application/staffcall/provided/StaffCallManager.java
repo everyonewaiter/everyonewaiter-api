@@ -9,7 +9,7 @@ public interface StaffCallManager {
 
   StaffCall call(Long storeId, int tableNo, @Valid StaffCallRequest callRequest);
 
-  StaffCall complete(Long storeId, Long staffCallId);
+  StaffCall complete(Long storeId, int tableNo, Long staffCallId);
 
   List<StaffCall> findAllIncompleted(Long storeId);
 

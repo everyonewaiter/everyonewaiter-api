@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -72,9 +73,10 @@ class OrderApi implements OrderApiSpecification {
   @PostMapping("/{orderId}/serving")
   public ResponseEntity<Void> servingOrder(
       @PathVariable Long orderId,
+      @RequestParam("tableNo") int tableNo,
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    orderServer.serving(device.getStoreId(), orderId);
+    orderServer.serving(device.getStoreId(), tableNo, orderId);
 
     return ResponseEntity.noContent().build();
   }
@@ -85,9 +87,10 @@ class OrderApi implements OrderApiSpecification {
   public ResponseEntity<Void> servingOrderMenu(
       @PathVariable Long orderId,
       @PathVariable Long orderMenuId,
+      @RequestParam("tableNo") int tableNo,
       @AuthenticationDevice(purpose = DevicePurpose.HALL) Device device
   ) {
-    orderServer.serving(device.getStoreId(), orderId, orderMenuId);
+    orderServer.serving(device.getStoreId(), tableNo, orderId, orderMenuId);
 
     return ResponseEntity.noContent().build();
   }

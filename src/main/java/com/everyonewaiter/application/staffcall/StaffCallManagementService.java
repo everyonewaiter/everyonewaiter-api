@@ -3,6 +3,7 @@ package com.everyonewaiter.application.staffcall;
 import com.everyonewaiter.application.staffcall.provided.StaffCallManager;
 import com.everyonewaiter.application.staffcall.required.StaffCallRepository;
 import com.everyonewaiter.application.store.provided.StoreFinder;
+import com.everyonewaiter.application.support.DistributedLock;
 import com.everyonewaiter.application.support.ReadOnlyTransactional;
 import com.everyonewaiter.domain.staffcall.StaffCall;
 import com.everyonewaiter.domain.staffcall.StaffCallOptionNotFoundException;
@@ -25,6 +26,7 @@ class StaffCallManagementService implements StaffCallManager {
 
   @Override
   @Transactional
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
   public StaffCall call(Long storeId, int tableNo, StaffCallRequest callRequest) {
     Store store = storeFinder.findOrThrow(storeId);
 
@@ -43,7 +45,8 @@ class StaffCallManagementService implements StaffCallManager {
 
   @Override
   @Transactional
-  public StaffCall complete(Long storeId, Long staffCallId) {
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
+  public StaffCall complete(Long storeId, int tableNo, Long staffCallId) {
     StaffCall staffCall = staffCallRepository.findOrThrow(staffCallId, storeId);
 
     staffCall.complete();

@@ -9,8 +9,8 @@ public interface OrderServer {
 
   Order create(Long storeId, OrderType orderType, @Valid OrderCreateRequest createRequest);
 
-  Order serving(Long storeId, Long orderId);
+  Order serving(Long storeId, int tableNo, Long orderId);
 
-  Order serving(Long storeId, Long orderId, Long orderMenuId);
+  Order serving(Long storeId, int tableNo, Long orderId, Long orderMenuId);
 
 }

@@ -70,7 +70,8 @@ class OrderModifyService implements OrderServer {
   }
 
   @Override
-  public Order serving(Long storeId, Long orderId) {
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
+  public Order serving(Long storeId, int tableNo, Long orderId) {
     Order order = orderFinder.findOrThrow(orderId, storeId);
 
     order.serving();
@@ -79,7 +80,8 @@ class OrderModifyService implements OrderServer {
   }
 
   @Override
-  public Order serving(Long storeId, Long orderId, Long orderMenuId) {
+  @DistributedLock(key = "#storeId + '-' + #tableNo")
+  public Order serving(Long storeId, int tableNo, Long orderId, Long orderMenuId) {
     Order order = orderFinder.findOrThrow(orderId, storeId);
 
     order.serving(orderMenuId);

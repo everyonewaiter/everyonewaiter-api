@@ -96,6 +96,7 @@ interface StaffCallApiSpecification {
   )
   ResponseEntity<Void> complete(
       Long staffCallId,
+      int tableNo,
       @Parameter(hidden = true) Device device
   );
 

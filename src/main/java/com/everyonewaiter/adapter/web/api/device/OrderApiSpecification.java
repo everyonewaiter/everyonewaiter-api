@@ -130,6 +130,7 @@ interface OrderApiSpecification {
   )
   ResponseEntity<Void> servingOrder(
       Long orderId,
+      int tableNo,
       @Parameter(hidden = true) Device device
   );
 
@@ -172,6 +173,7 @@ interface OrderApiSpecification {
   ResponseEntity<Void> servingOrderMenu(
       Long orderId,
       Long orderMenuId,
+      int tableNo,
       @Parameter(hidden = true) Device device
   );
 
