@@ -24,6 +24,8 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -87,6 +89,24 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
 
   public void addPayment(OrderPayment orderPayment) {
     this.payments.add(orderPayment);
+
+    // 선결제 주문이 있고, 결제가 취소인 경우
+    if (hasPrepaidOrderedOrder() && orderPayment.isCanceled()) {
+        // 취소 결제의 승인번호를 가지고 승인 결제를 찾음
+        payments.stream()
+              .filter(payment -> Objects.equals(payment.getApprovalNo(), orderPayment.getApprovalNo()))
+              .findAny()
+              .flatMap(approvedPayment -> getOrderedOrders()
+                      .stream()
+                      .filter(Order::isPrepaid)
+                      .filter(order -> order.getPrice() == orderPayment.getAmount())
+                      .filter(order -> order.getCreatedAt()
+                              .isAfter(approvedPayment.getCreatedAt())
+                              && order.getCreatedAt()
+                              .isBefore(orderPayment.getCreatedAt()))
+                      .findAny()
+              ).ifPresent(Order::cancel);
+    }
 
     if (isPostpaidTable() && getRemainingPaymentPriceWithDiscount() <= 0) {
       this.active = false;
@@ -173,6 +193,10 @@ public class PosTableActivity extends AggregateRootEntity<PosTableActivity> {
 
   public boolean hasOrderedOrder() {
     return !getOrderedOrders().isEmpty();
+  }
+
+  public boolean hasPrepaidOrderedOrder() {
+    return getOrderedOrders().stream().anyMatch(Order::isPrepaid);
   }
 
   public boolean isPostpaidTable() {
