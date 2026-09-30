@@ -37,6 +37,9 @@ public class Setting extends AggregateEntity {
   @Column(name = "show_order_total_price", nullable = false)
   private boolean showOrderTotalPrice;
 
+  @Column(name = "show_cart_total_price", nullable = false)
+  private boolean showCartTotalPrice;
+
   @Column(name = "show_order_menu_image", nullable = false)
   private boolean showOrderMenuImage;
 
@@ -54,6 +57,7 @@ public class Setting extends AggregateEntity {
     this.printerLocation = PrinterLocation.POS;
     this.showMenuPopup = true;
     this.showOrderTotalPrice = true;
+    this.showCartTotalPrice = true;
     this.showOrderMenuImage = true;
   }
 
@@ -63,6 +67,7 @@ public class Setting extends AggregateEntity {
     this.printerLocation = requireNonNull(updateRequest.printerLocation());
     this.showMenuPopup = requireNonNull(updateRequest.showMenuPopup());
     this.showOrderTotalPrice = requireNonNull(updateRequest.showOrderTotalPrice());
+    this.showCartTotalPrice = requireNonNull(updateRequest.showCartTotalPrice());
     this.showOrderMenuImage = requireNonNull(updateRequest.showOrderMenuImage());
 
     this.countryOfOrigins.clear();
