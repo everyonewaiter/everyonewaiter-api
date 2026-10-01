@@ -21,8 +21,11 @@ public record StoreSettingDetailResponse(
     @Schema(description = "손님 테이블 메뉴 팝업 보이기 여부", example = "true")
     boolean showMenuPopup,
 
-    @Schema(description = "손님 테이블 총 주문 금액 표시 여부", example = "true")
+    @Schema(description = "손님 테이블 주문내역 총 주문 금액 표시 여부", example = "true")
     boolean showOrderTotalPrice,
+
+    @Schema(description = "손님 테이블 장바구니 총 주문 금액 표시 여부", example = "true")
+    boolean showCartTotalPrice,
 
     @Schema(description = "홀 관리 주문 메뉴 이미지 표시 여부", example = "true")
     boolean showOrderMenuImage,
@@ -41,6 +44,7 @@ public record StoreSettingDetailResponse(
         setting.getPrinterLocation(),
         setting.isShowMenuPopup(),
         setting.isShowOrderTotalPrice(),
+        setting.isShowCartTotalPrice(),
         setting.isShowOrderMenuImage(),
         setting.getCountryOfOrigins(),
         setting.getStaffCallOptions().stream().map(StaffCallOption::optionName).toList()

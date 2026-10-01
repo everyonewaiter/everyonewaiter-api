@@ -31,9 +31,13 @@ public record StoreSettingUpdateRequest(
     @NotNull(message = "손님 테이블 메뉴 팝업 보이기 여부가 누락되었습니다.")
     Boolean showMenuPopup,
 
-    @Schema(description = "손님 테이블 총 주문 금액 표시 여부", example = "true", requiredMode = REQUIRED)
-    @NotNull(message = "손님 테이블 총 주문 금액 표시 여부가 누락되었습니다.")
+    @Schema(description = "손님 테이블 주문내역 총 주문 금액 표시 여부", example = "true", requiredMode = REQUIRED)
+    @NotNull(message = "손님 테이블 주문내역 총 주문 금액 표시 여부가 누락되었습니다.")
     Boolean showOrderTotalPrice,
+
+    @Schema(description = "손님 테이블 장바구니 총 주문 금액 표시 여부", example = "true", requiredMode = REQUIRED)
+    @NotNull(message = "손님 테이블 장바구니 주문 금액 표시 여부가 누락되었습니다.")
+    Boolean showCartTotalPrice,
 
     @Schema(description = "홀 관리 주문 메뉴 이미지 표시 여부", example = "true", requiredMode = REQUIRED)
     @NotNull(message = "홀 관리 주문 메뉴 이미지 표시 여부가 누락되었습니다.")
